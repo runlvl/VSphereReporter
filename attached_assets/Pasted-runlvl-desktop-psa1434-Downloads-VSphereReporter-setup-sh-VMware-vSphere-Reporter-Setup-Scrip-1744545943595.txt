@@ -1,0 +1,49 @@
+runlvl@desktop-psa1434:~/Downloads/VSphereReporter> ./setup.sh
+VMware vSphere Reporter - Setup Script
+=======================================
+
+Detected Linux distribution: openSUSE Tumbleweed
+Creating directory structure...
+Checking Python installation...
+Found Python 3.13.2
+Installing required system packages...
+Installing packages for OpenSUSE...
+Dienst 'NVIDIA' wird aktualisiert.
+Dienst 'openSUSE' wird aktualisiert.
+Repository-Daten werden geladen...
+Installierte Pakete werden gelesen...
+'python3-pip' wurde in den Paketnamen nicht gefunden. Fähigkeiten werden durchsucht.
+'python313-pip', welches 'python3-pip' bietet, ist bereits installiert.
+'python3-tk' wurde in den Paketnamen nicht gefunden. Fähigkeiten werden durchsucht.
+'python313-tk', welches 'python3-tk' bietet, ist bereits installiert.
+Paketabhängigkeiten werden aufgelöst...
+Keine auszuführenden Aktionen.
+Installing Python dependencies...
+
+[notice] A new release of pip is available: 24.3.1 -> 25.0.1
+[notice] To update, run: pip install --upgrade pip
+error: externally-managed-environment
+
+× This environment is externally managed
+╰─> To install Python packages system-wide, try
+    zypper install python313-xyz, where xyz is the package
+    you are trying to install.
+    
+    If you wish to install a non-rpm packaged Python package,
+    create a virtual environment using python3.13 -m venv path/to/venv.
+    Then use path/to/venv/bin/python and path/to/venv/bin/pip.
+    
+    If you wish to install a non-rpm packaged Python application,
+    it may be easiest to use `pipx install xyz`, which will manage a
+    virtual environment for you. Install pipx via `zypper install python313-pipx` .
+
+note: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.
+hint: See PEP 668 for the detailed specification.
+Making scripts executable...
+
+Setup complete!
+You can now run the VMware vSphere Reporter:
+- GUI: ./vsphere_reporter_linux.py
+- CLI: ./vsphere_reporter_cli.py --help
+
+For more information, see the documentation in the docs/ directory.
