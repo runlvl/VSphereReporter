@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ report_title }}</title>
+    <style>
+        {% include 'styles.css' %}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Title page -->
+        <div class="title-page">
+            <h1 class="title">{{ report_title }}</h1>
+            <p class="subtitle">Generated on: {{ report_date|format_datetime }}</p>
+        </div>
+
+        <!-- Table of Contents -->
+        <div class="toc-container">
+            <h2>Table of Contents</h2>
+            <ul class="toc">
+                <li><a href="#executive-summary">Executive Summary</a></li>
+                {% for section in sections %}
+                <li><a href="#{{ section.id }}">{{ section.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Executive Summary -->
+        <div class="section" id="executive-summary">
+            <h2>Executive Summary</h2>
+            <p>
+                This report contains information about the VMware vSphere environment. 
+                It includes details about VMware Tools versions, VM snapshots, orphaned VMDK files, 
+                and other important aspects of the environment.
+            </p>
+            
+            <h3>Summary Statistics</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if data.vmware_tools %}
+                    <tr>
+                        <td>VMware Tools versions needing upgrade</td>
+                        <td class="center">
+                            {{ data.vmware_tools|selectattr('vmware_tools_version', 'equalto', 'guestToolsNeedUpgrade')|list|length }}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    
+                    {% if data.snapshots %}
+                    <tr>
+                        <td>VMs with snapshots</td>
+                        <td class="center">
+                            {{ data.snapshots|map(attribute='vm_name')|unique|list|length }}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    
+                    {% if data.orphaned_vmdks %}
+                    <tr>
+                        <td>Orphaned VMDK files</td>
+                        <td class="center">{{ data.orphaned_vmdks|length }}</td>
+                    </tr>
+                    {% endif %}
+                    
+                    {% if data.vms %}
+                    <tr>
+                        <td>Total virtual machines</td>
+                        <td class="center">{{ data.vms|length }}</td>
+                    </tr>
+                    {% endif %}
+                    
+                    {% if data.hosts %}
+                    <tr>
+                        <td>Total ESXi hosts</td>
+                        <td class="center">{{ data.hosts|length }}</td>
+                    </tr>
+                    {% endif %}
+                    
+                    {% if data.datastores %}
+                    <tr>
+                        <td>Total datastores</td>
+                        <td class="center">{{ data.datastores|length }}</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- VMware Tools Section -->
+        {% if data.vmware_tools %}
+        <div class="section" id="vmware_tools">
+            <h2>VMware Tools Versions</h2>
+            <p>{{ sections|selectattr('id', 'equalto', 'vmware_tools')|map(attribute='description')|first }}</p>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>VM Name</th>
+                        <th>Power State</th>
+                        <th>Tools Status</th>
+                        <th>Tools Version</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vm in data.vmware_tools %}
+                    <tr {% if vm.vmware_tools_version == 'guestToolsNeedUpgrade' %}class="warning"{% endif %}>
+                        <td>{{ vm.name }}</td>
+                        <td>{{ vm.power_state }}</td>
+                        <td>{{ vm.vmware_tools_status }}</td>
+                        <td>{{ vm.vmware_tools_version }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            {% set outdated_tools = data.vmware_tools|selectattr('vmware_tools_version', 'equalto', 'guestToolsNeedUpgrade')|list %}
+            {% if outdated_tools %}
+            <div class="recommendation">
+                <strong>Recommendation:</strong> There are {{ outdated_tools|length }} virtual machines with outdated VMware Tools. 
+                It is recommended to update VMware Tools to the latest version to ensure optimal performance and compatibility.
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Snapshots Section -->
+        {% if data.snapshots %}
+        <div class="section" id="snapshots">
+            <h2>VM Snapshots</h2>
+            <p>{{ sections|selectattr('id', 'equalto', 'snapshots')|map(attribute='description')|first }}</p>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>VM Name</th>
+                        <th>Snapshot Name</th>
+                        <th>Description</th>
+                        <th>Create Time</th>
+                        <th>Age (Days)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for snapshot in data.snapshots %}
+                    <tr {% if snapshot.age_days > 7 %}class="warning"{% endif %}>
+                        <td>{{ snapshot.vm_name }}</td>
+                        <td>{{ snapshot.name }}</td>
+                        <td>{{ snapshot.description }}</td>
+                        <td>{{ snapshot.create_time|format_datetime }}</td>
+                        <td class="center">{{ snapshot.age_days }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            {% set old_snapshots = data.snapshots|selectattr('age_days', 'greaterthan', 7)|list %}
+            {% if old_snapshots %}
+            <div class="recommendation">
+                <strong>Recommendation:</strong> There are {{ old_snapshots|length }} snapshots older than 7 days. 
+                It is recommended to consolidate or remove old snapshots to maintain optimal performance.
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Orphaned VMDKs Section -->
+        {% if data.orphaned_vmdks %}
+        <div class="section" id="orphaned_vmdks">
+            <h2>Orphaned VMDK Files</h2>
+            <p>{{ sections|selectattr('id', 'equalto', 'orphaned_vmdks')|map(attribute='description')|first }}</p>
+            
+            {% if data.orphaned_vmdks|length == 0 %}
+            <p>No orphaned VMDK files found in the environment.</p>
+            {% else %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Path</th>
+                        <th>Datastore</th>
+                        <th>Size</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vmdk in data.orphaned_vmdks %}
+                    <tr>
+                        <td>{{ vmdk.path }}</td>
+                        <td>{{ vmdk.datastore }}</td>
+                        <td>{{ vmdk.size|format_size }}</td>
+                        <td>{{ vmdk.reason }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            {% set total_size = data.orphaned_vmdks|sum(attribute='size') %}
+            <div class="recommendation">
+                <strong>Recommendation:</strong> There are {{ data.orphaned_vmdks|length }} orphaned VMDK files consuming approximately {{ total_size|format_size }} of storage. 
+                It is recommended to verify and remove these files to reclaim storage space.
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- VMs Section -->
+        {% if data.vms %}
+        <div class="section" id="vms">
+            <h2>Virtual Machines</h2>
+            <p>{{ sections|selectattr('id', 'equalto', 'vms')|map(attribute='description')|first }}</p>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>VM Name</th>
+                        <th>Power State</th>
+                        <th>Guest OS</th>
+                        <th>CPU</th>
+                        <th>Memory (MB)</th>
+                        <th>Used Space</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vm in data.vms %}
+                    <tr>
+                        <td>{{ vm.name }}</td>
+                        <td>{{ vm.power_state }}</td>
+                        <td>{{ vm.guest_full_name }}</td>
+                        <td class="center">{{ vm.num_cpu }}</td>
+                        <td class="center">{{ vm.memory_mb }}</td>
+                        <td>{{ vm.used_space|format_size }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        <!-- Hosts Section -->
+        {% if data.hosts %}
+        <div class="section" id="hosts">
+            <h2>ESXi Hosts</h2>
+            <p>{{ sections|selectattr('id', 'equalto', 'hosts')|map(attribute='description')|first }}</p>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Host Name</th>
+                        <th>Cluster</th>
+                        <th>Connection State</th>
+                        <th>CPU Model</th>
+                        <th>CPU Cores</th>
+                        <th>Memory (GB)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for host in data.hosts %}
+                    <tr>
+                        <td>{{ host.name }}</td>
+                        <td>{{ host.cluster }}</td>
+                        <td>{{ host.connection_state }}</td>
+                        <td>{{ host.cpu_model }}</td>
+                        <td class="center">{{ host.cpu_cores }}</td>
+                        <td class="center">{{ host.memory_size|round(2) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        <!-- Datastores Section -->
+        {% if data.datastores %}
+        <div class="section" id="datastores">
+            <h2>Datastores</h2>
+            <p>{{ sections|selectattr('id', 'equalto', 'datastores')|map(attribute='description')|first }}</p>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Datastore Name</th>
+                        <th>Type</th>
+                        <th>Capacity</th>
+                        <th>Free Space</th>
+                        <th>Usage (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for datastore in data.datastores %}
+                    <tr {% if datastore.usage_percent > 85 %}class="warning"{% endif %}>
+                        <td>{{ datastore.name }}</td>
+                        <td>{{ datastore.type }}</td>
+                        <td>{{ datastore.capacity|format_size }}</td>
+                        <td>{{ datastore.free_space|format_size }}</td>
+                        <td class="center">{{ datastore.usage_percent|format_percent }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            {% set high_usage = data.datastores|selectattr('usage_percent', 'greaterthan', 85)|list %}
+            {% if high_usage %}
+            <div class="recommendation">
+                <strong>Recommendation:</strong> There are {{ high_usage|length }} datastores with usage above 85%. 
+                Consider adding more storage capacity or migrating VMs to balance usage.
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Clusters Section -->
+        {% if data.clusters %}
+        <div class="section" id="clusters">
+            <h2>Clusters</h2>
+            <p>{{ sections|selectattr('id', 'equalto', 'clusters')|map(attribute='description')|first }}</p>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Cluster Name</th>
+                        <th>Hosts</th>
+                        <th>DRS Enabled</th>
+                        <th>HA Enabled</th>
+                        <th>Total Memory (GB)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cluster in data.clusters %}
+                    <tr>
+                        <td>{{ cluster.name }}</td>
+                        <td class="center">{{ cluster.hosts }}</td>
+                        <td class="center">{{ cluster.drs_enabled }}</td>
+                        <td class="center">{{ cluster.ha_enabled }}</td>
+                        <td class="center">
+                            {% if cluster.total_memory %}
+                                {{ (cluster.total_memory / (1024 * 1024 * 1024))|round(2) }}
+                            {% else %}
+                                0
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        <!-- Resource Pools Section -->
+        {% if data.resource_pools %}
+        <div class="section" id="resource_pools">
+            <h2>Resource Pools</h2>
+            <p>{{ sections|selectattr('id', 'equalto', 'resource_pools')|map(attribute='description')|first }}</p>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Resource Pool Name</th>
+                        <th>Parent</th>
+                        <th>CPU Shares</th>
+                        <th>CPU Limit</th>
+                        <th>Memory Limit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pool in data.resource_pools %}
+                    <tr>
+                        <td>{{ pool.name }}</td>
+                        <td>{{ pool.parent_type }}: {{ pool.parent_name }}</td>
+                        <td class="center">{{ pool.cpu_shares }}</td>
+                        <td class="center">
+                            {% if pool.cpu_limit == -1 %}
+                                Unlimited
+                            {% else %}
+                                {{ pool.cpu_limit }}
+                            {% endif %}
+                        </td>
+                        <td class="center">
+                            {% if pool.memory_limit == -1 %}
+                                Unlimited
+                            {% else %}
+                                {{ pool.memory_limit }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        <!-- Networks Section -->
+        {% if data.networks %}
+        <div class="section" id="networks">
+            <h2>Networks</h2>
+            <p>{{ sections|selectattr('id', 'equalto', 'networks')|map(attribute='description')|first }}</p>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Network Name</th>
+                        <th>Type</th>
+                        <th>Accessible</th>
+                        <th>Additional Info</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for network in data.networks %}
+                    <tr>
+                        <td>{{ network.name }}</td>
+                        <td>{{ network.type }}</td>
+                        <td class="center">{{ network.accessible }}</td>
+                        <td>
+                            {% if network.type == 'DistributedVirtualPortgroup' %}
+                                {% if network.dvs_name is defined and network.vlan_id is defined %}
+                                    DVS: {{ network.dvs_name }}, VLAN: {{ network.vlan_id }}
+                                {% else %}
+                                    Distributed Virtual Portgroup
+                                {% endif %}
+                            {% else %}
+                                Standard Network
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>VMware vSphere Environment Report - Generated on: {{ report_date|format_datetime }}</p>
+        </div>
+    </div>
+</body>
+</html>
