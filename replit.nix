@@ -1,5 +1,6 @@
 {pkgs}: {
   deps = [
+    pkgs.tk
     pkgs.fontconfig
     pkgs.qt5Full
     pkgs.glibcLocales

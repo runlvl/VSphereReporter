@@ -737,14 +737,55 @@ def main():
     logger = logging.getLogger(__name__)
     logger.info("Starting VMware vSphere Reporter Linux GUI")
     
-    # Create Tkinter root window
-    root = tk.Tk()
+    # Replit environment detection
+    import os
+    is_replit = os.environ.get('REPL_ID', '') != ''
+    if is_replit:
+        logger.warning("Running in Replit environment - GUI might not be available")
+        print("Running in Replit environment - GUI mode is not available")
+        print("Please use the CLI version or download the application to run locally")
+        
+        # Display the CLI usage as fallback
+        import subprocess
+        print("\nAvailable CLI options:")
+        subprocess.run(["python", "vsphere_reporter_cli.py", "--help"])
+        return
     
-    # Create application
-    app = VSphereReporterGUI(root)
-    
-    # Run the application
-    root.mainloop()
+    # Check if running in headless mode
+    try:
+        # Tkinter needs a display to work
+        display = os.environ.get('DISPLAY', '')
+        if not display:
+            logger.error("No display detected (DISPLAY environment variable not set)")
+            raise Exception("No display detected. Running in headless mode.")
+        
+        # Create Tkinter root window
+        root = tk.Tk()
+        
+        # Create application
+        app = VSphereReporterGUI(root)
+        
+        # Run the application
+        root.mainloop()
+    except Exception as e:
+        logger.error(f"Error starting Linux GUI: {str(e)}")
+        print(f"Error starting Linux GUI: {str(e)}")
+        print("Falling back to CLI mode. Run 'python vsphere_reporter_cli.py --help' for usage information.")
+        
+        # Show clear message about GUI not available
+        print("\nTkinter GUI could not be initialized. This might be due to:")
+        print("1. Missing Tkinter package on your system")
+        print("2. No display server available (running in headless mode)")
+        print("3. Display server configuration issues")
+        print("\nPlease ensure Tkinter is properly installed:")
+        print("- For Debian/Ubuntu: sudo apt install python3-tk")
+        print("- For RedHat/CentOS: sudo dnf install python3-tkinter")
+        print("- For OpenSUSE: sudo zypper install python3-tk")
+        
+        # Display the CLI usage as fallback
+        import subprocess
+        print("\nAvailable CLI options:")
+        subprocess.run(["python", "vsphere_reporter_cli.py", "--help"])
 
 if __name__ == "__main__":
     main()

@@ -8,11 +8,23 @@ VMware vSphere Reporter is a comprehensive tool for generating detailed reports 
 
 ### Launching the Application
 
-1. Double-click on the application shortcut or run `run.bat` from the application directory
+#### Windows
+1. Double-click on the application shortcut or run `vsphere_reporter.py` from the application directory
 2. The main application window will open, showing the VMware vSphere Reporter interface
+
+#### Linux GUI Version
+1. Open a terminal and navigate to the application directory
+2. Run `python3 vsphere_reporter_linux.py`
+3. The Tkinter-based GUI will open, showing the VMware vSphere Reporter interface
+
+#### Linux Command Line Version
+1. Open a terminal and navigate to the application directory
+2. Run `python3 vsphere_reporter_cli.py --help` to see available options
+3. Use command-line parameters to specify connection details and report options
 
 ### Application Interface
 
+#### Windows and Linux GUI
 The main application window consists of the following sections:
 
 - **Connection Status**: Shows if you're connected to a vCenter server
@@ -139,5 +151,66 @@ For regular health checks, consider:
 
 ## Command Line Usage
 
-The application can also be run from the command line for automated reporting:
+The application can also be run from the command line for automated reporting. This is especially useful on Linux systems where you might want to schedule regular reports.
+
+### Command Line Syntax
+
+```
+python3 vsphere_reporter_cli.py --server <vcenter_address> --username <username> [--password <password>] [options]
+```
+
+### Required Parameters
+
+- `--server` or `-s`: vCenter server address
+- `--username` or `-u`: vCenter username
+
+### Optional Parameters
+
+- `--password` or `-p`: vCenter password (omit for secure prompt)
+- `--ignore-ssl` or `-k`: Ignore SSL certificate validation
+- `--output-dir` or `-o`: Output directory for reports (default: current directory)
+- `--format` or `-f`: Report format (html, docx, pdf, or all)
+- `--include-all` or `-a`: Include all optional sections in the report
+
+### Report Section Flags
+
+- `--vms`: Include virtual machines section
+- `--hosts`: Include hosts section
+- `--datastores`: Include datastores section
+- `--clusters`: Include clusters section
+- `--resource-pools`: Include resource pools section
+- `--networks`: Include networks section
+
+### Example Commands
+
+Generate a complete report in all formats:
+```
+python3 vsphere_reporter_cli.py --server vcenter.example.com --username admin@vsphere.local --include-all --format all
+```
+
+Generate a minimal report with only required sections in HTML format:
+```
+python3 vsphere_reporter_cli.py --server vcenter.example.com --username admin@vsphere.local --format html
+```
+
+Generate a custom report with specific sections in PDF format:
+```
+python3 vsphere_reporter_cli.py --server vcenter.example.com --username admin@vsphere.local --vms --hosts --datastores --format pdf
+```
+
+### Using in Scripts
+
+When using the CLI version in scripts, you can provide the password in a secure way by using environment variables or a secure prompt:
+
+```bash
+#!/bin/bash
+# Example script to generate weekly reports
+
+# Get password securely
+read -s -p "Enter vCenter password: " VC_PASS
+echo
+
+# Run report
+python3 vsphere_reporter_cli.py --server vcenter.example.com --username admin@vsphere.local --password "$VC_PASS" --include-all --format all --output-dir /path/to/reports/$(date +%Y-%m-%d)
+```
 
