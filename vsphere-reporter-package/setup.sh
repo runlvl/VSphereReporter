@@ -37,28 +37,60 @@ echo "Installing required system packages..."
 case $DISTRO in
     "opensuse"*)
         echo "Installing packages for OpenSUSE..."
-        sudo zypper install -y python3-tk python3-pip
+        sudo zypper install -y python3-tk python3-pip python3-devel gcc
+        # OpenSUSE might need additional development tools for some Python packages
+        sudo zypper install -y patterns-devel-base-devel_basis
         ;;
     "ubuntu"|"debian")
         echo "Installing packages for Ubuntu/Debian..."
         sudo apt-get update
-        sudo apt-get install -y python3-tk python3-pip
+        sudo apt-get install -y python3-tk python3-pip python3-dev build-essential
         ;;
     "fedora"|"rhel"|"centos")
         echo "Installing packages for Fedora/RHEL/CentOS..."
-        sudo dnf install -y python3-tkinter python3-pip
+        sudo dnf install -y python3-tkinter python3-pip python3-devel gcc
         ;;
     *)
-        echo "Unknown distribution. Please manually install Tkinter for Python 3."
-        echo "For OpenSuse: sudo zypper install python3-tk"
-        echo "For Debian/Ubuntu: sudo apt-get install python3-tk"
-        echo "For Fedora/RHEL/CentOS: sudo dnf install python3-tkinter"
+        echo "Unknown distribution. Please manually install the following packages:"
+        echo "- Tkinter for Python 3"
+        echo "- Python development headers"
+        echo "- C/C++ compiler (gcc)"
+        echo
+        echo "For OpenSuse: sudo zypper install python3-tk python3-devel gcc"
+        echo "For Debian/Ubuntu: sudo apt-get install python3-tk python3-dev build-essential"
+        echo "For Fedora/RHEL/CentOS: sudo dnf install python3-tkinter python3-devel gcc"
         ;;
 esac
 
+# Upgrade pip to the latest version
+echo "Upgrading pip to the latest version..."
+python3 -m pip install --upgrade pip
+
 # Install Python dependencies
 echo "Installing Python dependencies..."
-pip3 install -r vsphere_reporter_requirements.txt
+echo "This may take a few minutes..."
+
+# Install PyVmomi first (explicitly) to ensure it's properly set up
+echo "Installing PyVmomi (VMware vSphere Python SDK)..."
+python3 -m pip install --upgrade pyVmomi
+
+# Install all other dependencies
+echo "Installing remaining dependencies..."
+python3 -m pip install --upgrade -r vsphere_reporter_requirements.txt
+
+# Verify that critical packages were installed
+echo "Verifying critical packages..."
+if python3 -c "import pyVim" 2>/dev/null; then
+    echo "✓ PyVim module successfully installed"
+else
+    echo "⚠ WARNING: PyVim module not found. Try running manually: pip3 install pyVmomi"
+fi
+
+if python3 -c "import pyVmomi" 2>/dev/null; then
+    echo "✓ PyVmomi module successfully installed"
+else
+    echo "⚠ WARNING: PyVmomi module not found. Try running manually: pip3 install pyVmomi"
+fi
 
 # Make scripts executable
 echo "Making scripts executable..."
@@ -69,7 +101,10 @@ chmod +x vsphere_reporter_cli.py
 echo
 echo "Setup complete!"
 echo "You can now run the VMware vSphere Reporter:"
-echo "- GUI: ./vsphere_reporter_linux.py"
-echo "- CLI: ./vsphere_reporter_cli.py --help"
+echo "- GUI (recommended): python3 ./vsphere_reporter_linux.py"
+echo "- CLI: python3 ./vsphere_reporter_cli.py --help"
+echo
+echo "NOTE: If you encounter any issues with missing modules, try running:"
+echo "  pip3 install pyVmomi>=7.0.0 PyQt5>=5.15.0 reportlab>=3.6.0 python-docx>=0.8.11 jinja2>=3.0.0 humanize>=3.0.0"
 echo
 echo "For more information, see the documentation in the docs/ directory."
