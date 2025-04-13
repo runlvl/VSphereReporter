@@ -1,88 +1,140 @@
+/* 
+ * VMware vSphere Reporter - Bechtle Corporate Design
+ * Based on Bechtle AG corporate branding guidelines
+ * Primary color: #00355e (dark blue)
+ * Secondary color: #da6f1e (orange)
+ * Accent color: #23a96a (green)
+ */
+
 /* General Styles */
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    color: #333;
-    line-height: 1.5;
+    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    color: #5a5a5a;
+    line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #f9f9f9;
+    background-color: #f3f3f3;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    background-color: #ffffff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
 }
 
 h1, h2, h3, h4 {
-    color: #003366;
+    color: #00355e;
     margin-top: 0;
+    font-weight: 500;
 }
 
 h1 {
-    font-size: 24px;
+    font-size: 28px;
+    letter-spacing: -0.5px;
 }
 
 h2 {
-    font-size: 20px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 5px;
+    font-size: 22px;
+    border-bottom: 2px solid #da6f1e;
+    padding-bottom: 8px;
+    margin-top: 30px;
 }
 
 h3 {
-    font-size: 16px;
+    font-size: 18px;
+    color: #5a5a5a;
+    margin-top: 25px;
 }
 
 /* Title Page */
 .title-page {
-    text-align: center;
-    margin-bottom: 40px;
+    text-align: left;
+    margin-bottom: 50px;
     padding: 40px 0;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #e1e1e1;
+    position: relative;
+}
+
+.title-page:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 5px;
+    background-color: #da6f1e;
 }
 
 .title {
-    font-size: 28px;
-    margin-bottom: 10px;
+    font-size: 36px;
+    margin-bottom: 15px;
+    font-weight: 600;
+    color: #00355e;
 }
 
 .subtitle {
-    font-size: 16px;
-    color: #666;
+    font-size: 18px;
+    color: #5a5a5a;
+}
+
+/* Bechtle Logo */
+.logo {
+    position: absolute;
+    top: 20px;
+    right: 0;
+    width: 150px;
+    height: auto;
 }
 
 /* Table of Contents */
 .toc-container {
-    margin-bottom: 40px;
-    padding: 20px;
-    background-color: #f5f5f5;
-    border-radius: 5px;
+    margin-bottom: 50px;
+    padding: 25px;
+    background-color: #f7f7f7;
+    border-radius: 6px;
+    border-left: 4px solid #00355e;
+}
+
+.toc-container h2 {
+    border-bottom: none;
+    margin-top: 0;
 }
 
 .toc {
     list-style-type: none;
-    padding-left: 20px;
+    padding-left: 15px;
 }
 
 .toc li {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    position: relative;
+}
+
+.toc li:before {
+    content: ">";
+    color: #da6f1e;
+    position: absolute;
+    left: -15px;
+    font-weight: bold;
 }
 
 .toc a {
-    color: #003366;
+    color: #00355e;
     text-decoration: none;
+    font-weight: 500;
 }
 
 .toc a:hover {
-    text-decoration: underline;
+    color: #da6f1e;
+    text-decoration: none;
 }
 
 /* Sections */
 .section {
-    margin-bottom: 40px;
+    margin-bottom: 50px;
     page-break-after: always;
 }
 
@@ -90,30 +142,40 @@ h3 {
 .data-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
+    margin: 25px 0;
+    font-size: 13px;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
 .data-table th {
-    background-color: #003366;
+    background-color: #00355e;
     color: white;
-    font-weight: bold;
+    font-weight: 500;
     text-align: left;
-    padding: 8px;
-    border: 1px solid #ddd;
+    padding: 12px 15px;
+    border: none;
+    font-size: 14px;
 }
 
 .data-table td {
-    padding: 8px;
-    border: 1px solid #ddd;
+    padding: 12px 15px;
+    border: none;
+    border-bottom: 1px solid #e1e1e1;
     vertical-align: top;
 }
 
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
 .data-table tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: #f7f7f7;
 }
 
 .data-table tr:hover {
-    background-color: #e6f2ff;
+    background-color: #eaeffa;
 }
 
 .center {
@@ -121,26 +183,72 @@ h3 {
 }
 
 .warning {
-    background-color: #fff3cd !important;
+    background-color: #fcf1e9 !important;
+    border-left: 3px solid #da6f1e;
+}
+
+.critical {
+    background-color: #fce9ea !important;
+    border-left: 3px solid #d83a3a;
+}
+
+.good {
+    background-color: #eafbf2 !important;
+    border-left: 3px solid #23a96a;
+}
+
+/* Status Indicators */
+.status-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.status-good {
+    background-color: #23a96a;
+}
+
+.status-warning {
+    background-color: #da6f1e;
+}
+
+.status-critical {
+    background-color: #d83a3a;
 }
 
 /* Recommendations */
 .recommendation {
-    background-color: #f0f7ff;
-    border-left: 5px solid #003366;
-    padding: 15px;
-    margin: 20px 0;
+    background-color: #f7f7f7;
+    border-radius: 6px;
+    border-left: 5px solid #23a96a;
+    padding: 20px;
+    margin: 25px 0;
     font-size: 14px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.recommendation strong {
+    color: #00355e;
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
 }
 
 /* Footer */
 .footer {
-    margin-top: 40px;
-    padding-top: 20px;
-    border-top: 1px solid #ddd;
+    margin-top: 50px;
+    padding-top: 25px;
+    border-top: 1px solid #e1e1e1;
     text-align: center;
-    color: #666;
-    font-size: 10px;
+    color: #939393;
+    font-size: 11px;
+}
+
+.footer a {
+    color: #00355e;
+    text-decoration: none;
 }
 
 /* Print Styles */
@@ -152,6 +260,7 @@ h3 {
     .container {
         box-shadow: none;
         max-width: none;
+        padding: 15px;
     }
     
     .section {
@@ -160,10 +269,17 @@ h3 {
     
     .data-table {
         page-break-inside: avoid;
+        box-shadow: none;
     }
     
     .data-table th {
         background-color: #e0e0e0 !important;
-        color: black !important;
+        color: #00355e !important;
+    }
+    
+    .recommendation {
+        box-shadow: none;
+        border: 1px solid #e1e1e1;
+        border-left: 5px solid #23a96a;
     }
 }

@@ -27,7 +27,7 @@ class VSphereReporterGUI:
     def __init__(self, root):
         """Initialize the main application window"""
         self.root = root
-        self.root.title("VMware vSphere Reporter")
+        self.root.title("VMware vSphere Reporter | Bechtle AG")
         self.root.geometry("800x600")
         self.root.minsize(800, 600)
         
@@ -61,25 +61,58 @@ class VSphereReporterGUI:
         self.update_connection_status(False)
         
     def configure_app(self):
-        """Configure the application style"""
+        """Configure the application style based on Bechtle corporate design"""
         style = ttk.Style()
         style.theme_use('clam')  # Use a platform-neutral theme
         
-        # Configure colors
-        style.configure('TFrame', background='#f0f0f0')
-        style.configure('TLabel', background='#f0f0f0')
-        style.configure('TCheckbutton', background='#f0f0f0')
-        style.configure('TRadiobutton', background='#f0f0f0')
+        # Bechtle color palette
+        self.bechtle_primary = '#00355e'    # Dark blue
+        self.bechtle_secondary = '#da6f1e'  # Orange
+        self.bechtle_accent = '#23a96a'     # Green
+        self.bechtle_bg = '#f3f3f3'         # Light gray
+        self.bechtle_text = '#5a5a5a'       # Dark gray
         
-        # Configure headers
-        style.configure('Header.TLabel', font=('Arial', 12, 'bold'))
+        # Configure colors - Bechtle corporate style
+        style.configure('TFrame', background=self.bechtle_bg)
+        style.configure('TLabel', background=self.bechtle_bg, foreground=self.bechtle_text)
+        style.configure('TCheckbutton', background=self.bechtle_bg, foreground=self.bechtle_text)
+        style.configure('TRadiobutton', background=self.bechtle_bg, foreground=self.bechtle_text)
         
-        # Configure buttons
-        style.configure('Primary.TButton', font=('Arial', 10, 'bold'))
+        # Configure headers with Bechtle primary blue
+        style.configure('Header.TLabel', 
+                       font=('Segoe UI', 14, 'bold'), 
+                       foreground=self.bechtle_primary, 
+                       background=self.bechtle_bg)
         
-        # Configure status
-        style.configure('Connected.TLabel', foreground='green')
-        style.configure('Disconnected.TLabel', foreground='red')
+        # Configure section headers
+        style.configure('Section.TLabel', 
+                       font=('Segoe UI', 12, 'bold'), 
+                       foreground=self.bechtle_primary, 
+                       background=self.bechtle_bg)
+        
+        # Configure buttons in Bechtle style
+        style.configure('Primary.TButton', 
+                       font=('Segoe UI', 10, 'bold'),
+                       background=self.bechtle_primary,
+                       foreground='white')
+        
+        # Configure connection status indicators
+        style.configure('Connected.TLabel', 
+                       background=self.bechtle_accent,
+                       foreground='white',
+                       font=('Segoe UI', 10, 'bold'),
+                       padding=5)
+        
+        style.configure('Disconnected.TLabel', 
+                       background=self.bechtle_secondary,
+                       foreground='white',
+                       font=('Segoe UI', 10, 'bold'),
+                       padding=5)
+                       
+        # Configure the main root window background
+        self.root.configure(background=self.bechtle_bg)
+        
+        # These styles are already defined properly above in the Bechtle design
         
     def create_menu_bar(self):
         """Create the application menu bar"""
@@ -454,12 +487,14 @@ class VSphereReporterGUI:
         
         try:
             # Create client
-            self.vsphere_client = VSphereClient(server, username, password, ignore_ssl)
+            client = VSphereClient(server, username, password, ignore_ssl)
             
             # Connect in a separate thread
             def connect_thread():
                 try:
-                    self.vsphere_client.connect()
+                    client.connect()
+                    # Store the connected client
+                    self.vsphere_client = client
                     
                     # Update UI on success
                     self.root.after(0, lambda: self.connection_finished(True, server, username, dialog))
@@ -727,7 +762,7 @@ class VSphereReporterGUI:
             "A comprehensive reporting tool for VMware vSphere environments\n\n"
             "This application generates detailed reports about VMware vSphere environments, "
             "including VMware Tools versions, snapshot age, orphaned VMDK files, and more.\n\n"
-            "© 2025 All rights reserved."
+            "© 2025 Bechtle AG. All rights reserved."
         )
 
 def main():
