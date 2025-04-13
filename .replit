@@ -23,6 +23,10 @@ args = "run_vsphere_reporter"
 task = "workflow.run"
 args = "VSphereReporterCLI"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "VSphereReporterLinux"
+
 [[workflows.workflow]]
 name = "VSphereReporter"
 author = "agent"
@@ -65,6 +69,20 @@ task = "packager.installForAll"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python vsphere_reporter_cli.py --help"
+
+[[workflows.workflow]]
+name = "VSphereReporterLinux"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python vsphere_reporter_linux.py"
 
 [deployment]
 run = ["sh", "-c", "pip install -r requirements.txt || pip install pyVmomi>=7.0.0 PyQt5>=5.15.0 reportlab>=3.6.0 python-docx>=0.8.11 jinja2>=3.0.0 humanize>=3.0.0 && python vsphere_reporter.py"]
