@@ -11,9 +11,9 @@ Diese Anleitung erklärt, wie Sie den VMware vSphere Reporter auf Ihrem OpenSuse
    python3 --version
    ```
 
-2. Installieren Sie Tkinter für die GUI-Version:
+2. Installieren Sie benötigte Systempakete für OpenSuse Tumbleweed:
    ```bash
-   sudo zypper install python3-tk
+   sudo zypper install python3-tk python3-pip python3-devel gcc patterns-devel-base-devel_basis
    ```
 
 3. Führen Sie das Setup-Skript aus, um alle Abhängigkeiten zu installieren:
@@ -23,6 +23,35 @@ Diese Anleitung erklärt, wie Sie den VMware vSphere Reporter auf Ihrem OpenSuse
    ```
 
 4. Überprüfen Sie, ob das Installationsskript erfolgreich ausgeführt wurde.
+
+## Manuelle Installation (falls das Setup-Skript fehlschlägt)
+
+Wenn das Setup-Skript Probleme verursacht, können Sie die Abhängigkeiten auch manuell installieren:
+
+1. Installieren Sie zuerst die grundlegenden Systempakete:
+   ```bash
+   sudo zypper install python3-tk python3-pip python3-devel gcc patterns-devel-base-devel_basis
+   ```
+
+2. Aktualisieren Sie pip auf die neueste Version:
+   ```bash
+   python3 -m pip install --upgrade pip
+   ```
+
+3. Installieren Sie die PyVmomi-Bibliothek (wichtig für die VMware-Verbindung):
+   ```bash
+   pip3 install --upgrade pyVmomi
+   ```
+
+4. Installieren Sie die restlichen Python-Abhängigkeiten:
+   ```bash
+   pip3 install PyQt5>=5.15.0 reportlab>=3.6.0 python-docx>=0.8.11 jinja2>=3.0.0 humanize>=3.0.0
+   ```
+
+5. Machen Sie die Skripte ausführbar:
+   ```bash
+   chmod +x vsphere_reporter_linux.py vsphere_reporter_cli.py
+   ```
 
 ## Starten der Anwendung
 
@@ -50,7 +79,16 @@ Ersetzen Sie `VCENTER_SERVER` und `USERNAME` durch Ihre tatsächlichen Werte.
 
 ### Häufige Probleme und Lösungen
 
-1. **Tkinter-Fehler:**
+1. **Module nicht gefunden (wie pyVim oder pyVmomi):**
+   ```
+   ModuleNotFoundError: No module named 'pyVim'
+   ```
+   Lösung: Installieren Sie PyVmomi erneut mit:
+   ```bash
+   pip3 install --upgrade pyVmomi
+   ```
+
+2. **Tkinter-Fehler:**
    ```
    ModuleNotFoundError: No module named 'tkinter'
    ```
@@ -59,16 +97,19 @@ Ersetzen Sie `VCENTER_SERVER` und `USERNAME` durch Ihre tatsächlichen Werte.
    sudo zypper install python3-tk
    ```
 
-2. **Abhängigkeitsfehler:**
+3. **Probleme mit C-Extension-Kompilierung:**
    ```
-   ModuleNotFoundError: No module named 'package_name'
+   error: command 'gcc' failed with exit status 1
    ```
-   Lösung: Installieren Sie die fehlende Abhängigkeit mit:
+   Lösung: Installieren Sie Entwicklungstools:
    ```bash
-   pip3 install package_name
+   sudo zypper install patterns-devel-base-devel_basis
    ```
 
-3. **Berechtigungsfehler:**
+4. **SSL-Zertifikat Probleme bei Verbindung zu vCenter:**
+   Lösung: Verwenden Sie die Option `--ignore-ssl` bei der CLI-Version oder aktivieren Sie "SSL-Zertifikat ignorieren" in der GUI.
+
+5. **Berechtigungsfehler:**
    ```
    PermissionError: [Errno 13] Permission denied: '/path/to/file'
    ```
@@ -77,11 +118,8 @@ Ersetzen Sie `VCENTER_SERVER` und `USERNAME` durch Ihre tatsächlichen Werte.
    chmod +x /path/to/file
    ```
 
-4. **Displayfehler:**
-   ```
-   _tkinter.TclError: couldn't connect to display ":0"
-   ```
-   Lösung: Stellen Sie sicher, dass Sie in einer grafischen Umgebung arbeiten oder verwenden Sie die CLI-Version.
+6. **PyQt5-Probleme:**
+   Wenn Sie Probleme mit PyQt5 haben, können Sie die Tkinter-Version (vsphere_reporter_linux.py) verwenden, die speziell für Linux-Distributionen wie OpenSuse Tumbleweed entwickelt wurde.
 
 ## Weitere Informationen
 
