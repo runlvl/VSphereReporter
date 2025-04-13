@@ -11,6 +11,15 @@ This is the main entry point for the application.
 import sys
 import os
 import logging
+import platform
+
+# Set QT platform plugin for Linux environments
+if platform.system() == 'Linux':
+    os.environ['QT_QPA_PLATFORM'] = 'minimal'
+    # For VNC display
+    os.environ['DISPLAY'] = ':0'
+    os.environ['QT_DEBUG_PLUGINS'] = '1'
+
 from PyQt5.QtWidgets import QApplication
 
 from gui.main_window import MainWindow
