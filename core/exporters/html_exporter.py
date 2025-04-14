@@ -97,31 +97,28 @@ class HTMLExporter:
         sections = []
         
         # VMware Tools section (required)
-        if 'vmware_tools' in self.data:
-            sections.append({
-                'id': 'vmware_tools',
-                'title': 'VMware Tools Versions',
-                'description': 'VMware Tools versions for all virtual machines, ordered by oldest version first.',
-                'priority': 1
-            })
-            
+        sections.append({
+            'id': 'vmware_tools',
+            'title': 'VMware Tools Versions',
+            'description': 'VMware Tools versions for all virtual machines, ordered by oldest version first.',
+            'priority': 1
+        })
+        
         # Snapshots section (required)
-        if 'snapshots' in self.data:
-            sections.append({
-                'id': 'snapshots',
-                'title': 'VM Snapshots',
-                'description': 'Virtual machine snapshots, ordered by oldest first.',
-                'priority': 2
-            })
-            
+        sections.append({
+            'id': 'snapshots',
+            'title': 'VM Snapshots',
+            'description': 'Virtual machine snapshots, ordered by oldest first.',
+            'priority': 2
+        })
+        
         # Orphaned VMDKs section (required)
-        if 'orphaned_vmdks' in self.data:
-            sections.append({
-                'id': 'orphaned_vmdks',
-                'title': 'Orphaned VMDK Files',
-                'description': 'VMDK files that appear to be orphaned or not associated with any registered virtual machine.',
-                'priority': 3
-            })
+        sections.append({
+            'id': 'orphaned_vmdks',
+            'title': 'Orphaned VMDK Files',
+            'description': 'VMDK files that appear to be orphaned or not associated with any registered virtual machine.',
+            'priority': 3
+        })
             
         # Additional sections
         if 'vms' in self.data:

@@ -25,6 +25,18 @@ class ReportGenerator:
             data (dict): Dictionary containing collected vSphere data
         """
         self.data = data
+        
+        # Sicherstellen, dass die erforderlichen Sektionen für Sprungmarken immer vorhanden sind
+        # Dies ist wichtig, damit die Navigation in den Berichten korrekt funktioniert
+        if not 'vmware_tools' in self.data:
+            self.data['vmware_tools'] = []
+            
+        if not 'snapshots' in self.data:
+            self.data['snapshots'] = []
+            
+        if not 'orphaned_vmdks' in self.data:
+            self.data['orphaned_vmdks'] = []
+            
         self.timestamp = datetime.datetime.now()
         self.filename_base = f"vsphere_report_{self.timestamp.strftime('%Y%m%d_%H%M%S')}"
         
