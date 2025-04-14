@@ -40,8 +40,11 @@ def suppress_stdout_stderr():
                 # Filter out known harmless PyVmomi errors
                 if 'SSL:CERTIFICATE_VERIFY_FAILED' in message:
                     return
-                if 'vim.fault' in message and not 'vim.fault.NotFound' in message:
+                if 'vim.fault' in message and 'vim.fault.NotFound' not in message:
                     self.logger.log(self.level, f"pyVmomi: {message.strip()}")
+                    return
+                # Allgemeine Fehler umleiten (nicht nur vim.fault)
+                self.logger.log(self.level, f"pyVmomi: {message.strip()}")
                 
         def flush(self):
             pass
