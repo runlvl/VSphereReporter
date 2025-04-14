@@ -27,8 +27,8 @@ class HTMLExporter:
         self.data = data
         self.timestamp = timestamp
         
-        # Set up assets for HTML embedding
-        self.logo_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'images', 'logo_bechtle.png')
+        # Set up assets for HTML embedding - use the white logo for better visibility in reports
+        self.logo_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'images', 'logo_bechtle_white.png')
         
         # Setup Jinja2 environment
         template_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'templates')
