@@ -1,0 +1,20 @@
+CHANGELOG für VSphere Reporter Version 24.0
+
+## Version 24.0 (April 2025)
+
+### Bugfixes
+- Behoben: Thread-Management-Fehler, die zu "QThread: Destroyed while thread is still running" führen konnten
+- Behoben: Verbesserte Thread-Terminierung bei Anwendungsbeendigung
+- Behoben: Threads werden nun ordnungsgemäß abgebrochen, wenn der Benutzer den Fortschrittsdialog abbricht
+
+### Verbesserungen
+- Hinzugefügt: Verbesserte Fehlerbehandlung im GenerateReportWorker
+- Hinzugefügt: System zur sicheren Thread-Beendigung mit Timeout und Fallback-Terminierung
+- Optimiert: Saubereres Thread-Management, das verhindert, dass nicht beendete Threads die Anwendung zum Absturz bringen
+- Verbessert: is_running und abort_requested Flags für besseres Thread-Lifecycle-Management
+
+### Technische Änderungen
+- Hinzugefügt: finally-Block in GenerateReportWorker.generate(), um sicherzustellen, dass is_running immer zurückgesetzt wird
+- Erweitert: closeEvent-Methode mit verbesserter Thread-Terminierungslogik
+- Hinzugefügt: cancel_report_generation-Methode für saubere Thread-Abbrüche
+- Überarbeitet: Thread-Management-System um Threadlecks zu verhindern
