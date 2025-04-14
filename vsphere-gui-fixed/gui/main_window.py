@@ -118,8 +118,26 @@ class GenerateReportWorker(QObject):
         except Exception as e:
             self.logger.error(f"Fehler bei der Report-Generierung: {str(e)}")
             import traceback
-            self.logger.error(traceback.format_exc())
-            self.finished.emit(False, [], str(e))
+            error_trace = traceback.format_exc()
+            self.logger.error(error_trace)
+            
+            # Mehr Diagnoseinformationen protokollieren
+            self.logger.error("--- Diagnose-Informationen ---")
+            self.logger.error(f"Output-Verzeichnis: {self.output_dir}")
+            self.logger.error(f"Gewählte Formate: {self.options.get('formats', [])}")
+            self.logger.error(f"Gewählte Sektionen: {self.options.get('sections', {})}")
+            
+            # Überprüfen Sie die Templates und Verzeichnisse
+            import os
+            template_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'templates')
+            self.logger.error(f"Template-Verzeichnis: {template_dir}")
+            self.logger.error(f"Template-Verzeichnis existiert: {os.path.exists(template_dir)}")
+            
+            if os.path.exists(template_dir):
+                templates = [f for f in os.listdir(template_dir)]
+                self.logger.error(f"Gefundene Templates: {templates}")
+            
+            self.finished.emit(False, [], f"Fehler bei der Report-Generierung: {str(e)}\n\nDetails: {error_trace[:500]}...")
 
 class MainWindow(QMainWindow):
     """Hauptfenster der Anwendung"""

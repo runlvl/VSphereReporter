@@ -136,21 +136,24 @@ class ReportGenerator:
             # Generate reports in each requested format
             if 'html' in formats:
                 self.logger.info("Generating HTML report")
-                exporter = HTMLExporter(self.data, optional_sections)
+                timestamp_dt = datetime.datetime.now()  # Datetime-Objekt für den Exporter
+                exporter = HTMLExporter(self.data.collect_all_data(optional_sections), timestamp_dt)
                 output_path = os.path.join(output_dir, f"vsphere_report_{timestamp}.html")
                 exporter.export(output_path)
                 generated_files.append(output_path)
                 
             if 'docx' in formats:
                 self.logger.info("Generating DOCX report")
-                exporter = DOCXExporter(self.data, optional_sections)
+                timestamp_dt = datetime.datetime.now()  # Datetime-Objekt für den Exporter
+                exporter = DOCXExporter(self.data.collect_all_data(optional_sections), timestamp_dt)
                 output_path = os.path.join(output_dir, f"vsphere_report_{timestamp}.docx")
                 exporter.export(output_path)
                 generated_files.append(output_path)
                 
             if 'pdf' in formats:
                 self.logger.info("Generating PDF report")
-                exporter = PDFExporter(self.data, optional_sections)
+                timestamp_dt = datetime.datetime.now()  # Datetime-Objekt für den Exporter
+                exporter = PDFExporter(self.data.collect_all_data(optional_sections), timestamp_dt)
                 output_path = os.path.join(output_dir, f"vsphere_report_{timestamp}.pdf")
                 exporter.export(output_path)
                 generated_files.append(output_path)

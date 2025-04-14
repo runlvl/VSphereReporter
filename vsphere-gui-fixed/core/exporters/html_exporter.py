@@ -27,6 +27,18 @@ class HTMLExporter:
         self.data = data
         self.timestamp = timestamp
         
+        # Stellen Sie sicher, dass alle erforderlichen Schlüssel vorhanden sind
+        if not self.data:
+            self.data = {}
+        
+        # Pflichtdaten
+        if 'vmware_tools' not in self.data:
+            self.data['vmware_tools'] = []
+        if 'snapshots' not in self.data:
+            self.data['snapshots'] = []
+        if 'orphaned_vmdks' not in self.data:
+            self.data['orphaned_vmdks'] = []
+        
         # Set up assets for HTML embedding - use the white logo for better visibility in reports
         # The white logo is only used in reports, not in the tool itself
         white_logo_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'images', 'logo_bechtle_white.png')

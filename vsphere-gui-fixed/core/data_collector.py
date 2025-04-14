@@ -102,6 +102,57 @@ class DataCollector:
         """
         self.client = vsphere_client
         
+    def collect_all_data(self, optional_sections=None):
+        """
+        Collect all data for reporting
+        
+        Args:
+            optional_sections (dict): Dictionary with boolean flags for optional sections
+            
+        Returns:
+            dict: Dictionary with all collected data
+        """
+        logger.info("Collecting all data for reporting")
+        
+        if optional_sections is None:
+            optional_sections = {
+                'vms': True,
+                'hosts': True,
+                'datastores': True,
+                'clusters': True,
+                'resource_pools': True,
+                'networks': True
+            }
+            
+        # Pflichtdaten sammeln
+        data = {
+            'vmware_tools': self.collect_vmware_tools_info(),
+            'snapshots': self.collect_snapshot_info(),
+            'orphaned_vmdks': self.collect_orphaned_vmdks()
+        }
+        
+        # Optionale Daten je nach Konfiguration sammeln
+        if optional_sections.get('vms', False):
+            data['vms'] = self.collect_vm_info()
+            
+        if optional_sections.get('hosts', False):
+            data['hosts'] = self.collect_host_info()
+            
+        if optional_sections.get('datastores', False):
+            data['datastores'] = self.collect_datastore_info()
+            
+        if optional_sections.get('clusters', False):
+            data['clusters'] = self.collect_cluster_info()
+            
+        if optional_sections.get('resource_pools', False):
+            data['resource_pools'] = self.collect_resource_pool_info()
+            
+        if optional_sections.get('networks', False):
+            data['networks'] = self.collect_network_info()
+            
+        logger.info("Data collection completed")
+        return data
+        
     def collect_vm_info(self):
         """
         Collect information about virtual machines
