@@ -6,6 +6,7 @@
  * Accent color: #23a96a (green)
  * Background: #f3f3f3 (light gray)
  * Text: #5a5a5a (dark gray)
+ * Updated: April 2025
  */
 
 /* General Styles */
@@ -70,6 +71,8 @@ h3 {
     align-items: center;
     padding: 0 20px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* Stellt sicher, dass die Navigation immer über allem anderen liegt */
+    z-index: 9999;
 }
 
 .nav-logo {
@@ -177,57 +180,12 @@ h3 {
     position: absolute;
     top: 20px;
     right: 0;
-    width: 150px;
+    width: 180px; /* Erhöht von 150px */
     height: auto;
+    display: block !important; /* Stellt sicher, dass das Logo immer angezeigt wird */
 }
 
-/* Table of Contents */
-.toc-container {
-    margin-bottom: 50px;
-    padding: 25px;
-    background-color: #f7f7f7;
-    border-radius: 6px;
-    border-left: 4px solid #00355e;
-}
-
-.toc-container h2 {
-    border-bottom: none;
-    margin-top: 0;
-}
-
-.toc {
-    list-style-type: none;
-    padding-left: 15px;
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.toc li {
-    margin-bottom: 12px;
-    position: relative;
-    width: 50%;
-    padding-right: 20px;
-    box-sizing: border-box;
-}
-
-.toc li:before {
-    content: ">";
-    color: #da6f1e;
-    position: absolute;
-    left: -15px;
-    font-weight: bold;
-}
-
-.toc a {
-    color: #00355e;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.toc a:hover {
-    color: #da6f1e;
-    text-decoration: none;
-}
+/* Table of Contents wurde durch horizontales Menü ersetzt */
 
 /* Back to top button */
 .back-to-top {
