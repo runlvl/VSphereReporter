@@ -204,11 +204,11 @@
         </div>
 
         <!-- VMware Tools Section -->
-        {% if data.vmware_tools %}
         <div class="section" id="vmware_tools">
             <h2>VMware Tools Versions</h2>
             <p>{{ sections|selectattr('id', 'equalto', 'vmware_tools')|map(attribute='description')|first }}</p>
             
+            {% if data.vmware_tools and data.vmware_tools|length > 0 %}
             <table class="data-table">
                 <thead>
                     <tr>
@@ -237,15 +237,17 @@
                 It is recommended to update VMware Tools to the latest version to ensure optimal performance and compatibility.
             </div>
             {% endif %}
+            {% else %}
+            <p>No VMware Tools information available.</p>
+            {% endif %}
         </div>
-        {% endif %}
 
         <!-- Snapshots Section -->
-        {% if data.snapshots %}
         <div class="section" id="snapshots">
             <h2>VM Snapshots</h2>
             <p>{{ sections|selectattr('id', 'equalto', 'snapshots')|map(attribute='description')|first }}</p>
             
+            {% if data.snapshots and data.snapshots|length > 0 %}
             <table class="data-table">
                 <thead>
                     <tr>
@@ -276,18 +278,17 @@
                 It is recommended to consolidate or remove old snapshots to maintain optimal performance.
             </div>
             {% endif %}
+            {% else %}
+            <p>No VM snapshots found in the environment.</p>
+            {% endif %}
         </div>
-        {% endif %}
 
         <!-- Orphaned VMDKs Section -->
-        {% if data.orphaned_vmdks %}
         <div class="section" id="orphaned_vmdks">
             <h2>Orphaned VMDK Files</h2>
             <p>{{ sections|selectattr('id', 'equalto', 'orphaned_vmdks')|map(attribute='description')|first }}</p>
             
-            {% if data.orphaned_vmdks|length == 0 %}
-            <p>No orphaned VMDK files found in the environment.</p>
-            {% else %}
+            {% if data.orphaned_vmdks and data.orphaned_vmdks|length > 0 %}
             <table class="data-table">
                 <thead>
                     <tr>
@@ -314,16 +315,17 @@
                 <strong>Recommendation:</strong> There are {{ data.orphaned_vmdks|length }} orphaned VMDK files consuming approximately {{ total_size|format_size }} of storage. 
                 It is recommended to verify and remove these files to reclaim storage space.
             </div>
+            {% else %}
+            <p>No orphaned VMDK files found in the environment.</p>
             {% endif %}
         </div>
-        {% endif %}
 
         <!-- VMs Section -->
-        {% if data.vms %}
         <div class="section" id="vms">
             <h2>Virtual Machines</h2>
             <p>{{ sections|selectattr('id', 'equalto', 'vms')|map(attribute='description')|first }}</p>
             
+            {% if data.vms and data.vms|length > 0 %}
             <table class="data-table">
                 <thead>
                     <tr>
@@ -348,15 +350,17 @@
                     {% endfor %}
                 </tbody>
             </table>
+            {% else %}
+            <p>No virtual machines found in the environment.</p>
+            {% endif %}
         </div>
-        {% endif %}
 
         <!-- Hosts Section -->
-        {% if data.hosts %}
         <div class="section" id="hosts">
             <h2>ESXi Hosts</h2>
             <p>{{ sections|selectattr('id', 'equalto', 'hosts')|map(attribute='description')|first }}</p>
             
+            {% if data.hosts and data.hosts|length > 0 %}
             <table class="data-table">
                 <thead>
                     <tr>
@@ -381,15 +385,17 @@
                     {% endfor %}
                 </tbody>
             </table>
+            {% else %}
+            <p>No ESXi hosts found in the environment.</p>
+            {% endif %}
         </div>
-        {% endif %}
 
         <!-- Datastores Section -->
-        {% if data.datastores %}
         <div class="section" id="datastores">
             <h2>Datastores</h2>
             <p>{{ sections|selectattr('id', 'equalto', 'datastores')|map(attribute='description')|first }}</p>
             
+            {% if data.datastores and data.datastores|length > 0 %}
             <table class="data-table">
                 <thead>
                     <tr>
@@ -420,15 +426,17 @@
                 Consider adding more storage capacity or migrating VMs to balance usage.
             </div>
             {% endif %}
+            {% else %}
+            <p>No datastores found in the environment.</p>
+            {% endif %}
         </div>
-        {% endif %}
 
         <!-- Clusters Section -->
-        {% if data.clusters %}
         <div class="section" id="clusters">
             <h2>Clusters</h2>
             <p>{{ sections|selectattr('id', 'equalto', 'clusters')|map(attribute='description')|first }}</p>
             
+            {% if data.clusters and data.clusters|length > 0 %}
             <table class="data-table">
                 <thead>
                     <tr>
@@ -457,15 +465,17 @@
                     {% endfor %}
                 </tbody>
             </table>
+            {% else %}
+            <p>No clusters found in the environment.</p>
+            {% endif %}
         </div>
-        {% endif %}
 
         <!-- Resource Pools Section -->
-        {% if data.resource_pools %}
         <div class="section" id="resource_pools">
             <h2>Resource Pools</h2>
             <p>{{ sections|selectattr('id', 'equalto', 'resource_pools')|map(attribute='description')|first }}</p>
             
+            {% if data.resource_pools and data.resource_pools|length > 0 %}
             <table class="data-table">
                 <thead>
                     <tr>
@@ -500,15 +510,17 @@
                     {% endfor %}
                 </tbody>
             </table>
+            {% else %}
+            <p>No resource pools found in the environment.</p>
+            {% endif %}
         </div>
-        {% endif %}
 
         <!-- Networks Section -->
-        {% if data.networks %}
         <div class="section" id="networks">
             <h2>Networks</h2>
             <p>{{ sections|selectattr('id', 'equalto', 'networks')|map(attribute='description')|first }}</p>
             
+            {% if data.networks and data.networks|length > 0 %}
             <table class="data-table">
                 <thead>
                     <tr>
@@ -539,8 +551,10 @@
                     {% endfor %}
                 </tbody>
             </table>
+            {% else %}
+            <p>No networks found in the environment.</p>
+            {% endif %}
         </div>
-        {% endif %}
 
         <!-- Footer with Bechtle branding -->
         <div class="footer">

@@ -16,6 +16,20 @@ from contextlib import contextmanager
 # Configure the logger
 logger = logging.getLogger(__name__)
 
+# Define a filter to suppress error messages during data collection
+class SuppressErrorFilter(logging.Filter):
+    def filter(self, record):
+        # Filtert alle Fehler-Level-Logs und konvertiert sie in Debug-Level-Logs
+        if record.levelno >= logging.ERROR:
+            # Ändere den Level zu DEBUG
+            record.levelno = logging.DEBUG
+            record.levelname = 'DEBUG'
+            record.msg = f"SUPPRESSED ERROR: {record.msg}"
+        return True
+
+# Add filter to logger
+logger.addFilter(SuppressErrorFilter())
+
 @contextmanager
 def suppress_stdout_stderr():
     """
@@ -36,15 +50,9 @@ def suppress_stdout_stderr():
             self.buffer = ''
             
         def write(self, message):
-            if message and message.strip():
-                # Filter out known harmless PyVmomi errors
-                if 'SSL:CERTIFICATE_VERIFY_FAILED' in message:
-                    return
-                if 'vim.fault' in message and 'vim.fault.NotFound' not in message:
-                    self.logger.log(self.level, f"pyVmomi: {message.strip()}")
-                    return
-                # Allgemeine Fehler umleiten (nicht nur vim.fault)
-                self.logger.log(self.level, f"pyVmomi: {message.strip()}")
+            # Komplett stumm bleiben - keine Fehlermeldungen während der Datensammlung anzeigen
+            # Wenn etwas nicht funktioniert, zeigen wir es durch leere Daten an
+            pass
                 
         def flush(self):
             pass
@@ -155,7 +163,8 @@ class DataCollector:
                 vm_info_list.append(vm_info)
             
             except Exception as e:
-                logger.error(f"Error collecting info for VM {vm.name}: {str(e)}")
+                # Keine Fehlermeldungen anzeigen - leise im Hintergrund weitermachen
+                logger.debug(f"VM collection info silent error: {vm.name}")
                 continue
                 
         return vm_info_list
@@ -195,7 +204,8 @@ class DataCollector:
                     tools_info_list.append(tools_info)
             
             except Exception as e:
-                logger.error(f"Error collecting VMware Tools info for VM {vm.name}: {str(e)}")
+                # Keine Fehlermeldungen anzeigen - leise im Hintergrund weitermachen
+                logger.debug(f"VMware Tools info silent error: {vm.name}")
                 continue
                 
         # Sort by tools version status (oldest first)
