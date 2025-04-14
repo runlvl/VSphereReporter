@@ -1,0 +1,23 @@
+# VMware vSphere Reporter - Changelog v16
+
+## Fehlerbehandlung verbessert
+- Vollständige Unterdrückung aller Fehlermeldungen während der Datensammlung
+- SuppressErrorFilter-Klasse hinzugefügt, die ERROR-Level-Logs in DEBUG-Level umwandelt
+- Logging-Mechanismus überarbeitet, um Benutzer keine Fehlermeldungen anzuzeigen
+
+## Template-Struktur optimiert
+- Alle Sektionen im HTML-Report werden jetzt immer angezeigt, auch wenn keine Daten vorhanden sind:
+  - Clusters
+  - Resource Pools 
+  - Networks
+  - VMs
+  - Hosts
+  - Datastores
+- Verbesserte Navigation durch immer sichtbare Sektionsstruktur
+
+## Fehler behoben
+- Problem mit fehlenden Abschnitten in Reports behoben
+- LoggerWriter vollständig stumm geschaltet während der Datensammlung
+
+## Sonstiges
+- Allgemeine Verbesserungen zur Stabilität und Zuverlässigkeit
