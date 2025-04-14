@@ -35,10 +35,25 @@ def import_module_from_file(module_name, file_path):
     return module
 
 try:
-    # HTMLExporter
+    # HTMLExporter - versuche zuerst den normalen Exporter, dann den vereinfachten
     html_path = os.path.join(exporters_dir, 'html_exporter.py')
-    html_exporter = import_module_from_file('html_exporter', html_path)
-    HTMLExporter = html_exporter.HTMLExporter
+    simple_html_path = os.path.join(exporters_dir, 'simple_html_exporter.py')
+    
+    # Versuche den normalen HTML-Exporter zu laden
+    try:
+        html_exporter = import_module_from_file('html_exporter', html_path)
+        HTMLExporter = html_exporter.HTMLExporter
+        print("Standard HTML-Exporter erfolgreich geladen")
+    except Exception as e:
+        print(f"Fehler beim Laden des HTML-Exporters: {str(e)}")
+        try:
+            # Versuche den vereinfachten HTML-Exporter als Fallback zu laden
+            simple_html_exporter = import_module_from_file('simple_html_exporter', simple_html_path)
+            HTMLExporter = simple_html_exporter.SimpleHTMLExporter
+            print("Vereinfachter HTML-Exporter als Fallback geladen")
+        except Exception as e2:
+            print(f"Konnte auch den vereinfachten HTML-Exporter nicht laden: {str(e2)}")
+            # Wenn beide fehlschlagen, werden wir später den DummyExporter verwenden
 
     # DOCXExporter
     docx_path = os.path.join(exporters_dir, 'docx_exporter.py')
@@ -63,14 +78,15 @@ except ImportError as e:
     
     # Dummy-Klassen für Debug-Zwecke
     class DummyExporter:
-        def __init__(self, data, optional_sections):
+        def __init__(self, data, timestamp):
             self.data = data
-            self.optional_sections = optional_sections
+            self.timestamp = timestamp
         
         def export(self, output_path):
             print(f"DUMMY-EXPORT nach {output_path}")
             with open(output_path, 'w') as f:
-                f.write("Fehler beim Laden der Exporter-Module. Bitte prüfen Sie die Anwendungsstruktur.")
+                f.write(f"Fehler beim Laden der Exporter-Module. Bitte prüfen Sie die Anwendungsstruktur.\nBerichtszeitstempel: {self.timestamp}")
+            return True
     
     HTMLExporter = DummyExporter
     DOCXExporter = DummyExporter
