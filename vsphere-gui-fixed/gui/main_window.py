@@ -26,6 +26,14 @@ from core.vsphere_client import VSphereClient
 from images.bechtle_logo import get_bechtle_logo_for_qt, BECHTLE_COLORS
 from core.data_collector import DataCollector
 from core.report_generator import ReportGenerator
+
+# Bechtle Farbschema
+BECHTLE_DARK_BLUE = '#00355e'   # Primärfarbe
+BECHTLE_ORANGE = '#da6f1e'      # Sekundärfarbe
+BECHTLE_GREEN = '#23a96a'       # Akzentfarbe
+BECHTLE_LIGHT_GRAY = '#f3f3f3'  # Hintergrundfarbe
+BECHTLE_TEXT = '#5a5a5a'        # Textfarbe
+BECHTLE_DARK_GRAY = '#5a5a5a'   # Dunkles Grau
 # Dynamischer Import des Loggers
 import importlib.util
 import sys
@@ -71,12 +79,7 @@ except ImportError:
                 logger.setLevel(logging.INFO)
             return logger
 
-# Bechtle-Farbschema
-BECHTLE_DARK_BLUE = "#00355e"
-BECHTLE_ORANGE = "#da6f1e"
-BECHTLE_GREEN = "#23a96a"
-BECHTLE_LIGHT_GRAY = "#f3f3f3"
-BECHTLE_DARK_GRAY = "#5a5a5a"
+# Diese Konstanten können entfernt werden, da wir sie bereits oben definiert haben
 
 class GenerateReportWorker(QObject):
     """Worker-Thread für die Report-Generierung"""
@@ -201,53 +204,96 @@ class MainWindow(QMainWindow):
         main_layout = QVBoxLayout()
         central_widget.setLayout(main_layout)
         
-        # Header mit Bechtle-Branding
+        # Header im Bechtle-Design - analog zur Linux-Version
         header_frame = QFrame()
         header_frame.setStyleSheet(f"""
             QFrame {{
-                background-color: {BECHTLE_DARK_BLUE};
-                color: white;
-                min-height: 90px;
+                background-color: {BECHTLE_LIGHT_GRAY};
+                color: {BECHTLE_TEXT};
                 margin: 0px;
                 padding: 0px;
             }}
         """)
         header_layout = QHBoxLayout(header_frame)
-        header_layout.setContentsMargins(20, 15, 20, 15)
-        header_layout.setSpacing(20)  # Erhöhter Abstand zwischen Logo und Text
+        header_layout.setContentsMargins(20, 10, 20, 10)
+        
+        # Logo Container
+        logo_container = QFrame()
+        logo_container.setStyleSheet("background-color: transparent;")
+        logo_container.setFixedWidth(120)
+        logo_container_layout = QVBoxLayout(logo_container)
+        logo_container_layout.setContentsMargins(0, 5, 0, 5)
+        logo_container_layout.setAlignment(Qt.AlignCenter)
         
         # Logo
         logo_label = QLabel()
-        logo_path = "images/bechtle_logo_white.png"
+        logo_path = "images/logo_bechtle.png"  # Standard blaues Logo für hellen Hintergrund
         if os.path.exists(logo_path):
             logo_pixmap = QPixmap(logo_path)
             if not logo_pixmap.isNull():
-                logo_pixmap = logo_pixmap.scaledToHeight(50, Qt.SmoothTransformation)
+                # Skaliere das Logo proportional
+                logo_pixmap = logo_pixmap.scaled(100, 40, Qt.KeepAspectRatio, Qt.SmoothTransformation)
                 logo_label.setPixmap(logo_pixmap)
-                logo_label.setFixedSize(160, 50)
-                # Ausrichtung des Logos nach links und vertikal zentriert
-                logo_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-        header_layout.addWidget(logo_label)
+                logo_label.setAlignment(Qt.AlignCenter)
+        else:
+            # Fallback Text-Logo, falls das Bild nicht gefunden wird
+            logo_label.setText("BECHTLE")
+            logo_label.setStyleSheet(f"color: {BECHTLE_DARK_BLUE}; font-size: 18px; font-weight: bold;")
+            logo_label.setAlignment(Qt.AlignCenter)
         
-        # Titel und Untertitel
-        title_layout = QVBoxLayout()
-        title_layout.setSpacing(5)  # Reduzierter Abstand zwischen Titel und Untertitel
+        logo_container_layout.addWidget(logo_label)
+        header_layout.addWidget(logo_container)
         
-        subtitle_label = QLabel("Cloud Solutions | Datacenter & Endpoint")
-        subtitle_label.setStyleSheet("color: rgba(255, 255, 255, 0.85); font-size: 12px;")
-        subtitle_label.setAlignment(Qt.AlignLeft)
-        title_layout.addWidget(subtitle_label)
+        # Slogan Container
+        slogan_container = QFrame()
+        slogan_container.setStyleSheet("background-color: transparent;")
+        slogan_layout = QVBoxLayout(slogan_container)
+        slogan_layout.setContentsMargins(5, 5, 5, 5)
+        slogan_layout.setSpacing(2)
         
-        title_label = QLabel("VMware vSphere Reporter")
-        title_label.setStyleSheet("color: white; font-size: 24px; font-weight: bold;")
-        title_label.setAlignment(Qt.AlignLeft)
-        title_layout.addWidget(title_label)
+        # Cloud Solutions Text
+        cloud_label = QLabel("Cloud Solutions")
+        cloud_label.setStyleSheet(f"color: {BECHTLE_ORANGE}; font-size: 14px; font-weight: bold;")
+        cloud_label.setAlignment(Qt.AlignLeft)
+        slogan_layout.addWidget(cloud_label)
         
-        title_layout.setStretch(0, 1)  # Subtitle erhält weniger vertikalen Platz
-        title_layout.setStretch(1, 2)  # Titel erhält mehr vertikalen Platz
+        # Datacenter & Endpoint Text
+        datacenter_label = QLabel("Datacenter & Endpoint")
+        datacenter_label.setStyleSheet(f"color: {BECHTLE_TEXT}; font-size: 12px;")
+        datacenter_label.setAlignment(Qt.AlignLeft)
+        slogan_layout.addWidget(datacenter_label)
         
-        header_layout.addLayout(title_layout)
-        header_layout.addStretch(1)  # Rechter Abstand wird maximiert
+        header_layout.addWidget(slogan_container)
+        
+        # Vertikaler Separator
+        separator = QFrame()
+        separator.setFrameShape(QFrame.VLine)
+        separator.setFixedHeight(50)
+        separator.setStyleSheet(f"color: {BECHTLE_DARK_BLUE};")
+        separator.setContentsMargins(15, 0, 15, 0)
+        header_layout.addWidget(separator)
+        
+        # Anwendungsname Container
+        app_container = QFrame()
+        app_container.setStyleSheet("background-color: transparent;")
+        app_layout = QVBoxLayout(app_container)
+        app_layout.setContentsMargins(5, 5, 5, 5)
+        app_layout.setSpacing(2)
+        
+        # Anwendungsname
+        app_label = QLabel("VMware vSphere Reporter")
+        app_label.setStyleSheet(f"color: {BECHTLE_DARK_BLUE}; font-size: 16px; font-weight: bold;")
+        app_label.setAlignment(Qt.AlignLeft)
+        app_layout.addWidget(app_label)
+        
+        # Version
+        version_label = QLabel("Version 1.0.0")
+        version_label.setStyleSheet(f"color: {BECHTLE_TEXT}; font-size: 10px;")
+        version_label.setAlignment(Qt.AlignLeft)
+        app_layout.addWidget(version_label)
+        
+        header_layout.addWidget(app_container, 1)  # Gibt dem App-Container den restlichen Platz
+        header_layout.addStretch(1)  # Platz rechts zum Ausdehnen
         
         main_layout.addWidget(header_frame)
         
