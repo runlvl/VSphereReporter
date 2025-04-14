@@ -1,0 +1,6 @@
+Version 22 - Fehlerbehebungen für Snapshot und Orphaned VMDK Datenerfassung
+- Verbesserte Fehlerbehandlung mit Debug-Modus
+- Bedingte Fehlerfilterung für PyVmomi-Operationen
+- Zusätzliche Logging-Stufen für bessere Diagnose
+- Debug-Modus-Skript für Linux hinzugefügt
+- Verbesserte Fallback-Mechanismen für Datenerfassung
