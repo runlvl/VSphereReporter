@@ -22,15 +22,34 @@ def suppress_stdout_stderr():
     Context manager to suppress stdout and stderr output
     
     This is useful for hiding error messages from pyVmomi that are not
-    critical for the application's functioning.
+    critical for the application's functioning. Output is redirected to
+    the application log widget with DEBUG level instead of showing in 
+    command windows.
     """
     original_stdout = sys.stdout
     original_stderr = sys.stderr
     
+    class LoggerWriter:
+        def __init__(self, logger, level):
+            self.logger = logger
+            self.level = level
+            self.buffer = ''
+            
+        def write(self, message):
+            if message and message.strip():
+                # Filter out known harmless PyVmomi errors
+                if 'SSL:CERTIFICATE_VERIFY_FAILED' in message:
+                    return
+                if 'vim.fault' in message and not 'vim.fault.NotFound' in message:
+                    self.logger.log(self.level, f"pyVmomi: {message.strip()}")
+                
+        def flush(self):
+            pass
+    
     try:
-        # Redirect stdout and stderr to a null device
-        sys.stdout = open(os.devnull, 'w')
-        sys.stderr = open(os.devnull, 'w')
+        # Redirect stdout and stderr to logger with appropriate levels
+        sys.stdout = LoggerWriter(logger, logging.DEBUG)
+        sys.stderr = LoggerWriter(logger, logging.WARNING)
         yield
     finally:
         # Restore stdout and stderr
