@@ -27,6 +27,9 @@ class HTMLExporter:
         self.data = data
         self.timestamp = timestamp
         
+        # Set up assets for HTML embedding
+        self.logo_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'images', 'logo_bechtle.png')
+        
         # Setup Jinja2 environment
         template_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'templates')
         self.jinja_env = jinja2.Environment(
@@ -54,12 +57,24 @@ class HTMLExporter:
             # Get the template
             template = self.jinja_env.get_template('report_template.html')
             
+            # Prepare the logo for embedding if it exists
+            logo_data = None
+            if os.path.exists(self.logo_path):
+                try:
+                    import base64
+                    with open(self.logo_path, 'rb') as logo_file:
+                        logo_data = base64.b64encode(logo_file.read()).decode('utf-8')
+                    logger.info(f"Bechtle logo loaded successfully from {self.logo_path}")
+                except Exception as e:
+                    logger.warning(f"Could not load Bechtle logo: {str(e)}")
+            
             # Render the template with data
             html_content = template.render(
                 report_title="VMware vSphere Environment Report",
                 report_date=self.timestamp,
                 data=self.data,
-                sections=self._get_sections()
+                sections=self._get_sections(),
+                bechtle_logo=logo_data
             )
             
             # Write the rendered HTML to file
