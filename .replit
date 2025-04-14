@@ -31,6 +31,10 @@ args = "VSphereReporterLinux"
 task = "workflow.run"
 args = "VSphereReporterDemo"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "VSphereReporterWindows"
+
 [[workflows.workflow]]
 name = "VSphereReporter"
 author = "agent"
@@ -255,6 +259,21 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print('Server wird beendet...')
 \""""
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "VSphereReporterWindows"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python vsphere_reporter.py"
 waitForPort = 5000
 
 [deployment]
