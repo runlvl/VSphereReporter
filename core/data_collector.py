@@ -247,8 +247,8 @@ class DataCollector:
                 logger.error(f"Error collecting snapshot info for VM {vm.name}: {str(e)}")
                 continue
                 
-        # Sort by create time (oldest first)
-        snapshot_info_list.sort(key=lambda x: x['create_time'])
+        # Sort by create time (oldest first) - absteigend sortieren
+        snapshot_info_list.sort(key=lambda x: x['create_time'], reverse=False)
         
         return snapshot_info_list
         
@@ -416,6 +416,8 @@ class DataCollector:
         """
         Check if a VMDK file is orphaned by looking for associated VM files
         
+        Definition: Eine VMDK ist orphaned, wenn sie keiner VM zugeordnet ist UND kein Template ist.
+        
         Args:
             folder_path (str): Datastore folder path
             vmdk_name (str): VMDK file name
@@ -446,26 +448,45 @@ class DataCollector:
                 
         if browser is None:
             return False
-            
-        # Create search spec for VMX file
-        search_spec = vim.host.DatastoreBrowser.SearchSpec()
-        search_spec.matchPattern = [f"{vm_name}.vmx"]
         
-        # Search the datastore folder
-        search_task = browser.SearchDatastore_Task(
+        # 1. Prüfen, ob VMX-Datei existiert (zur Erkennung vorhandener VMs)
+        vmx_search_spec = vim.host.DatastoreBrowser.SearchSpec()
+        vmx_search_spec.matchPattern = [f"{vm_name}.vmx"]
+        
+        vmx_search_task = browser.SearchDatastore_Task(
             datastorePath=folder_path,
-            searchSpec=search_spec
+            searchSpec=vmx_search_spec
         )
         
-        # Wait for search to complete
-        search_results = self.client.service_instance.content.taskManager.WaitForTask(search_task)
+        vmx_results = self.client.service_instance.content.taskManager.WaitForTask(vmx_search_task)
+        vmx_exists = False
         
-        # Check if VMX file was found
-        if hasattr(search_results, 'info') and hasattr(search_results.info, 'result'):
-            if len(search_results.info.result.file) == 0:
-                # No VMX file found, likely orphaned
-                return True
-                
+        if hasattr(vmx_results, 'info') and hasattr(vmx_results.info, 'result'):
+            if len(vmx_results.info.result.file) > 0:
+                vmx_exists = True
+        
+        # 2. Prüfen, ob es ein Template ist (zur Erkennung von Templates)
+        is_template = False
+        if vmx_exists:
+            # Suche nach VMs mit gleichem Namen
+            vms = self.client.get_virtual_machines()
+            for vm in vms:
+                with suppress_stdout_stderr():
+                    # Prüfe, ob der Name übereinstimmt
+                    if vm.name == vm_name:
+                        # Prüfe, ob es sich um ein Template handelt
+                        if vm.config and vm.config.template:
+                            is_template = True
+                            break
+        
+        # Eine VMDK ist orphaned, wenn keine VMX existiert oder wenn sie keinem Template zugeordnet ist
+        if not vmx_exists:
+            return True  # Keine VMX-Datei gefunden, eindeutig orphaned
+        elif not is_template:
+            # VMX existiert, aber keine registrierte VM als Template gefunden und dennoch nicht registriert
+            # Das bedeutet, die VMX ist vorhanden, aber die VM ist nicht in vCenter registriert
+            return True
+            
         return False
         
     def collect_host_info(self):
