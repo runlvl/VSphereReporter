@@ -20,6 +20,7 @@ from utils.logger import setup_logger
 from core.vsphere_client import VSphereClient
 from core.data_collector import DataCollector
 from core.report_generator import ReportGenerator
+from images.bechtle_logo import get_bechtle_logo_for_tkinter
 
 class VSphereReporterGUI:
     """Main application window for Linux using Tkinter"""
@@ -28,8 +29,12 @@ class VSphereReporterGUI:
         """Initialize the main application window"""
         self.root = root
         self.root.title("VMware vSphere Reporter | Bechtle AG")
-        self.root.geometry("800x600")
-        self.root.minsize(800, 600)
+        self.root.geometry("900x700")  # Größeres Startfenster
+        self.root.minsize(800, 600)    # Minimale Fenstergröße
+        
+        # Aktivieren der Fenstergröße-Anpassung
+        self.root.columnconfigure(0, weight=1)
+        self.root.rowconfigure(0, weight=1)
         
         # Configure the application
         self.configure_app()
@@ -37,9 +42,97 @@ class VSphereReporterGUI:
         # Create the menu bar
         self.create_menu_bar()
         
-        # Create the main frame
+        # Add Bechtle logo with slogan
+        try:
+            # Create a frame for logo and slogan
+            logo_frame = ttk.Frame(self.root, style='TFrame')
+            logo_frame.pack(side=tk.TOP, pady=(10, 5), fill=tk.X)
+            
+            # Try to load logo from file
+            self.logo_image = get_bechtle_logo_for_tkinter(self.root)
+            
+            # Left side - logo
+            logo_left_frame = ttk.Frame(logo_frame, style='TFrame')
+            logo_left_frame.pack(side=tk.LEFT, padx=(20, 0))
+            
+            if self.logo_image is not None:
+                logo_label = tk.Label(logo_left_frame, image=self.logo_image, background=self.bechtle_bg)
+                logo_label.pack(side=tk.LEFT, padx=(0, 10))
+            else:
+                # Fallback to text if image can't be loaded
+                logo_text = tk.Label(
+                    logo_left_frame, 
+                    text="BECHTLE", 
+                    font=("Helvetica", 18, "bold"),
+                    foreground=self.bechtle_primary,
+                    background=self.bechtle_bg
+                )
+                logo_text.pack(side=tk.LEFT, padx=(0, 10))
+            
+            # First slogan frame - Bechtle branding
+            slogan_frame = ttk.Frame(logo_frame, style='TFrame')
+            slogan_frame.pack(side=tk.LEFT, padx=(5, 0))
+            
+            slogan_main = tk.Label(
+                slogan_frame,
+                text="Cloud Solutions",
+                font=("Helvetica", 14, "bold"),
+                foreground=self.bechtle_secondary,  # Orange color for main slogan
+                background=self.bechtle_bg
+            )
+            slogan_main.pack(side=tk.TOP, anchor=tk.W)
+            
+            slogan_sub = tk.Label(
+                slogan_frame,
+                text="Datacenter & Endpoint",
+                font=("Helvetica", 12),
+                foreground=self.bechtle_text,  # Dark gray for sub-slogan
+                background=self.bechtle_bg
+            )
+            slogan_sub.pack(side=tk.TOP, anchor=tk.W)
+            
+            # Vertical separator line
+            separator_frame = ttk.Frame(logo_frame, width=2, style='Separator.TFrame')
+            separator_frame.pack_propagate(False)  # Fixed to use boolean False instead of 0
+            separator_frame.pack(side=tk.LEFT, fill=tk.Y, padx=(15, 15), pady=5)
+            
+            # Second slogan frame - Application name
+            app_frame = ttk.Frame(logo_frame, style='TFrame')
+            app_frame.pack(side=tk.LEFT, padx=(0, 0))
+            
+            app_name = tk.Label(
+                app_frame,
+                text="VMware vSphere Reporter",
+                font=("Helvetica", 16, "bold"),  # Larger font size
+                foreground=self.bechtle_primary,  # Primary blue color for app name
+                background=self.bechtle_bg
+            )
+            app_name.pack(side=tk.TOP, anchor=tk.W, pady=(10, 0))  # Adjust vertical position
+            
+            # Responsive version text
+            version_text = tk.Label(
+                app_frame,
+                text="Version 1.0.0",
+                font=("Helvetica", 10),
+                foreground=self.bechtle_text,
+                background=self.bechtle_bg
+            )
+            version_text.pack(side=tk.TOP, anchor=tk.W)
+            
+            # Configure the separator style
+            style = ttk.Style()
+            style.configure('Separator.TFrame', background=self.bechtle_primary)
+            
+        except Exception as e:
+            logging.warning(f"Could not load Bechtle logo: {str(e)}")
+        
+        # Create the main frame with responsive behavior
         self.main_frame = ttk.Frame(self.root, padding=(10, 10, 10, 10))
         self.main_frame.pack(fill=tk.BOTH, expand=True)
+        
+        # Configure main_frame for responsive layout
+        self.main_frame.columnconfigure(0, weight=1)
+        self.main_frame.rowconfigure(0, weight=1)
         
         # Create the connection frame
         self.create_connection_frame()
@@ -183,13 +276,23 @@ class VSphereReporterGUI:
         options_frame = ttk.LabelFrame(self.main_frame, text="Report Options", padding=(10, 5, 10, 5))
         options_frame.pack(fill=tk.BOTH, expand=True, pady=(0, 10))
         
-        # Description
+        # Description - Responsive wraplength
         desc_label = ttk.Label(
             options_frame, 
             text="Select the sections to include in the report. Required sections cannot be deselected.",
             wraplength=750
         )
         desc_label.pack(fill=tk.X, pady=(0, 10))
+        
+        # Make wraplength responsive to window size
+        def update_wraplength(event):
+            # Update wraplength to 90% of the current frame width
+            new_width = int(event.width * 0.9)
+            if new_width > 100:  # Minimum wraplength
+                desc_label.configure(wraplength=new_width)
+                
+        # Bind resize event to the function
+        options_frame.bind('<Configure>', update_wraplength)
         
         # Options container
         options_container = ttk.Frame(options_frame)
@@ -548,9 +651,13 @@ class VSphereReporterGUI:
         self.is_connected = is_connected
         
         if is_connected:
+            # Convert values to strings to avoid type errors
+            server_str = str(server) if server is not None else "Unknown Server"
+            username_str = str(username) if username is not None else "Unknown User"
+            
             self.status_value.config(text="Connected", style="Connected.TLabel")
-            self.server_value.config(text=server)
-            self.user_value.config(text=username)
+            self.server_value.config(text=server_str)
+            self.user_value.config(text=username_str)
         else:
             self.status_value.config(text="Disconnected", style="Disconnected.TLabel")
             self.server_value.config(text="Not connected")
