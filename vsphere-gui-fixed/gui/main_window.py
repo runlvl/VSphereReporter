@@ -43,8 +43,12 @@ except ImportError:
         
         # Füge die fehlende get_logger-Funktion hinzu, falls sie nicht existiert
         if not hasattr(logger_module, 'get_logger'):
-            def get_logger():
-                return logger_module.setup_logger()
+            def get_logger(name=None):
+                if name is None:
+                    return logger_module.setup_logger()
+                else:
+                    logger = logger_module.setup_logger()
+                    return logging.getLogger(name)
             logger_module.get_logger = get_logger
             
         # Importiere get_logger aus dem dynamisch geladenen Modul
@@ -52,8 +56,12 @@ except ImportError:
     else:
         # Letzter Fallback: Eigene Logger-Funktion
         print("WARNUNG: Logger-Modul konnte nicht geladen werden, verwende Fallback-Logger")
-        def get_logger():
-            logger = logging.getLogger()
+        def get_logger(name=None):
+            if name is None:
+                logger = logging.getLogger()
+            else:
+                logger = logging.getLogger(name)
+                
             if not logger.handlers:
                 handler = logging.StreamHandler(sys.stdout)
                 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
