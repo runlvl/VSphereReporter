@@ -1,0 +1,19 @@
+# VMware vSphere Reporter - Versionshinweise v9
+Datum: 14.04.2025
+
+## Änderungen in dieser Version
+
+### Fehlerbehebungen
+- Verbesserte Fehlerbehandlung in allen Datenerfassungsmethoden
+- Implementierte vollständige Fehlerunterdrückung mit 'suppress_stdout_stderr()' für alle PyVmomi-Operationen
+- Behoben: RegEx-Fehlerbehandlung für Datastore-Pfade
+
+### Funktionen
+- Verbesserte Log-Level-Auswahl im Linux-Benutzerinterface
+- Umleitung aller PyVmomi-Fehlermeldungen zum Logger statt zum Befehlsfenster
+- Optimiertes Installationsskript für OpenSuse Tumbleweed
+
+### Bekannte Probleme
+- Keine
+
+
