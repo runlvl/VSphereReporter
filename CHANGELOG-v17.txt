@@ -1,0 +1,8 @@
+VMware vSphere Reporter v17
+Veröffentlicht am 2025-04-14
+
+ÄNDERUNGEN:
+- Orphaned VMDKs genauer definiert (keiner VM zugeordnet UND kein Template)
+- Snapshots werden vom ältesten absteigend sortiert
+- Doppeltes Bechtle-Logo im Report-Header entfernt
+- Fehlerbehandlung weiter verbessert mit SuppressErrorFilter
