@@ -7,6 +7,58 @@
     <style>
         {% include 'styles.css' %}
     </style>
+    <script>
+        // JavaScript für verbesserte Sprungmarken und Navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Aktive Klasse für die Navigation hinzufügen, wenn ein Abschnitt sichtbar ist
+            var sections = document.querySelectorAll('.section');
+            var navLinks = document.querySelectorAll('.nav-links a');
+            
+            // Scroll-Handler
+            function highlightNav() {
+                var scrollPosition = window.scrollY + 60; // Navigationshöhe berücksichtigen
+                
+                sections.forEach(function(section) {
+                    var sectionTop = section.offsetTop;
+                    var sectionHeight = section.offsetHeight;
+                    var sectionId = section.getAttribute('id');
+                    
+                    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                        // Aktive Klasse entfernen
+                        navLinks.forEach(function(navLink) {
+                            navLink.classList.remove('active');
+                        });
+                        
+                        // Aktive Klasse für den aktuellen Abschnitt hinzufügen
+                        var activeLink = document.querySelector('.nav-links a[href="#' + sectionId + '"]');
+                        if (activeLink) {
+                            activeLink.classList.add('active');
+                        }
+                    }
+                });
+            }
+            
+            // Initial und bei Scroll aktive Navigation setzen
+            window.addEventListener('scroll', highlightNav);
+            highlightNav();
+            
+            // Smooth Scroll für Navigations-Links
+            navLinks.forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var targetId = this.getAttribute('href');
+                    var targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 50, // Navigationshöhe berücksichtigen
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
     <!-- Fixed Navigation Bar -->
@@ -52,16 +104,7 @@
             <p class="subtitle">Generated on: {{ report_date|format_datetime }}</p>
         </div>
 
-        <!-- Table of Contents -->
-        <div class="toc-container">
-            <h2>Table of Contents</h2>
-            <ul class="toc">
-                <li><a href="#executive-summary">Executive Summary</a></li>
-                {% for section in sections %}
-                <li><a href="#{{ section.id }}">{{ section.title }}</a></li>
-                {% endfor %}
-            </ul>
-        </div>
+        <!-- Das ursprüngliche Inhaltsverzeichnis wird entfernt, da die Navigation jetzt über das horizontale Menü erfolgt -->
 
         <!-- Executive Summary -->
         <div class="section" id="executive-summary">

@@ -1,0 +1,25 @@
+# VMware vSphere Reporter - Versionshinweise v10
+Datum: 14.04.2025
+
+## Änderungen in dieser Version
+
+### Fehlerbehebungen
+- Ersetzung des vertikalen Inhaltsverzeichnisses durch ein horizontales Navigationsmenü
+- Korrektur der Sprungmarken mit JavaScript für reibungsloses Scrollen
+- Sicherstellen, dass das Bechtle-Logo immer angezeigt wird
+- Verbesserte Fehlerunterdrückung in allen Datenerfassungsmethoden
+- Implementierte vollständige Fehlerunterdrückung mit 'suppress_stdout_stderr()' für alle PyVmomi-Operationen
+- Behoben: RegEx-Fehlerbehandlung für Datastore-Pfade
+
+### Funktionen
+- Neues horizontales Menü als feste Navigation, die beim Scrollen sichtbar bleibt
+- Interaktive Hervorhebung des aktuellen Abschnitts in der Navigation
+- Größeres Bechtle-Logo in den HTML-Berichten
+- Verbesserte Log-Level-Auswahl im Linux-Benutzerinterface
+- Umleitung aller PyVmomi-Fehlermeldungen zum Logger statt zum Befehlsfenster
+- Optimiertes Installationsskript für OpenSuse Tumbleweed
+
+### Bekannte Probleme
+- Keine
+
+
