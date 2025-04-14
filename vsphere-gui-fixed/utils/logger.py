@@ -14,6 +14,19 @@ from logging.handlers import RotatingFileHandler
 _logger = None
 _console_handler = None
 
+def get_logger():
+    """
+    Get the application logger
+    
+    Returns:
+        logging.Logger: The application logger. If setup_logger hasn't been called,
+                        it will be called with default settings.
+    """
+    global _logger
+    if _logger is None:
+        _logger = setup_logger()
+    return _logger
+
 def setup_logger(log_level=None):
     """
     Setup application logging

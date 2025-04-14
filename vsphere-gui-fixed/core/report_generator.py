@@ -16,29 +16,65 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 exporters_dir = os.path.join(current_dir, 'exporters')
 
 # Dynamisches Importieren der Exporter, um Importfehler zu vermeiden
-# HTMLExporter
-html_path = os.path.join(exporters_dir, 'html_exporter.py')
-spec = importlib.util.spec_from_file_location('html_exporter', html_path)
-html_exporter = importlib.util.module_from_spec(spec)
-sys.modules['html_exporter'] = html_exporter
-spec.loader.exec_module(html_exporter)
-HTMLExporter = html_exporter.HTMLExporter
+# Hilfsfunktion für das Importieren
+def import_module_from_file(module_name, file_path):
+    if not os.path.exists(file_path):
+        raise ImportError(f"Datei nicht gefunden: {file_path}")
+        
+    spec = importlib.util.spec_from_file_location(module_name, file_path)
+    if spec is None:
+        raise ImportError(f"Konnte keine Modul-Spec für {file_path} erstellen")
+        
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    
+    if spec.loader is None:
+        raise ImportError(f"Keine Loader für Modul {module_name}")
+        
+    spec.loader.exec_module(module)
+    return module
 
-# DOCXExporter
-docx_path = os.path.join(exporters_dir, 'docx_exporter.py')
-spec = importlib.util.spec_from_file_location('docx_exporter', docx_path)
-docx_exporter = importlib.util.module_from_spec(spec)
-sys.modules['docx_exporter'] = docx_exporter
-spec.loader.exec_module(docx_exporter)
-DOCXExporter = docx_exporter.DOCXExporter
+try:
+    # HTMLExporter
+    html_path = os.path.join(exporters_dir, 'html_exporter.py')
+    html_exporter = import_module_from_file('html_exporter', html_path)
+    HTMLExporter = html_exporter.HTMLExporter
 
-# PDFExporter
-pdf_path = os.path.join(exporters_dir, 'pdf_exporter.py')
-spec = importlib.util.spec_from_file_location('pdf_exporter', pdf_path)
-pdf_exporter = importlib.util.module_from_spec(spec)
-sys.modules['pdf_exporter'] = pdf_exporter
-spec.loader.exec_module(pdf_exporter)
-PDFExporter = pdf_exporter.PDFExporter
+    # DOCXExporter
+    docx_path = os.path.join(exporters_dir, 'docx_exporter.py')
+    docx_exporter = import_module_from_file('docx_exporter', docx_path)
+    DOCXExporter = docx_exporter.DOCXExporter
+
+    # PDFExporter
+    pdf_path = os.path.join(exporters_dir, 'pdf_exporter.py')
+    pdf_exporter = import_module_from_file('pdf_exporter', pdf_path)
+    PDFExporter = pdf_exporter.PDFExporter
+    
+except ImportError as e:
+    print(f"FEHLER beim Importieren der Exporter-Module: {e}")
+    print(f"Bitte stellen Sie sicher, dass die Exporters-Verzeichnisstruktur korrekt ist.")
+    print(f"Suche nach Exportern in: {exporters_dir}")
+    print(f"Verfügbare Dateien:")
+    if os.path.exists(exporters_dir):
+        for filename in os.listdir(exporters_dir):
+            print(f" - {filename}")
+    else:
+        print(f" - Verzeichnis existiert nicht!")
+    
+    # Dummy-Klassen für Debug-Zwecke
+    class DummyExporter:
+        def __init__(self, data, optional_sections):
+            self.data = data
+            self.optional_sections = optional_sections
+        
+        def export(self, output_path):
+            print(f"DUMMY-EXPORT nach {output_path}")
+            with open(output_path, 'w') as f:
+                f.write("Fehler beim Laden der Exporter-Module. Bitte prüfen Sie die Anwendungsstruktur.")
+    
+    HTMLExporter = DummyExporter
+    DOCXExporter = DummyExporter
+    PDFExporter = DummyExporter
 
 logger = logging.getLogger(__name__)
 
