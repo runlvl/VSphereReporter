@@ -28,7 +28,15 @@ class HTMLExporter:
         self.timestamp = timestamp
         
         # Set up assets for HTML embedding - use the white logo for better visibility in reports
-        self.logo_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'images', 'logo_bechtle_white.png')
+        # The white logo is only used in reports, not in the tool itself
+        white_logo_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'images', 'logo_bechtle_white.png')
+        regular_logo_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'images', 'logo_bechtle.png')
+        
+        # Bevorzugt das weiße Logo für Berichte, fallback auf das normale Logo
+        if os.path.exists(white_logo_path):
+            self.logo_path = white_logo_path
+        else:
+            self.logo_path = regular_logo_path
         
         # Setup Jinja2 environment
         template_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'templates')
