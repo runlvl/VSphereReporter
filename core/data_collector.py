@@ -8,9 +8,34 @@ VMware vSphere data collector module
 import datetime
 import re
 import logging
+import sys
+import os
 from pyVmomi import vim
+from contextlib import contextmanager
 
+# Configure the logger
 logger = logging.getLogger(__name__)
+
+@contextmanager
+def suppress_stdout_stderr():
+    """
+    Context manager to suppress stdout and stderr output
+    
+    This is useful for hiding error messages from pyVmomi that are not
+    critical for the application's functioning.
+    """
+    original_stdout = sys.stdout
+    original_stderr = sys.stderr
+    
+    try:
+        # Redirect stdout and stderr to a null device
+        sys.stdout = open(os.devnull, 'w')
+        sys.stderr = open(os.devnull, 'w')
+        yield
+    finally:
+        # Restore stdout and stderr
+        sys.stdout = original_stdout
+        sys.stderr = original_stderr
 
 class DataCollector:
     """Collector for vSphere environment data"""
@@ -37,10 +62,12 @@ class DataCollector:
         vm_info_list = []
         for vm in vms:
             try:
-                # Get VM properties
-                summary = vm.summary
-                config = vm.config if vm.config else None
-                guest = vm.guest if vm.guest else None
+                # Suppress stdout/stderr to prevent PyVmomi error messages
+                with suppress_stdout_stderr():
+                    # Get VM properties
+                    summary = vm.summary
+                    config = vm.config if vm.config else None
+                    guest = vm.guest if vm.guest else None
                 
                 vm_info = {
                     'name': vm.name,
@@ -124,11 +151,13 @@ class DataCollector:
         tools_info_list = []
         for vm in vms:
             try:
-                summary = vm.summary
+                # Suppress stdout/stderr to prevent PyVmomi error messages
+                with suppress_stdout_stderr():
+                    summary = vm.summary
                 
-                # Skip if VM is a template
-                if summary.config.template:
-                    continue
+                    # Skip if VM is a template
+                    if summary.config.template:
+                        continue
                     
                 tools_info = {
                     'name': vm.name,
@@ -174,11 +203,13 @@ class DataCollector:
         snapshot_info_list = []
         for vm in vms:
             try:
-                if vm.snapshot:
-                    snapshots = self._get_vm_snapshots(vm)
-                    for snapshot in snapshots:
-                        snapshot['vm_name'] = vm.name
-                        snapshot_info_list.append(snapshot)
+                # Suppress stdout/stderr to prevent PyVmomi error messages
+                with suppress_stdout_stderr():
+                    if vm.snapshot:
+                        snapshots = self._get_vm_snapshots(vm)
+                        for snapshot in snapshots:
+                            snapshot['vm_name'] = vm.name
+                            snapshot_info_list.append(snapshot)
             
             except Exception as e:
                 logger.error(f"Error collecting snapshot info for VM {vm.name}: {str(e)}")
@@ -259,12 +290,14 @@ class DataCollector:
         
         for vm in vms:
             try:
-                if vm.config and vm.config.hardware and vm.config.hardware.device:
-                    for device in vm.config.hardware.device:
-                        if isinstance(device, vim.vm.device.VirtualDisk):
-                            # Get the datastore path
-                            datastore_path = device.backing.fileName
-                            registered_vmdks.add(datastore_path)
+                # Suppress stdout/stderr to prevent PyVmomi error messages
+                with suppress_stdout_stderr():
+                    if vm.config and vm.config.hardware and vm.config.hardware.device:
+                        for device in vm.config.hardware.device:
+                            if isinstance(device, vim.vm.device.VirtualDisk):
+                                # Get the datastore path
+                                datastore_path = device.backing.fileName
+                                registered_vmdks.add(datastore_path)
             except Exception as e:
                 logger.error(f"Error getting VMDK info for VM {vm.name}: {str(e)}")
                 continue
@@ -364,7 +397,12 @@ class DataCollector:
             vm_name = vm_name[:-5]
         
         # Check if there's a VMX file with the same name
-        datastore = re.match(r'\[(.*?)\]', folder_path).group(1)
+        datastore_match = re.match(r'\[(.*?)\]', folder_path)
+        if not datastore_match:
+            logger.warning(f"Could not extract datastore name from path: {folder_path}")
+            return False
+            
+        datastore = datastore_match.group(1)
         browser = None
         
         # Find the datastore browser
@@ -411,10 +449,12 @@ class DataCollector:
         host_info_list = []
         for host in hosts:
             try:
-                # Get host properties
-                summary = host.summary
-                hardware = host.hardware if hasattr(host, 'hardware') else None
-                config = host.config if hasattr(host, 'config') else None
+                # Suppress stdout/stderr to prevent PyVmomi error messages
+                with suppress_stdout_stderr():
+                    # Get host properties
+                    summary = host.summary
+                    hardware = host.hardware if hasattr(host, 'hardware') else None
+                    config = host.config if hasattr(host, 'config') else None
                 
                 host_info = {
                     'name': host.name,
@@ -460,8 +500,10 @@ class DataCollector:
         datastore_info_list = []
         for datastore in datastores:
             try:
-                # Get datastore properties
-                summary = datastore.summary
+                # Suppress stdout/stderr to prevent PyVmomi error messages
+                with suppress_stdout_stderr():
+                    # Get datastore properties
+                    summary = datastore.summary
                 
                 datastore_info = {
                     'name': datastore.name,
@@ -502,8 +544,10 @@ class DataCollector:
         cluster_info_list = []
         for cluster in clusters:
             try:
-                # Get cluster properties
-                summary = cluster.summary
+                # Suppress stdout/stderr to prevent PyVmomi error messages
+                with suppress_stdout_stderr():
+                    # Get cluster properties
+                    summary = cluster.summary
                 
                 cluster_info = {
                     'name': cluster.name,
@@ -547,9 +591,11 @@ class DataCollector:
         resource_pool_info_list = []
         for pool in resource_pools:
             try:
-                # Get resource pool properties
-                summary = pool.summary
-                config = pool.config if hasattr(pool, 'config') else None
+                # Suppress stdout/stderr to prevent PyVmomi error messages
+                with suppress_stdout_stderr():
+                    # Get resource pool properties
+                    summary = pool.summary
+                    config = pool.config if hasattr(pool, 'config') else None
                 
                 pool_info = {
                     'name': pool.name,
@@ -597,11 +643,13 @@ class DataCollector:
         network_info_list = []
         for network in networks:
             try:
-                network_info = {
-                    'name': network.name,
-                    'accessible': network.summary.accessible if hasattr(network.summary, 'accessible') else False,
-                    'type': type(network).__name__,  # Network type (DistributedVirtualPortgroup, Network, etc.)
-                }
+                # Suppress stdout/stderr to prevent PyVmomi error messages
+                with suppress_stdout_stderr():
+                    network_info = {
+                        'name': network.name,
+                        'accessible': network.summary.accessible if hasattr(network.summary, 'accessible') else False,
+                        'type': type(network).__name__,  # Network type (DistributedVirtualPortgroup, Network, etc.)
+                    }
                 
                 # Get additional properties based on network type
                 if isinstance(network, vim.dvs.DistributedVirtualPortgroup):

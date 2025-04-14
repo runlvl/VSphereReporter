@@ -16,7 +16,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from tkinter.scrolledtext import ScrolledText
 
-from utils.logger import setup_logger
+from utils.logger import setup_logger, set_log_level, get_log_level_name, get_log_level_from_name
 from core.vsphere_client import VSphereClient
 from core.data_collector import DataCollector
 from core.report_generator import ReportGenerator
@@ -448,9 +448,37 @@ class VSphereReporterGUI:
         log_frame = ttk.LabelFrame(self.main_frame, text="Log", padding=(10, 5, 10, 5))
         log_frame.pack(fill=tk.BOTH, expand=True)
         
+        # Control frame for log settings
+        controls_frame = ttk.Frame(log_frame)
+        controls_frame.pack(fill=tk.X, padx=5, pady=5)
+        
+        # Log level selector
+        level_label = ttk.Label(controls_frame, text="Log Detail Level:")
+        level_label.pack(side=tk.LEFT, padx=(0, 10))
+        
+        self.log_level_var = tk.StringVar(value="INFO")
+        log_level_combo = ttk.Combobox(
+            controls_frame, 
+            textvariable=self.log_level_var,
+            values=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+            state="readonly",
+            width=10
+        )
+        log_level_combo.pack(side=tk.LEFT)
+        log_level_combo.bind("<<ComboboxSelected>>", self.change_log_level)
+        
+        # Help text
+        help_text = ttk.Label(
+            controls_frame,
+            text="Debug: More detail | Info: Normal | Warning: Issues only | Error: Problems | Critical: Severe issues",
+            font=("Helvetica", 8),
+            foreground="#666666"
+        )
+        help_text.pack(side=tk.LEFT, padx=(10, 0))
+        
         # Scrolled text widget for log output
         self.log_text = ScrolledText(log_frame, height=10, width=80)
-        self.log_text.pack(fill=tk.BOTH, expand=True)
+        self.log_text.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         self.log_text.config(state=tk.DISABLED)
         
         # Create a custom handler for logging to the text widget
@@ -703,6 +731,22 @@ class VSphereReporterGUI:
         self.clusters_var.set(False)
         self.resource_pools_var.set(False)
         self.networks_var.set(False)
+        
+    def change_log_level(self, event):
+        """
+        Change the logging level based on the combo box selection
+        
+        Args:
+            event: Combobox selection event
+        """
+        log_level_name = self.log_level_var.get()
+        log_level = get_log_level_from_name(log_level_name)
+        
+        # Set the new log level
+        set_log_level(log_level)
+        
+        # Add a message to the log
+        logging.info(f"Log level changed to {log_level_name}")
         
     def generate_report(self):
         """Generate the vSphere report"""

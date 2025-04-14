@@ -10,14 +10,23 @@ import sys
 import logging
 from logging.handlers import RotatingFileHandler
 
-def setup_logger():
+# Singleton logger instance
+_logger = None
+_console_handler = None
+
+def setup_logger(log_level=logging.INFO):
     """
     Setup application logging
     
     This sets up logging to:
-    1. Console (INFO level)
+    1. Console (configurable level)
     2. Log file (DEBUG level)
+    
+    Args:
+        log_level (int): Logging level for console output
     """
+    global _logger, _console_handler
+    
     # Create logs directory if it doesn't exist
     log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'logs')
     if not os.path.exists(log_dir):
@@ -52,12 +61,79 @@ def setup_logger():
     file_handler.setFormatter(file_formatter)
     
     # Create console handler
-    console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setLevel(logging.INFO)
-    console_handler.setFormatter(console_formatter)
+    _console_handler = logging.StreamHandler(sys.stdout)
+    _console_handler.setLevel(log_level)
+    _console_handler.setFormatter(console_formatter)
     
     # Add handlers to logger
     logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
+    logger.addHandler(_console_handler)
+    
+    # Store reference to logger
+    _logger = logger
     
     return logger
+
+def set_log_level(level):
+    """
+    Update the console log level
+    
+    Args:
+        level (int): New logging level
+    """
+    global _console_handler
+    
+    if _console_handler:
+        _console_handler.setLevel(level)
+        
+    # Also update all StreamHandlers to the same level
+    for handler in logging.getLogger().handlers:
+        if isinstance(handler, logging.StreamHandler) and handler is not _console_handler:
+            handler.setLevel(level)
+            
+def get_log_level_name(level):
+    """
+    Get the string name of a log level
+    
+    Args:
+        level (int): Logging level
+        
+    Returns:
+        str: Level name
+    """
+    if level == logging.DEBUG:
+        return "DEBUG"
+    elif level == logging.INFO:
+        return "INFO"
+    elif level == logging.WARNING:
+        return "WARNING"
+    elif level == logging.ERROR:
+        return "ERROR"
+    elif level == logging.CRITICAL:
+        return "CRITICAL"
+    else:
+        return "UNKNOWN"
+        
+def get_log_level_from_name(name):
+    """
+    Get log level from string name
+    
+    Args:
+        name (str): Level name
+        
+    Returns:
+        int: Logging level
+    """
+    name = name.upper()
+    if name == "DEBUG":
+        return logging.DEBUG
+    elif name == "INFO":
+        return logging.INFO
+    elif name == "WARNING":
+        return logging.WARNING
+    elif name == "ERROR":
+        return logging.ERROR
+    elif name == "CRITICAL":
+        return logging.CRITICAL
+    else:
+        return logging.INFO
