@@ -207,13 +207,14 @@ class MainWindow(QMainWindow):
             QFrame {{
                 background-color: {BECHTLE_DARK_BLUE};
                 color: white;
-                min-height: 80px;
+                min-height: 90px;
                 margin: 0px;
                 padding: 0px;
             }}
         """)
         header_layout = QHBoxLayout(header_frame)
-        header_layout.setContentsMargins(20, 10, 20, 10)
+        header_layout.setContentsMargins(20, 15, 20, 15)
+        header_layout.setSpacing(20)  # Erhöhter Abstand zwischen Logo und Text
         
         # Logo
         logo_label = QLabel()
@@ -221,24 +222,32 @@ class MainWindow(QMainWindow):
         if os.path.exists(logo_path):
             logo_pixmap = QPixmap(logo_path)
             if not logo_pixmap.isNull():
-                logo_pixmap = logo_pixmap.scaledToHeight(40, Qt.SmoothTransformation)
+                logo_pixmap = logo_pixmap.scaledToHeight(50, Qt.SmoothTransformation)
                 logo_label.setPixmap(logo_pixmap)
-                logo_label.setFixedSize(180, 50)
+                logo_label.setFixedSize(160, 50)
+                # Ausrichtung des Logos nach links und vertikal zentriert
+                logo_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         header_layout.addWidget(logo_label)
         
         # Titel und Untertitel
         title_layout = QVBoxLayout()
+        title_layout.setSpacing(5)  # Reduzierter Abstand zwischen Titel und Untertitel
         
         subtitle_label = QLabel("Cloud Solutions | Datacenter & Endpoint")
-        subtitle_label.setStyleSheet("color: white; font-size: 12px;")
+        subtitle_label.setStyleSheet("color: rgba(255, 255, 255, 0.85); font-size: 12px;")
+        subtitle_label.setAlignment(Qt.AlignLeft)
         title_layout.addWidget(subtitle_label)
         
         title_label = QLabel("VMware vSphere Reporter")
         title_label.setStyleSheet("color: white; font-size: 24px; font-weight: bold;")
+        title_label.setAlignment(Qt.AlignLeft)
         title_layout.addWidget(title_label)
         
+        title_layout.setStretch(0, 1)  # Subtitle erhält weniger vertikalen Platz
+        title_layout.setStretch(1, 2)  # Titel erhält mehr vertikalen Platz
+        
         header_layout.addLayout(title_layout)
-        header_layout.addStretch(1)
+        header_layout.addStretch(1)  # Rechter Abstand wird maximiert
         
         main_layout.addWidget(header_frame)
         
