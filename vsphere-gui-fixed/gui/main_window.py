@@ -101,19 +101,40 @@ class GenerateReportWorker(QObject):
             
             # Sammle Daten
             collector = DataCollector(self.vsphere_client)
+            self.logger.info("DataCollector initialisiert")
             
             # Generiere Report
             generator = ReportGenerator(collector)
+            self.logger.info("ReportGenerator initialisiert")
             
             self.status_update.emit("Generiere Reports...")
-            output_files = generator.generate_reports(
-                output_dir=self.output_dir,
-                formats=self.options.get('formats', ['html']),
-                optional_sections=self.options.get('sections', {})
-            )
-            
-            self.logger.info(f"Report-Generierung abgeschlossen: {output_files}")
-            self.finished.emit(True, output_files, "")
+            try:
+                output_files = generator.generate_reports(
+                    output_dir=self.output_dir,
+                    formats=self.options.get('formats', ['html']),
+                    optional_sections=self.options.get('sections', {})
+                )
+                
+                if output_files and len(output_files) > 0:
+                    self.logger.info(f"Report-Generierung abgeschlossen: {output_files}")
+                    self.finished.emit(True, output_files, "")
+                else:
+                    self.logger.warning("Keine Report-Dateien wurden generiert")
+                    self.finished.emit(
+                        False, [], 
+                        "Die Generierung wurde abgeschlossen, aber es wurden keine Report-Dateien erstellt. "
+                        "Bitte prüfen Sie das Log für weitere Details."
+                    )
+            except Exception as report_err:
+                self.logger.error(f"Fehler beim Generieren der Reports: {str(report_err)}")
+                import traceback
+                self.logger.error(traceback.format_exc())
+                # Trotz des Fehlers in generate_reports geben wir einen leeren Report zurück,
+                # aber mit einer Fehlermeldung, die den Benutzer informiert, was schief ging
+                self.finished.emit(
+                    False, [], 
+                    f"Fehler beim Generieren der Reports: {str(report_err)}"
+                )
             
         except Exception as e:
             self.logger.error(f"Fehler bei der Report-Generierung: {str(e)}")

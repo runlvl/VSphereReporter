@@ -133,34 +133,85 @@ class ReportGenerator:
         generated_files = []
         
         try:
+            # Sammle zuerst alle Daten, um Wiederholungen zu vermeiden und Fehler früh zu erkennen
+            try:
+                self.logger.info("Collecting data for reports...")
+                collected_data = self.data.collect_all_data(optional_sections)
+                self.logger.info("Data collection completed successfully")
+            except Exception as data_err:
+                self.logger.error(f"Error collecting data: {str(data_err)}")
+                # Fallback: Erstelle ein leeres Dictionary für die Berichte
+                self.logger.warning("Using empty datasets for reports")
+                collected_data = {
+                    'vmware_tools': [],
+                    'snapshots': [],
+                    'orphaned_vmdks': [],
+                    'vms': [],
+                    'hosts': [],
+                    'datastores': [],
+                    'clusters': [],
+                    'resource_pools': [],
+                    'networks': []
+                }
+            
+            timestamp_dt = datetime.datetime.now()  # Einmal für alle Exporter
+            
             # Generate reports in each requested format
             if 'html' in formats:
-                self.logger.info("Generating HTML report")
-                timestamp_dt = datetime.datetime.now()  # Datetime-Objekt für den Exporter
-                exporter = HTMLExporter(self.data.collect_all_data(optional_sections), timestamp_dt)
-                output_path = os.path.join(output_dir, f"vsphere_report_{timestamp}.html")
-                exporter.export(output_path)
-                generated_files.append(output_path)
+                try:
+                    self.logger.info("Generating HTML report")
+                    exporter = HTMLExporter(collected_data, timestamp_dt)
+                    output_path = os.path.join(output_dir, f"vsphere_report_{timestamp}.html")
+                    success = exporter.export(output_path)
+                    if success:
+                        generated_files.append(output_path)
+                        self.logger.info(f"HTML report generated successfully: {output_path}")
+                    else:
+                        self.logger.error(f"HTML report generation returned False")
+                except Exception as html_err:
+                    self.logger.error(f"Error generating HTML report: {str(html_err)}")
+                    import traceback
+                    self.logger.debug(f"HTML traceback: {traceback.format_exc()}")
                 
             if 'docx' in formats:
-                self.logger.info("Generating DOCX report")
-                timestamp_dt = datetime.datetime.now()  # Datetime-Objekt für den Exporter
-                exporter = DOCXExporter(self.data.collect_all_data(optional_sections), timestamp_dt)
-                output_path = os.path.join(output_dir, f"vsphere_report_{timestamp}.docx")
-                exporter.export(output_path)
-                generated_files.append(output_path)
+                try:
+                    self.logger.info("Generating DOCX report")
+                    exporter = DOCXExporter(collected_data, timestamp_dt)
+                    output_path = os.path.join(output_dir, f"vsphere_report_{timestamp}.docx")
+                    success = exporter.export(output_path)
+                    if success:
+                        generated_files.append(output_path)
+                        self.logger.info(f"DOCX report generated successfully: {output_path}")
+                    else:
+                        self.logger.error(f"DOCX report generation returned False")
+                except Exception as docx_err:
+                    self.logger.error(f"Error generating DOCX report: {str(docx_err)}")
+                    import traceback
+                    self.logger.debug(f"DOCX traceback: {traceback.format_exc()}")
                 
             if 'pdf' in formats:
-                self.logger.info("Generating PDF report")
-                timestamp_dt = datetime.datetime.now()  # Datetime-Objekt für den Exporter
-                exporter = PDFExporter(self.data.collect_all_data(optional_sections), timestamp_dt)
-                output_path = os.path.join(output_dir, f"vsphere_report_{timestamp}.pdf")
-                exporter.export(output_path)
-                generated_files.append(output_path)
+                try:
+                    self.logger.info("Generating PDF report")
+                    exporter = PDFExporter(collected_data, timestamp_dt)
+                    output_path = os.path.join(output_dir, f"vsphere_report_{timestamp}.pdf")
+                    success = exporter.export(output_path)
+                    if success:
+                        generated_files.append(output_path)
+                        self.logger.info(f"PDF report generated successfully: {output_path}")
+                    else:
+                        self.logger.error(f"PDF report generation returned False")
+                except Exception as pdf_err:
+                    self.logger.error(f"Error generating PDF report: {str(pdf_err)}")
+                    import traceback
+                    self.logger.debug(f"PDF traceback: {traceback.format_exc()}")
                 
             self.logger.info(f"Generated {len(generated_files)} reports: {generated_files}")
             return generated_files
             
         except Exception as e:
-            self.logger.error(f"Error generating reports: {str(e)}")
-            raise
+            self.logger.error(f"Error in report generation process: {str(e)}")
+            import traceback
+            self.logger.error(f"Traceback: {traceback.format_exc()}")
+            # Wir geben eine leere Liste zurück, anstatt eine Exception zu werfen
+            # Dies verhindert das Abstürzen der Anwendung
+            return []
