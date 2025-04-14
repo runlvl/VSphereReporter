@@ -1,22 +1,29 @@
-CHANGELOG VERSION 23
-===================
+CHANGELOG: VMware vSphere Reporter v23
+======================================
 
-Features und Verbesserungen:
-----------------------------
-- [NEU] Header mit Bechtle-Branding hinzugefügt, inklusive Logo und Untertitel "Cloud Solutions | Datacenter & Endpoint"
-- [FIX] Logger-Modul überarbeitet, um optionale Parameter zu unterstützen
-- [FIX] Initialisierungsreihenfolge der UI-Elemente korrigiert
-- [FIX] Logo-Darstellung im Anwendungsfenster verbessert
-- [FIX] Formatierung des Headers optimiert mit besseren Abständen und verbesserten Ausrichtungen
+## Version 23 - 14.04.2025
 
-Bekannte Probleme:
-------------------
-Keine bekannten Probleme in dieser Version.
+### Hauptänderungen
+- Vollständig überarbeitetes responsives Layout für Windows-GUI
+- Fehlerbehebung für Bechtle-Header im Windows-GUI
+- Verbesserte UI-Skalierung und Darstellung bei verschiedenen Fenstergrößen
 
-Setup-Anweisungen:
------------------
-1. Entpacken Sie die ZIP-Datei in ein beliebiges Verzeichnis
-2. Führen Sie die Datei "run.bat" aus, um die Anwendung zu starten
-3. Bei Problemen mit der Installation führen Sie "setup.bat" aus, um die erforderlichen Abhängigkeiten zu installieren
+### Fehlerbehebungen
+- Behoben: Fehlende oder abgeschnittene Pflichtbestandteile im Report-Optionen-Panel
+- Behoben: Optionale Bestandteile verschwinden bei Verkleinerung des Fensters
+- Behoben: Logo und Textelemente im Header werden nicht korrekt angezeigt
 
-Hinweis: Diese Version erfordert Python 3.8 oder höher und die in vsphere_reporter_requirements.txt angegebenen Abhängigkeiten.
+### Technische Verbesserungen
+- Implementierte ScrollArea für Report-Optionen, um korrekte Darstellung auch bei kleinen Fenstern zu gewährleisten
+- Verbesserte Größenrichtlinien für UI-Komponenten
+- Aktivierte Textumbruch für Beschreibungstexte, um bessere Lesbarkeit zu gewährleisten
+- Verbesserte Container-Struktur in MainWindow für konsistente Darstellung
+
+### Anleitung für Anwender
+- Das Programm sollte nun bei allen Fenstergrößen korrekt funktionieren
+- Bei sehr kleinen Fenstern kann in den Bereichsoptionen gescrollt werden
+- Die minimale Fenstergröße wurde beibehalten, um eine gute Bedienung zu gewährleisten
+
+### Kompatibilität
+- Windows-Version: Vollständig kompatibel mit Windows 10/11
+- Linux-Version: Vollständig kompatibel mit OpenSuse Tumbleweed
