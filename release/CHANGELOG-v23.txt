@@ -1,0 +1,22 @@
+CHANGELOG VERSION 23
+===================
+
+Features und Verbesserungen:
+----------------------------
+- [NEU] Header mit Bechtle-Branding hinzugefügt, inklusive Logo und Untertitel "Cloud Solutions | Datacenter & Endpoint"
+- [FIX] Logger-Modul überarbeitet, um optionale Parameter zu unterstützen
+- [FIX] Initialisierungsreihenfolge der UI-Elemente korrigiert
+- [FIX] Logo-Darstellung im Anwendungsfenster verbessert
+- [FIX] Formatierung des Headers optimiert mit besseren Abständen und verbesserten Ausrichtungen
+
+Bekannte Probleme:
+------------------
+Keine bekannten Probleme in dieser Version.
+
+Setup-Anweisungen:
+-----------------
+1. Entpacken Sie die ZIP-Datei in ein beliebiges Verzeichnis
+2. Führen Sie die Datei "run.bat" aus, um die Anwendung zu starten
+3. Bei Problemen mit der Installation führen Sie "setup.bat" aus, um die erforderlichen Abhängigkeiten zu installieren
+
+Hinweis: Diese Version erfordert Python 3.8 oder höher und die in vsphere_reporter_requirements.txt angegebenen Abhängigkeiten.
