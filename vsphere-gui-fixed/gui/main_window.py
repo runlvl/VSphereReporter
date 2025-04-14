@@ -25,7 +25,42 @@ from gui.report_options import ReportOptionsPanel
 from core.vsphere_client import VSphereClient
 from core.data_collector import DataCollector
 from core.report_generator import ReportGenerator
-from utils.logger import get_logger
+# Dynamischer Import des Loggers
+import importlib.util
+import sys
+
+# Versuche zuerst den normalen Import
+try:
+    from utils.logger import get_logger
+except ImportError:
+    # Fallback: Dynamischer Import
+    logger_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'utils', 'logger.py')
+    if os.path.exists(logger_path):
+        spec = importlib.util.spec_from_file_location("logger_module", logger_path)
+        logger_module = importlib.util.module_from_spec(spec)
+        sys.modules["logger_module"] = logger_module
+        spec.loader.exec_module(logger_module)
+        
+        # Füge die fehlende get_logger-Funktion hinzu, falls sie nicht existiert
+        if not hasattr(logger_module, 'get_logger'):
+            def get_logger():
+                return logger_module.setup_logger()
+            logger_module.get_logger = get_logger
+            
+        # Importiere get_logger aus dem dynamisch geladenen Modul
+        get_logger = logger_module.get_logger
+    else:
+        # Letzter Fallback: Eigene Logger-Funktion
+        print("WARNUNG: Logger-Modul konnte nicht geladen werden, verwende Fallback-Logger")
+        def get_logger():
+            logger = logging.getLogger()
+            if not logger.handlers:
+                handler = logging.StreamHandler(sys.stdout)
+                formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+                handler.setFormatter(formatter)
+                logger.addHandler(handler)
+                logger.setLevel(logging.INFO)
+            return logger
 
 # Bechtle-Farbschema
 BECHTLE_DARK_BLUE = "#00355e"
