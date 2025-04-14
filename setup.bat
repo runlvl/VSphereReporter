@@ -148,11 +148,18 @@ if !ERRORLEVEL! equ 0 (
     )
 )
 
-rem Try installing each dependency individually
-echo Attempting to install dependencies individually...
-for /F "tokens=*" %%i in (vsphere_reporter_requirements.txt) do (
-    echo Installing %%i...
-    %PYTHON_CMD% -m pip install %%i
+rem If requirements file is missing, install explicitly
+echo Checking if requirements file exists...
+if not exist vsphere_reporter_requirements.txt (
+    echo vsphere_reporter_requirements.txt not found, installing dependencies explicitly...
+    %PYTHON_CMD% -m pip install pyVmomi>=7.0.0 PyQt5>=5.15.0 reportlab>=3.6.0 python-docx>=0.8.11 jinja2>=3.0.0 humanize>=3.0.0 six>=1.16.0 requests>=2.25.0
+) else (
+    rem Try installing each dependency individually
+    echo Attempting to install dependencies individually...
+    for /F "tokens=*" %%i in (vsphere_reporter_requirements.txt) do (
+        echo Installing %%i...
+        %PYTHON_CMD% -m pip install %%i
+    )
 )
 
 :dependencies_installed
