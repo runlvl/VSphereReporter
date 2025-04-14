@@ -23,6 +23,7 @@ from gui.connection_dialog import ConnectionDialog
 from gui.progress_dialog import ProgressDialog
 from gui.report_options import ReportOptionsPanel
 from core.vsphere_client import VSphereClient
+from images.bechtle_logo import get_bechtle_logo_for_qt, BECHTLE_COLORS
 from core.data_collector import DataCollector
 from core.report_generator import ReportGenerator
 # Dynamischer Import des Loggers
@@ -140,6 +141,11 @@ class MainWindow(QMainWindow):
         self.resize(900, 700)
         self.setMinimumSize(800, 600)
         
+        # Lade Bechtle-Logo
+        self.bechtle_logo = get_bechtle_logo_for_qt()
+        if self.bechtle_logo:
+            self.setWindowIcon(QIcon(self.bechtle_logo))
+        
         # Setze Bechtle-Farbschema
         self.setStyleSheet(f"""
             QMainWindow, QDialog {{
@@ -194,6 +200,47 @@ class MainWindow(QMainWindow):
         # Hauptlayout
         main_layout = QVBoxLayout()
         central_widget.setLayout(main_layout)
+        
+        # Header mit Bechtle-Branding
+        header_frame = QFrame()
+        header_frame.setStyleSheet(f"""
+            QFrame {{
+                background-color: {BECHTLE_DARK_BLUE};
+                color: white;
+                min-height: 80px;
+                margin: 0px;
+                padding: 0px;
+            }}
+        """)
+        header_layout = QHBoxLayout(header_frame)
+        header_layout.setContentsMargins(20, 10, 20, 10)
+        
+        # Logo
+        logo_label = QLabel()
+        logo_path = "images/bechtle_logo_white.png"
+        if os.path.exists(logo_path):
+            logo_pixmap = QPixmap(logo_path)
+            if not logo_pixmap.isNull():
+                logo_pixmap = logo_pixmap.scaledToHeight(40, Qt.SmoothTransformation)
+                logo_label.setPixmap(logo_pixmap)
+                logo_label.setFixedSize(180, 50)
+        header_layout.addWidget(logo_label)
+        
+        # Titel und Untertitel
+        title_layout = QVBoxLayout()
+        
+        subtitle_label = QLabel("Cloud Solutions | Datacenter & Endpoint")
+        subtitle_label.setStyleSheet("color: white; font-size: 12px;")
+        title_layout.addWidget(subtitle_label)
+        
+        title_label = QLabel("VMware vSphere Reporter")
+        title_label.setStyleSheet("color: white; font-size: 24px; font-weight: bold;")
+        title_layout.addWidget(title_label)
+        
+        header_layout.addLayout(title_layout)
+        header_layout.addStretch(1)
+        
+        main_layout.addWidget(header_frame)
         
         # Erstelle Report-Optionen und andere UI-Elemente zuerst, bevor wir Menüs erstellen
         
