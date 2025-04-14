@@ -8,9 +8,37 @@ Report generator for vSphere environment reports
 import os
 import datetime
 import logging
-from core.exporters.html_exporter import HTMLExporter
-from core.exporters.docx_exporter import DOCXExporter
-from core.exporters.pdf_exporter import PDFExporter
+import importlib.util
+import sys
+
+# Wir müssen den relativen Import anpassen, damit die Anwendung startet
+current_dir = os.path.dirname(os.path.abspath(__file__))
+exporters_dir = os.path.join(current_dir, 'exporters')
+
+# Dynamisches Importieren der Exporter, um Importfehler zu vermeiden
+# HTMLExporter
+html_path = os.path.join(exporters_dir, 'html_exporter.py')
+spec = importlib.util.spec_from_file_location('html_exporter', html_path)
+html_exporter = importlib.util.module_from_spec(spec)
+sys.modules['html_exporter'] = html_exporter
+spec.loader.exec_module(html_exporter)
+HTMLExporter = html_exporter.HTMLExporter
+
+# DOCXExporter
+docx_path = os.path.join(exporters_dir, 'docx_exporter.py')
+spec = importlib.util.spec_from_file_location('docx_exporter', docx_path)
+docx_exporter = importlib.util.module_from_spec(spec)
+sys.modules['docx_exporter'] = docx_exporter
+spec.loader.exec_module(docx_exporter)
+DOCXExporter = docx_exporter.DOCXExporter
+
+# PDFExporter
+pdf_path = os.path.join(exporters_dir, 'pdf_exporter.py')
+spec = importlib.util.spec_from_file_location('pdf_exporter', pdf_path)
+pdf_exporter = importlib.util.module_from_spec(spec)
+sys.modules['pdf_exporter'] = pdf_exporter
+spec.loader.exec_module(pdf_exporter)
+PDFExporter = pdf_exporter.PDFExporter
 
 logger = logging.getLogger(__name__)
 
@@ -22,149 +50,78 @@ class ReportGenerator:
         Initialize the report generator
         
         Args:
-            data (dict): Dictionary containing collected vSphere data
+            data: DataCollector instance with vSphere data
         """
         self.data = data
+        self.logger = logging.getLogger(__name__)
         
-        # Protokollieren der erhaltenen Daten für Diagnosezwecke
-        logger.info("Report Generator initialized with data:")
-        logger.info(f"VMware Tools: {len(data.get('vmware_tools', []))} entries")
-        logger.info(f"Snapshots: {len(data.get('snapshots', []))} entries")
-        logger.info(f"Orphaned VMDKs: {len(data.get('orphaned_vmdks', []))} entries")
-        logger.info(f"VMs: {len(data.get('vms', []))} entries")
-        logger.info(f"Hosts: {len(data.get('hosts', []))} entries")
-        logger.info(f"Datastores: {len(data.get('datastores', []))} entries")
-        
-        # Sicherstellen, dass die erforderlichen Sektionen für Sprungmarken immer vorhanden sind
-        # Dies ist wichtig, damit die Navigation in den Berichten korrekt funktioniert
-        if not 'vmware_tools' in self.data:
-            self.data['vmware_tools'] = []
-            
-        if not 'snapshots' in self.data:
-            logger.warning("No snapshots data found, creating empty list")
-            self.data['snapshots'] = []
-            
-        if not 'orphaned_vmdks' in self.data:
-            logger.warning("No orphaned VMDKs data found, creating empty list")
-            self.data['orphaned_vmdks'] = []
-            
-        # Debug-Modus überprüfen
-        debug_mode = os.environ.get('VSPHERE_REPORTER_DEBUG', '0') == '1'
-        if debug_mode:
-            logger.warning("*** REPORT GENERATOR DEBUG MODE ACTIVE ***")
-            logger.warning(f"Final dataset sizes:")
-            logger.warning(f"VMware Tools: {len(self.data.get('vmware_tools', []))} entries")
-            logger.warning(f"Snapshots: {len(self.data.get('snapshots', []))} entries")
-            logger.warning(f"Orphaned VMDKs: {len(self.data.get('orphaned_vmdks', []))} entries")
-            logger.warning(f"VMs: {len(self.data.get('vms', []))} entries")
-            logger.warning(f"Hosts: {len(self.data.get('hosts', []))} entries")
-            logger.warning(f"Datastores: {len(self.data.get('datastores', []))} entries")
-        
-        # Wenn wir in einem Diagnosemodus sind, füge Testdaten hinzu
-        # Dies dient zur Überprüfung, ob die Berichtsvorlagen korrekt funktionieren
-        import os
-        if os.environ.get('VSPHERE_REPORTER_DEBUG') == '1':
-            logger.warning("Debug mode enabled, adding test data to reports")
-            
-            # Hinzufügen von Testdaten für Snapshots, wenn keine vorhanden sind
-            if len(self.data.get('snapshots', [])) == 0:
-                logger.info("Adding test snapshot entry")
-                test_snapshot = {
-                    'vm_name': 'TEST-VM-DEBUG',
-                    'name': 'TEST-SNAPSHOT-DEBUG',
-                    'description': 'This is a test snapshot for debugging',
-                    'create_time': datetime.datetime.now() - datetime.timedelta(days=10),
-                    'age_days': 10,
-                    'age_hours': 240
-                }
-                # Stelle sicher, dass wir nicht überschreiben
-                if 'snapshots' not in self.data:
-                    self.data['snapshots'] = []
-                self.data['snapshots'].append(test_snapshot)
-            
-            # Hinzufügen von Testdaten für Orphaned VMDKs, wenn keine vorhanden sind
-            if len(self.data.get('orphaned_vmdks', [])) == 0:
-                logger.info("Adding test orphaned VMDK entry")
-                test_vmdk = {
-                    'path': '[TEST-DATASTORE] TEST-VM-DEBUG/TEST-VM-DEBUG.vmdk',
-                    'datastore': 'TEST-DATASTORE',
-                    'size': 1073741824,  # 1 GB
-                    'modification_time': datetime.datetime.now() - datetime.timedelta(days=30),
-                    'reason': 'Test orphaned VMDK for debugging'
-                }
-                # Stelle sicher, dass wir nicht überschreiben
-                if 'orphaned_vmdks' not in self.data:
-                    self.data['orphaned_vmdks'] = []
-                self.data['orphaned_vmdks'].append(test_vmdk)
-        
-        self.timestamp = datetime.datetime.now()
-        self.filename_base = f"vsphere_report_{self.timestamp.strftime('%Y%m%d_%H%M%S')}"
-        
-    def export_to_html(self, output_dir):
+    def generate_reports(self, output_dir=None, formats=None, optional_sections=None):
         """
-        Export the report to HTML format
+        Generate reports in the specified formats
         
         Args:
-            output_dir (str): Directory to save the report
+            output_dir: Directory where reports will be saved. Default is user's home directory
+            formats: List of formats to generate. Options: 'html', 'docx', 'pdf', 'all'
+            optional_sections: Dictionary specifying which optional sections to include
             
         Returns:
-            str: Path to the generated HTML file
+            List of paths to generated report files
         """
-        logger.info("Generating HTML report")
+        # Setup default values
+        if output_dir is None:
+            output_dir = os.path.join(os.path.expanduser("~"), "vsphere_reports")
+            
+        if formats is None:
+            formats = ['html']
+            
+        if 'all' in formats:
+            formats = ['html', 'docx', 'pdf']
+            
+        if optional_sections is None:
+            optional_sections = {
+                'vms': True,
+                'hosts': True,
+                'datastores': True,
+                'clusters': True,
+                'resource_pools': True,
+                'networks': True
+            }
+            
+        # Create output directory if it doesn't exist
+        os.makedirs(output_dir, exist_ok=True)
         
-        exporter = HTMLExporter(self.data, self.timestamp)
-        output_path = os.path.join(output_dir, f"{self.filename_base}.html")
+        # Generate timestamp for filenames
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+        # Initialize list of generated files
+        generated_files = []
         
         try:
-            exporter.export(output_path)
-            logger.info(f"HTML report saved to: {output_path}")
-            return output_path
+            # Generate reports in each requested format
+            if 'html' in formats:
+                self.logger.info("Generating HTML report")
+                exporter = HTMLExporter(self.data, optional_sections)
+                output_path = os.path.join(output_dir, f"vsphere_report_{timestamp}.html")
+                exporter.export(output_path)
+                generated_files.append(output_path)
+                
+            if 'docx' in formats:
+                self.logger.info("Generating DOCX report")
+                exporter = DOCXExporter(self.data, optional_sections)
+                output_path = os.path.join(output_dir, f"vsphere_report_{timestamp}.docx")
+                exporter.export(output_path)
+                generated_files.append(output_path)
+                
+            if 'pdf' in formats:
+                self.logger.info("Generating PDF report")
+                exporter = PDFExporter(self.data, optional_sections)
+                output_path = os.path.join(output_dir, f"vsphere_report_{timestamp}.pdf")
+                exporter.export(output_path)
+                generated_files.append(output_path)
+                
+            self.logger.info(f"Generated {len(generated_files)} reports: {generated_files}")
+            return generated_files
+            
         except Exception as e:
-            logger.error(f"Error generating HTML report: {str(e)}")
-            raise Exception(f"Error generating HTML report: {str(e)}")
-            
-    def export_to_docx(self, output_dir):
-        """
-        Export the report to DOCX format
-        
-        Args:
-            output_dir (str): Directory to save the report
-            
-        Returns:
-            str: Path to the generated DOCX file
-        """
-        logger.info("Generating DOCX report")
-        
-        exporter = DOCXExporter(self.data, self.timestamp)
-        output_path = os.path.join(output_dir, f"{self.filename_base}.docx")
-        
-        try:
-            exporter.export(output_path)
-            logger.info(f"DOCX report saved to: {output_path}")
-            return output_path
-        except Exception as e:
-            logger.error(f"Error generating DOCX report: {str(e)}")
-            raise Exception(f"Error generating DOCX report: {str(e)}")
-            
-    def export_to_pdf(self, output_dir):
-        """
-        Export the report to PDF format
-        
-        Args:
-            output_dir (str): Directory to save the report
-            
-        Returns:
-            str: Path to the generated PDF file
-        """
-        logger.info("Generating PDF report")
-        
-        exporter = PDFExporter(self.data, self.timestamp)
-        output_path = os.path.join(output_dir, f"{self.filename_base}.pdf")
-        
-        try:
-            exporter.export(output_path)
-            logger.info(f"PDF report saved to: {output_path}")
-            return output_path
-        except Exception as e:
-            logger.error(f"Error generating PDF report: {str(e)}")
-            raise Exception(f"Error generating PDF report: {str(e)}")
+            self.logger.error(f"Error generating reports: {str(e)}")
+            raise
