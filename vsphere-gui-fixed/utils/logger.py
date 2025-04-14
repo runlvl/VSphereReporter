@@ -14,9 +14,12 @@ from logging.handlers import RotatingFileHandler
 _logger = None
 _console_handler = None
 
-def get_logger():
+def get_logger(name=None):
     """
     Get the application logger
+    
+    Args:
+        name (str, optional): Logger name. Defaults to None (root logger).
     
     Returns:
         logging.Logger: The application logger. If setup_logger hasn't been called,
@@ -25,7 +28,12 @@ def get_logger():
     global _logger
     if _logger is None:
         _logger = setup_logger()
-    return _logger
+    
+    if name is None:
+        return _logger
+    else:
+        # Gibt einen namensbasierten Logger zurück, der die Konfiguration des Root-Loggers verwendet
+        return logging.getLogger(name)
 
 def setup_logger(log_level=None):
     """
