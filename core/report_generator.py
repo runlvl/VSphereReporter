@@ -26,17 +26,77 @@ class ReportGenerator:
         """
         self.data = data
         
+        # Protokollieren der erhaltenen Daten für Diagnosezwecke
+        logger.info("Report Generator initialized with data:")
+        logger.info(f"VMware Tools: {len(data.get('vmware_tools', []))} entries")
+        logger.info(f"Snapshots: {len(data.get('snapshots', []))} entries")
+        logger.info(f"Orphaned VMDKs: {len(data.get('orphaned_vmdks', []))} entries")
+        logger.info(f"VMs: {len(data.get('vms', []))} entries")
+        logger.info(f"Hosts: {len(data.get('hosts', []))} entries")
+        logger.info(f"Datastores: {len(data.get('datastores', []))} entries")
+        
         # Sicherstellen, dass die erforderlichen Sektionen für Sprungmarken immer vorhanden sind
         # Dies ist wichtig, damit die Navigation in den Berichten korrekt funktioniert
         if not 'vmware_tools' in self.data:
             self.data['vmware_tools'] = []
             
         if not 'snapshots' in self.data:
+            logger.warning("No snapshots data found, creating empty list")
             self.data['snapshots'] = []
             
         if not 'orphaned_vmdks' in self.data:
+            logger.warning("No orphaned VMDKs data found, creating empty list")
             self.data['orphaned_vmdks'] = []
             
+        # Debug-Modus überprüfen
+        debug_mode = os.environ.get('VSPHERE_REPORTER_DEBUG', '0') == '1'
+        if debug_mode:
+            logger.warning("*** REPORT GENERATOR DEBUG MODE ACTIVE ***")
+            logger.warning(f"Final dataset sizes:")
+            logger.warning(f"VMware Tools: {len(self.data.get('vmware_tools', []))} entries")
+            logger.warning(f"Snapshots: {len(self.data.get('snapshots', []))} entries")
+            logger.warning(f"Orphaned VMDKs: {len(self.data.get('orphaned_vmdks', []))} entries")
+            logger.warning(f"VMs: {len(self.data.get('vms', []))} entries")
+            logger.warning(f"Hosts: {len(self.data.get('hosts', []))} entries")
+            logger.warning(f"Datastores: {len(self.data.get('datastores', []))} entries")
+        
+        # Wenn wir in einem Diagnosemodus sind, füge Testdaten hinzu
+        # Dies dient zur Überprüfung, ob die Berichtsvorlagen korrekt funktionieren
+        import os
+        if os.environ.get('VSPHERE_REPORTER_DEBUG') == '1':
+            logger.warning("Debug mode enabled, adding test data to reports")
+            
+            # Hinzufügen von Testdaten für Snapshots, wenn keine vorhanden sind
+            if len(self.data.get('snapshots', [])) == 0:
+                logger.info("Adding test snapshot entry")
+                test_snapshot = {
+                    'vm_name': 'TEST-VM-DEBUG',
+                    'name': 'TEST-SNAPSHOT-DEBUG',
+                    'description': 'This is a test snapshot for debugging',
+                    'create_time': datetime.datetime.now() - datetime.timedelta(days=10),
+                    'age_days': 10,
+                    'age_hours': 240
+                }
+                # Stelle sicher, dass wir nicht überschreiben
+                if 'snapshots' not in self.data:
+                    self.data['snapshots'] = []
+                self.data['snapshots'].append(test_snapshot)
+            
+            # Hinzufügen von Testdaten für Orphaned VMDKs, wenn keine vorhanden sind
+            if len(self.data.get('orphaned_vmdks', [])) == 0:
+                logger.info("Adding test orphaned VMDK entry")
+                test_vmdk = {
+                    'path': '[TEST-DATASTORE] TEST-VM-DEBUG/TEST-VM-DEBUG.vmdk',
+                    'datastore': 'TEST-DATASTORE',
+                    'size': 1073741824,  # 1 GB
+                    'modification_time': datetime.datetime.now() - datetime.timedelta(days=30),
+                    'reason': 'Test orphaned VMDK for debugging'
+                }
+                # Stelle sicher, dass wir nicht überschreiben
+                if 'orphaned_vmdks' not in self.data:
+                    self.data['orphaned_vmdks'] = []
+                self.data['orphaned_vmdks'].append(test_vmdk)
+        
         self.timestamp = datetime.datetime.now()
         self.filename_base = f"vsphere_report_{self.timestamp.strftime('%Y%m%d_%H%M%S')}"
         

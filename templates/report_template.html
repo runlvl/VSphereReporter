@@ -244,6 +244,18 @@
             <h2>VM Snapshots</h2>
             <p>{{ sections|selectattr('id', 'equalto', 'snapshots')|map(attribute='description')|first }}</p>
             
+            <!-- Diagnostische Information über Snapshots-Daten -->
+            <div style="background-color: #f0f9ff; border-left: 5px solid #00355e; padding: 10px; margin-bottom: 15px; font-family: monospace; font-size: 12px;">
+                <p><strong>Debug Information:</strong></p>
+                <p>Raw snapshots data type: {{ data.snapshots.__class__.__name__ }}</p>
+                <p>Number of snapshot entries: {{ data.snapshots|length }}</p>
+                {% if data.snapshots and data.snapshots|length > 0 %}
+                    <p>First snapshot keys: {{ data.snapshots[0].keys()|list }}</p>
+                {% else %}
+                    <p>No snapshot data available.</p>
+                {% endif %}
+            </div>
+            
             {% if data.snapshots and data.snapshots|length > 0 %}
             <table class="data-table">
                 <thead>
@@ -258,11 +270,11 @@
                 <tbody>
                     {% for snapshot in data.snapshots %}
                     <tr {% if snapshot.age_days > 7 %}class="warning"{% endif %}>
-                        <td>{{ snapshot.vm_name }}</td>
-                        <td>{{ snapshot.name }}</td>
-                        <td>{{ snapshot.description }}</td>
-                        <td>{{ snapshot.create_time|format_datetime }}</td>
-                        <td class="center">{{ snapshot.age_days }}</td>
+                        <td>{{ snapshot.get('vm_name', 'N/A') }}</td>
+                        <td>{{ snapshot.get('name', 'N/A') }}</td>
+                        <td>{{ snapshot.get('description', 'N/A') }}</td>
+                        <td>{{ snapshot.get('create_time')|format_datetime }}</td>
+                        <td class="center">{{ snapshot.get('age_days', 'N/A') }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -285,6 +297,18 @@
             <h2>Orphaned VMDK Files</h2>
             <p>{{ sections|selectattr('id', 'equalto', 'orphaned_vmdks')|map(attribute='description')|first }}</p>
             
+            <!-- Diagnostische Information über Orphaned VMDKs-Daten -->
+            <div style="background-color: #f0f9ff; border-left: 5px solid #00355e; padding: 10px; margin-bottom: 15px; font-family: monospace; font-size: 12px;">
+                <p><strong>Debug Information:</strong></p>
+                <p>Raw orphaned_vmdks data type: {{ data.orphaned_vmdks.__class__.__name__ }}</p>
+                <p>Number of orphaned_vmdks entries: {{ data.orphaned_vmdks|length }}</p>
+                {% if data.orphaned_vmdks and data.orphaned_vmdks|length > 0 %}
+                    <p>First orphaned_vmdk keys: {{ data.orphaned_vmdks[0].keys()|list }}</p>
+                {% else %}
+                    <p>No orphaned VMDK data available.</p>
+                {% endif %}
+            </div>
+            
             {% if data.orphaned_vmdks and data.orphaned_vmdks|length > 0 %}
             <table class="data-table">
                 <thead>
@@ -298,10 +322,10 @@
                 <tbody>
                     {% for vmdk in data.orphaned_vmdks %}
                     <tr>
-                        <td>{{ vmdk.path }}</td>
-                        <td>{{ vmdk.datastore }}</td>
-                        <td>{{ vmdk.size|format_size }}</td>
-                        <td>{{ vmdk.reason }}</td>
+                        <td>{{ vmdk.get('path', 'N/A') }}</td>
+                        <td>{{ vmdk.get('datastore', 'N/A') }}</td>
+                        <td>{{ vmdk.get('size', 0)|format_size }}</td>
+                        <td>{{ vmdk.get('reason', 'Unknown') }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

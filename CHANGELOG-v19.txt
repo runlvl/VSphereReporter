@@ -1,0 +1,12 @@
+VMware vSphere Reporter v19
+Veröffentlicht am 2025-04-14
+
+ÄNDERUNGEN:
+- Verbesserte Erkennung von Snapshots mit robusterer Fehlerbehandlung
+- Zusätzliche Namensvergleiche für bessere Snapshot-Identifikation
+- Vollständig überarbeiteter orphaned VMDK-Erkennungsalgorithmus:
+  * Normalisierung von Pfaden für bessere Vergleiche
+  * Weniger aggressive Filterung von VMDK-Typen (-flat, -delta, etc.)
+  * Erweiterte Suche in übergeordneten Verzeichnissen
+  * Optimierter Namensvergleich zwischen VMDKs und VMX-Dateien
+  * Verbesserte Erkennung von VMDKs, die nicht registrierten VMs gehören
