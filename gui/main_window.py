@@ -12,10 +12,10 @@ from PyQt5.QtWidgets import (
     QMainWindow, QAction, QMessageBox, QFileDialog, 
     QVBoxLayout, QHBoxLayout, QWidget, QPushButton,
     QLabel, QComboBox, QGroupBox, QCheckBox, QTabWidget,
-    QSplitter, QTextEdit, QStatusBar
+    QSplitter, QTextEdit, QStatusBar, QFrame
 )
 from PyQt5.QtCore import Qt, QSize, QThread, pyqtSignal
-from PyQt5.QtGui import QIcon, QFont
+from PyQt5.QtGui import QIcon, QFont, QColor, QPalette
 
 from gui.connection_dialog import ConnectionDialog
 from gui.report_options import ReportOptionsWidget
@@ -24,6 +24,8 @@ from core.vsphere_client import VSphereClient
 from core.report_generator import ReportGenerator
 from core.data_collector import DataCollector
 from utils.helper import get_save_directory
+from utils.logger import set_log_level, get_log_level_name, get_log_level_from_name
+from images.bechtle_logo import get_bechtle_logo_for_qt, BECHTLE_COLORS
 
 logger = logging.getLogger(__name__)
 
@@ -35,27 +37,133 @@ class MainWindow(QMainWindow):
         self.vsphere_client = None
         self.connected = False
         self.report_options = None
+        
+        # Bechtle corporate colors
+        self.bechtle_primary = BECHTLE_COLORS['primary']
+        self.bechtle_secondary = BECHTLE_COLORS['secondary']
+        self.bechtle_accent = BECHTLE_COLORS['accent']
+        self.bechtle_bg = BECHTLE_COLORS['bg']
+        self.bechtle_text = BECHTLE_COLORS['text']
+        
+        # Apply Bechtle style
+        self.apply_bechtle_style()
+        
+        # Initialize UI
         self.init_ui()
+        
+    def apply_bechtle_style(self):
+        """Apply Bechtle corporate style to the application"""
+        # Set application palette
+        palette = QPalette()
+        palette.setColor(QPalette.Window, QColor(self.bechtle_bg))
+        palette.setColor(QPalette.WindowText, QColor(self.bechtle_text))
+        palette.setColor(QPalette.Base, QColor(self.bechtle_bg))
+        palette.setColor(QPalette.AlternateBase, QColor(self.bechtle_bg))
+        palette.setColor(QPalette.ToolTipBase, QColor('white'))
+        palette.setColor(QPalette.ToolTipText, QColor(self.bechtle_text))
+        palette.setColor(QPalette.Text, QColor(self.bechtle_text))
+        palette.setColor(QPalette.Button, QColor(self.bechtle_bg))
+        palette.setColor(QPalette.ButtonText, QColor(self.bechtle_primary))
+        palette.setColor(QPalette.BrightText, QColor('white'))
+        palette.setColor(QPalette.Highlight, QColor(self.bechtle_primary))
+        palette.setColor(QPalette.HighlightedText, QColor('white'))
+        self.setPalette(palette)
+        
+        # Set stylesheet
+        self.setStyleSheet(f"""
+            QMainWindow, QWidget {{ 
+                background-color: {self.bechtle_bg}; 
+                color: {self.bechtle_text};
+            }}
+            QGroupBox {{ 
+                border: 1px solid {self.bechtle_primary}; 
+                border-radius: 5px; 
+                margin-top: 1ex; 
+                font-weight: bold;
+                padding: 10px;
+            }}
+            QGroupBox::title {{ 
+                subcontrol-origin: margin; 
+                subcontrol-position: top left; 
+                padding: 0 5px; 
+                color: {self.bechtle_primary};
+            }}
+            QPushButton {{ 
+                background-color: {self.bechtle_primary}; 
+                color: white; 
+                border: none; 
+                border-radius: 3px; 
+                padding: 5px 10px;
+                font-weight: bold;
+            }}
+            QPushButton:hover {{ 
+                background-color: {self.bechtle_secondary}; 
+            }}
+            QPushButton:disabled {{ 
+                background-color: #cccccc; 
+                color: #666666; 
+            }}
+            QComboBox, QLineEdit {{ 
+                border: 1px solid {self.bechtle_primary}; 
+                border-radius: 3px; 
+                padding: 2px 5px; 
+                background-color: white;
+                color: {self.bechtle_text};
+            }}
+            QTabWidget::pane {{ 
+                border: 1px solid {self.bechtle_primary}; 
+                border-radius: 3px; 
+            }}
+            QTabBar::tab {{ 
+                background-color: {self.bechtle_bg}; 
+                border: 1px solid {self.bechtle_primary}; 
+                border-bottom: none; 
+                border-top-left-radius: 3px; 
+                border-top-right-radius: 3px; 
+                padding: 5px 10px; 
+                color: {self.bechtle_text};
+            }}
+            QTabBar::tab:selected {{ 
+                background-color: {self.bechtle_primary}; 
+                color: white;
+            }}
+            QCheckBox::indicator:checked {{ 
+                background-color: {self.bechtle_accent}; 
+            }}
+        """)
         
     def init_ui(self):
         """Initialize the user interface"""
-        self.setWindowTitle("VMware vSphere Reporter")
-        self.setMinimumSize(900, 600)
+        self.setWindowTitle("VMware vSphere Reporter | Bechtle AG")
+        self.setMinimumSize(900, 700)
+        self.resize(900, 700)
         
         # Create central widget and main layout
         central_widget = QWidget()
         main_layout = QVBoxLayout(central_widget)
+        main_layout.setContentsMargins(10, 10, 10, 10)
         
         # Create menu bar
         self.create_menu_bar()
         
+        # Create header with Bechtle branding
+        self.create_bechtle_header(main_layout)
+        
         # Create top status area
         status_layout = QHBoxLayout()
+        status_layout.setContentsMargins(0, 10, 0, 10)
+        
+        status_label = QLabel("Connection Status:")
+        status_label.setFont(QFont("Segoe UI", 10, QFont.Bold))
+        status_label.setStyleSheet(f"color: {self.bechtle_primary};")
+        
         self.connection_status = QLabel("Not connected to vCenter")
-        self.connection_status.setStyleSheet("color: red;")
+        self.connection_status.setStyleSheet(f"color: {self.bechtle_secondary}; font-weight: bold;")
+        
         self.connect_button = QPushButton("Connect to vCenter")
         self.connect_button.clicked.connect(self.show_connection_dialog)
         
+        status_layout.addWidget(status_label)
         status_layout.addWidget(self.connection_status)
         status_layout.addStretch(1)
         status_layout.addWidget(self.connect_button)
@@ -67,7 +175,12 @@ class MainWindow(QMainWindow):
         self.report_options_widget.setEnabled(False)
         main_layout.addWidget(self.report_options_widget)
         
-        # Create export options
+        # Create export options and log settings
+        options_frame = QFrame()
+        options_layout = QHBoxLayout(options_frame)
+        options_layout.setContentsMargins(0, 0, 0, 0)
+        
+        # Export options section
         export_group = QGroupBox("Export Options")
         export_layout = QVBoxLayout()
         
@@ -87,7 +200,38 @@ class MainWindow(QMainWindow):
         export_layout.addWidget(self.export_button)
         
         export_group.setLayout(export_layout)
-        main_layout.addWidget(export_group)
+        options_layout.addWidget(export_group)
+        
+        # Log settings section
+        log_settings_group = QGroupBox("Log Settings")
+        log_settings_layout = QVBoxLayout()
+        
+        log_level_layout = QHBoxLayout()
+        log_level_layout.addWidget(QLabel("Log Detail Level:"))
+        
+        self.log_level_combo = QComboBox()
+        self.log_level_combo.addItems(["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
+        # Set default to INFO (index 1)
+        self.log_level_combo.setCurrentIndex(1)
+        self.log_level_combo.currentIndexChanged.connect(self.change_log_level)
+        log_level_layout.addWidget(self.log_level_combo)
+        
+        log_settings_layout.addLayout(log_level_layout)
+        
+        log_info_label = QLabel(
+            "Debug: Shows all messages including detailed diagnostics\n"
+            "Info: Normal operational messages (Default)\n"
+            "Warning: Issues that might need attention\n"
+            "Error: Serious issues affecting functionality\n"
+            "Critical: Critical errors requiring immediate attention"
+        )
+        log_info_label.setStyleSheet("font-size: 10px; color: #666666;")
+        log_settings_layout.addWidget(log_info_label)
+        
+        log_settings_group.setLayout(log_settings_layout)
+        options_layout.addWidget(log_settings_group)
+        
+        main_layout.addWidget(options_frame)
         
         # Set central widget
         self.setCentralWidget(central_widget)
@@ -162,7 +306,7 @@ class MainWindow(QMainWindow):
             self.vsphere_client = client
             self.connected = True
             self.connection_status.setText(f"Connected to: {self.vsphere_client.server}")
-            self.connection_status.setStyleSheet("color: green;")
+            self.connection_status.setStyleSheet(f"color: {self.bechtle_accent}; font-weight: bold;")
             self.connect_button.setText("Reconnect")
             self.report_options_widget.setEnabled(True)
             self.export_button.setEnabled(True)
@@ -170,6 +314,7 @@ class MainWindow(QMainWindow):
         else:
             QMessageBox.critical(self, "Connection Error", 
                                 f"Failed to connect to vCenter:\n{error_message}")
+            self.connection_status.setStyleSheet(f"color: {self.bechtle_secondary}; font-weight: bold;")
             self.statusBar.showMessage("Connection failed", 3000)
     
     def generate_report(self):
@@ -227,16 +372,158 @@ class MainWindow(QMainWindow):
     
     def show_about_dialog(self):
         """Show the about dialog"""
-        QMessageBox.about(
-            self, 
-            "About VMware vSphere Reporter",
-            "VMware vSphere Reporter 1.0.0\n\n"
-            "A comprehensive reporting tool for VMware vSphere environments.\n\n"
-            "This tool allows you to generate detailed reports about your "
-            "vSphere environment including VMware Tools versions, "
-            "snapshot status, orphaned VMDKs, and more."
+        # Apply Bechtle style to the about dialog
+        about_text = (
+            f"<html>"
+            f"<head>"
+            f"<style>"
+            f"body {{ font-family: 'Segoe UI', Arial, sans-serif; }}"
+            f"h1 {{ color: {self.bechtle_primary}; }}"
+            f"h2 {{ color: {self.bechtle_secondary}; }}"
+            f".accent {{ color: {self.bechtle_accent}; }}"
+            f"</style>"
+            f"</head>"
+            f"<body>"
+            f"<h1>VMware vSphere Reporter</h1>"
+            f"<p><b>Version 1.0.0</b></p>"
+            f"<p>A comprehensive reporting tool for VMware vSphere environments.</p>"
+            f"<p>This tool allows you to generate detailed reports about your "
+            f"vSphere environment including:</p>"
+            f"<ul>"
+            f"<li><span class='accent'>VMware Tools versions</span> (sorted by oldest first)</li>"
+            f"<li><span class='accent'>VM Snapshot status</span> (sorted by age)</li>"
+            f"<li><span class='accent'>Orphaned VMDK files</span></li>"
+            f"<li>And more...</li>"
+            f"</ul>"
+            f"<p>© 2025 Bechtle AG</p>"
+            f"</body>"
+            f"</html>"
         )
+        
+        # Create custom styled message box
+        msg_box = QMessageBox(self)
+        msg_box.setWindowTitle("About VMware vSphere Reporter")
+        msg_box.setText(about_text)
+        msg_box.setStandardButtons(QMessageBox.Ok)
+        
+        # Set icon
+        logo_pixmap = get_bechtle_logo_for_qt()
+        if logo_pixmap:
+            msg_box.setIconPixmap(logo_pixmap)
+        
+        # Show the dialog
+        msg_box.exec_()
     
+    def create_bechtle_header(self, layout):
+        """Create header with Bechtle branding"""
+        try:
+            # Create a frame for the header
+            header_frame = QFrame()
+            header_frame.setStyleSheet(f"background-color: {self.bechtle_bg}; border: none;")
+            header_layout = QHBoxLayout(header_frame)
+            header_layout.setContentsMargins(0, 0, 0, 10)
+            
+            # Try to load logo
+            logo_pixmap = get_bechtle_logo_for_qt()
+            
+            # Left side - logo
+            logo_frame = QFrame()
+            logo_frame.setStyleSheet(f"background-color: {self.bechtle_bg}; border: none;")
+            logo_layout = QVBoxLayout(logo_frame)
+            logo_layout.setContentsMargins(10, 0, 10, 0)
+            
+            if logo_pixmap:
+                logo_label = QLabel()
+                logo_label.setPixmap(logo_pixmap)
+                logo_layout.addWidget(logo_label)
+            else:
+                # Fallback to text if image can't be loaded
+                logo_text = QLabel("BECHTLE")
+                logo_text.setFont(QFont("Segoe UI", 18, QFont.Bold))
+                logo_text.setStyleSheet(f"color: {self.bechtle_primary};")
+                logo_layout.addWidget(logo_text)
+            
+            header_layout.addWidget(logo_frame)
+            
+            # First slogan frame - Bechtle branding
+            slogan_frame = QFrame()
+            slogan_frame.setStyleSheet(f"background-color: {self.bechtle_bg}; border: none;")
+            slogan_layout = QVBoxLayout(slogan_frame)
+            slogan_layout.setContentsMargins(0, 5, 0, 0)
+            slogan_layout.setSpacing(0)
+            
+            slogan_main = QLabel("Cloud Solutions")
+            slogan_main.setFont(QFont("Segoe UI", 14, QFont.Bold))
+            slogan_main.setStyleSheet(f"color: {self.bechtle_secondary};")  # Orange color for main slogan
+            slogan_layout.addWidget(slogan_main)
+            
+            slogan_sub = QLabel("Datacenter & Endpoint")
+            slogan_sub.setFont(QFont("Segoe UI", 12))
+            slogan_sub.setStyleSheet(f"color: {self.bechtle_text};")  # Dark gray for sub-slogan
+            slogan_layout.addWidget(slogan_sub)
+            
+            header_layout.addWidget(slogan_frame)
+            
+            # Vertical separator line
+            separator = QFrame()
+            separator.setFrameShape(QFrame.VLine)
+            separator.setFixedWidth(2)
+            separator.setStyleSheet(f"background-color: {self.bechtle_primary};")
+            header_layout.addWidget(separator, 0, Qt.AlignCenter)
+            
+            # Second slogan frame - Application name
+            app_frame = QFrame()
+            app_frame.setStyleSheet(f"background-color: {self.bechtle_bg}; border: none;")
+            app_layout = QVBoxLayout(app_frame)
+            app_layout.setContentsMargins(10, 5, 0, 0)
+            app_layout.setSpacing(0)
+            
+            app_name = QLabel("VMware vSphere Reporter")
+            app_name.setFont(QFont("Segoe UI", 16, QFont.Bold))
+            app_name.setStyleSheet(f"color: {self.bechtle_primary};")  # Primary blue color for app name
+            app_layout.addWidget(app_name)
+            
+            # Version text
+            version_text = QLabel("Version 1.0.0")
+            version_text.setFont(QFont("Segoe UI", 10))
+            version_text.setStyleSheet(f"color: {self.bechtle_text};")
+            app_layout.addWidget(version_text)
+            
+            header_layout.addWidget(app_frame)
+            
+            # Add stretch at the end to push everything to the left
+            header_layout.addStretch(1)
+            
+            # Add the header to the main layout
+            layout.addWidget(header_frame)
+            
+            # Add a horizontal line
+            separator_line = QFrame()
+            separator_line.setFrameShape(QFrame.HLine)
+            separator_line.setFixedHeight(2)
+            separator_line.setStyleSheet(f"background-color: {self.bechtle_primary};")
+            layout.addWidget(separator_line)
+            
+        except Exception as e:
+            logger.warning(f"Could not create Bechtle header: {str(e)}")
+    
+    def change_log_level(self, index):
+        """
+        Change the logging level based on the combo box selection
+        
+        Args:
+            index (int): Index of the selected item in the combo box
+        """
+        log_level_name = self.log_level_combo.currentText()
+        log_level = get_log_level_from_name(log_level_name)
+        
+        # Set the new log level
+        set_log_level(log_level)
+        
+        # Show confirmation in status bar
+        self.statusBar.showMessage(f"Log level changed to {log_level_name}", 3000)
+        logger.info(f"Log level changed to {log_level_name}")
+        
     def closeEvent(self, event):
         """Handle window close event"""
         if self.connected and self.vsphere_client:

@@ -9,9 +9,32 @@
     </style>
 </head>
 <body>
+    <!-- Fixed Navigation Bar -->
+    <nav class="nav-fixed">
+        <!-- Bechtle Logo (small version for nav) -->
+        <svg class="nav-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 20" width="80" height="20">
+            <path fill="white" d="M15.8,5.1h-3.4c-2.3,0-3.5,1.3-3.5,3.5v2.8c0,2.3,1.2,3.5,3.5,3.5h3.4c2.3,0,3.5-1.3,3.5-3.5V8.6 C19.2,6.4,18,5.1,15.8,5.1z M16.2,11.6c0,0.8-0.4,1.2-1.1,1.2h-2.2c-0.8,0-1.1-0.4-1.1-1.2V8.4c0-0.8,0.4-1.2,1.1-1.2h2.2 c0.8,0,1.1,0.4,1.1,1.2V11.6z"/>
+            <path fill="white" d="M26.4,5.1H23c-2.3,0-3.5,1.3-3.5,3.5v2.8c0,2.3,1.2,3.5,3.5,3.5h3.4c2.3,0,3.5-1.3,3.5-3.5V8.6 C29.8,6.4,28.6,5.1,26.4,5.1z M26.8,11.6c0,0.8-0.4,1.2-1.1,1.2h-2.2c-0.8,0-1.1-0.4-1.1-1.2V8.4c0-0.8,0.4-1.2,1.1-1.2h2.2 c0.8,0,1.1,0.4,1.1,1.2V11.6z"/>
+            <path fill="white" d="M42.1,7.5V5.1h-2.9v2.4h-0.6V5.1h-2.9v2.4h-0.6V5.1h-2.9v7.3c0,2.3,1.2,3.5,3.5,3.5h3.4 c2.3,0,3.5-1.3,3.5-3.5V7.5H42.1z M39.2,11.6c0,0.8-0.4,1.2-1.1,1.2h-2.2c-0.8,0-1.1-0.4-1.1-1.2V8.4c0-0.8,0.4-1.2,1.1-1.2h2.2 c0.8,0,1.1,0.4,1.1,1.2V11.6z"/>
+            <path fill="white" d="M52.7,5.1h-3.4c-2.3,0-3.5,1.3-3.5,3.5v3.8h2.9V8.2c0-0.8,0.4-1.2,1.1-1.2h2.2c0.8,0,1.1,0.4,1.1,1.2 v4.2h2.9V8.6C56.2,6.4,55,5.1,52.7,5.1z"/>
+            <path fill="white" d="M60.5,5.1h-2.9v9.8h6.9v-1.9h-4V5.1z"/>
+            <path fill="white" d="M73.6,7.3h-6.9v1.9h4v5.8h2.9V7.3z"/>
+            <path fill="#da6f1e" d="M9.2,5.1h-9v9.8h2.9v-4.2h6.1V8.8H3.2V7h6.1V5.1z"/>
+        </svg>
+        
+        <div class="nav-title">VMware vSphere Reporter</div>
+        
+        <ul class="nav-links">
+            <li><a href="#executive-summary">Summary</a></li>
+            {% for section in sections %}
+            <li><a href="#{{ section.id }}">{{ section.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </nav>
+
     <div class="container">
         <!-- Title page -->
-        <div class="title-page">
+        <div class="title-page" id="top">
             <!-- Bechtle Logo (SVG inline for better portability) -->
             <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40">
                 <path fill="#00355e" d="M31.5,10.2h-6.8c-4.5,0-6.9,2.5-6.9,7v5.6c0,4.5,2.4,7,6.9,7h6.8c4.5,0,6.9-2.5,6.9-7v-5.6 C38.4,12.7,36,10.2,31.5,10.2z M32.4,23.2c0,1.5-0.8,2.3-2.2,2.3h-4.3c-1.5,0-2.2-0.8-2.2-2.3v-6.4c0-1.5,0.8-2.3,2.2-2.3h4.3 c1.5,0,2.2,0.8,2.2,2.3V23.2z"/>
@@ -452,5 +475,68 @@
             <p>© {{ report_date.year }} Bechtle AG. All rights reserved.</p>
         </div>
     </div>
+    
+    <!-- Back to top button -->
+    <a href="#top" class="back-to-top" id="backToTop">↑</a>
+    
+    <!-- JavaScript for navigation and fixed elements -->
+    <script>
+        // Back to top button visibility
+        window.addEventListener('scroll', function() {
+            var backToTopButton = document.getElementById('backToTop');
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        });
+        
+        // Highlight active menu item based on scroll position
+        window.addEventListener('scroll', function() {
+            // Get all sections
+            var sections = document.querySelectorAll('.section');
+            var navLinks = document.querySelectorAll('.nav-links a');
+            
+            // Determine current scroll position
+            var currentPos = window.pageYOffset;
+            
+            // Find the current section
+            sections.forEach(function(section) {
+                var sectionTop = section.offsetTop - 100; // Account for nav height
+                var sectionBottom = sectionTop + section.offsetHeight;
+                
+                if (currentPos >= sectionTop && currentPos < sectionBottom) {
+                    // Remove active class from all links
+                    navLinks.forEach(function(link) {
+                        link.classList.remove('active');
+                    });
+                    
+                    // Add active class to corresponding nav link
+                    var id = section.getAttribute('id');
+                    var correspondingLink = document.querySelector('.nav-links a[href="#' + id + '"]');
+                    if (correspondingLink) {
+                        correspondingLink.classList.add('active');
+                    }
+                }
+            });
+        });
+        
+        // Smooth scroll to sections when clicking navigation links
+        document.querySelectorAll('.nav-links a, .toc a, .back-to-top').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                var targetId = this.getAttribute('href');
+                var targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 60,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
