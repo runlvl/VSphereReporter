@@ -92,12 +92,22 @@ class GenerateReportWorker(QObject):
         self.options = options
         self.output_dir = output_dir
         self.logger = get_logger(__name__)
+        self.is_running = False
+        self.abort_requested = False
         
     def generate(self):
         """Generiere den Report"""
+        self.is_running = True
         try:
             self.logger.info("Starte Report-Generierung")
             self.status_update.emit("Sammle Daten von vSphere...")
+            
+            # Prüfe regelmäßig, ob die Ausführung abgebrochen werden soll
+            if self.abort_requested:
+                self.logger.info("Report-Generierung abgebrochen")
+                self.finished.emit(False, [], "Report-Generierung wurde abgebrochen.")
+                self.is_running = False
+                return
             
             # Sammle Daten
             collector = DataCollector(self.vsphere_client)
@@ -159,6 +169,9 @@ class GenerateReportWorker(QObject):
                 self.logger.error(f"Gefundene Templates: {templates}")
             
             self.finished.emit(False, [], f"Fehler bei der Report-Generierung: {str(e)}\n\nDetails: {error_trace[:500]}...")
+        finally:
+            # Stellen Sie sicher, dass is_running zurückgesetzt wird
+            self.is_running = False
 
 class MainWindow(QMainWindow):
     """Hauptfenster der Anwendung"""
@@ -326,7 +339,7 @@ class MainWindow(QMainWindow):
         app_layout.addWidget(app_label)
         
         # Version
-        version_label = QLabel("Version 1.0.0")
+        version_label = QLabel("Version 24.0")
         version_label.setStyleSheet(f"color: {BECHTLE_TEXT}; font-size: 10px;")
         version_label.setAlignment(Qt.AlignLeft)
         app_layout.addWidget(version_label)
@@ -665,10 +678,23 @@ class MainWindow(QMainWindow):
                                "Bitte stellen Sie zuerst eine Verbindung zu vCenter her.")
             return
         
+        # Beende laufende Threads, falls vorhanden
+        if hasattr(self, 'report_thread') and self.report_thread and self.report_thread.isRunning():
+            self.logger.warning("Es läuft bereits ein Report-Thread - beende diesen zuerst")
+            if hasattr(self, 'report_worker') and self.report_worker:
+                self.report_worker.abort_requested = True
+            self.report_thread.quit()
+            self.report_thread.wait(2000)  # 2 Sekunden warten
+            if self.report_thread.isRunning():
+                self.logger.warning("Thread konnte nicht beendet werden, versuche es nochmal")
+                self.report_thread.terminate()
+                self.report_thread.wait(1000)  # 1 Sekunde warten
+        
         # Optionen sammeln
+        selected_options = self.report_options.get_selected_options()
         options = {
-            'formats': self.report_options.get_selected_formats(),
-            'sections': self.report_options.get_selected_sections()
+            'formats': selected_options['formats'],
+            'sections': selected_options['sections']
         }
         
         # Prüfe, ob ein Format ausgewählt ist
@@ -696,18 +722,30 @@ class MainWindow(QMainWindow):
         self.report_worker.moveToThread(thread)
         thread.started.connect(self.report_worker.generate)
         
+        # Speichere die Thread-Referenz
+        self.report_thread = thread
+        
         # Verbinde Signale
         self.report_worker.status_update.connect(progress.update_status)
         self.report_worker.finished.connect(lambda success, files, error: 
-                                          self.report_finished(success, files, progress, error))
+                                          self.report_finished(success, files, progress, error, thread))
         thread.finished.connect(thread.deleteLater)
+        self.report_worker.finished.connect(self.report_worker.deleteLater)
+        
+        # Fortschrittsdialog für Abbruch vorbereiten
+        progress.enable_cancel(lambda: self.cancel_report_generation(thread))
         
         # Starte Thread
         thread.start()
     
-    def report_finished(self, success, output_files, progress_dialog, error=None):
+    def report_finished(self, success, output_files, progress_dialog, error=None, thread=None):
         """Behandle das Ergebnis der Report-Generierung"""
         progress_dialog.close()
+        
+        # Thread sicher beenden
+        if thread and thread.isRunning():
+            thread.quit()
+            thread.wait(2000)  # 2 Sekunden warten, damit der Thread ordnungsgemäß beendet wird
         
         if success:
             self.logger.info(f"Report-Generierung abgeschlossen: {output_files}")
@@ -747,19 +785,63 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "Fehler bei der Report-Generierung", 
                                 f"Bei der Generierung des Reports ist ein Fehler aufgetreten:\n\n{error_msg}")
     
+    def cancel_report_generation(self, thread):
+        """Bricht die laufende Report-Generierung ab"""
+        self.logger.info("Abbruch der Report-Generierung angefordert")
+        
+        if hasattr(self, 'report_worker') and self.report_worker and hasattr(self.report_worker, 'abort_requested'):
+            self.report_worker.abort_requested = True
+            self.logger.info("Worker über Abbruch informiert")
+        
+        if thread and thread.isRunning():
+            thread.quit()
+            success = thread.wait(2000)  # 2 Sekunden warten
+            
+            if not success or thread.isRunning():
+                self.logger.warning("Thread konnte nicht ordnungsgemäß beendet werden")
+                thread.terminate()
+                self.logger.warning("Thread wurde forciert beendet")
+            else:
+                self.logger.info("Thread erfolgreich beendet")
+    
     def show_about(self):
         """Zeige den Über-Dialog"""
         QMessageBox.about(self, "Über VMware vSphere Reporter",
                          """<h1>VMware vSphere Reporter</h1>
-                         <p>Version 1.0.0</p>
+                         <p>Version 24.0</p>
                          <p>Ein umfassendes Reporting-Tool für VMware vSphere-Umgebungen</p>
                          <p>Entwickelt für Bechtle GmbH</p>
                          <p>Copyright &copy; 2025 Bechtle GmbH</p>""")
     
     def closeEvent(self, event):
         """Wird aufgerufen, wenn das Fenster geschlossen wird"""
+        self.logger.info("Anwendung wird beendet...")
+        
+        # Verbindung zum vCenter trennen, falls vorhanden
         if self.connected and self.vsphere_client:
             self.vsphere_client.disconnect()
             self.logger.info(f"Verbindung zu {self.server} getrennt")
+        
+        # Alle laufenden Threads beenden
+        if hasattr(self, 'report_thread') and self.report_thread and self.report_thread.isRunning():
+            self.logger.info("Beende laufenden Report-Thread...")
             
+            # Versuche den Worker zu benachrichtigen
+            if hasattr(self, 'report_worker') and self.report_worker and hasattr(self.report_worker, 'abort_requested'):
+                self.report_worker.abort_requested = True
+                self.logger.info("Worker über Abbruch informiert")
+            
+            # Thread beenden
+            self.report_thread.quit()
+            success = self.report_thread.wait(3000)  # 3 Sekunden warten
+            
+            if not success or self.report_thread.isRunning():
+                self.logger.warning("Thread konnte nicht ordnungsgemäß beendet werden")
+                # Forcieren beenden (nicht ideal, aber verhindert hängende Threads)
+                self.report_thread.terminate()
+                self.logger.warning("Thread wurde forciert beendet")
+            else:
+                self.logger.info("Thread erfolgreich beendet")
+            
+        self.logger.info("Anwendung wird beendet")
         event.accept()
