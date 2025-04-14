@@ -195,8 +195,7 @@ class MainWindow(QMainWindow):
         main_layout = QVBoxLayout()
         central_widget.setLayout(main_layout)
         
-        # Erstelle Menüs
-        self.create_menus()
+        # Erstelle Report-Optionen und andere UI-Elemente zuerst, bevor wir Menüs erstellen
         
         # Erstelle Statusleiste
         self.statusBar = QStatusBar()
@@ -316,6 +315,9 @@ class MainWindow(QMainWindow):
         
         # Verbinde Logger mit Log-Widget
         self.setup_log_handler()
+        
+        # Nachdem alle UI-Elemente initialisiert wurden, erstellen wir die Menüs
+        self.create_menus()
         
         self.logger.info("Benutzeroberfläche initialisiert")
     
