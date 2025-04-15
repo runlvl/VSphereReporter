@@ -166,19 +166,27 @@ class EnhancedDataCollector:
         # Debug-Modus-Check für verbesserte Protokollierung
         debug_mode = os.environ.get('VSPHERE_REPORTER_DEBUG', '0') == '1'
         if debug_mode:
-            logger.warning("*** ENHANCED ORPHANED VMDK COLLECTION - V24.0 ***")
+            logger.warning("*** ENHANCED ORPHANED VMDK COLLECTION - V24.1 ***")
         
-        logger.info("Using enhanced v24.0 orphaned VMDK collection")
+        logger.info("Using enhanced v24.1 orphaned VMDK collection")
         
-        # Registrierte VMDKs mit verbessertem Ansatz sammeln
-        registered_vmdks = set()
-        
+        # Globaler Exception-Handler - Tool darf nicht abstürzen, auch bei unerwarteten Fehlern
         try:
-            # Direkter Zugriff auf alle VMs
-            content = client.service_instance.content
-            vm_view = content.viewManager.CreateContainerView(
-                content.rootFolder, [vim.VirtualMachine], True)
-            vms = vm_view.view
+            # Registrierte VMDKs mit verbessertem Ansatz sammeln
+            registered_vmdks = set()
+            
+            try:
+                # Direkter Zugriff auf alle VMs
+                content = client.service_instance.content
+                vm_view = content.viewManager.CreateContainerView(
+                    content.rootFolder, [vim.VirtualMachine], True)
+                vms = vm_view.view
+            except Exception as e:
+                if debug_mode:
+                    logger.error(f"Fehler beim Zugriff auf VMs: {str(e)}")
+                else:
+                    logger.debug(f"Fehler beim Zugriff auf VMs: {str(e)}")
+                vms = []
             
             # Erfasse alle registrierten VMDKs
             for vm in vms:
@@ -261,22 +269,29 @@ class EnhancedDataCollector:
                             
                             # Verarbeite die Suchergebnisse mit verbesserter Fehlerbehandlung
                             for result in search_results:
-                                folder_path = result.folderPath
-                                
-                                # Verbessertes Logging für Nachverfolgung
-                                if debug_mode:
-                                    logger.warning(f"Checking folder: {folder_path} with {len(result.file)} files")
+                                try:
+                                    folder_path = result.folderPath
                                     
-                                for file_info in result.file:
-                                    try:
-                                        if not file_info.path.lower().endswith('.vmdk'):
-                                            continue
+                                    # Überprüfe, ob die Dateien-Eigenschaft existiert und nicht leer ist
+                                    if not hasattr(result, 'file') or not result.file:
+                                        if debug_mode:
+                                            logger.warning(f"Folder {folder_path} has no files or file property")
+                                        continue
+                                    
+                                    # Verbessertes Logging für Nachverfolgung
+                                    if debug_mode:
+                                        logger.warning(f"Checking folder: {folder_path} with {len(result.file)} files")
+                                    
+                                    for file_info in result.file:
+                                        try:
+                                            if not file_info.path.lower().endswith('.vmdk'):
+                                                continue
+                                                
+                                            # Vollständigen Pfad konstruieren
+                                            full_path = folder_path + file_info.path
+                                            normalized_path = full_path.lower()
                                             
-                                        # Vollständigen Pfad konstruieren
-                                        full_path = folder_path + file_info.path
-                                        normalized_path = full_path.lower()
-                                        
-                                        # Prüfe auf Hilfs-VMDK-Dateien (delta, flat)
+                                            # Prüfe auf Hilfs-VMDK-Dateien (delta, flat)
                                         if ("-flat.vmdk" in normalized_path or 
                                             "-delta.vmdk" in normalized_path or 
                                             "-ctk.vmdk" in normalized_path or
