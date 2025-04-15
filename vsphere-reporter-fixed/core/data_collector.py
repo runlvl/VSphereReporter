@@ -13,6 +13,7 @@ import os
 from pyVmomi import vim
 from contextlib import contextmanager
 from core.enhanced_collector import EnhancedDataCollector
+from core.direct_vmdk_collector import collect_orphaned_vmdks as direct_collect_orphaned_vmdks
 
 # Configure the logger
 logger = logging.getLogger(__name__)
@@ -125,11 +126,11 @@ class DataCollector:
                 'networks': True
             }
             
-        # Pflichtdaten sammeln mit verbesserten V24.0-Methoden
+        # Pflichtdaten sammeln mit verbesserten V24.3-Methoden
         data = {
             'vmware_tools': self.collect_vmware_tools_info(),
             'snapshots': EnhancedDataCollector.collect_snapshots(self.client),
-            'orphaned_vmdks': EnhancedDataCollector.collect_orphaned_vmdks(self.client)
+            'orphaned_vmdks': direct_collect_orphaned_vmdks(self.client)  # Neue direkte VMDK-Erkennungsmethode
         }
         
         # Optionale Daten je nach Konfiguration sammeln
