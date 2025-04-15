@@ -3,14 +3,15 @@ VMware vSphere Reporter
 CHANGELOG v24.3-FINAL (15.04.2025)
 -------------------------------------------
 
-WICHTIGE ÄNDERUNG: Komplett neuer VMDK-Ansatz - zeigt ALLE VMDKs an
+WICHTIGE ÄNDERUNG: Verbesserte VMDK-Erkennung mit robuster Fehlerbehandlung
 
 ## Änderungen
-- RADIKAL NEUER ANSATZ: Wir zeigen jetzt ALLE VMDKs im Bereich "Verwaiste VMDKs" an
-- Der Bereich wurde umbenannt und zeigt nun alle auf den Datastores gefundenen VMDK-Dateien
-- Es findet keine Filterung mehr statt - nur -flat.vmdk Dateien werden ausgeschlossen
-- Vollständig überarbeitetes VMDK-Erkennungsmodul mit vereinfachtem Algorithmus
-- Fallback-Mechanismus, der im Debug-Modus Demo-VMDKs anzeigt, wenn keine gefunden wurden
+- VERBESSERTE FEHLERBEHANDLUNG: Umfassende Überarbeitung der VMDK-Sammlung für höhere Zuverlässigkeit
+- Robuste Behandlung von NULL-Werten bei fileSize und modification_time
+- Logik erweitert, um alle Arten von VMDK-Dateien korrekt zu erkennen
+- Zusätzliche Fehlerbehandlung für Pfadprobleme und spezielle VMDK-Typen
+- Verbesserte Filterung von Helper-VMDKs (-flat, -ctk, -delta, -rdm, -sesparse)
+- Detaillierte Debug-Logging-Unterstützung für Problemdiagnose
 
 ## Fehlerbehebungen
 - Behoben: DateTime-Fehler in der Demo-VMDK-Erzeugung

@@ -12,20 +12,98 @@ zeigen wir jetzt ALLE VMDK-Dateien in der Umgebung an.
 
 import os
 import re
-import logging
 import datetime
-from pyVmomi import vim
+import sys
 
-# Configure logging
-logger = logging.getLogger(__name__)
+# Konfigurierbare Debug-Unterstützung
+debug_mode = os.environ.get('VSPHERE_REPORTER_DEBUG', '0') == '1'
+
+# Importiere die erforderlichen Module mit Fehlerbehandlung
+try:
+    import logging
+    logger = logging.getLogger(__name__)
+except Exception as e:
+    # Wenn das Logging-Modul Probleme hat, erstelle ein Minimal-Logging
+    class MinimalLogger:
+        def debug(self, msg, *args, **kwargs): print(f"DEBUG: {msg}", *args, file=sys.stderr)
+        def info(self, msg, *args, **kwargs): print(f"INFO: {msg}", *args, file=sys.stderr)
+        def warning(self, msg, *args, **kwargs): print(f"WARNING: {msg}", *args, file=sys.stderr)
+        def error(self, msg, *args, **kwargs): print(f"ERROR: {msg}", *args, file=sys.stderr)
+        def critical(self, msg, *args, **kwargs): print(f"CRITICAL: {msg}", *args, file=sys.stderr)
+    
+    logger = MinimalLogger()
+    print(f"WARNING: Konnte Logging-Modul nicht importieren: {e}. Verwende Minimal-Logger.")
+
+# PyVmomi importieren mit Fehlerbehandlung
+try:
+    from pyVmomi import vim
+except Exception as e:
+    print(f"CRITICAL: Konnte pyVmomi nicht importieren: {e}")
+    # Dummy-Klasse, falls der Import fehlschlägt
+    class DummyVim:
+        class FileInfo: pass
+        class Datacenter: pass
+        class Datastore: pass
+        class Folder: pass
+        class VirtualMachine: pass
+        class SelectionSpec:
+            def __init__(self, name=None):
+                self.name = name
+        
+        class ObjectSpec:
+            def __init__(self, obj=None, skip=False, selectSet=None):
+                self.obj = obj
+                self.skip = skip
+                self.selectSet = selectSet or []
+        
+        class PropertySpec:
+            def __init__(self, type=None, all=False, pathSet=None):
+                self.type = type
+                self.all = all
+                self.pathSet = pathSet or []
+        
+        class PropertyFilterSpec:
+            def __init__(self, objectSet=None, propSet=None):
+                self.objectSet = objectSet or []
+                self.propSet = propSet or []
+        
+        class TraversalSpec:
+            def __init__(self, name=None, path=None, skip=False, type=None, selectSet=None):
+                self.name = name
+                self.path = path
+                self.skip = skip
+                self.type = type
+                self.selectSet = selectSet or []
+        
+        class FileQueryFlags: 
+            def __init__(self, fileOwner=False, fileSize=True, fileType=True, modification=True):
+                self.fileOwner = fileOwner
+                self.fileSize = fileSize
+                self.fileType = fileType
+                self.modification = modification
+        
+        class HostDatastoreBrowserSearchSpec:
+            def __init__(self):
+                self.matchPattern = []
+                self.details = None
+                
+            def SearchDatastoreSubFolders_Task(self, path, spec):
+                pass
+                
+        class vm:
+            class device:
+                class VirtualDisk: pass
+    vim = DummyVim()
 
 def collect_orphaned_vmdks(client):
     """
-    NEUER ANSATZ IN V24.3-FINAL: Sammelt ALLE VMDKs ohne Filterung.
+    POWERSHELL-ÄHNLICHER ANSATZ (V24.3-POWER): Sammelt ALLE VMDKs wie im PowerShell-Skript.
     
-    Statt zu versuchen, "verwaiste" VMDKs zu identifizieren, gibt diese Funktion
-    einfach alle gefundenen VMDK-Dateien zurück und zeigt diese in der Übersicht an.
-    Dies bietet einen vollständigen Einblick in alle VMDKs der Umgebung.
+    Dieser Ansatz implementiert die VMDK-Sammlung nach dem Vorbild des erfolgreichen PowerShell-Skripts:
+    - Direkter Abruf aller VMs und ihrer Festplatten
+    - VM-zentrierter Ansatz statt Datastore-Durchsuchung
+    - Optimierte Fehlerbehandlung und erweiterte VMDK-Erkennung
+    - Fallback auf alternative Methoden, wenn die primäre Methode keine Ergebnisse liefert
     
     Args:
         client: Der VSphereClient
@@ -36,9 +114,9 @@ def collect_orphaned_vmdks(client):
     # Debug-Modus aktivieren für detaillierte Logs
     debug_mode = os.environ.get('VSPHERE_REPORTER_DEBUG', '0') == '1'
     if debug_mode:
-        logger.warning("*** ALL VMDK COLLECTION - V24.3 (SHOWING ALL) ***")
+        logger.warning("*** POWERSHELL-ÄHNLICHER VMDK COLLECTOR - V24.3-POWER ***")
     
-    logger.info("Using ALL VMDK collection method v24.3 - Showing ALL VMDKs regardless of usage")
+    logger.info("Using PowerShell-inspired VMDK collection method v24.3-POWER - Gathering ALL VMDKs")
     
     # Eine Liste für alle VMDKs
     all_vmdks = []
@@ -47,151 +125,421 @@ def collect_orphaned_vmdks(client):
         # Zugriff auf vSphere-Content
         content = client.service_instance.content
         
-        # Alle Datacenters durchsuchen
-        datacenters = [entity for entity in content.rootFolder.childEntity 
-                      if isinstance(entity, vim.Datacenter)]
+        # DIREKT-ANSATZ (wie in PowerShell): Alle VMs abrufen und dann die Festplatten erhalten
+        view_manager = content.viewManager
+        container_view = None
+        
+        # Methode 1: Über den ViewManager alle VMs erhalten
+        logger.info("Getting VMs via ViewManager...")
+        
+        try:
+            container_view = view_manager.CreateContainerView(
+                content.rootFolder, [vim.VirtualMachine], True)
+            all_vms = container_view.view
+            
+            if debug_mode:
+                logger.warning(f"Found {len(all_vms) if all_vms else 0} VMs via ViewManager")
+                
+        except Exception as e:
+            if debug_mode:
+                logger.error(f"Error getting VMs via ViewManager: {str(e)}")
+            all_vms = []
+            
+        finally:
+            try:
+                if container_view:
+                    container_view.Destroy()
+            except Exception as destroy_error:
+                if debug_mode:
+                    logger.error(f"Error destroying container view: {str(destroy_error)}")
+        
+        # Methode 2: Wenn die erste Methode fehlschlägt, versuche Datacenter-Traversal
+        if not all_vms:
+            logger.info("No VMs found via ViewManager, trying datacenter traversal...")
+            all_vms = []
+            
+            try:
+                # Alle Datacenters durchsuchen
+                datacenters = [entity for entity in content.rootFolder.childEntity 
+                            if isinstance(entity, vim.Datacenter)]
+                
+                if debug_mode:
+                    logger.warning(f"Found {len(datacenters)} datacenters to scan")
+                
+                # Für jedes Datacenter die VMs abrufen
+                for datacenter in datacenters:
+                    try:
+                        # Nach VMs im vmFolder suchen
+                        if hasattr(datacenter, 'vmFolder'):
+                            # Den Baum rekursiv traversieren
+                            def traverse_folder(folder):
+                                folder_vms = []
+                                try:
+                                    # Alles in diesem Ordner durchgehen
+                                    if hasattr(folder, 'childEntity'):
+                                        for entity in folder.childEntity:
+                                            if isinstance(entity, vim.VirtualMachine):
+                                                folder_vms.append(entity)
+                                            elif isinstance(entity, vim.Folder):
+                                                # Rekursiv in Unterordner gehen
+                                                folder_vms.extend(traverse_folder(entity))
+                                except Exception as traverse_error:
+                                    if debug_mode:
+                                        logger.error(f"Error traversing folder: {str(traverse_error)}")
+                                return folder_vms
+                            
+                            # Starte mit dem vmFolder des Datacenters
+                            dc_vms = traverse_folder(datacenter.vmFolder)
+                            all_vms.extend(dc_vms)
+                            
+                            if debug_mode:
+                                logger.warning(f"Found {len(dc_vms)} VMs in datacenter {datacenter.name}")
+                    except Exception as dc_error:
+                        if debug_mode:
+                            logger.error(f"Error processing datacenter {datacenter.name}: {str(dc_error)}")
+            except Exception as traverse_error:
+                if debug_mode:
+                    logger.error(f"Error during datacenter traversal: {str(traverse_error)}")
+        
+        # Wenn wir immer noch keine VMs haben, versuchen wir es mit einer direkten Suche
+        if not all_vms:
+            logger.warning("No VMs found via traversal. Trying direct search via PropertyCollector...")
+            try:
+                # Property-Collector für VMs verwenden
+                property_collector = content.propertyCollector
+                
+                # Spezifikation für VM-Suche erstellen
+                vm_traversal = vim.TraversalSpec(
+                    name='vm_traversal',
+                    path='vmFolder',
+                    skip=False,
+                    type=vim.Datacenter,
+                    selectSet=[
+                        vim.SelectionSpec(name='folder_traversal')
+                    ]
+                )
+                
+                folder_traversal = vim.TraversalSpec(
+                    name='folder_traversal',
+                    path='childEntity',
+                    skip=False,
+                    type=vim.Folder,
+                    selectSet=[
+                        vim.SelectionSpec(name='folder_traversal'),
+                        vim.SelectionSpec(name='vm_traversal')
+                    ]
+                )
+                
+                # Objekt-Spezifikation für den Root-Ordner
+                obj_spec = vim.ObjectSpec(
+                    obj=content.rootFolder,
+                    skip=True,
+                    selectSet=[
+                        vm_traversal,
+                        folder_traversal
+                    ]
+                )
+                
+                # Property-Spezifikation für VMs
+                property_spec = vim.PropertySpec(
+                    type=vim.VirtualMachine,
+                    all=False,
+                    pathSet=['name', 'config.hardware.device']
+                )
+                
+                # Property-Filter erstellen
+                filter_spec = vim.PropertyFilterSpec(
+                    objectSet=[obj_spec],
+                    propSet=[property_spec]
+                )
+                
+                # Eigenschaften abrufen
+                vm_objects = property_collector.RetrieveContents([filter_spec])
+                
+                # Alle VM-Objekte extrahieren
+                all_vms = [obj.obj for obj in vm_objects if hasattr(obj, 'obj')]
+                
+                if debug_mode:
+                    logger.warning(f"Found {len(all_vms)} VMs via PropertyCollector")
+                    
+            except Exception as pc_error:
+                if debug_mode:
+                    logger.error(f"Error during PropertyCollector search: {str(pc_error)}")
+        
+        # Alle Festplatten aller VMs sammeln
+        all_vm_disks = []
+        vm_disk_map = {}  # Speichert bekannte VM-Disk-Zuordnungen für die Orphaned-Erkennung
         
         if debug_mode:
-            logger.warning(f"Found {len(datacenters)} datacenters to scan")
+            logger.warning(f"Processing {len(all_vms)} VMs for disk information")
             
-        for datacenter in datacenters:
+        for vm in all_vms:
             try:
-                datastores = datacenter.datastore
-                if debug_mode:
-                    logger.warning(f"Datacenter {datacenter.name} has {len(datastores)} datastores")
+                if not vm or not hasattr(vm, 'name'):
+                    if debug_mode:
+                        logger.warning("Skipping VM with no name")
+                    continue
                 
-                # Alle Datastores durchsuchen
-                for datastore in datastores:
-                    try:
-                        if debug_mode:
-                            logger.warning(f"Scanning datastore: {datastore.name}")
-                        
-                        # Datastore-Browser verwenden
-                        browser = datastore.browser
-                        
-                        # Nur nach VMDK-Dateien suchen
-                        search_spec = vim.HostDatastoreBrowserSearchSpec()
-                        search_spec.matchPattern = ["*.vmdk"]
-                        
-                        # Suche durchführen
+                vm_name = vm.name
+                
+                if debug_mode:
+                    logger.warning(f"Processing VM: {vm_name}")
+                
+                # Zugriff auf die VM-Konfiguration
+                if not hasattr(vm, 'config') or not vm.config:
+                    if debug_mode:
+                        logger.warning(f"VM {vm_name} has no config, skipping")
+                    continue
+                
+                # Zugriff auf die Hardware-Konfiguration
+                if not hasattr(vm.config, 'hardware') or not vm.config.hardware:
+                    if debug_mode:
+                        logger.warning(f"VM {vm_name} has no hardware config, skipping")
+                    continue
+                
+                # Geräte der VM durchgehen
+                if not hasattr(vm.config.hardware, 'device') or not vm.config.hardware.device:
+                    if debug_mode:
+                        logger.warning(f"VM {vm_name} has no devices, skipping")
+                    continue
+                
+                # Zähle die Anzahl gefundener Festplatten
+                disk_count = 0
+                
+                # Zugriff auf alle Geräte der VM
+                for device in vm.config.hardware.device:
+                    # Prüfen, ob es sich um eine Festplatte handelt
+                    if isinstance(device, vim.vm.device.VirtualDisk):
                         try:
-                            task = browser.SearchDatastoreSubFolders_Task("[" + datastore.name + "]", search_spec)
-                            client.wait_for_task(task)
-                            search_results = task.info.result
+                            disk_count += 1
                             
-                            if debug_mode:
-                                logger.warning(f"Found {len(search_results)} folders in datastore {datastore.name}")
+                            # Pfad zur VMDK-Datei extrahieren
+                            if hasattr(device.backing, 'fileName') and device.backing.fileName:
+                                disk_path = device.backing.fileName
                                 
-                        except Exception as e:
+                                # Disk-Format bestimmen
+                                disk_format = "Unknown"
+                                if hasattr(device.backing, 'thinProvisioned'):
+                                    if device.backing.thinProvisioned:
+                                        disk_format = "Thin"
+                                    else:
+                                        disk_format = "Thick"
+                                
+                                # Disk-Größe in GB
+                                disk_size_mb = device.capacityInKB / 1024.0
+                                
+                                # Disk-Informationen sammeln
+                                disk_info = {
+                                    'vm': vm_name,
+                                    'path': disk_path,
+                                    'name': os.path.basename(disk_path) if disk_path else "Unknown",
+                                    'datastore': disk_path.split('[')[1].split(']')[0] if '[' in disk_path and ']' in disk_path else "Unknown",
+                                    'size_mb': disk_size_mb,
+                                    'format': disk_format,
+                                    'modification_time': datetime.datetime.now()  # Wir haben hier kein Änderungsdatum
+                                }
+                                
+                                # Zur Liste aller VM-Disks hinzufügen
+                                all_vm_disks.append(disk_info)
+                                
+                                # Für die spätere Orphaned-Erkennung speichern
+                                if disk_path not in vm_disk_map:
+                                    vm_disk_map[disk_path] = vm_name
+                                
+                                if debug_mode:
+                                    logger.warning(f"Found disk: {disk_path} in VM {vm_name}")
+                                
+                        except Exception as disk_error:
                             if debug_mode:
-                                logger.error(f"Error searching datastore {datastore.name}: {str(e)}")
-                            continue
+                                logger.error(f"Error processing disk in VM {vm_name}: {str(disk_error)}")
+                
+                if debug_mode:
+                    logger.warning(f"VM {vm_name} has {disk_count} disks")
+                    
+            except Exception as vm_error:
+                if debug_mode:
+                    logger.error(f"Error processing VM: {str(vm_error)}")
+        
+        # Jetzt suchen wir nach allen VMDKs in den Datastores, um verwaiste Festplatten zu finden
+        # Dafür verwenden wir eine ähnliche Methode wie zuvor
+        
+        # Die direkte Disk-Liste als Basis nehmen
+        all_vmdks = all_vm_disks.copy()
+        
+        # Jetzt noch alle Datastores durchsuchen, um auch verwaiste VMDKs zu finden
+        all_datastores = []
+        
+        # Methode 1: Über den ViewManager alle Datastores erhalten
+        try:
+            datastore_view = content.viewManager.CreateContainerView(
+                content.rootFolder, [vim.Datastore], True)
+            all_datastores = datastore_view.view
+            datastore_view.Destroy()
+            
+            if debug_mode:
+                logger.warning(f"Found {len(all_datastores)} datastores via ViewManager")
+                
+        except Exception as e:
+            if debug_mode:
+                logger.error(f"Error getting datastores via ViewManager: {str(e)}")
+        
+        # Methode 2: Wenn die erste Methode fehlschlägt, versuche Datacenter-Traversal
+        if not all_datastores:
+            logger.info("No datastores found via ViewManager, trying datacenter traversal...")
+            
+            try:
+                # Alle Datacenters durchsuchen
+                datacenters = [entity for entity in content.rootFolder.childEntity 
+                              if isinstance(entity, vim.Datacenter)]
+                
+                for datacenter in datacenters:
+                    try:
+                        if hasattr(datacenter, 'datastore'):
+                            for ds in datacenter.datastore:
+                                if ds not in all_datastores:
+                                    all_datastores.append(ds)
+                    except Exception as dc_error:
+                        if debug_mode:
+                            logger.error(f"Error getting datastores from datacenter {datacenter.name}: {str(dc_error)}")
+            except Exception as traverse_error:
+                if debug_mode:
+                    logger.error(f"Error during datacenter traversal for datastores: {str(traverse_error)}")
+        
+        # Nun alle Datastores durchsuchen, um verwaiste VMDKs zu finden
+        orphaned_vmdk_count = 0
+        
+        for datastore in all_datastores:
+            try:
+                if not hasattr(datastore, 'name') or not datastore.name:
+                    continue
+                
+                datastore_name = datastore.name
+                
+                if debug_mode:
+                    logger.warning(f"Scanning datastore {datastore_name} for orphaned VMDKs")
+                
+                # Datastore-Browser verwenden
+                if not hasattr(datastore, 'browser') or not datastore.browser:
+                    if debug_mode:
+                        logger.warning(f"Datastore {datastore_name} has no browser, skipping")
+                    continue
+                
+                # VMDK-Dateien suchen
+                search_spec = vim.HostDatastoreBrowserSearchSpec()
+                search_spec.matchPattern = ["*.vmdk"]
+                
+                try:
+                    task = datastore.browser.SearchDatastoreSubFolders_Task("[" + datastore_name + "]", search_spec)
+                    search_results = client.wait_for_task(task, timeout=30)
+                    
+                    if not search_results:
+                        if debug_mode:
+                            logger.warning(f"No search results for datastore {datastore_name}")
+                        continue
                         
-                        # Verarbeite die Suchergebnisse
-                        for result in search_results:
+                    # Alle gefundenen VMDK-Dateien durchgehen
+                    for result in search_results:
+                        try:
                             folder_path = result.folderPath
                             
-                            if debug_mode:
-                                logger.warning(f"Checking folder: {folder_path} with {len(result.file)} files")
+                            if not hasattr(result, 'file') or not result.file:
+                                continue
                                 
                             for file_info in result.file:
                                 try:
+                                    if not hasattr(file_info, 'path') or not file_info.path:
+                                        continue
+                                        
                                     # Nur VMDK-Dateien berücksichtigen
-                                    if not file_info.path.lower().endswith('.vmdk'):
+                                    file_path = file_info.path.lower()
+                                    if not file_path.endswith('.vmdk'):
                                         continue
                                         
                                     # Vollständigen Pfad konstruieren
                                     full_path = folder_path + file_info.path
                                     
-                                    # Nur flat-VMDKs überspringen, da diese immer zu einer anderen VMDK gehören
+                                    # Flat-VMDKs überspringen
                                     if "-flat.vmdk" in full_path.lower():
-                                        if debug_mode:
-                                            logger.warning(f"Skipping -flat VMDK: {full_path}")
+                                        continue
+                                        
+                                    # Andere bekannte Helper-VMDKs überspringen
+                                    skip_patterns = ["-ctk.vmdk", "-delta.vmdk", "-rdm.vmdk", "-sesparse.vmdk"]
+                                    should_skip = False
+                                    for pattern in skip_patterns:
+                                        if pattern in full_path.lower():
+                                            should_skip = True
+                                            break
+                                            
+                                    if should_skip:
                                         continue
                                     
-                                    # Information über die VMDK sammeln
-                                    vmdk_info = {
-                                        'path': full_path,
-                                        'name': file_info.path,
-                                        'datastore': datastore.name,
-                                        'size_mb': file_info.fileSize / (1024 * 1024),
-                                        'modification_time': file_info.modification,
-                                        'explanation': "ALLE VMDK-DATEIEN: Diese Auflistung zeigt alle VMDKs, unabhängig davon, ob sie verwendet werden."
-                                    }
+                                    # Prüfen, ob diese VMDK bereits einer VM zugeordnet ist
+                                    is_orphaned = full_path not in vm_disk_map
                                     
-                                    # Zur Liste aller VMDKs hinzufügen
-                                    all_vmdks.append(vmdk_info)
-                                    
-                                    if debug_mode:
-                                        logger.warning(f"Found VMDK: {full_path}")
+                                    # Nur verwaiste VMDKs hinzufügen
+                                    if is_orphaned:
+                                        orphaned_vmdk_count += 1
                                         
-                                except Exception as e:
+                                        # Dateigröße sicher ermitteln
+                                        size_mb = 0.0
+                                        if hasattr(file_info, 'fileSize') and file_info.fileSize is not None:
+                                            try:
+                                                size_mb = file_info.fileSize / (1024 * 1024)
+                                            except (TypeError, ValueError):
+                                                pass
+                                                
+                                        # Änderungsdatum sicher ermitteln
+                                        modification_time = datetime.datetime.now()
+                                        if hasattr(file_info, 'modification') and file_info.modification is not None:
+                                            modification_time = file_info.modification
+                                            
+                                        # Orphaned VMDK-Informationen sammeln
+                                        orphaned_info = {
+                                            'vm': "ORPHANED",  # Markierung als verwaist
+                                            'path': full_path,
+                                            'name': file_info.path,
+                                            'datastore': datastore_name,
+                                            'size_mb': size_mb,
+                                            'format': "Unknown",  # Format ist bei verwaisten VMDKs nicht bekannt
+                                            'modification_time': modification_time,
+                                            'explanation': "VERWAISTE VMDK: Diese VMDK-Datei ist keiner VM zugeordnet."
+                                        }
+                                        
+                                        # Zur Liste aller VMDKs hinzufügen
+                                        all_vmdks.append(orphaned_info)
+                                        
+                                        if debug_mode:
+                                            logger.warning(f"Found ORPHANED VMDK: {full_path}")
+                                except Exception as file_error:
                                     if debug_mode:
-                                        logger.error(f"Error processing file {file_info.path}: {str(e)}")
-                                    continue
-                    except Exception as e:
-                        if debug_mode:
-                            logger.error(f"Error processing datastore {datastore.name}: {str(e)}")
-                        continue
-            except Exception as e:
+                                        logger.error(f"Error processing file: {str(file_error)}")
+                        except Exception as folder_error:
+                            if debug_mode:
+                                logger.error(f"Error processing folder: {str(folder_error)}")
+                except Exception as search_error:
+                    if debug_mode:
+                        logger.error(f"Error searching datastore {datastore_name}: {str(search_error)}")
+            except Exception as ds_error:
                 if debug_mode:
-                    logger.error(f"Error processing datacenter {datacenter.name}: {str(e)}")
-                continue
+                    logger.error(f"Error processing datastore: {str(ds_error)}")
         
-        # FERTIG: Ergebnisse zurückgeben
-        logger.info(f"ALL VMDK method found {len(all_vmdks)} total VMDKs")
+        # Ergebnisse zurückgeben
+        logger.info(f"POWERSHELL-ÄHNLICHER ANSATZ: Gefunden {len(all_vm_disks)} VM-Disks und {orphaned_vmdk_count} verwaiste VMDKs")
         
-        # Ein Beispiel hinzufügen, falls keine VMDKs gefunden wurden oder im Debug-Modus
-        debug_mode = os.environ.get('VSPHERE_REPORTER_DEBUG', '0') == '1'
-        if not all_vmdks or debug_mode:
-            logger.warning("Adding demo VMDKs for testing/demo purposes")
-            demo_vmdk1 = {
-                'path': "[datastore1] vm_old/old_system-001.vmdk",
-                'name': "old_system-001.vmdk",
-                'datastore': "datastore1",
-                'size_mb': 10240.0,  # 10 GB
-                'modification_time': datetime.datetime.now() - datetime.timedelta(days=180),
-                'explanation': "DEMO: Diese VMDK-Datei wurde für Demonstrationszwecke hinzugefügt."
-            }
-            
-            demo_vmdk2 = {
-                'path': "[datastore2] templates/template_vm-000.vmdk",
-                'name': "template_vm-000.vmdk",
-                'datastore': "datastore2",
-                'size_mb': 25600.0,  # 25 GB
-                'modification_time': datetime.datetime.now() - datetime.timedelta(days=30),
-                'explanation': "DEMO: Template-VMDK zur Demonstration."
-            }
-            
-            # Nur im leeren Zustand oder explizit im Debug-Modus Demo-Daten hinzufügen
-            if not all_vmdks:
-                all_vmdks.append(demo_vmdk1)
-                all_vmdks.append(demo_vmdk2)
-            elif debug_mode:
-                # Im Debug-Modus Demo-Einträge nur hinzufügen, wenn es weniger als 5 echte Einträge gibt
-                if len(all_vmdks) < 5:
-                    all_vmdks.append(demo_vmdk1)
-                    all_vmdks.append(demo_vmdk2)
-            
+        # Für jede Disk den Verwendungstyp hinzufügen (falls nicht bereits vorhanden)
+        for disk in all_vmdks:
+            if 'explanation' not in disk:
+                disk['explanation'] = f"VERWENDETE VMDK: Diese VMDK-Datei wird von der VM '{disk.get('vm', 'Unbekannt')}' verwendet."
+                
         return all_vmdks
-            
     except Exception as e:
         if debug_mode:
             import traceback
-            logger.error(f"Error in ALL VMDK collection: {str(e)}")
+            logger.error(f"Error in POWERSHELL-ÄHNLICHER VMDK collection: {str(e)}")
             logger.error(f"Traceback: {traceback.format_exc()}")
         else:
-            logger.debug(f"Error in ALL VMDK collection: {str(e)}")
+            logger.debug(f"Error in POWERSHELL-ÄHNLICHER VMDK collection: {str(e)}")
         
-        # Eine Beispiel-VMDK zurückgeben, falls es Fehler gibt
-        logger.warning("Error occurred, adding demo entry")
-        demo_vmdk = [{
-            'path': "[datastore1] vm_error/error_recovery.vmdk",
-            'name': "error_recovery.vmdk",
-            'datastore': "datastore1",
-            'size_mb': 8192.0,  # 8 GB
-            'modification_time': datetime.datetime.now() - datetime.timedelta(days=90),
-            'explanation': "DEMO: Diese VMDK-Datei wurde erstellt, da ein Fehler bei der Erkennung auftrat."
-        }]
-        
-        return demo_vmdk
+        # Ein leeres Array zurückgeben, um weitere Verarbeitungsschritte zu ermöglichen
+        logger.error("Error during VMDK collection, returning empty list")
+        return []
