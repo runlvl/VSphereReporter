@@ -46,6 +46,7 @@ except Exception as e:
         class Datastore: pass
         class Folder: pass
         class VirtualMachine: pass
+        class VirtualApp: pass  # Für Template-Behandlung
         class SelectionSpec:
             def __init__(self, name=None):
                 self.name = name
@@ -233,13 +234,23 @@ def collect_orphaned_vmdks(client):
                     ]
                 )
                 
+                # Template-Traversal hinzufügen (damit Templates nicht als verwaist erkannt werden)
+                template_to_vm_traversal = vim.TraversalSpec(
+                    name='template_to_vm',
+                    path='vm',
+                    skip=False,
+                    type=vim.VirtualApp,
+                    selectSet=[]
+                )
+                
                 # Objekt-Spezifikation für den Root-Ordner
                 obj_spec = vim.ObjectSpec(
                     obj=content.rootFolder,
                     skip=True,
                     selectSet=[
                         vm_traversal,
-                        folder_traversal
+                        folder_traversal,
+                        template_to_vm_traversal
                     ]
                 )
                 
@@ -247,7 +258,7 @@ def collect_orphaned_vmdks(client):
                 property_spec = vim.PropertySpec(
                     type=vim.VirtualMachine,
                     all=False,
-                    pathSet=['name', 'config.hardware.device']
+                    pathSet=['name', 'config.hardware.device', 'config.template']
                 )
                 
                 # Property-Filter erstellen
@@ -259,11 +270,11 @@ def collect_orphaned_vmdks(client):
                 # Eigenschaften abrufen
                 vm_objects = property_collector.RetrieveContents([filter_spec])
                 
-                # Alle VM-Objekte extrahieren
+                # Alle VM-Objekte extrahieren (inkl. Templates)
                 all_vms = [obj.obj for obj in vm_objects if hasattr(obj, 'obj')]
                 
                 if debug_mode:
-                    logger.warning(f"Found {len(all_vms)} VMs via PropertyCollector")
+                    logger.warning(f"Found {len(all_vms)} VMs (including templates) via PropertyCollector")
                     
             except Exception as pc_error:
                 if debug_mode:
@@ -293,6 +304,14 @@ def collect_orphaned_vmdks(client):
                     if debug_mode:
                         logger.warning(f"VM {vm_name} has no config, skipping")
                     continue
+                
+                # Check if VM is a Template (they should be treated differently but include them)
+                is_template = False
+                if hasattr(vm.config, 'template'):
+                    is_template = vm.config.template
+                
+                # Template-VMDKs auch erfassen, aber als Template markieren
+                template_prefix = "TEMPLATE: " if is_template else ""
                 
                 # Zugriff auf die Hardware-Konfiguration
                 if not hasattr(vm.config, 'hardware') or not vm.config.hardware:
@@ -333,13 +352,14 @@ def collect_orphaned_vmdks(client):
                                 
                                 # Disk-Informationen sammeln
                                 disk_info = {
-                                    'vm': vm_name,
+                                    'vm': template_prefix + vm_name,  # Template-Präfix hinzufügen
                                     'path': disk_path,
                                     'name': os.path.basename(disk_path) if disk_path else "Unknown",
                                     'datastore': disk_path.split('[')[1].split(']')[0] if '[' in disk_path and ']' in disk_path else "Unknown",
                                     'size_mb': disk_size_mb,
                                     'format': disk_format,
-                                    'modification_time': datetime.datetime.now()  # Wir haben hier kein Änderungsdatum
+                                    'modification_time': datetime.datetime.now(),  # Wir haben hier kein Änderungsdatum
+                                    'is_template': is_template  # Template-Markierung hinzufügen für spätere Filterung
                                 }
                                 
                                 # Zur Liste aller VM-Disks hinzufügen
@@ -348,16 +368,30 @@ def collect_orphaned_vmdks(client):
                                 # Für die spätere Orphaned-Erkennung speichern
                                 # Wichtig: Vollständigen Pfad normalisieren, damit verschiedene Formatierungen verglichen werden können
                                 normalized_path = disk_path.lower().strip()
-                                vm_disk_map[normalized_path] = vm_name
+                                # Den Template-Status mit in der Map speichern (wichtig für Statusanzeige)
+                                vm_disk_map[normalized_path] = f"{template_prefix}{vm_name}"
                                 
                                 # Auch ohne Datastore-Prefix speichern für robusteren Vergleich
                                 if '[' in disk_path and ']' in disk_path:
                                     try:
                                         path_without_datastore = disk_path.split(']', 1)[1].strip()
                                         if path_without_datastore:
-                                            vm_disk_map[path_without_datastore.lower()] = vm_name
+                                            vm_disk_map[path_without_datastore.lower()] = f"{template_prefix}{vm_name}"
                                     except:
                                         pass
+                                
+                                # Nur den Dateinamen speichern für weitere Robustheit
+                                try:
+                                    file_name = os.path.basename(disk_path)
+                                    if file_name:
+                                        vm_disk_map[file_name.lower()] = f"{template_prefix}{vm_name}"
+                                        # Bei -delta und -flat Dateien auch die Basis-VMDK speichern
+                                        if "-delta" in file_name or "-flat" in file_name:
+                                            base_name = file_name.replace("-delta", "").replace("-flat", "")
+                                            if base_name.endswith(".vmdk"):
+                                                vm_disk_map[base_name.lower()] = f"{template_prefix}{vm_name}"
+                                except:
+                                    pass
                                 
                                 if debug_mode:
                                     logger.warning(f"Found disk: {disk_path} in VM {vm_name}")
@@ -474,16 +508,28 @@ def collect_orphaned_vmdks(client):
                                     # Vollständigen Pfad konstruieren
                                     full_path = folder_path + file_info.path
                                     
-                                    # Flat-VMDKs überspringen
+                                    # Flat-VMDKs niemals als verwaist betrachten
                                     if "-flat.vmdk" in full_path.lower():
+                                        # Prüfen, ob die entsprechende Hauptdatei vorhanden ist
+                                        base_vmdk = full_path.lower().replace("-flat.vmdk", ".vmdk")
+                                        # Flat-VMDK als zugehörig markieren
+                                        vm_disk_map[full_path.lower()] = "-flat.vmdk"
                                         continue
                                         
-                                    # Andere bekannte Helper-VMDKs überspringen
+                                    # Andere bekannte Helper-VMDKs überspringen und ebenfalls
+                                    # als zugehörig zu VMs markieren
                                     skip_patterns = ["-ctk.vmdk", "-delta.vmdk", "-rdm.vmdk", "-sesparse.vmdk"]
                                     should_skip = False
                                     for pattern in skip_patterns:
                                         if pattern in full_path.lower():
                                             should_skip = True
+                                            # Als zugehörig zu einer VM markieren
+                                            vm_disk_map[full_path.lower()] = pattern
+                                            # Auch die Basis-VMDK (ohne -pattern) als zugehörig markieren
+                                            for base_pattern in skip_patterns:
+                                                possible_base = full_path.lower().replace(base_pattern, ".vmdk")
+                                                # Als Hilfsdatei markieren, nicht als verwaiste VMDK betrachten
+                                                vm_disk_map[possible_base] = f"HELPER:{pattern}"
                                             break
                                             
                                     if should_skip:
