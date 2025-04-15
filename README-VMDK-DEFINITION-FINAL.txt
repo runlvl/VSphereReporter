@@ -1,21 +1,22 @@
 =====================================================
-VMware vSphere Reporter - VMDK-Erkennung (v24.3-FINAL)
+VMware vSphere Reporter - VMDK-Anzeige (v24.3-FINAL)
 =====================================================
 
-## Neue Definition für verwaiste VMDKs (ab v24.3-FINAL)
+## Neuer Ansatz für VMDK-Anzeige (ab v24.3-FINAL)
 
-Eine VMDK-Datei gilt als "verwaist", wenn sie keiner registrierten VM zugeordnet ist.
+Statt zu versuchen, "verwaiste" VMDK-Dateien zu identifizieren, zeigt die Anwendung jetzt
+ALLE VMDK-Dateien in der Umgebung an, die auf den Datastores gefunden wurden.
 
-Dies ist eine stark vereinfachte Definition gegenüber früheren Versionen, die zusätzliche Kriterien 
-wie das Vorhandensein einer VMX-Datei oder den Template-Status berücksichtigten.
+Dies ist ein völlig neuer Ansatz gegenüber früheren Versionen, die versuchten, nur "verwaiste"
+VMDKs anzuzeigen und komplexe Filterungskriterien verwendeten.
 
-## Der neue Erkennungsalgorithmus
+## Der neue Algorithmus
 
-Die Implementierung folgt einem klaren, dreistufigen Ansatz:
+Die Implementierung folgt einem einfachen, direkten Ansatz:
 
-1. Sammeln aller in Verwendung befindlichen VMDK-Dateien von allen VMs (inkl. Templates)
-2. Sammeln aller VMDK-Dateien von allen Datastores
-3. Identifizieren der VMDKs, die nicht in Verwendung sind (verwaist)
+1. Alle Datastores durchsuchen
+2. Alle VMDK-Dateien sammeln (außer -flat.vmdk)
+3. Alle gefundenen VMDKs anzeigen
 
 ## Verbesserter Pfadvergleich
 

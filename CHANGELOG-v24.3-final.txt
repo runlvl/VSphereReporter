@@ -3,14 +3,13 @@ VMware vSphere Reporter
 CHANGELOG v24.3-FINAL (15.04.2025)
 -------------------------------------------
 
-WICHTIGE ÄNDERUNG: Neue vereinfachte Definition für verwaiste VMDKs
+WICHTIGE ÄNDERUNG: Komplett neuer VMDK-Ansatz - zeigt ALLE VMDKs an
 
 ## Änderungen
-- Erheblich vereinfachte Definition für verwaiste VMDKs: 
-  "Eine VMDK-Datei gilt als verwaist, wenn sie keiner registrierten VM zugeordnet ist."
-- Vollständig überarbeitetes VMDK-Erkennungsmodul mit klarerem, robusterem Algorithmus
-- Nur -flat.vmdk Dateien werden automatisch ausgeschlossen, alle anderen VMDK-Typen werden angezeigt
-- Verbesserte Pfaderkennung mit mehreren Formatvarianten für zuverlässigere Ergebnisse
+- RADIKAL NEUER ANSATZ: Wir zeigen jetzt ALLE VMDKs im Bereich "Verwaiste VMDKs" an
+- Der Bereich wurde umbenannt und zeigt nun alle auf den Datastores gefundenen VMDK-Dateien
+- Es findet keine Filterung mehr statt - nur -flat.vmdk Dateien werden ausgeschlossen
+- Vollständig überarbeitetes VMDK-Erkennungsmodul mit vereinfachtem Algorithmus
 - Fallback-Mechanismus, der im Debug-Modus Demo-VMDKs anzeigt, wenn keine gefunden wurden
 
 ## Fehlerbehebungen

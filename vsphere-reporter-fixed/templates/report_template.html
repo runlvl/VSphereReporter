@@ -423,13 +423,13 @@
                 </table>
                 {% else %}
                 <div class="alert alert-success">
-                    <p>Keine verwaisten VMDK-Dateien gefunden. Alle Festplattendateien sind ordnungsgemäß zugeordnet.</p>
+                    <p>Keine VMDK-Dateien gefunden.</p>
                 </div>
                 {% endif %}
                 
                 <div class="alert alert-info">
-                    <p><strong>Definition:</strong> Eine VMDK-Datei gilt als "verwaist", wenn sie keiner registrierten VM zugeordnet ist und kein Teil einer Template-VM ist.</p>
-                    <p><strong>Empfehlung:</strong> Prüfen Sie verwaiste VMDKs und entfernen Sie diese, wenn sie nicht mehr benötigt werden, um Speicherplatz freizugeben.</p>
+                    <p><strong>Hinweis:</strong> Diese Übersicht zeigt <u>alle</u> auf den Datastores gefundenen VMDK-Dateien, unabhängig davon, ob sie einer VM zugeordnet sind oder nicht.</p>
+                    <p><strong>Empfehlung:</strong> Überprüfen Sie die angezeigten VMDKs und identifizieren Sie diejenigen, die keiner VM zugeordnet sind, um Speicherplatz freizugeben.</p>
                 </div>
                 
             {% elif section.id == 'vms' %}
