@@ -1,24 +1,4 @@
-# VMware vSphere Reporter v24.1 - Änderungsprotokoll
-
-## KRITISCHE BUGFIXES
-
-### Behoben: DateTime-Fehler bei Snapshot-Erfassung
-- Behoben: "can't subtract offset-naive and offset-aware datetimes" Fehler
-- Implementierung einer robusten Zeitzonen-Behandlung für Snapshot-Daten
-- Korrekte Erkennung und Anzeige aller vorhandener Snapshots durch Zeitzonenkompatibilität
-- Vollständige Korrektur der Altersberechnung für alle Snapshots
-
-### Verbessert: Erkennung von verwaisten VMDK-Dateien
-- Behoben: Fehler bei der Erkennung verwaister VMDK-Dateien
-- Verbesserte Filterung von Hilfs-VMDK-Dateien (-flat, -delta, -ctk, etc.)
-- Korrektur von Pfad-Normalisierung für zuverlässige Erkennung
-- Zusätzliche Prüfung auf zugehörige VMX-Dateien
-
-### Robustere Fehlerbehandlung
-- Implementierung eines globalen Exception-Handlers zur Verhinderung von Abstürzen
-- Benutzerfreundliche Fehlermeldungen mit Detailinformationen
-- Mehrstufiges Fehler-Logging-System mit vollem Stacktrace für Administratoren
-- Verbesserte Abfangen von API-Fehlern mit detaillierten Fehlerinformationen
+# VMware vSphere Reporter v24.0 - Änderungsprotokoll
 
 ## Spezielles Debug-Tool
 
