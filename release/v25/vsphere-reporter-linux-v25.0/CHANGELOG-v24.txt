@@ -1,0 +1,60 @@
+# VMware vSphere Reporter v24.0 - Änderungsprotokoll
+
+## Spezielles Debug-Tool
+
+### Neues Debug-Tool für Snapshots und verwaiste VMDKs
+- Implementierung eines dedizierten Diagnose-Tools `vsphere-reporter-debug-tool-v24.zip`
+- Umfassende Logging-Funktionalität mit detaillierten Statusmeldungen
+- Export aller gefundenen Daten in JSON-Format zur weiteren Analyse
+- Benutzerfreundliche Skripte für Windows und Linux
+- Ausführliche Anleitung zur Verwendung des Tools (ANLEITUNG-DEBUG-TOOL-V24.md)
+
+## Verbesserungen bei der Erkennung von Snapshots und verwaisten VMDKs
+
+### Snapshot-Erkennung
+- Komplett überarbeiteter Algorithmus zur VM-Snapshot-Erkennung
+- Implementierung einer direkten Traversierung der VM-Objekte anstelle der PropertyCollector-API
+- Verbessertes Fehlerhandling mit detaillierten Debug-Protokollen
+- Robuste rekursive Snapshot-Baumtraversierung zur Erfassung aller Snapshot-Ebenen
+
+### Erkennung verwaister VMDK-Dateien
+- Verbesserte Erkennung von verwaisten VMDK-Dateien durch präziseren Abgleich
+- Erweiterte Filterung für Hilfs-VMDKs (-flat, -delta, etc.)
+- Zusätzliche Prüfung auf VMX-Dateien, um Fehlklassifizierungen zu vermeiden
+- Besseres Handling von Datastore-Pfaden und Normalisierung
+
+### Allgemeine Verbesserungen
+- Einführung der EnhancedDataCollector-Klasse für verbesserte Methoden
+- Umstellung auf direkten Objektzugriff statt PropertyCollector-API
+- Optimiertes Caching von registrierten VMDK-Dateien
+- Verbesserte Debug-Protokollierung zur einfacheren Fehlerbehebung
+- Tiefgreifende Überarbeitung der Fehlerbehandlung
+
+## Thread-Management-Verbesserungen
+
+### Lebenszyklus-Management
+- Einführung von is_running und abort_requested-Flags für den Bericht-Worker
+- Implementierung einer sauberen Abbruchmöglichkeit für Berichtsgenerierung
+- Verbesserter closeEvent-Handler mit robustem Thread-Beendigungsmechanismus
+
+### Fehlerbehandlung
+- Komplette Überarbeitung der Thread-Fehlerbehandlung
+- Einführung von Try-Finally-Blöcken zur Gewährleistung der Thread-Statusaktualisierung
+- Implementierung eines Timeout- und Fallback-Mechanismus für Thread-Beendigung
+
+## Weitere Verbesserungen
+
+### Benutzeroberflächenverbesserungen
+- Feste horizontale Navigationsleiste in HTML-Berichten
+- Verbesserte Sprungmarken für VM-Snapshots und verwaiste VMDKs
+- Optimiertes Bechtle-Branding im HTML-Bericht
+
+### Fehlerbehebung
+- Unterdrückung von PyVmomi-Fehlermeldungen in der UI
+- Verbesserung der Log-Routing-Mechanismen
+- Optimierung der GUI-Threads für bessere Benutzerfreundlichkeit
+
+### Distribution
+- Neue Installationspakete für Windows (ZIP) und Linux (tar.gz)
+- Aktualisierung der Dokumentation mit den neuen Funktionen
+- Verbesserte Installationsanweisungen für beide Plattformen
