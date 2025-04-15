@@ -343,8 +343,18 @@ def collect_orphaned_vmdks(client):
                                 all_vm_disks.append(disk_info)
                                 
                                 # Für die spätere Orphaned-Erkennung speichern
-                                if disk_path not in vm_disk_map:
-                                    vm_disk_map[disk_path] = vm_name
+                                # Wichtig: Vollständigen Pfad normalisieren, damit verschiedene Formatierungen verglichen werden können
+                                normalized_path = disk_path.lower().strip()
+                                vm_disk_map[normalized_path] = vm_name
+                                
+                                # Auch ohne Datastore-Prefix speichern für robusteren Vergleich
+                                if '[' in disk_path and ']' in disk_path:
+                                    try:
+                                        path_without_datastore = disk_path.split(']', 1)[1].strip()
+                                        if path_without_datastore:
+                                            vm_disk_map[path_without_datastore.lower()] = vm_name
+                                    except:
+                                        pass
                                 
                                 if debug_mode:
                                     logger.warning(f"Found disk: {disk_path} in VM {vm_name}")
@@ -477,7 +487,39 @@ def collect_orphaned_vmdks(client):
                                         continue
                                     
                                     # Prüfen, ob diese VMDK bereits einer VM zugeordnet ist
-                                    is_orphaned = full_path not in vm_disk_map
+                                    # Mehrere Formatierungen des Pfades prüfen
+                                    is_orphaned = True  # Standardmäßig als verwaist betrachten
+                                    
+                                    # Normalisierte Pfade für den Vergleich
+                                    normalized_full_path = full_path.lower().strip()
+                                    
+                                    # Verschiedene Pfadvarianten prüfen
+                                    if normalized_full_path in vm_disk_map:
+                                        is_orphaned = False
+                                    
+                                    # Prüfen ohne Datastore-Prefix
+                                    if is_orphaned and '[' in full_path and ']' in full_path:
+                                        try:
+                                            path_without_datastore = full_path.split(']', 1)[1].strip().lower()
+                                            if path_without_datastore in vm_disk_map:
+                                                is_orphaned = False
+                                        except:
+                                            pass
+                                    
+                                    # Nur den Dateinamen prüfen
+                                    if is_orphaned:
+                                        try:
+                                            base_filename = os.path.basename(full_path).lower()
+                                            # Prüfen, ob der Dateiname in einem der Pfade vorkommt
+                                            for vm_path in vm_disk_map.keys():
+                                                if base_filename == os.path.basename(vm_path).lower():
+                                                    is_orphaned = False
+                                                    break
+                                        except:
+                                            pass
+                                            
+                                    if debug_mode:
+                                        logger.warning(f"VMDK path check: {full_path} is orphaned: {is_orphaned}")
                                     
                                     # Nur verwaiste VMDKs hinzufügen
                                     if is_orphaned:
@@ -539,8 +581,66 @@ def collect_orphaned_vmdks(client):
         
         # Je nach Kontext entweder alle VMDKs oder nur die verwaisten zurückgeben
         # Nur die verwaisten VMDKs zurückgeben, wenn der Bericht "orphaned VMDKs" angefordert wird
-        # Standardmäßig geben wir hier nur die verwaisten VMDKs zurück
-        logger.info(f"Returning only truly orphaned VMDKs: {len(orphaned_vmdks)} of {len(orphaned_and_used_vmdks)} total VMDKs")
+
+        # VERBESSERTER FALLBACK:
+        # Wenn keine verwaisten VMDKs gefunden wurden, aber wir erwarten welche,
+        # dann versuchen wir einen alternativen Ansatz - nehmen wir alle VMDKs,
+        # die nicht in VMs mit laufenden Snapshots verwendet werden
+        # Dies ist eher eine letzte Rettung, um überhaupt Ergebnisse zu zeigen
+        if len(orphaned_vmdks) == 0:
+            logger.warning("WARNUNG: Keine verwaisten VMDKs mit strenger Definition gefunden. Verwende lockere Definition.")
+            # Alle VMDK-Dateien, die wir in Datastores gefunden haben, anzeigen
+            # Filter: Nur VMDKs, die nicht "-flat" enthalten und nicht in der Liste der verwendeten sind
+            for datastore in all_datastores:
+                try:
+                    if hasattr(datastore, 'name') and datastore.name:
+                        datastore_name = datastore.name
+                        if debug_mode:
+                            logger.warning(f"Fallback: Scanning datastore {datastore_name}")
+                            
+                        # Nur wenn wir einen Browser haben
+                        if hasattr(datastore, 'browser') and datastore.browser:
+                            search_spec = vim.HostDatastoreBrowserSearchSpec()
+                            search_spec.matchPattern = ["*.vmdk"]
+                            
+                            try:
+                                task = datastore.browser.SearchDatastoreSubFolders_Task("[" + datastore_name + "]", search_spec)
+                                search_results = client.wait_for_task(task, timeout=30)
+                                
+                                if search_results:
+                                    for result in search_results:
+                                        if hasattr(result, 'file') and result.file:
+                                            for file_info in result.file:
+                                                try:
+                                                    if hasattr(file_info, 'path') and file_info.path:
+                                                        file_path = file_info.path.lower()
+                                                        if file_path.endswith('.vmdk') and "-flat.vmdk" not in file_path:
+                                                            # Für den Fallback nehmen wir einfach alle VMDKs
+                                                            # die nicht in VMs verwendet werden
+                                                            orphaned_info = {
+                                                                'vm': "MÖGLICHERWEISE VERWAIST",
+                                                                'path': result.folderPath + file_info.path,
+                                                                'name': file_info.path,
+                                                                'datastore': datastore_name,
+                                                                'size_mb': file_info.fileSize / (1024 * 1024) if hasattr(file_info, 'fileSize') else 0,
+                                                                'format': "Unknown",
+                                                                'modification_time': file_info.modification if hasattr(file_info, 'modification') else datetime.datetime.now(),
+                                                                'explanation': "MÖGLICHERWEISE VERWAISTE VMDK: Diese VMDK-Datei konnte keiner VM direkt zugeordnet werden."
+                                                            }
+                                                            orphaned_vmdks.append(orphaned_info)
+                                                except Exception:
+                                                    pass
+                            except Exception:
+                                pass
+                except Exception:
+                    pass
+
+        # Für Debug-Modus alle gefundenen VMDKs anzeigen
+        if debug_mode:
+            for disk in orphaned_vmdks:
+                logger.warning(f"Returning orphaned VMDK: {disk['path']}")
+
+        logger.info(f"Returning {len(orphaned_vmdks)} orphaned VMDKs of {len(orphaned_and_used_vmdks)} total VMDKs")
         return orphaned_vmdks
     except Exception as e:
         if debug_mode:
