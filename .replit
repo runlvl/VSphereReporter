@@ -39,6 +39,10 @@ args = "VSphereReporterWindows"
 task = "workflow.run"
 args = "VSphereReporterFinal"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "VMwareMonitor_v24_3"
+
 [[workflows.workflow]]
 name = "VSphereReporter"
 author = "agent"
@@ -293,6 +297,20 @@ task = "packager.installForAll"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd vsphere-gui-fixed && python vsphere_reporter.py"
+
+[[workflows.workflow]]
+name = "VMwareMonitor_v24_3"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd vsphere-reporter-fixed && VSPHERE_REPORTER_DEBUG=1 python vsphere_reporter.py"
 
 [deployment]
 run = ["sh", "-c", "pip install -r requirements.txt || pip install pyVmomi>=7.0.0 PyQt5>=5.15.0 reportlab>=3.6.0 python-docx>=0.8.11 jinja2>=3.0.0 humanize>=3.0.0 && python vsphere_reporter.py"]
