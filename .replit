@@ -47,18 +47,6 @@ args = "VMwareMonitor_v24_3_Final"
 task = "workflow.run"
 args = "VMwareMonitorEnhanced"
 
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "VSphereReporterV25"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "VSphereReporterV25NoGUI"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "VSphereReporterDemoHTML"
-
 [[workflows.workflow]]
 name = "VSphereReporter"
 author = "agent"
@@ -342,51 +330,6 @@ task = "packager.installForAll"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd vsphere-reporter-fixed && VSPHERE_REPORTER_DEBUG=1 python vsphere_reporter.py"
-
-[[workflows.workflow]]
-name = "VSphereReporterV25"
-author = "agent"
-
-[workflows.workflow.metadata]
-agentRequireRestartOnSave = false
-
-[[workflows.workflow.tasks]]
-task = "packager.installForAll"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd vsphere-reporter-fixed && python vsphere_reporter_demo.py"
-waitForPort = 5000
-
-[[workflows.workflow]]
-name = "VSphereReporterV25NoGUI"
-author = "agent"
-
-[workflows.workflow.metadata]
-agentRequireRestartOnSave = false
-
-[[workflows.workflow.tasks]]
-task = "packager.installForAll"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd vsphere-reporter-fixed && DISPLAY=:0 QT_QPA_PLATFORM=offscreen python vsphere_reporter_demo.py"
-waitForPort = 5000
-
-[[workflows.workflow]]
-name = "VSphereReporterDemoHTML"
-author = "agent"
-
-[workflows.workflow.metadata]
-agentRequireRestartOnSave = false
-
-[[workflows.workflow.tasks]]
-task = "packager.installForAll"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd vsphere-reporter-fixed && python run_demo.py"
-waitForPort = 5001
 
 [deployment]
 run = ["sh", "-c", "pip install -r requirements.txt || pip install pyVmomi>=7.0.0 PyQt5>=5.15.0 reportlab>=3.6.0 python-docx>=0.8.11 jinja2>=3.0.0 humanize>=3.0.0 && python vsphere_reporter.py"]
