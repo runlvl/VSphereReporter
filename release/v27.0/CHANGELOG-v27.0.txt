@@ -1,0 +1,46 @@
+CHANGELOG - VMware vSphere Reporter v27.0
+=======================================
+
+HAUPTÄNDERUNG: VMDK-Reporting vollständig überarbeitet
+
+Zusammenfassung der Änderungen:
+------------------------------
+
+1. VMDK-Report wurde grundlegend überarbeitet:
+   - ALLE VMDKs werden jetzt angezeigt (nicht nur potentiell verwaiste)
+   - Status-Indikator für jede VMDK (AKTIV, TEMPLATE, POTENTIALLY ORPHANED)
+   - Farbkodierte Darstellung für einfachere visuelle Unterscheidung
+   - Verbesserte Erklärungstexte für potentiell verwaiste VMDKs
+
+2. VM-zentrischer Ansatz für VMDK-Sammlung:
+   - Beginnt mit allen VMs und deren virtuellen Festplatten
+   - Durchsucht dann alle Datastores nach zusätzlichen VMDKs
+   - Kreuztabellierung zwischen VM-Festplatten und Datastore-Dateien
+
+3. Verbesserte Erkennung potentiell verwaister VMDKs:
+   - Mehrere Vergleichsformate für Pfade (voller Pfad, ohne Datastore-Präfix, nur Dateiname)
+   - Berücksichtigung von Template-Status-Präfixen
+   - Spezielle Markierung von Helper-Dateien mit "HELPER:"-Präfix
+   - Bessere Erkennung von temporären VMDKs durch Namenmuster-Analyse
+
+4. Berichtsvorlage verbessert:
+   - Zusätzliche Status-Spalte für VMDK-Berichte
+   - CSS-Styling für farbliche Hervorhebung verschiedener VMDK-Typen
+   - Status-Badges mit visuell unterscheidbaren Farben
+   - Verbesserte Legenden und Erklärungstexte
+
+5. Performance-Optimierungen:
+   - Parallelisierte Datensammlung wo möglich
+   - Optimierte Algorithmen zur Erkennung potenziell verwaister VMDKs
+   - Bessere Fehlerbehandlung und Redundanz bei Datensammlungsfehlern
+
+6. Administrator-Freundlichkeit:
+   - Klare visuelle Unterscheidung zwischen aktiven, Template- und potentiell verwaisten VMDKs
+   - Verbesserte Entscheidungshilfen durch detailliertere Erklärungstexte
+   - Gesamtübersicht aller VMDKs für bessere Ressourcenverwaltung
+
+Diese Version stellt einen fundamentalen Wechsel in der VMDK-Berichterstattung dar: 
+Statt zu versuchen, nur "verwaiste" VMDK-Dateien zu identifizieren, werden jetzt ALLE 
+VMDK-Dateien in der Umgebung angezeigt, mit einer klaren Kennzeichnung der potentiell 
+verwaisten Dateien. Dies ermöglicht Administratoren eine bessere Entscheidungsgrundlage 
+und verhindert versehentliches Löschen wichtiger Dateien.
