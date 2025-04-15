@@ -47,80 +47,135 @@ def setup_logger(log_level=None):
         log_level (int, optional): Logging level for console output. 
                                    If None, it will check for VSPHERE_REPORTER_DEBUG environment variable
                                    and use DEBUG level if set to '1', otherwise INFO level.
+                                   
+    Returns:
+        logging.Logger: Configured logger instance
     """
     global _logger, _console_handler
     
-    # Check for debug mode in environment variables if log_level is not specified
-    if log_level is None:
-        debug_mode = os.environ.get('VSPHERE_REPORTER_DEBUG', '0') == '1'
-        log_level = logging.DEBUG if debug_mode else logging.INFO
-    
-    # Create logs directory if it doesn't exist
-    log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'logs')
-    if not os.path.exists(log_dir):
-        os.makedirs(log_dir)
-    
-    # Generate a unique log file name with timestamp
-    import datetime
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_file = os.path.join(log_dir, f'vsphere_reporter_{timestamp}.log')
-    
-    # Configure root logger
-    logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)  # Root logger always at DEBUG to catch everything
-    
-    # Clear any existing handlers to avoid duplicates
-    if logger.handlers:
-        logger.handlers = []
-    
-    # Create formatters
-    file_formatter = logging.Formatter(
-        '%(asctime)s - %(levelname)s - %(name)s - %(filename)s:%(lineno)d - %(message)s'
-    )
-    console_formatter = logging.Formatter(
-        '%(asctime)s - %(levelname)s - %(message)s'
-    )
-    
-    # Create file handler (with rotation)
-    file_handler = RotatingFileHandler(
-        log_file,
-        maxBytes=10 * 1024 * 1024,  # 10 MB
-        backupCount=5
-    )
-    file_handler.setLevel(logging.DEBUG)  # File handler always at DEBUG
-    file_handler.setFormatter(file_formatter)
-    
-    # Create console handler
-    _console_handler = logging.StreamHandler(sys.stdout)
-    _console_handler.setLevel(log_level)
-    _console_handler.setFormatter(console_formatter)
-    
-    # Add handlers to logger
-    logger.addHandler(file_handler)
-    logger.addHandler(_console_handler)
-    
-    # Store reference to logger
-    _logger = logger
-    
-    # Log startup information
-    debug_mode = log_level == logging.DEBUG
-    
-    # Set debug mode environment variable for other modules to use
-    if debug_mode:
-        os.environ['VSPHERE_REPORTER_DEBUG'] = '1'
-        logger.info("Debug mode enabled. Detailed logs will be saved to: %s", log_file)
+    # Umfassende Fehlerbehandlung, um Abstürze zu vermeiden
+    try:
+        # Check for debug mode in environment variables if log_level is not specified
+        if log_level is None:
+            debug_mode = os.environ.get('VSPHERE_REPORTER_DEBUG', '0') == '1'
+            log_level = logging.DEBUG if debug_mode else logging.INFO
         
-        # Log Python version and platform info for debugging
-        import platform
-        logger.debug("Python version: %s", sys.version)
-        logger.debug("Platform: %s", platform.platform())
+        # Create logs directory if it doesn't exist
+        log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'logs')
+        if not os.path.exists(log_dir):
+            try:
+                os.makedirs(log_dir)
+            except Exception as e:
+                # Fallback: Verwende temporäres Verzeichnis, wenn logs-Verzeichnis nicht erstellt werden kann
+                import tempfile
+                log_dir = tempfile.gettempdir()
+                print(f"Warning: Could not create logs directory, using temp directory: {log_dir}")
         
-        # Enable debug test data
-        logger.debug("Test data will be used if no real data is available")
-    else:
-        logger.info("Application started. Log file: %s", log_file)
-    
-    return logger
+        # Generate a unique log file name with timestamp
+        import datetime
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        log_file = os.path.join(log_dir, f'vsphere_reporter_{timestamp}.log')
+        
+        # Configure root logger
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)  # Root logger always at DEBUG to catch everything
+        
+        # Clear any existing handlers to avoid duplicates
+        if logger.handlers:
+            logger.handlers = []
+        
+        # Create formatters with Fehlerbehandlung für Malformatted Strings
+        try:
+            file_formatter = logging.Formatter(
+                '%(asctime)s - %(levelname)s - %(name)s - %(filename)s:%(lineno)d - %(message)s'
+            )
+            console_formatter = logging.Formatter(
+                '%(asctime)s - %(levelname)s - %(message)s'
+            )
+        except Exception as e:
+            # Einfachere Formatter als Fallback verwenden
+            file_formatter = logging.Formatter('%(levelname)s - %(message)s')
+            console_formatter = logging.Formatter('%(levelname)s - %(message)s')
+            print(f"Warning: Using simplified log formatters due to error: {str(e)}")
+        
+        # Create file handler (with rotation)
+        try:
+            file_handler = RotatingFileHandler(
+                log_file,
+                maxBytes=10 * 1024 * 1024,  # 10 MB
+                backupCount=5
+            )
+            file_handler.setLevel(logging.DEBUG)  # File handler always at DEBUG
+            file_handler.setFormatter(file_formatter)
+            
+            # Add file handler to logger
+            logger.addHandler(file_handler)
+        except Exception as e:
+            # Protokollierung in Datei nicht möglich, nur Konsolenausgabe verwenden
+            print(f"Warning: Could not create log file ({log_file}), using console only: {str(e)}")
+        
+        # Create console handler
+        try:
+            _console_handler = logging.StreamHandler(sys.stdout)
+            _console_handler.setLevel(log_level)
+            _console_handler.setFormatter(console_formatter)
+            
+            # Add handler to logger
+            logger.addHandler(_console_handler)
+        except Exception as e:
+            # Notfall-Handler für Konsole
+            _console_handler = logging.StreamHandler()
+            _console_handler.setLevel(logging.WARNING)
+            logger.addHandler(_console_handler)
+            print(f"Warning: Using simplified console handler: {str(e)}")
+        
+        # Store reference to logger
+        _logger = logger
+        
+        # Log startup information
+        debug_mode = log_level == logging.DEBUG
+        
+        # Set debug mode environment variable for other modules to use
+        if debug_mode:
+            os.environ['VSPHERE_REPORTER_DEBUG'] = '1'
+            try:
+                logger.info("Debug mode enabled. Detailed logs will be saved to: %s", log_file)
+                
+                # Log Python version and platform info for debugging
+                import platform
+                logger.debug("Python version: %s", sys.version)
+                logger.debug("Platform: %s", platform.platform())
+                
+                # Enable debug test data
+                logger.debug("Test data will be used if no real data is available")
+            except Exception as e:
+                print(f"Warning: Error during debug logging: {str(e)}")
+        else:
+            try:
+                logger.info("Application started. Log file: %s", log_file)
+            except Exception as e:
+                print(f"Warning: Error during startup logging: {str(e)}")
+        
+        return logger
+        
+    except Exception as e:
+        # Absolute Notfall-Fallback, wenn alles andere fehlschlägt
+        print(f"CRITICAL: Failed to set up logging system: {str(e)}")
+        
+        # Create a minimal logger that only prints to console
+        minimal_logger = logging.getLogger()
+        minimal_logger.setLevel(logging.WARNING)
+        
+        # Ensure there is at least one handler
+        if not minimal_logger.handlers:
+            handler = logging.StreamHandler()
+            handler.setLevel(logging.WARNING)
+            minimal_logger.addHandler(handler)
+        
+        # Store reference
+        _logger = minimal_logger
+        
+        return minimal_logger
 
 def set_log_level(level):
     """
