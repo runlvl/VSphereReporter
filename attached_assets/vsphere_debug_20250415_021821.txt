@@ -1,0 +1,1516 @@
+2025-04-15 02:18:28,828 - INFO - Verbinde mit vCenter: labvcenter.lab.local
+2025-04-15 02:18:28,972 - INFO - Verbindung zum vCenter hergestellt.
+2025-04-15 02:18:28,973 - INFO - 
+=== SNAPSHOT-DIAGNOSE ===
+2025-04-15 02:18:28,973 - INFO - Sammle Informationen über VM-Snapshots (Standard-Methode)
+2025-04-15 02:18:28,996 - INFO - 186 VMs gefunden zum Prüfen auf Snapshots
+2025-04-15 02:18:29,000 - INFO - Verarbeite VM: palctx03
+2025-04-15 02:18:29,108 - INFO - Verarbeite VM: labccus01
+2025-04-15 02:18:29,185 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:29,191 - INFO - Verarbeite VM: labcaus01
+2025-04-15 02:18:29,235 - INFO - Verarbeite VM: mpa-ras-vdi-01
+2025-04-15 02:18:29,269 - INFO - Verarbeite VM: BIGIP-16.1.5-0.0.3-vmware
+2025-04-15 02:18:29,308 - INFO - Verarbeite VM: test-ucs-import
+2025-04-15 02:18:29,345 - INFO - Verarbeite VM: rldwebtest2
+2025-04-15 02:18:29,382 - INFO - Verarbeite VM: Packer VM OBE Test
+2025-04-15 02:18:29,451 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:29,457 - INFO - Verarbeite VM: rbnigel01
+2025-04-15 02:18:29,493 - INFO - Verarbeite VM: mpa-ctx-w11-c01
+2025-04-15 02:18:29,535 - INFO - Verarbeite VM: SPL Tele GmbH
+2025-04-15 02:18:29,601 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:29,605 - INFO - Verarbeite VM: VP NOE
+2025-04-15 02:18:29,697 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:29,702 - INFO - Verarbeite VM: mpa-ras-w22-01
+2025-04-15 02:18:29,749 - INFO - Verarbeite VM: mpa-ctx-w11-003
+2025-04-15 02:18:29,793 - INFO - Verarbeite VM: cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8
+2025-04-15 02:18:29,875 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:29,879 - INFO - Verarbeite VM: ReplicaDemo
+2025-04-15 02:18:29,918 - INFO - Verarbeite VM: Haus der Bamherzigkeit
+2025-04-15 02:18:29,998 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:30,003 - INFO - Verarbeite VM: rldmaster01
+2025-04-15 02:18:30,044 - INFO - Verarbeite VM: mpa-hrz-w11-01
+2025-04-15 02:18:30,122 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:30,127 - INFO - Verarbeite VM: mpa-ctx-fas01
+2025-04-15 02:18:30,168 - INFO - Verarbeite VM: F5_LAB_UDF_B
+2025-04-15 02:18:30,242 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:30,246 - INFO - Verarbeite VM: F5_LAB_UDF_A
+2025-04-15 02:18:30,328 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:30,334 - INFO - Verarbeite VM: geo02Kali
+2025-04-15 02:18:30,422 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:30,427 - INFO - Verarbeite VM: Angelo-Test-02
+2025-04-15 02:18:30,473 - INFO - Verarbeite VM: mpa-ras-cb01
+2025-04-15 02:18:30,559 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:30,564 - INFO - Verarbeite VM: mpa-rds-gw01
+2025-04-15 02:18:30,610 - INFO - Verarbeite VM: mpa-rds-cs01
+2025-04-15 02:18:30,646 - INFO - Verarbeite VM: ob-tf-test-04
+2025-04-15 02:18:30,681 - INFO - Verarbeite VM: stvdev
+2025-04-15 02:18:30,714 - INFO - Verarbeite VM: thmicinga2
+2025-04-15 02:18:30,754 - INFO - Verarbeite VM: rbncsa01
+2025-04-15 02:18:30,800 - INFO - Verarbeite VM: thmapache2
+2025-04-15 02:18:30,841 - INFO - Verarbeite VM: F5_Lab
+2025-04-15 02:18:30,881 - INFO - Verarbeite VM: stvccc
+2025-04-15 02:18:30,926 - INFO - Verarbeite VM: stvfact
+2025-04-15 02:18:30,965 - INFO - Verarbeite VM: stvpvs
+2025-04-15 02:18:31,053 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:31,059 - INFO - Verarbeite VM: stvsql
+2025-04-15 02:18:31,102 - INFO - Verarbeite VM: mpa-msa-tf01
+2025-04-15 02:18:31,144 - INFO - Verarbeite VM: geo03WinServDDOS
+2025-04-15 02:18:31,181 - INFO - Verarbeite VM: rnhworker01
+2025-04-15 02:18:31,262 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:31,267 - INFO - Verarbeite VM: cdeADM
+2025-04-15 02:18:31,302 - INFO - Verarbeite VM: F5-Lab-A1-Site2-vmware
+2025-04-15 02:18:31,375 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:31,379 - INFO - Verarbeite VM: labddc01.lab.local
+2025-04-15 02:18:31,419 - INFO - Verarbeite VM: rnhigel12
+2025-04-15 02:18:31,491 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:31,497 - INFO - Verarbeite VM: thmlnx
+2025-04-15 02:18:31,535 - INFO - Verarbeite VM: paltst
+2025-04-15 02:18:31,581 - INFO - Verarbeite VM: mpa-ras-m00
+2025-04-15 02:18:31,627 - INFO - Verarbeite VM: thmroyalserver
+2025-04-15 02:18:31,674 - INFO - Verarbeite VM: rnh22dc02
+2025-04-15 02:18:31,712 - INFO - Verarbeite VM: BIG-IP-Next-CentralManager
+2025-04-15 02:18:31,751 - INFO - Verarbeite VM: Oto-UbuntuF5-01
+2025-04-15 02:18:31,793 - INFO - Verarbeite VM: rldadc01
+2025-04-15 02:18:31,832 - INFO - Verarbeite VM: rbncdc01
+2025-04-15 02:18:31,869 - INFO - Verarbeite VM: nicex1
+2025-04-15 02:18:31,917 - INFO - Verarbeite VM: palazmigrate
+2025-04-15 02:18:31,963 - INFO - Verarbeite VM: nicdc1
+2025-04-15 02:18:32,005 - INFO - Verarbeite VM: lblaunch02
+2025-04-15 02:18:32,053 - INFO - Verarbeite VM: csbveeam02
+2025-04-15 02:18:32,107 - INFO - Verarbeite VM: stvelm
+2025-04-15 02:18:32,153 - INFO - Verarbeite VM: Win11Pool-01
+2025-04-15 02:18:32,203 - INFO - Verarbeite VM: mpa-w11-base
+2025-04-15 02:18:32,248 - INFO - Verarbeite VM: F5-Lab-A1-Site1-vmware
+2025-04-15 02:18:32,326 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:32,331 - INFO - Verarbeite VM: F5_Ansible
+2025-04-15 02:18:32,373 - INFO - Verarbeite VM: mkb_aadc01
+2025-04-15 02:18:32,415 - INFO - Verarbeite VM: mkb_hüpfi
+2025-04-15 02:18:32,456 - INFO - Verarbeite VM: cdewebserver01
+2025-04-15 02:18:32,497 - INFO - Verarbeite VM: mpa-ctx-m01
+2025-04-15 02:18:32,570 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:32,575 - INFO - Verarbeite VM: mpa-hrz-w11-c01
+2025-04-15 02:18:32,663 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:32,667 - INFO - Verarbeite VM: mpa-rds-wa01
+2025-04-15 02:18:32,702 - INFO - Verarbeite VM: thmicinga1
+2025-04-15 02:18:32,743 - INFO - Verarbeite VM: thmwebserver
+2025-04-15 02:18:32,788 - INFO - Verarbeite VM: JHNSQL01
+2025-04-15 02:18:32,825 - INFO - Verarbeite VM: mpa-ctx-pvs01
+2025-04-15 02:18:32,863 - INFO - Verarbeite VM: mkb_aadc02
+2025-04-15 02:18:32,900 - INFO - Verarbeite VM: JHNEX01
+2025-04-15 02:18:32,940 - INFO - Verarbeite VM: labcc01
+2025-04-15 02:18:32,976 - INFO - Verarbeite VM: mpa-hrz-m01
+2025-04-15 02:18:33,048 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:33,053 - INFO - Verarbeite VM: labvcenter8
+2025-04-15 02:18:33,098 - INFO - Verarbeite VM: RNHIGEL
+2025-04-15 02:18:33,135 - INFO - Verarbeite VM: labdemoveeam01
+2025-04-15 02:18:33,206 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:33,212 - INFO - Verarbeite VM: mpa-ras-vdi-02
+2025-04-15 02:18:33,254 - INFO - Verarbeite VM: rbnldm01
+2025-04-15 02:18:33,305 - INFO - Verarbeite VM: mpa-ctx-ddc01
+2025-04-15 02:18:33,351 - INFO - Verarbeite VM: kvnvda2019-01
+2025-04-15 02:18:33,425 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:33,430 - INFO - Verarbeite VM: mpa-inf-dc01
+2025-04-15 02:18:33,469 - INFO - Verarbeite VM: thmguacamole
+2025-04-15 02:18:33,516 - INFO - Verarbeite VM: rldadm01
+2025-04-15 02:18:33,597 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:33,601 - INFO - Verarbeite VM: stvcsp
+2025-04-15 02:18:33,684 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:33,688 - INFO - Verarbeite VM: rnhubu01
+2025-04-15 02:18:33,723 - INFO - Verarbeite VM: stvload
+2025-04-15 02:18:33,761 - INFO - Verarbeite VM: msr-ctx01
+2025-04-15 02:18:33,802 - INFO - Verarbeite VM: rldweblinux01
+2025-04-15 02:18:33,848 - INFO - Verarbeite VM: labcc02
+2025-04-15 02:18:33,894 - INFO - Verarbeite VM: JHNUBU01
+2025-04-15 02:18:33,935 - INFO - Verarbeite VM: begr_dc02.grotz.local
+2025-04-15 02:18:33,973 - INFO - Verarbeite VM: lblaunch01
+2025-04-15 02:18:34,010 - INFO - Verarbeite VM: JHNVEEAM01
+2025-04-15 02:18:34,051 - INFO - Verarbeite VM: rnhtc01
+2025-04-15 02:18:34,091 - INFO - Verarbeite VM: labccus02
+2025-04-15 02:18:34,132 - INFO - Verarbeite VM: rnhida
+2025-04-15 02:18:34,171 - INFO - Verarbeite VM: JHNTest01
+2025-04-15 02:18:34,206 - INFO - Verarbeite VM: kvndc01
+2025-04-15 02:18:34,240 - INFO - Verarbeite VM: RNHSQL01
+2025-04-15 02:18:34,278 - INFO - Verarbeite VM: JHNDC01
+2025-04-15 02:18:34,347 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:34,352 - INFO - Verarbeite VM: mks_veeam01_br_w2022
+2025-04-15 02:18:34,393 - INFO - Verarbeite VM: rnhmsix
+2025-04-15 02:18:34,429 - INFO - Verarbeite VM: begr_dc01.grotz.local
+2025-04-15 02:18:34,473 - INFO - Verarbeite VM: BIGIP-16.1.0-0.0.19-vmware
+2025-04-15 02:18:34,555 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:34,561 - INFO - Verarbeite VM: mpa-rds-w01
+2025-04-15 02:18:34,613 - INFO - Verarbeite VM: labctx01
+2025-04-15 02:18:34,665 - INFO - Verarbeite VM: kvnddc01
+2025-04-15 02:18:34,712 - INFO - Verarbeite VM: rnhims01
+2025-04-15 02:18:34,758 - INFO - Verarbeite VM: mpa-ctx-wem
+2025-04-15 02:18:34,799 - INFO - Verarbeite VM: Oto-CloudConnect02.naprstek.intern
+2025-04-15 02:18:34,838 - INFO - Verarbeite VM: labvcenter
+2025-04-15 02:18:34,932 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:34,939 - INFO - Verarbeite VM: mpa-hrz-cs02
+2025-04-15 02:18:34,990 - INFO - Verarbeite VM: mpa-hrz-cs01
+2025-04-15 02:18:35,032 - INFO - Verarbeite VM: mpa-inf-fs01
+2025-04-15 02:18:35,076 - INFO - Verarbeite VM: rldmgmt01
+2025-04-15 02:18:35,122 - INFO - Verarbeite VM: rockyrepo01
+2025-04-15 02:18:35,169 - INFO - Verarbeite VM: SAPIGEL01
+2025-04-15 02:18:35,257 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:35,265 - INFO - Verarbeite VM: geo05TestVPX_01
+2025-04-15 02:18:35,311 - INFO - Verarbeite VM: rnhunicon01
+2025-04-15 02:18:35,358 - INFO - Verarbeite VM: geo01Win11
+2025-04-15 02:18:35,449 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:35,457 - INFO - Verarbeite VM: palcdc01
+2025-04-15 02:18:35,506 - INFO - Verarbeite VM: rbntest01
+2025-04-15 02:18:35,605 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:35,610 - INFO - Verarbeite VM: rldcvad01
+2025-04-15 02:18:35,656 - INFO - Verarbeite VM: mpa-ras-m01
+2025-04-15 02:18:35,695 - INFO - Verarbeite VM: labAzureAgent
+2025-04-15 02:18:35,738 - INFO - Verarbeite VM: mpa-inf-adm
+2025-04-15 02:18:35,774 - INFO - Verarbeite VM: mpa-ctx-w11-001
+2025-04-15 02:18:35,813 - INFO - Verarbeite VM: cp-template-57527757-e310-4899-aa5d-b770d66651d8
+2025-04-15 02:18:35,887 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:35,892 - INFO - Verarbeite VM: esxi-vm01
+2025-04-15 02:18:35,934 - INFO - Verarbeite VM: ReplicaDemo_replica
+2025-04-15 02:18:36,019 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:36,023 - INFO - Verarbeite VM: Oto-F5VE02.naprstek.intern
+2025-04-15 02:18:36,069 - INFO - Verarbeite VM: mpa-hrz-av01
+2025-04-15 02:18:36,113 - INFO - Verarbeite VM: labctx02
+2025-04-15 02:18:36,159 - INFO - Verarbeite VM: rnhwem01
+2025-04-15 02:18:36,201 - INFO - Verarbeite VM: F5_lab_Test_debian
+2025-04-15 02:18:36,244 - INFO - Verarbeite VM: labdemoveeamVTL
+2025-04-15 02:18:36,289 - INFO - Verarbeite VM: geo04Kubuntu
+2025-04-15 02:18:36,327 - INFO - Verarbeite VM: chd_NS001
+2025-04-15 02:18:36,367 - INFO - Verarbeite VM: csbveeam03
+2025-04-15 02:18:36,413 - INFO - Verarbeite VM: msr-win11
+2025-04-15 02:18:36,456 - INFO - Verarbeite VM: thmtest
+2025-04-15 02:18:36,509 - INFO - Verarbeite VM: mpa-hrz-m00
+2025-04-15 02:18:36,581 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:36,586 - INFO - Verarbeite VM: labdemoveeam02
+2025-04-15 02:18:36,628 - INFO - Verarbeite VM: dmkmgmt01
+2025-04-15 02:18:36,670 - INFO - Verarbeite VM: mpa-ctx-m00
+2025-04-15 02:18:36,759 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:36,765 - INFO - Verarbeite VM: rnhworker02
+2025-04-15 02:18:36,810 - INFO - Verarbeite VM: mpa-ctx-sf01
+2025-04-15 02:18:36,857 - INFO - Verarbeite VM: rnhmsixwin10
+2025-04-15 02:18:36,939 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:36,943 - INFO - Verarbeite VM: rnhWorkCon
+2025-04-15 02:18:36,984 - INFO - Verarbeite VM: rnhWorkGW
+2025-04-15 02:18:37,029 - INFO - Verarbeite VM: Windows2022
+2025-04-15 02:18:37,066 - INFO - Verarbeite VM: palmgmt
+2025-04-15 02:18:37,112 - INFO - Verarbeite VM: LAMP_v7-BT
+2025-04-15 02:18:37,158 - INFO - Verarbeite VM: rnhWin10
+2025-04-15 02:18:37,203 - INFO - Verarbeite VM: cdeBigIP_WAF
+2025-04-15 02:18:37,255 - INFO - Verarbeite VM: rldwebserver01
+2025-04-15 02:18:37,305 - INFO - Verarbeite VM: rnhdc02
+2025-04-15 02:18:37,356 - INFO - Verarbeite VM: rnhdc01
+2025-04-15 02:18:37,407 - INFO - Verarbeite VM: rnhWorker01
+2025-04-15 02:18:37,451 - INFO - Verarbeite VM: rldns200
+2025-04-15 02:18:37,534 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:37,541 - INFO - Verarbeite VM: rnh22dc01
+2025-04-15 02:18:37,585 - INFO - Verarbeite VM: rldns100
+2025-04-15 02:18:37,669 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:37,675 - INFO - Verarbeite VM: TRAJUMP01
+2025-04-15 02:18:37,721 - INFO - Verarbeite VM: labsf01
+2025-04-15 02:18:37,769 - INFO - Verarbeite VM: labpkiissuing
+2025-04-15 02:18:37,816 - INFO - Verarbeite VM: labdc01
+2025-04-15 02:18:37,908 - ERROR - Fehler beim Verarbeiten eines Snapshots: can't subtract offset-naive and offset-aware datetimes
+2025-04-15 02:18:37,913 - INFO - Verarbeite VM: msr-iva01
+2025-04-15 02:18:37,957 - INFO - Verarbeite VM: labconappliance
+2025-04-15 02:18:38,007 - INFO - Verarbeite VM: csbveeam01
+2025-04-15 02:18:38,045 - INFO - Verarbeite VM: dmkucspe01
+2025-04-15 02:18:38,091 - INFO - Verarbeite VM: rnhWin11
+2025-04-15 02:18:38,132 - INFO - Verarbeite VM: ADC13ClusterTemplate
+2025-04-15 02:18:38,165 - INFO - Verarbeite VM: BIG-IP-Next-04
+2025-04-15 02:18:38,202 - INFO - Verarbeite VM: Windows2019
+2025-04-15 02:18:38,240 - INFO - Verarbeite VM: Ubuntu 20.04 Desktop
+2025-04-15 02:18:38,280 - INFO - Verarbeite VM: Ubuntu 20.04 Server
+2025-04-15 02:18:38,310 - INFO - Verarbeite VM: mpa-srv22-base
+2025-04-15 02:18:38,344 - INFO - Verarbeite VM: labpkiroot
+2025-04-15 02:18:38,392 - INFO - Verarbeite VM: mpa-inf-sql01
+2025-04-15 02:18:38,449 - INFO - Verarbeite VM: rldadmconnect01
+2025-04-15 02:18:38,497 - INFO - Verarbeite VM: begr_template
+2025-04-15 02:18:38,535 - INFO - Verarbeite VM: rbnpingu01
+2025-04-15 02:18:38,573 - INFO - Insgesamt 0 Snapshots über 0 VMs gefunden
+2025-04-15 02:18:38,574 - WARNING - KEINE SNAPSHOTS GEFUNDEN!
+2025-04-15 02:18:38,574 - WARNING - Keine Snapshots gefunden!
+2025-04-15 02:18:38,575 - INFO - 
+=== VERWAISTE VMDK-DIAGNOSE ===
+2025-04-15 02:18:38,576 - INFO - Sammle Informationen über verwaiste VMDK-Dateien (Standard-Methode)
+2025-04-15 02:18:38,599 - INFO - 186 VMs gefunden zum Prüfen auf registrierte VMDKs
+2025-04-15 02:18:38,676 - INFO - Registrierte VMDK: [Unity_Datastore_1] palctx03/palctx03_5.vmdk
+2025-04-15 02:18:38,747 - INFO - Registrierte VMDK: [Unity_Datastore_1] labccus01/labccus01_3-000001.vmdk
+2025-04-15 02:18:38,817 - INFO - Registrierte VMDK: [Unity_Datastore_2] labcaus01/labcaus01.vmdk
+2025-04-15 02:18:38,887 - INFO - Registrierte VMDK: [Unity_Datastore_2] mpa-ras-vdi-01/mpa-ras-vdi-01-000002.vmdk
+2025-04-15 02:18:38,974 - INFO - Registrierte VMDK: [LAB] BIGIP-16.1.5-0.0.3-vmware/BIGIP-16.1.5-0.0.3-vmware.vmdk
+2025-04-15 02:18:39,063 - INFO - Registrierte VMDK: [LAB] test-ucs-import/test-ucs-import_2.vmdk
+2025-04-15 02:18:39,124 - INFO - Registrierte VMDK: [LAB] rldwebtest2/rldwebtest2.vmdk
+2025-04-15 02:18:39,183 - INFO - Registrierte VMDK: [LAB] Packer VM OBE Test/Packer VM OBE Test-000001.vmdk
+2025-04-15 02:18:39,248 - INFO - Registrierte VMDK: [LAB] rbnigel01/rbnigel01.vmdk
+2025-04-15 02:18:39,314 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-ctx-w11-c01/mpa-ctx-w11-c01-f3102d48-444a-4119-b4b2-6121b0133f62-xd-copy.vmdk
+2025-04-15 02:18:39,314 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-ctx-w11-c01/mpa-ctx-w11-c01_IdentityDisk.vmdk
+2025-04-15 02:18:39,378 - INFO - Registrierte VMDK: [LAB] SPL Tele GmbH/SPL Tele GmbH-000001.vmdk
+2025-04-15 02:18:39,440 - INFO - Registrierte VMDK: [LAB] VP NOE/VP NOE-000001.vmdk
+2025-04-15 02:18:39,506 - INFO - Registrierte VMDK: [Unity_Datastore_2] mpa-ras-w22-01/mpa-ras-w22-01-000003.vmdk
+2025-04-15 02:18:39,574 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-ctx-w11-003/mpa-ctx-w11-003-fcf172ec-02b9-4e6e-b57d-2bf0b8cfdeea-xd-delta.vmdk
+2025-04-15 02:18:39,575 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-ctx-w11-003/mpa-ctx-w11-003_IdentityDisk.vmdk
+2025-04-15 02:18:39,577 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-ctx-w11-003/mpa-ctx-w11-003_TemporaryStorage.vmdk
+2025-04-15 02:18:39,641 - INFO - Registrierte VMDK: [Unity_Datastore_2] cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8/cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8_4-000001.vmdk
+2025-04-15 02:18:39,713 - INFO - Registrierte VMDK: [Unity_Datastore_2] ReplicaDemo/ReplicaDemo.vmdk
+2025-04-15 02:18:39,773 - INFO - Registrierte VMDK: [LAB] Haus der Bamherzigkeit/Haus der Bamherzigkeit-000001.vmdk
+2025-04-15 02:18:39,840 - INFO - Registrierte VMDK: [Unity_Datastore_2] rldmaster01/rldmaster01.vmdk
+2025-04-15 02:18:39,918 - INFO - Registrierte VMDK: [Unity_Datastore_2] mpa-hrz-w11-01/mpa-hrz-w11-01_4-000001.vmdk
+2025-04-15 02:18:39,989 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-ctx-fas01/mpa-ctx-fas01.vmdk
+2025-04-15 02:18:40,066 - INFO - Registrierte VMDK: [Unity_Datastore_1] F5_LAB_UDF_B/F5_LAB_UDF_B-000001.vmdk
+2025-04-15 02:18:40,146 - INFO - Registrierte VMDK: [Unity_Datastore_1] BIGIP-17.1.1.3-0.0.5-vmware/BIGIP-17.1.1.3-0.0.5-vmware-000001.vmdk
+2025-04-15 02:18:40,204 - INFO - Registrierte VMDK: [LAB] geo02Kali/geo02Kali-000002.vmdk
+2025-04-15 02:18:40,205 - INFO - Registrierte VMDK: [LAB] geo02Kali/geo02Kali_1.vmdk
+2025-04-15 02:18:40,283 - INFO - Registrierte VMDK: [LAB] Angelo-Test-02/Angelo-Test-02.vmdk
+2025-04-15 02:18:40,344 - INFO - Registrierte VMDK: [Unity_Datastore_2] mpa-ras-cb01/mpa-ras-cb01-000001.vmdk
+2025-04-15 02:18:40,406 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-rds-gw01/mpa-rds-gw01.vmdk
+2025-04-15 02:18:40,476 - INFO - Registrierte VMDK: [LAB] mpa-rds-cs01/mpa-rds-cs01.vmdk
+2025-04-15 02:18:40,539 - INFO - Registrierte VMDK: [LAB] ob-tf-test-04/ob-tf-test-04-cf3272db-8a5e-4dbb-b25c-8c746e428598-xd-delta.vmdk
+2025-04-15 02:18:40,540 - INFO - Registrierte VMDK: [LAB] ob-tf-test-04/ob-tf-test-04_IdentityDisk.vmdk
+2025-04-15 02:18:40,602 - INFO - Registrierte VMDK: [Unity_Datastore_1] stvdev/stvdev.vmdk
+2025-04-15 02:18:40,666 - INFO - Registrierte VMDK: [LAB] thmicinga2/thmicinga2.vmdk
+2025-04-15 02:18:40,725 - INFO - Registrierte VMDK: [LAB] rbncsa01/rbncsa01.vmdk
+2025-04-15 02:18:40,797 - INFO - Registrierte VMDK: [LAB] thmapache2/thmapache2.vmdk
+2025-04-15 02:18:40,798 - INFO - Registrierte VMDK: [LAB] thmapache2/thmapache2_1.vmdk
+2025-04-15 02:18:40,878 - INFO - Registrierte VMDK: [Unity_Datastore_2] F5_Lab/F5_Lab.vmdk
+2025-04-15 02:18:40,943 - INFO - Registrierte VMDK: [Unity_Datastore_1] stvccc/stvccc.vmdk
+2025-04-15 02:18:41,000 - INFO - Registrierte VMDK: [Unity_Datastore_1] stvfact/stvfact.vmdk
+2025-04-15 02:18:41,065 - INFO - Registrierte VMDK: [Unity_Datastore_1] stvpvs/stvpvs-000002.vmdk
+2025-04-15 02:18:41,129 - INFO - Registrierte VMDK: [Unity_Datastore_1] stvsql/stvsql.vmdk
+2025-04-15 02:18:41,195 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-msa-tf01/mpa-msa-tf01.vmdk
+2025-04-15 02:18:41,254 - INFO - Registrierte VMDK: [Unity_Datastore_1] geo03WinServ/geo03WinServ.vmdk
+2025-04-15 02:18:41,325 - INFO - Registrierte VMDK: [LAB] rnhworker01/rnhworker01-000003.vmdk
+2025-04-15 02:18:41,325 - INFO - Registrierte VMDK: [LAB] rnhworker01/rnhworker01_1-000002.vmdk
+2025-04-15 02:18:41,387 - INFO - Registrierte VMDK: [LAB] cdeADM/cdeADM.vmdk
+2025-04-15 02:18:41,477 - INFO - Registrierte VMDK: [Unity_Datastore_2] BIGIP-17.1.2-0.0.8-ha-vmware/BIGIP-17.1.2-0.0.8-ha-vmware-000001.vmdk
+2025-04-15 02:18:41,542 - INFO - Registrierte VMDK: [Unity_Datastore_2] labddc01.lab.local/labddc01.lab.local.vmdk
+2025-04-15 02:18:41,607 - INFO - Registrierte VMDK: [LAB] rnhigel12/rnhigel12-000001.vmdk
+2025-04-15 02:18:41,665 - INFO - Registrierte VMDK: [LAB] thmlnx/thmlnx.vmdk
+2025-04-15 02:18:41,730 - INFO - Registrierte VMDK: [LAB] paltst/paltst.vmdk
+2025-04-15 02:18:41,810 - INFO - Registrierte VMDK: [LAB] thmroyalserver/thmroyalserver.vmdk
+2025-04-15 02:18:41,877 - INFO - Registrierte VMDK: [LAB] rnh22dc02/rnh22dc02.vmdk
+2025-04-15 02:18:41,941 - INFO - Registrierte VMDK: [Unity_Datastore_1] BIG-IP-Next-CentralManager/BIG-IP-Next-CentralManager.vmdk
+2025-04-15 02:18:42,006 - INFO - Registrierte VMDK: [Unity_Datastore_2] Oto-UbuntuF5-01/Oto-UbuntuF5-01.vmdk
+2025-04-15 02:18:42,068 - INFO - Registrierte VMDK: [LAB] rldadc01/rldadc01.vmdk
+2025-04-15 02:18:42,137 - INFO - Registrierte VMDK: [LAB] rbncdc01/rbncdc01.vmdk
+2025-04-15 02:18:42,210 - INFO - Registrierte VMDK: [LAB] nicex1/nicex1.vmdk
+2025-04-15 02:18:42,280 - INFO - Registrierte VMDK: [Unity_Datastore_1] palazmigrate/palazmigrate.vmdk
+2025-04-15 02:18:42,347 - INFO - Registrierte VMDK: [LAB] nicdc1/nicdc1.vmdk
+2025-04-15 02:18:42,409 - INFO - Registrierte VMDK: [Unity_Datastore_1] lblaunch02/lblaunch02.vmdk
+2025-04-15 02:18:42,472 - INFO - Registrierte VMDK: [LAB] csbveeam02/csbveeam02.vmdk
+2025-04-15 02:18:42,472 - INFO - Registrierte VMDK: [LAB] csbveeam02/csbveeam02_1.vmdk
+2025-04-15 02:18:42,544 - INFO - Registrierte VMDK: [Unity_Datastore_1] stvelm/stvelm.vmdk
+2025-04-15 02:18:42,545 - INFO - Registrierte VMDK: [Unity_Datastore_1] stvelm/stvelm_1.vmdk
+2025-04-15 02:18:42,625 - INFO - Registrierte VMDK: [Unity_Datastore_1] Win11Pool-01/Win11Pool-01-000006.vmdk
+2025-04-15 02:18:42,715 - INFO - Registrierte VMDK: [Unity_Datastore_2] BIGIP-17.1.2-0.0.8-vmware/BIGIP-17.1.2-0.0.8-vmware-000001.vmdk
+2025-04-15 02:18:42,783 - INFO - Registrierte VMDK: [Unity_Datastore_2] Neue virtuelle Maschine/Neue virtuelle Maschine.vmdk
+2025-04-15 02:18:42,857 - INFO - Registrierte VMDK: [LAB] mbk_aadc01/mbk_aadc01.vmdk
+2025-04-15 02:18:42,922 - INFO - Registrierte VMDK: [LAB] mkb_hüpfi/mkb_hüpfi.vmdk
+2025-04-15 02:18:43,018 - INFO - Registrierte VMDK: [Unity_Datastore_2] cdewebserver01/cdewebserver01.vmdk
+2025-04-15 02:18:43,090 - INFO - Registrierte VMDK: [Unity_Datastore_2] mpa-ctx-m01/mpa-ctx-m01-000001.vmdk
+2025-04-15 02:18:43,166 - INFO - Registrierte VMDK: [Unity_Datastore_2] mpa-hrz-w11-c01/mpa-hrz-w11-c01_4-000001.vmdk
+2025-04-15 02:18:43,245 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-rds-wa01/mpa-rds-wa01.vmdk
+2025-04-15 02:18:43,313 - INFO - Registrierte VMDK: [LAB] Neue virtuelle Maschine_1/Neue virtuelle Maschine.vmdk
+2025-04-15 02:18:43,382 - INFO - Registrierte VMDK: [LAB] thmwebserver/thmwebserver.vmdk
+2025-04-15 02:18:43,452 - INFO - Registrierte VMDK: [LAB] JHNSQL01/JHNSQL01.vmdk
+2025-04-15 02:18:43,452 - INFO - Registrierte VMDK: [LAB] JHNSQL01/JHNSQL01_1.vmdk
+2025-04-15 02:18:43,518 - INFO - Registrierte VMDK: [Unity_Datastore_2] mpa-ctx-pvs01/mpa-ctx-pvs01.vmdk
+2025-04-15 02:18:43,577 - INFO - Registrierte VMDK: [LAB] mkb_aadc02/mkb_aadc02_1.vmdk
+2025-04-15 02:18:43,644 - INFO - Registrierte VMDK: [LAB] JHNEX01/JHNEX01.vmdk
+2025-04-15 02:18:43,644 - INFO - Registrierte VMDK: [LAB] JHNEX01/JHNEX01_1.vmdk
+2025-04-15 02:18:43,708 - INFO - Registrierte VMDK: [LAB] labcc01.lab.local/labcc01.lab.local.vmdk
+2025-04-15 02:18:43,775 - INFO - Registrierte VMDK: [Unity_Datastore_2] mpa-hrz-m01/mpa-hrz-m01-000004.vmdk
+2025-04-15 02:18:43,883 - INFO - Registrierte VMDK: [LAB] labvcenter8/labvcenter8.vmdk
+2025-04-15 02:18:43,884 - INFO - Registrierte VMDK: [LAB] labvcenter8/labvcenter8_1.vmdk
+2025-04-15 02:18:43,887 - INFO - Registrierte VMDK: [LAB] labvcenter8/labvcenter8_2.vmdk
+2025-04-15 02:18:43,887 - INFO - Registrierte VMDK: [LAB] labvcenter8/labvcenter8_3.vmdk
+2025-04-15 02:18:43,888 - INFO - Registrierte VMDK: [LAB] labvcenter8/labvcenter8_4.vmdk
+2025-04-15 02:18:43,889 - INFO - Registrierte VMDK: [LAB] labvcenter8/labvcenter8_5.vmdk
+2025-04-15 02:18:43,889 - INFO - Registrierte VMDK: [LAB] labvcenter8/labvcenter8_6.vmdk
+2025-04-15 02:18:43,890 - INFO - Registrierte VMDK: [LAB] labvcenter8/labvcenter8_7.vmdk
+2025-04-15 02:18:43,890 - INFO - Registrierte VMDK: [LAB] labvcenter8/labvcenter8_8.vmdk
+2025-04-15 02:18:43,891 - INFO - Registrierte VMDK: [LAB] labvcenter8/labvcenter8_9.vmdk
+2025-04-15 02:18:43,892 - INFO - Registrierte VMDK: [LAB] labvcenter8/labvcenter8_10.vmdk
+2025-04-15 02:18:43,892 - INFO - Registrierte VMDK: [LAB] labvcenter8/labvcenter8_11.vmdk
+2025-04-15 02:18:43,893 - INFO - Registrierte VMDK: [LAB] labvcenter8/labvcenter8_12.vmdk
+2025-04-15 02:18:43,893 - INFO - Registrierte VMDK: [LAB] labvcenter8/labvcenter8_13.vmdk
+2025-04-15 02:18:43,894 - INFO - Registrierte VMDK: [LAB] labvcenter8/labvcenter8_14.vmdk
+2025-04-15 02:18:43,894 - INFO - Registrierte VMDK: [LAB] labvcenter8/labvcenter8_15.vmdk
+2025-04-15 02:18:43,897 - INFO - Registrierte VMDK: [LAB] labvcenter8/labvcenter8_16.vmdk
+2025-04-15 02:18:43,958 - INFO - Registrierte VMDK: [LAB] RNHIGEL/RNHIGEL.vmdk
+2025-04-15 02:18:44,028 - INFO - Registrierte VMDK: [Unity_Datastore_1] labdemoveeam01/labdemoveeam01-000001.vmdk
+2025-04-15 02:18:44,092 - INFO - Registrierte VMDK: [Unity_Datastore_2] mpa-ras-vdi-02/mpa-ras-vdi-02-000002.vmdk
+2025-04-15 02:18:44,168 - INFO - Registrierte VMDK: [LAB] rbnldm01/rbnldm01.vmdk
+2025-04-15 02:18:44,169 - INFO - Registrierte VMDK: [LAB] rbnldm01/rbnldm01_2.vmdk
+2025-04-15 02:18:44,234 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-ctx-ddc01/mpa-ctx-ddc01.vmdk
+2025-04-15 02:18:44,295 - INFO - Registrierte VMDK: [LAB] kvnvda2019-01/kvnvda2019-01-000001.vmdk
+2025-04-15 02:18:44,364 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-inf-dc01/mpa-inf-dc01.vmdk
+2025-04-15 02:18:44,426 - INFO - Registrierte VMDK: [LAB] thmguacamole/thmguacamole.vmdk
+2025-04-15 02:18:44,504 - INFO - Registrierte VMDK: [LAB] rldadm01/rldadm01-000001.vmdk
+2025-04-15 02:18:44,567 - INFO - Registrierte VMDK: [Unity_Datastore_1] stvcsp/stvcsp-000001.vmdk
+2025-04-15 02:18:44,625 - INFO - Registrierte VMDK: [LAB] rnhubu01/rnhubu01.vmdk
+2025-04-15 02:18:44,688 - INFO - Registrierte VMDK: [Unity_Datastore_1] stvload/stvload.vmdk
+2025-04-15 02:18:44,755 - INFO - Registrierte VMDK: [Unity_Datastore_1] msr-ctx01/msr-ctx01.vmdk
+2025-04-15 02:18:44,811 - INFO - Registrierte VMDK: [Unity_Datastore_2] rldweblinux01/rldweblinux01.vmdk
+2025-04-15 02:18:44,877 - INFO - Registrierte VMDK: [Unity_Datastore_2] labcc02/labcc02.vmdk
+2025-04-15 02:18:44,940 - INFO - Registrierte VMDK: [LAB] JHNUBU01/JHNUBU01.vmdk
+2025-04-15 02:18:44,940 - INFO - Registrierte VMDK: [LAB] JHNUBU01/JHNUBU01_1.vmdk
+2025-04-15 02:18:45,004 - INFO - Registrierte VMDK: [LAB] begr_dc02.grotz.local/begr_dc02.grotz.local.vmdk
+2025-04-15 02:18:45,069 - INFO - Registrierte VMDK: [Unity_Datastore_1] lblaunch01/lblaunch01.vmdk
+2025-04-15 02:18:45,136 - INFO - Registrierte VMDK: [LAB] JHNVEEAM01/JHNVEEAM01.vmdk
+2025-04-15 02:18:45,137 - INFO - Registrierte VMDK: [LAB] JHNVEEAM01/JHNVEEAM01_1.vmdk
+2025-04-15 02:18:45,139 - INFO - Registrierte VMDK: [LAB] JHNVEEAM01/JHNVEEAM01_2.vmdk
+2025-04-15 02:18:45,214 - INFO - Registrierte VMDK: [LAB] rnhtc01/rnhtc01.vmdk
+2025-04-15 02:18:45,284 - INFO - Registrierte VMDK: [LAB] labccus02/labccus02.vmdk
+2025-04-15 02:18:45,348 - INFO - Registrierte VMDK: [LAB] rnhida/rnhida.vmdk
+2025-04-15 02:18:45,349 - INFO - Registrierte VMDK: [LAB] rnhida/rnhida_1.vmdk
+2025-04-15 02:18:45,420 - INFO - Registrierte VMDK: [LAB] JHNTest01/JHNTest01.vmdk
+2025-04-15 02:18:45,485 - INFO - Registrierte VMDK: [LAB] kvndc01/kvndc01.vmdk
+2025-04-15 02:18:45,559 - INFO - Registrierte VMDK: [LAB] RNHSQL01/RNHSQL01.vmdk
+2025-04-15 02:18:45,628 - INFO - Registrierte VMDK: [LAB] JHNDC01/JHNDC01-000001.vmdk
+2025-04-15 02:18:45,628 - INFO - Registrierte VMDK: [LAB] JHNDC01/JHNDC01_1-000001.vmdk
+2025-04-15 02:18:45,631 - INFO - Registrierte VMDK: [LAB] JHNDC01/JHNDC01_2-000001.vmdk
+2025-04-15 02:18:45,701 - INFO - Registrierte VMDK: [LAB] bema_veeam01_br/bema_veeam01_br.vmdk
+2025-04-15 02:18:45,760 - INFO - Registrierte VMDK: [LAB] rnhmsix/rnhmsix.vmdk
+2025-04-15 02:18:45,825 - INFO - Registrierte VMDK: [LAB] begr_dc01.grotz.local/begr_dc01.grotz.local.vmdk
+2025-04-15 02:18:45,826 - INFO - Registrierte VMDK: [LAB] begr_dc01.grotz.local/begr_dc01.grotz.local_1.vmdk
+2025-04-15 02:18:45,903 - INFO - Registrierte VMDK: [LAB] BIGIP-16.1.0-0.0.19-vmware/BIGIP-16.1.0-0.0.19-vmware-000001.vmdk
+2025-04-15 02:18:45,969 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-rds-w01/mpa-rds-w01.vmdk
+2025-04-15 02:18:46,048 - INFO - Registrierte VMDK: [Unity_Datastore_2] labctx01/labctx01.vmdk
+2025-04-15 02:18:46,049 - INFO - Registrierte VMDK: [Unity_Datastore_2] labctx01/labctx01_1.vmdk
+2025-04-15 02:18:46,111 - INFO - Registrierte VMDK: [LAB] kvnddc01/kvnddc01.vmdk
+2025-04-15 02:18:46,175 - INFO - Registrierte VMDK: [LAB] rnhims01/rnhims01.vmdk
+2025-04-15 02:18:46,236 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-ctx-wem/mpa-ctx-wem.vmdk
+2025-04-15 02:18:46,300 - INFO - Registrierte VMDK: [Unity_Datastore_2] Oto-CloudConnector02.naprstek.intern/Oto-CloudConnector02.naprstek.intern.vmdk
+2025-04-15 02:18:46,421 - INFO - Registrierte VMDK: [LAB] labvc.lab.local/labvc.lab.local-000001.vmdk
+2025-04-15 02:18:46,422 - INFO - Registrierte VMDK: [LAB] labvc.lab.local/labvc.lab.local_1-000001.vmdk
+2025-04-15 02:18:46,424 - INFO - Registrierte VMDK: [LAB] labvc.lab.local/labvc.lab.local_2-000001.vmdk
+2025-04-15 02:18:46,424 - INFO - Registrierte VMDK: [LAB] labvc.lab.local/labvc.lab.local_3-000001.vmdk
+2025-04-15 02:18:46,425 - INFO - Registrierte VMDK: [LAB] labvc.lab.local/labvc.lab.local_4-000001.vmdk
+2025-04-15 02:18:46,425 - INFO - Registrierte VMDK: [LAB] labvc.lab.local/labvc.lab.local_5-000001.vmdk
+2025-04-15 02:18:46,426 - INFO - Registrierte VMDK: [LAB] labvc.lab.local/labvc.lab.local_6-000001.vmdk
+2025-04-15 02:18:46,426 - INFO - Registrierte VMDK: [LAB] labvc.lab.local/labvc.lab.local_7-000001.vmdk
+2025-04-15 02:18:46,427 - INFO - Registrierte VMDK: [LAB] labvc.lab.local/labvc.lab.local_8-000001.vmdk
+2025-04-15 02:18:46,428 - INFO - Registrierte VMDK: [LAB] labvc.lab.local/labvc.lab.local_9-000001.vmdk
+2025-04-15 02:18:46,430 - INFO - Registrierte VMDK: [LAB] labvc.lab.local/labvc.lab.local_10-000001.vmdk
+2025-04-15 02:18:46,430 - INFO - Registrierte VMDK: [LAB] labvc.lab.local/labvc.lab.local_11-000001.vmdk
+2025-04-15 02:18:46,431 - INFO - Registrierte VMDK: [LAB] labvc.lab.local/labvc.lab.local_12-000001.vmdk
+2025-04-15 02:18:46,432 - INFO - Registrierte VMDK: [LAB] labvc.lab.local/labvc.lab.local_13-000001.vmdk
+2025-04-15 02:18:46,435 - INFO - Registrierte VMDK: [LAB] labvc.lab.local/labvc.lab.local_14-000001.vmdk
+2025-04-15 02:18:46,436 - INFO - Registrierte VMDK: [LAB] labvc.lab.local/labvc.lab.local_15-000001.vmdk
+2025-04-15 02:18:46,499 - INFO - Registrierte VMDK: [Unity_Datastore_2] mpa-hrz-cs02/mpa-hrz-cs02.vmdk
+2025-04-15 02:18:46,576 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-hrz-cs01/mpa-hrz-cs01.vmdk
+2025-04-15 02:18:46,660 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-inf-fs01/mpa-inf-fs01.vmdk
+2025-04-15 02:18:46,660 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-inf-fs01/mpa-inf-fs01_1.vmdk
+2025-04-15 02:18:46,732 - INFO - Registrierte VMDK: [Unity_Datastore_2] New Virtual Machine_1/New Virtual Machine.vmdk
+2025-04-15 02:18:46,802 - INFO - Registrierte VMDK: [Unity_Datastore_2] New Virtual Machine/New Virtual Machine.vmdk
+2025-04-15 02:18:46,803 - INFO - Registrierte VMDK: [Unity_Datastore_2] New Virtual Machine/New Virtual Machine_1.vmdk
+2025-04-15 02:18:46,869 - INFO - Registrierte VMDK: [LAB] SAPIGEL01/SAPIGEL01-000001.vmdk
+2025-04-15 02:18:46,932 - INFO - Registrierte VMDK: [Unity_Datastore_1] geo05TestVPX_01/geo05TestVPX_01.vmdk
+2025-04-15 02:18:47,014 - INFO - Registrierte VMDK: [LAB] rnhunicon01/rnhunicon01.vmdk
+2025-04-15 02:18:47,097 - INFO - Registrierte VMDK: [LAB] geo01Win11/geo01Win11-000001.vmdk
+2025-04-15 02:18:47,173 - INFO - Registrierte VMDK: [Unity_Datastore_1] palcdc01/palcdc01.vmdk
+2025-04-15 02:18:47,247 - INFO - Registrierte VMDK: [LAB] rbnwin10/rbnwin10-000001.vmdk
+2025-04-15 02:18:47,311 - INFO - Registrierte VMDK: [Unity_Datastore_2] rldcvad01/rldcvad01.vmdk
+2025-04-15 02:18:47,390 - INFO - Registrierte VMDK: [Unity_Datastore_1] labAzureAgent/labAzureAgent.vmdk
+2025-04-15 02:18:47,456 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-inf-adm/mpa-inf-adm.vmdk
+2025-04-15 02:18:47,534 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-ctx-w11-001/mpa-ctx-w11-001-0a5b2c3e-b766-49d5-91e3-face96cc6e90-xd-delta.vmdk
+2025-04-15 02:18:47,535 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-ctx-w11-001/mpa-ctx-w11-001_IdentityDisk.vmdk
+2025-04-15 02:18:47,537 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-ctx-w11-001/mpa-ctx-w11-001_TemporaryStorage.vmdk
+2025-04-15 02:18:47,614 - INFO - Registrierte VMDK: [Unity_Datastore_2] cp-template-57527757-e310-4899-aa5d-b770d66651d8/cp-template-57527757-e310-4899-aa5d-b770d66651d8-000001.vmdk
+2025-04-15 02:18:47,677 - INFO - Registrierte VMDK: [Unity_Datastore_2] esxi-virtuall01/esxi-virtuall01.vmdk
+2025-04-15 02:18:47,748 - INFO - Registrierte VMDK: [Unity_Datastore_2] ReplicaDemo_replica/ReplicaDemo-000005.vmdk
+2025-04-15 02:18:47,826 - INFO - Registrierte VMDK: [Unity_Datastore_2] Oto-F5VE02.naprstek.intern/Oto-F5VE02.naprstek.intern.vmdk
+2025-04-15 02:18:47,889 - INFO - Registrierte VMDK: [Unity_Datastore_2] mpa-hrz-av01/mpa-hrz-av01.vmdk
+2025-04-15 02:18:47,966 - INFO - Registrierte VMDK: [Unity_Datastore_2] labctx02/labctx02_4.vmdk
+2025-04-15 02:18:47,967 - INFO - Registrierte VMDK: [Unity_Datastore_2] labctx02/labctx02_6.vmdk
+2025-04-15 02:18:48,035 - INFO - Registrierte VMDK: [LAB] rnhwem01/rnhwem01.vmdk
+2025-04-15 02:18:48,099 - INFO - Registrierte VMDK: [LAB] F5_lab_Test_debian/F5_lab_Test_debian.vmdk
+2025-04-15 02:18:48,164 - INFO - Registrierte VMDK: [Unity_Datastore_1] labdemoveeamVTL/labdemoveeamVTL.vmdk
+2025-04-15 02:18:48,165 - INFO - Registrierte VMDK: [Unity_Datastore_1] labdemoveeamVTL/labdemoveeamVTL_1.vmdk
+2025-04-15 02:18:48,232 - INFO - Registrierte VMDK: [Unity_Datastore_1] geo04Kubuntu/geo04Kubuntu.vmdk
+2025-04-15 02:18:48,293 - INFO - Registrierte VMDK: [LAB] chd_NS001/chd_NS001.vmdk
+2025-04-15 02:18:48,353 - INFO - Registrierte VMDK: [Unity_Datastore_2] csbveeam03/csbveeam03.vmdk
+2025-04-15 02:18:48,421 - INFO - Registrierte VMDK: [Unity_Datastore_1] msr-win11/msr-win11.vmdk
+2025-04-15 02:18:48,484 - INFO - Registrierte VMDK: [Unity_Datastore_1] thmtest/thmtest.vmdk
+2025-04-15 02:18:48,564 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-hrz-m00/mpa-hrz-m00-000002.vmdk
+2025-04-15 02:18:48,636 - INFO - Registrierte VMDK: [Unity_Datastore_1] labdemoveeam02/labdemoveeam02.vmdk
+2025-04-15 02:18:48,637 - INFO - Registrierte VMDK: [Unity_Datastore_1] labdemoveeam02/labdemoveeam02_1.vmdk
+2025-04-15 02:18:48,704 - INFO - Registrierte VMDK: [Unity_Datastore_1] dmkmgmt01/dmkmgmt01.vmdk
+2025-04-15 02:18:48,783 - INFO - Registrierte VMDK: [LAB] mpactxddc01/mpactxddc01-000002.vmdk
+2025-04-15 02:18:48,866 - INFO - Registrierte VMDK: [LAB] rnhworker02/rnhworker02_4.vmdk
+2025-04-15 02:18:48,866 - INFO - Registrierte VMDK: [LAB] rnhworker02/rnhworker02_6.vmdk
+2025-04-15 02:18:48,942 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-ctx-sf01/mpa-ctx-sf01.vmdk
+2025-04-15 02:18:49,020 - INFO - Registrierte VMDK: [LAB] rnhmsixwin11/rnhmsixwin11-000003.vmdk
+2025-04-15 02:18:49,080 - INFO - Registrierte VMDK: [LAB] rnhWorkCon/rnhWorkCon.vmdk
+2025-04-15 02:18:49,144 - INFO - Registrierte VMDK: [LAB] rnhWorkGW/rnhWorkGW.vmdk
+2025-04-15 02:18:49,227 - INFO - Registrierte VMDK: [LAB] palmgmt/palmgmt.vmdk
+2025-04-15 02:18:49,227 - INFO - Registrierte VMDK: [LAB] palmgmt/palmgmt_1.vmdk
+2025-04-15 02:18:49,288 - INFO - Registrierte VMDK: [Unity_Datastore_2] LAMP_v7-BT/LAMP_v7-BT.vmdk
+2025-04-15 02:18:49,350 - INFO - Registrierte VMDK: [LAB] New Virtual Machine/New Virtual Machine.vmdk
+2025-04-15 02:18:49,423 - INFO - Registrierte VMDK: [Unity_Datastore_2] cdeBigIP_WAF/cdeBigIP_WAF.vmdk
+2025-04-15 02:18:49,488 - INFO - Registrierte VMDK: [Unity_Datastore_2] New Virtual Machine_2/New Virtual Machine.vmdk
+2025-04-15 02:18:49,549 - INFO - Registrierte VMDK: [LAB] rnhdc02/rnhdc02.vmdk
+2025-04-15 02:18:49,615 - INFO - Registrierte VMDK: [LAB] rnhdc01/rnhdc01.vmdk
+2025-04-15 02:18:49,687 - INFO - Registrierte VMDK: [LAB] rldns200/rldns200-000001.vmdk
+2025-04-15 02:18:49,754 - INFO - Registrierte VMDK: [LAB] rnh22dc01/rnh22dc01.vmdk
+2025-04-15 02:18:49,818 - INFO - Registrierte VMDK: [Unity_Datastore_2] NSVPX-ESX-14.1-17.38_nc_64/NSVPX-ESX-14.1-17.38_nc_64-000001.vmdk
+2025-04-15 02:18:49,881 - INFO - Registrierte VMDK: [LAB] TRAJUMP01/TRAJUMP01.vmdk
+2025-04-15 02:18:49,944 - INFO - Registrierte VMDK: [LAB] labsf01/labsf01.vmdk
+2025-04-15 02:18:50,016 - INFO - Registrierte VMDK: [LAB] labpkiissuing.lab.local/labpkiissuing.lab.local.vmdk
+2025-04-15 02:18:50,088 - INFO - Registrierte VMDK: [Unity_Datastore_2] labdc01/labdc01-000001.vmdk
+2025-04-15 02:18:50,089 - INFO - Registrierte VMDK: [Unity_Datastore_2] labdc01/labdc01_1.vmdk
+2025-04-15 02:18:50,158 - INFO - Registrierte VMDK: [Unity_Datastore_1] dal-iva-uwm01/dal-iva-uwm01.vmdk
+2025-04-15 02:18:50,222 - INFO - Registrierte VMDK: [LAB] labconappliance/labconappliance.vmdk
+2025-04-15 02:18:50,291 - INFO - Registrierte VMDK: [Unity_Datastore_1] csbveeam01/csbveeam01.vmdk
+2025-04-15 02:18:50,362 - INFO - Registrierte VMDK: [Unity_Datastore_1] dmkucspe01/dmkucspe01.vmdk
+2025-04-15 02:18:50,443 - INFO - Registrierte VMDK: [LAB] BIG-IP-Next-04/BIG-IP-Next-04.vmdk
+2025-04-15 02:18:50,552 - INFO - Registrierte VMDK: [LAB] labpkiroot.lab.local/labpkiroot.lab.local.vmdk
+2025-04-15 02:18:50,615 - INFO - Registrierte VMDK: [Unity_Datastore_1] mpa-inf-sql01/mpa-inf-sql01.vmdk
+2025-04-15 02:18:50,673 - INFO - Registrierte VMDK: [LAB] rldadmconnect01/rldadmconnect01.vmdk
+2025-04-15 02:18:50,743 - INFO - Registrierte VMDK: [Local_labesx01] rbnpingu01/rbnpingu01.vmdk
+2025-04-15 02:18:50,744 - INFO - Insgesamt 770 registrierte VMDKs gefunden
+2025-04-15 02:18:50,757 - INFO - 1 Datacenters zum Scannen gefunden
+2025-04-15 02:18:50,766 - INFO - Datacenter LAB hat 5 Datastores
+2025-04-15 02:18:50,774 - INFO - Scanne Datastore: Local_labesx01
+2025-04-15 02:18:51,821 - INFO - 1 Ordner im Datastore Local_labesx01 gefunden
+2025-04-15 02:18:51,821 - INFO - Prüfe Ordner: [Local_labesx01] rbnpingu01/ mit 2 Dateien
+2025-04-15 02:18:51,823 - INFO - VMDK in Verwendung (direkter Treffer): [Local_labesx01] rbnpingu01/rbnpingu01.vmdk
+2025-04-15 02:18:51,824 - INFO - Überspringe Hilfs-VMDK: [Local_labesx01] rbnpingu01/rbnpingu01-flat.vmdk
+2025-04-15 02:18:51,828 - INFO - Scanne Datastore: Local_labesx02
+2025-04-15 02:18:52,863 - INFO - 1 Ordner im Datastore Local_labesx02 gefunden
+2025-04-15 02:18:52,863 - INFO - Prüfe Ordner: [Local_labesx02] mit 0 Dateien
+2025-04-15 02:18:52,869 - INFO - Scanne Datastore: LAB
+2025-04-15 02:18:53,965 - INFO - 95 Ordner im Datastore LAB gefunden
+2025-04-15 02:18:53,965 - INFO - Prüfe Ordner: [LAB] labcc01.lab.local/ mit 2 Dateien
+2025-04-15 02:18:53,967 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labcc01.lab.local/labcc01.lab.local.vmdk
+2025-04-15 02:18:53,968 - INFO - Überspringe Hilfs-VMDK: [LAB] labcc01.lab.local/labcc01.lab.local-flat.vmdk
+2025-04-15 02:18:53,969 - INFO - Prüfe Ordner: [LAB] rnhWorker01/ mit 4 Dateien
+2025-04-15 02:18:55,022 - INFO - VERWAISTE VMDK GEFUNDEN: [LAB] rnhWorker01/rnhWorker01_6.vmdk
+2025-04-15 02:18:55,026 - ERROR - Fehler bei der Verarbeitung der Datei rnhWorker01_6.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:18:56,081 - INFO - VERWAISTE VMDK GEFUNDEN: [LAB] rnhWorker01/rnhWorker01_4.vmdk
+2025-04-15 02:18:56,085 - ERROR - Fehler bei der Verarbeitung der Datei rnhWorker01_4.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:18:56,086 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhWorker01/rnhWorker01_6-flat.vmdk
+2025-04-15 02:18:56,087 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhWorker01/rnhWorker01_4-flat.vmdk
+2025-04-15 02:18:56,087 - INFO - Prüfe Ordner: [LAB] rbnigel01/ mit 2 Dateien
+2025-04-15 02:18:56,088 - INFO - Überspringe Hilfs-VMDK: [LAB] rbnigel01/rbnigel01-flat.vmdk
+2025-04-15 02:18:56,089 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rbnigel01/rbnigel01.vmdk
+2025-04-15 02:18:56,089 - INFO - Prüfe Ordner: [LAB] rbnldm01/ mit 4 Dateien
+2025-04-15 02:18:56,090 - INFO - Überspringe Hilfs-VMDK: [LAB] rbnldm01/rbnldm01_2-flat.vmdk
+2025-04-15 02:18:56,091 - INFO - Überspringe Hilfs-VMDK: [LAB] rbnldm01/rbnldm01-flat.vmdk
+2025-04-15 02:18:56,091 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rbnldm01/rbnldm01_2.vmdk
+2025-04-15 02:18:56,094 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rbnldm01/rbnldm01.vmdk
+2025-04-15 02:18:56,094 - INFO - Prüfe Ordner: [LAB] rnhworker01/ mit 14 Dateien
+2025-04-15 02:18:57,151 - INFO - VMDK rnhworker01_1.vmdk gehört zu VMX rnhworker01.vmx
+2025-04-15 02:18:57,151 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] rnhworker01/rnhworker01_1.vmdk
+2025-04-15 02:18:57,154 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnhworker01/rnhworker01-000003.vmdk
+2025-04-15 02:18:57,155 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhworker01/rnhworker01-flat.vmdk
+2025-04-15 02:18:58,209 - INFO - VMDK rnhworker01-000002.vmdk gehört zu VMX rnhworker01.vmx
+2025-04-15 02:18:58,209 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] rnhworker01/rnhworker01-000002.vmdk
+2025-04-15 02:18:58,211 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnhworker01/rnhworker01_1-000002.vmdk
+2025-04-15 02:18:59,268 - INFO - VMDK rnhworker01-000001.vmdk gehört zu VMX rnhworker01.vmx
+2025-04-15 02:18:59,268 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] rnhworker01/rnhworker01-000001.vmdk
+2025-04-15 02:18:59,326 - INFO - VMDK rnhworker01_1-000001.vmdk gehört zu VMX rnhworker01.vmx
+2025-04-15 02:18:59,327 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] rnhworker01/rnhworker01_1-000001.vmdk
+2025-04-15 02:18:59,328 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhworker01/rnhworker01_1-flat.vmdk
+2025-04-15 02:18:59,329 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhworker01/rnhworker01-000003-sesparse.vmdk
+2025-04-15 02:18:59,330 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhworker01/rnhworker01-000002-sesparse.vmdk
+2025-04-15 02:18:59,330 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhworker01/rnhworker01-000001-sesparse.vmdk
+2025-04-15 02:18:59,331 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhworker01/rnhworker01_1-000001-sesparse.vmdk
+2025-04-15 02:18:59,331 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhworker01/rnhworker01_1-000002-sesparse.vmdk
+2025-04-15 02:19:00,389 - INFO - VMDK rnhworker01.vmdk gehört zu VMX rnhworker01.vmx
+2025-04-15 02:19:00,390 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] rnhworker01/rnhworker01.vmdk
+2025-04-15 02:19:00,392 - INFO - Prüfe Ordner: [LAB] thmguacamole/ mit 2 Dateien
+2025-04-15 02:19:00,392 - INFO - Überspringe Hilfs-VMDK: [LAB] thmguacamole/thmguacamole-flat.vmdk
+2025-04-15 02:19:00,393 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] thmguacamole/thmguacamole.vmdk
+2025-04-15 02:19:00,394 - INFO - Prüfe Ordner: [LAB] TRAJUMP01/ mit 2 Dateien
+2025-04-15 02:19:00,394 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] TRAJUMP01/TRAJUMP01.vmdk
+2025-04-15 02:19:00,395 - INFO - Überspringe Hilfs-VMDK: [LAB] TRAJUMP01/TRAJUMP01-flat.vmdk
+2025-04-15 02:19:00,395 - INFO - Prüfe Ordner: [LAB] labpkiroot.lab.local/ mit 3 Dateien
+2025-04-15 02:19:00,396 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labpkiroot.lab.local/labpkiroot.lab.local.vmdk
+2025-04-15 02:19:00,396 - INFO - Überspringe Hilfs-VMDK: [LAB] labpkiroot.lab.local/labpkiroot.lab.local-ctk.vmdk
+2025-04-15 02:19:00,397 - INFO - Überspringe Hilfs-VMDK: [LAB] labpkiroot.lab.local/labpkiroot.lab.local-flat.vmdk
+2025-04-15 02:19:00,397 - INFO - Prüfe Ordner: [LAB] VP NOE/ mit 4 Dateien
+2025-04-15 02:19:00,453 - INFO - VMDK VP NOE.vmdk gehört zu VMX VP NOE.vmx
+2025-04-15 02:19:00,453 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] VP NOE/VP NOE.vmdk
+2025-04-15 02:19:00,456 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] VP NOE/VP NOE-000001.vmdk
+2025-04-15 02:19:00,456 - INFO - Überspringe Hilfs-VMDK: [LAB] VP NOE/VP NOE-000001-sesparse.vmdk
+2025-04-15 02:19:00,457 - INFO - Überspringe Hilfs-VMDK: [LAB] VP NOE/VP NOE-flat.vmdk
+2025-04-15 02:19:00,458 - INFO - Prüfe Ordner: [LAB] labccus02/ mit 2 Dateien
+2025-04-15 02:19:00,458 - INFO - Überspringe Hilfs-VMDK: [LAB] labccus02/labccus02-flat.vmdk
+2025-04-15 02:19:00,459 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labccus02/labccus02.vmdk
+2025-04-15 02:19:00,460 - INFO - Prüfe Ordner: [LAB] SAPIGEL01/ mit 4 Dateien
+2025-04-15 02:19:00,460 - INFO - Überspringe Hilfs-VMDK: [LAB] SAPIGEL01/SAPIGEL01-flat.vmdk
+2025-04-15 02:19:01,522 - INFO - VMDK SAPIGEL01.vmdk gehört zu VMX SAPIGEL01.vmx
+2025-04-15 02:19:01,523 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] SAPIGEL01/SAPIGEL01.vmdk
+2025-04-15 02:19:01,524 - INFO - Überspringe Hilfs-VMDK: [LAB] SAPIGEL01/SAPIGEL01-000001-sesparse.vmdk
+2025-04-15 02:19:01,525 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] SAPIGEL01/SAPIGEL01-000001.vmdk
+2025-04-15 02:19:01,527 - INFO - Prüfe Ordner: [LAB] rldns200/ mit 4 Dateien
+2025-04-15 02:19:02,583 - INFO - VMDK rldns200.vmdk gehört zu VMX rldns200.vmx
+2025-04-15 02:19:02,584 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] rldns200/rldns200.vmdk
+2025-04-15 02:19:02,586 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rldns200/rldns200-000001.vmdk
+2025-04-15 02:19:02,587 - INFO - Überspringe Hilfs-VMDK: [LAB] rldns200/rldns200-flat.vmdk
+2025-04-15 02:19:02,588 - INFO - Überspringe Hilfs-VMDK: [LAB] rldns200/rldns200-000001-sesparse.vmdk
+2025-04-15 02:19:02,589 - INFO - Prüfe Ordner: [LAB] rnhims01/ mit 2 Dateien
+2025-04-15 02:19:02,590 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhims01/rnhims01-flat.vmdk
+2025-04-15 02:19:02,591 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnhims01/rnhims01.vmdk
+2025-04-15 02:19:02,591 - INFO - Prüfe Ordner: [LAB] ADC13ClusterTemplate/ mit 2 Dateien
+2025-04-15 02:19:03,659 - INFO - VERWAISTE VMDK GEFUNDEN: [LAB] ADC13ClusterTemplate/ADC13ClusterTemplate.vmdk
+2025-04-15 02:19:03,663 - ERROR - Fehler bei der Verarbeitung der Datei ADC13ClusterTemplate.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:19:03,664 - INFO - Überspringe Hilfs-VMDK: [LAB] ADC13ClusterTemplate/ADC13ClusterTemplate-flat.vmdk
+2025-04-15 02:19:03,665 - INFO - Prüfe Ordner: [LAB] JHNEX01/ mit 6 Dateien
+2025-04-15 02:19:03,666 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNEX01/JHNEX01_1-flat.vmdk
+2025-04-15 02:19:03,666 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNEX01/JHNEX01_2-flat.vmdk
+2025-04-15 02:19:03,667 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] JHNEX01/JHNEX01_1.vmdk
+2025-04-15 02:19:03,667 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] JHNEX01/JHNEX01.vmdk
+2025-04-15 02:19:04,723 - INFO - VMDK JHNEX01_2.vmdk gehört zu VMX JHNEX01.vmx
+2025-04-15 02:19:04,724 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] JHNEX01/JHNEX01_2.vmdk
+2025-04-15 02:19:04,725 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNEX01/JHNEX01-flat.vmdk
+2025-04-15 02:19:04,726 - INFO - Prüfe Ordner: [LAB] F5_lab_Test_debian/ mit 2 Dateien
+2025-04-15 02:19:04,726 - INFO - Überspringe Hilfs-VMDK: [LAB] F5_lab_Test_debian/F5_lab_Test_debian-flat.vmdk
+2025-04-15 02:19:04,727 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] F5_lab_Test_debian/F5_lab_Test_debian.vmdk
+2025-04-15 02:19:04,728 - INFO - Prüfe Ordner: [LAB] New Virtual Machine/ mit 2 Dateien
+2025-04-15 02:19:04,728 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] New Virtual Machine/New Virtual Machine.vmdk
+2025-04-15 02:19:04,729 - INFO - Überspringe Hilfs-VMDK: [LAB] New Virtual Machine/New Virtual Machine-flat.vmdk
+2025-04-15 02:19:04,729 - INFO - Prüfe Ordner: [LAB] RNHIGEL/ mit 3 Dateien
+2025-04-15 02:19:04,730 - INFO - Überspringe Hilfs-VMDK: [LAB] RNHIGEL/RNHIGEL-ctk.vmdk
+2025-04-15 02:19:04,730 - INFO - Überspringe Hilfs-VMDK: [LAB] RNHIGEL/RNHIGEL-flat.vmdk
+2025-04-15 02:19:04,731 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] RNHIGEL/RNHIGEL.vmdk
+2025-04-15 02:19:04,731 - INFO - Prüfe Ordner: [LAB] RNHSQL01/ mit 2 Dateien
+2025-04-15 02:19:04,732 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] RNHSQL01/RNHSQL01.vmdk
+2025-04-15 02:19:04,732 - INFO - Überspringe Hilfs-VMDK: [LAB] RNHSQL01/RNHSQL01-flat.vmdk
+2025-04-15 02:19:04,733 - INFO - Prüfe Ordner: [LAB] JHNDC01/ mit 14 Dateien
+2025-04-15 02:19:04,733 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] JHNDC01/JHNDC01_1-000001.vmdk
+2025-04-15 02:19:04,736 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] JHNDC01/JHNDC01_2-000001.vmdk
+2025-04-15 02:19:04,737 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNDC01/JHNDC01_1-flat.vmdk
+2025-04-15 02:19:05,788 - INFO - VMDK JHNDC01.vmdk gehört zu VMX JHNDC01.vmx
+2025-04-15 02:19:05,788 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] JHNDC01/JHNDC01.vmdk
+2025-04-15 02:19:05,790 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNDC01/JHNDC01_3-flat.vmdk
+2025-04-15 02:19:05,791 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNDC01/JHNDC01_2-flat.vmdk
+2025-04-15 02:19:05,791 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] JHNDC01/JHNDC01-000001.vmdk
+2025-04-15 02:19:06,852 - INFO - VMDK JHNDC01_1.vmdk gehört zu VMX JHNDC01.vmx
+2025-04-15 02:19:06,853 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] JHNDC01/JHNDC01_1.vmdk
+2025-04-15 02:19:06,855 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNDC01/JHNDC01_1-000001-sesparse.vmdk
+2025-04-15 02:19:07,907 - INFO - VMDK JHNDC01_3.vmdk gehört zu VMX JHNDC01.vmx
+2025-04-15 02:19:07,907 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] JHNDC01/JHNDC01_3.vmdk
+2025-04-15 02:19:07,909 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNDC01/JHNDC01_2-000001-sesparse.vmdk
+2025-04-15 02:19:07,910 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNDC01/JHNDC01-flat.vmdk
+2025-04-15 02:19:07,910 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNDC01/JHNDC01-000001-sesparse.vmdk
+2025-04-15 02:19:08,967 - INFO - VMDK JHNDC01_2.vmdk gehört zu VMX JHNDC01.vmx
+2025-04-15 02:19:08,968 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] JHNDC01/JHNDC01_2.vmdk
+2025-04-15 02:19:08,970 - INFO - Prüfe Ordner: [LAB] rldadm01/ mit 4 Dateien
+2025-04-15 02:19:08,971 - INFO - Überspringe Hilfs-VMDK: [LAB] rldadm01/rldadm01-flat.vmdk
+2025-04-15 02:19:10,025 - INFO - VMDK rldadm01.vmdk gehört zu VMX rldadm01.vmx
+2025-04-15 02:19:10,026 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] rldadm01/rldadm01.vmdk
+2025-04-15 02:19:10,028 - INFO - Überspringe Hilfs-VMDK: [LAB] rldadm01/rldadm01-000001-sesparse.vmdk
+2025-04-15 02:19:10,028 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rldadm01/rldadm01-000001.vmdk
+2025-04-15 02:19:10,029 - INFO - Prüfe Ordner: [LAB] rnhdc02/ mit 2 Dateien
+2025-04-15 02:19:10,030 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhdc02/rnhdc02-flat.vmdk
+2025-04-15 02:19:10,031 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnhdc02/rnhdc02.vmdk
+2025-04-15 02:19:10,031 - INFO - Prüfe Ordner: [LAB] rnhmsixwin11/ mit 6 Dateien
+2025-04-15 02:19:11,086 - INFO - VMDK rnhmsixwin11-000001.vmdk gehört zu VMX rnhmsixwin11.vmx
+2025-04-15 02:19:11,087 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] rnhmsixwin11/rnhmsixwin11-000001.vmdk
+2025-04-15 02:19:11,089 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnhmsixwin11/rnhmsixwin11-000003.vmdk
+2025-04-15 02:19:12,144 - INFO - VMDK rnhmsixwin11.vmdk gehört zu VMX rnhmsixwin11.vmx
+2025-04-15 02:19:12,144 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] rnhmsixwin11/rnhmsixwin11.vmdk
+2025-04-15 02:19:12,146 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhmsixwin11/rnhmsixwin11-000003-sesparse.vmdk
+2025-04-15 02:19:12,147 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhmsixwin11/rnhmsixwin11-000001-sesparse.vmdk
+2025-04-15 02:19:12,147 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhmsixwin11/rnhmsixwin11-flat.vmdk
+2025-04-15 02:19:12,148 - INFO - Prüfe Ordner: [LAB] kvndc01/ mit 2 Dateien
+2025-04-15 02:19:12,148 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] kvndc01/kvndc01.vmdk
+2025-04-15 02:19:12,149 - INFO - Überspringe Hilfs-VMDK: [LAB] kvndc01/kvndc01-flat.vmdk
+2025-04-15 02:19:12,150 - INFO - Prüfe Ordner: [LAB] mpactxddc01/ mit 8 Dateien
+2025-04-15 02:19:13,202 - INFO - VMDK mpactxddc01.vmdk gehört zu VMX mpactxddc01.vmx
+2025-04-15 02:19:13,203 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] mpactxddc01/mpactxddc01.vmdk
+2025-04-15 02:19:14,266 - INFO - VMDK mpactxddc01-000001.vmdk gehört zu VMX mpactxddc01.vmx
+2025-04-15 02:19:14,267 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] mpactxddc01/mpactxddc01-000001.vmdk
+2025-04-15 02:19:14,269 - INFO - Überspringe Hilfs-VMDK: [LAB] mpactxddc01/mpactxddc01-000003-sesparse.vmdk
+2025-04-15 02:19:14,270 - INFO - Überspringe Hilfs-VMDK: [LAB] mpactxddc01/mpactxddc01-000002-sesparse.vmdk
+2025-04-15 02:19:14,270 - INFO - Überspringe Hilfs-VMDK: [LAB] mpactxddc01/mpactxddc01-000001-sesparse.vmdk
+2025-04-15 02:19:14,271 - INFO - Überspringe Hilfs-VMDK: [LAB] mpactxddc01/mpactxddc01-flat.vmdk
+2025-04-15 02:19:15,325 - INFO - VMDK mpactxddc01-000003.vmdk gehört zu VMX mpactxddc01.vmx
+2025-04-15 02:19:15,325 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] mpactxddc01/mpactxddc01-000003.vmdk
+2025-04-15 02:19:15,327 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] mpactxddc01/mpactxddc01-000002.vmdk
+2025-04-15 02:19:15,328 - INFO - Prüfe Ordner: [LAB] rnhdc01/ mit 2 Dateien
+2025-04-15 02:19:15,328 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnhdc01/rnhdc01.vmdk
+2025-04-15 02:19:15,329 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhdc01/rnhdc01-flat.vmdk
+2025-04-15 02:19:15,329 - INFO - Prüfe Ordner: [LAB] rnhtc01/ mit 2 Dateien
+2025-04-15 02:19:15,330 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnhtc01/rnhtc01.vmdk
+2025-04-15 02:19:15,330 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhtc01/rnhtc01-flat.vmdk
+2025-04-15 02:19:15,331 - INFO - Prüfe Ordner: [LAB] Neue virtuelle Maschine_1/ mit 2 Dateien
+2025-04-15 02:19:15,331 - INFO - Überspringe Hilfs-VMDK: [LAB] Neue virtuelle Maschine_1/Neue virtuelle Maschine-flat.vmdk
+2025-04-15 02:19:15,332 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] Neue virtuelle Maschine_1/Neue virtuelle Maschine.vmdk
+2025-04-15 02:19:15,333 - INFO - Prüfe Ordner: [LAB] nicdc1/ mit 2 Dateien
+2025-04-15 02:19:15,333 - INFO - Überspringe Hilfs-VMDK: [LAB] nicdc1/nicdc1-flat.vmdk
+2025-04-15 02:19:15,334 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] nicdc1/nicdc1.vmdk
+2025-04-15 02:19:15,334 - INFO - Prüfe Ordner: [LAB] begr_dc02.grotz.local/ mit 2 Dateien
+2025-04-15 02:19:15,334 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] begr_dc02.grotz.local/begr_dc02.grotz.local.vmdk
+2025-04-15 02:19:15,338 - INFO - Überspringe Hilfs-VMDK: [LAB] begr_dc02.grotz.local/begr_dc02.grotz.local-flat.vmdk
+2025-04-15 02:19:15,339 - INFO - Prüfe Ordner: [LAB] rbnwin10/ mit 4 Dateien
+2025-04-15 02:19:15,339 - INFO - Überspringe Hilfs-VMDK: [LAB] rbnwin10/rbnwin10-000001-sesparse.vmdk
+2025-04-15 02:19:15,340 - INFO - Überspringe Hilfs-VMDK: [LAB] rbnwin10/rbnwin10-flat.vmdk
+2025-04-15 02:19:16,397 - INFO - VMDK rbnwin10.vmdk gehört zu VMX rbnwin10.vmx
+2025-04-15 02:19:16,398 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] rbnwin10/rbnwin10.vmdk
+2025-04-15 02:19:16,400 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rbnwin10/rbnwin10-000001.vmdk
+2025-04-15 02:19:16,401 - INFO - Prüfe Ordner: [LAB] JHNSQL01/ mit 4 Dateien
+2025-04-15 02:19:16,402 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] JHNSQL01/JHNSQL01_1.vmdk
+2025-04-15 02:19:16,403 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] JHNSQL01/JHNSQL01.vmdk
+2025-04-15 02:19:16,404 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNSQL01/JHNSQL01_1-flat.vmdk
+2025-04-15 02:19:16,405 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNSQL01/JHNSQL01-flat.vmdk
+2025-04-15 02:19:16,406 - INFO - Prüfe Ordner: [LAB] rldw2k22w01/ mit 2 Dateien
+2025-04-15 02:19:16,406 - INFO - Überspringe Hilfs-VMDK: [LAB] rldw2k22w01/rldw2k22w01_IdentityDisk-flat.vmdk
+2025-04-15 02:19:17,463 - INFO - VERWAISTE VMDK GEFUNDEN: [LAB] rldw2k22w01/rldw2k22w01_IdentityDisk.vmdk
+2025-04-15 02:19:17,469 - ERROR - Fehler bei der Verarbeitung der Datei rldw2k22w01_IdentityDisk.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:19:17,470 - INFO - Prüfe Ordner: [LAB] SPL Tele GmbH/ mit 4 Dateien
+2025-04-15 02:19:17,470 - INFO - Überspringe Hilfs-VMDK: [LAB] SPL Tele GmbH/SPL Tele GmbH-flat.vmdk
+2025-04-15 02:19:17,471 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] SPL Tele GmbH/SPL Tele GmbH-000001.vmdk
+2025-04-15 02:19:17,471 - INFO - Überspringe Hilfs-VMDK: [LAB] SPL Tele GmbH/SPL Tele GmbH-000001-sesparse.vmdk
+2025-04-15 02:19:18,528 - INFO - VMDK SPL Tele GmbH.vmdk gehört zu VMX SPL Tele GmbH.vmx
+2025-04-15 02:19:18,528 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] SPL Tele GmbH/SPL Tele GmbH.vmdk
+2025-04-15 02:19:18,531 - INFO - Prüfe Ordner: [LAB] devops-packer-baseDisk-PNVbk-datastore-15/ mit 2 Dateien
+2025-04-15 02:19:18,531 - INFO - Überspringe Hilfs-VMDK: [LAB] devops-packer-baseDisk-PNVbk-datastore-15/devops-packer-baseDisk-PNVbk-datastore-15_6-flat.vmdk
+2025-04-15 02:19:19,582 - INFO - VERWAISTE VMDK GEFUNDEN: [LAB] devops-packer-baseDisk-PNVbk-datastore-15/devops-packer-baseDisk-PNVbk-datastore-15_6.vmdk
+2025-04-15 02:19:19,588 - ERROR - Fehler bei der Verarbeitung der Datei devops-packer-baseDisk-PNVbk-datastore-15_6.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:19:19,589 - INFO - Prüfe Ordner: [LAB] rldwebtest2/ mit 2 Dateien
+2025-04-15 02:19:19,589 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rldwebtest2/rldwebtest2.vmdk
+2025-04-15 02:19:19,590 - INFO - Überspringe Hilfs-VMDK: [LAB] rldwebtest2/rldwebtest2-flat.vmdk
+2025-04-15 02:19:19,591 - INFO - Prüfe Ordner: [LAB] rnh22dc01/ mit 2 Dateien
+2025-04-15 02:19:19,592 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnh22dc01/rnh22dc01.vmdk
+2025-04-15 02:19:19,592 - INFO - Überspringe Hilfs-VMDK: [LAB] rnh22dc01/rnh22dc01-flat.vmdk
+2025-04-15 02:19:19,595 - INFO - Prüfe Ordner: [LAB] palmgmt/ mit 4 Dateien
+2025-04-15 02:19:19,595 - INFO - Überspringe Hilfs-VMDK: [LAB] palmgmt/palmgmt_1-flat.vmdk
+2025-04-15 02:19:19,596 - INFO - Überspringe Hilfs-VMDK: [LAB] palmgmt/palmgmt-flat.vmdk
+2025-04-15 02:19:19,597 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] palmgmt/palmgmt_1.vmdk
+2025-04-15 02:19:19,597 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] palmgmt/palmgmt.vmdk
+2025-04-15 02:19:19,598 - INFO - Prüfe Ordner: [LAB] rnhubu01/ mit 2 Dateien
+2025-04-15 02:19:19,598 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhubu01/rnhubu01-flat.vmdk
+2025-04-15 02:19:19,599 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnhubu01/rnhubu01.vmdk
+2025-04-15 02:19:19,599 - INFO - Prüfe Ordner: [LAB] begr_template/ mit 2 Dateien
+2025-04-15 02:19:20,658 - INFO - VERWAISTE VMDK GEFUNDEN: [LAB] begr_template/begr_template.vmdk
+2025-04-15 02:19:20,662 - ERROR - Fehler bei der Verarbeitung der Datei begr_template.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:19:20,662 - INFO - Überspringe Hilfs-VMDK: [LAB] begr_template/begr_template-flat.vmdk
+2025-04-15 02:19:20,663 - INFO - Prüfe Ordner: [LAB] JHNUBU01/ mit 6 Dateien
+2025-04-15 02:19:20,663 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNUBU01/JHNUBU01-ctk.vmdk
+2025-04-15 02:19:20,664 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNUBU01/JHNUBU01_1-flat.vmdk
+2025-04-15 02:19:20,665 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNUBU01/JHNUBU01_1-ctk.vmdk
+2025-04-15 02:19:20,665 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] JHNUBU01/JHNUBU01.vmdk
+2025-04-15 02:19:20,666 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] JHNUBU01/JHNUBU01_1.vmdk
+2025-04-15 02:19:20,666 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNUBU01/JHNUBU01-flat.vmdk
+2025-04-15 02:19:20,667 - INFO - Prüfe Ordner: [LAB] mpa-rds-cs01/ mit 2 Dateien
+2025-04-15 02:19:20,667 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] mpa-rds-cs01/mpa-rds-cs01.vmdk
+2025-04-15 02:19:20,668 - INFO - Überspringe Hilfs-VMDK: [LAB] mpa-rds-cs01/mpa-rds-cs01-flat.vmdk
+2025-04-15 02:19:20,668 - INFO - Prüfe Ordner: [LAB] BIGIP-16.1.5-0.0.3-vmware/ mit 2 Dateien
+2025-04-15 02:19:20,671 - INFO - Überspringe Hilfs-VMDK: [LAB] BIGIP-16.1.5-0.0.3-vmware/BIGIP-16.1.5-0.0.3-vmware-flat.vmdk
+2025-04-15 02:19:20,672 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] BIGIP-16.1.5-0.0.3-vmware/BIGIP-16.1.5-0.0.3-vmware.vmdk
+2025-04-15 02:19:20,672 - INFO - Prüfe Ordner: [LAB] nicex1/ mit 3 Dateien
+2025-04-15 02:19:20,673 - INFO - Überspringe Hilfs-VMDK: [LAB] nicex1/nicex1-flat.vmdk
+2025-04-15 02:19:20,673 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] nicex1/nicex1.vmdk
+2025-04-15 02:19:20,674 - INFO - Überspringe Hilfs-VMDK: [LAB] nicex1/nicex1-ctk.vmdk
+2025-04-15 02:19:20,674 - INFO - Prüfe Ordner: [LAB] kvnddc01/ mit 2 Dateien
+2025-04-15 02:19:20,675 - INFO - Überspringe Hilfs-VMDK: [LAB] kvnddc01/kvnddc01-flat.vmdk
+2025-04-15 02:19:20,675 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] kvnddc01/kvnddc01.vmdk
+2025-04-15 02:19:20,676 - INFO - Prüfe Ordner: [LAB] JHNTest01/ mit 2 Dateien
+2025-04-15 02:19:20,676 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] JHNTest01/JHNTest01.vmdk
+2025-04-15 02:19:20,676 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNTest01/JHNTest01-flat.vmdk
+2025-04-15 02:19:20,677 - INFO - Prüfe Ordner: [LAB] rnhWorkCon/ mit 2 Dateien
+2025-04-15 02:19:20,677 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhWorkCon/rnhWorkCon-flat.vmdk
+2025-04-15 02:19:20,678 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnhWorkCon/rnhWorkCon.vmdk
+2025-04-15 02:19:20,678 - INFO - Prüfe Ordner: [LAB] labvc.lab.local/ mit 64 Dateien
+2025-04-15 02:19:20,679 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvc.lab.local/labvc.lab.local_15-000001.vmdk
+2025-04-15 02:19:20,679 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvc.lab.local/labvc.lab.local_14-000001.vmdk
+2025-04-15 02:19:20,684 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvc.lab.local/labvc.lab.local_13-000001.vmdk
+2025-04-15 02:19:20,684 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvc.lab.local/labvc.lab.local_12-000001.vmdk
+2025-04-15 02:19:20,685 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvc.lab.local/labvc.lab.local_11-000001.vmdk
+2025-04-15 02:19:20,686 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvc.lab.local/labvc.lab.local_10-000001.vmdk
+2025-04-15 02:19:21,745 - INFO - VMDK labvc.lab.local_7.vmdk gehört zu VMX labvc.lab.local.vmx
+2025-04-15 02:19:21,745 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] labvc.lab.local/labvc.lab.local_7.vmdk
+2025-04-15 02:19:22,812 - INFO - VMDK labvc.lab.local_3.vmdk gehört zu VMX labvc.lab.local.vmx
+2025-04-15 02:19:22,813 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] labvc.lab.local/labvc.lab.local_3.vmdk
+2025-04-15 02:19:23,886 - INFO - VMDK labvc.lab.local_15.vmdk gehört zu VMX labvc.lab.local.vmx
+2025-04-15 02:19:23,887 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] labvc.lab.local/labvc.lab.local_15.vmdk
+2025-04-15 02:19:24,955 - INFO - VMDK labvc.lab.local_11.vmdk gehört zu VMX labvc.lab.local.vmx
+2025-04-15 02:19:24,956 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] labvc.lab.local/labvc.lab.local_11.vmdk
+2025-04-15 02:19:26,027 - INFO - VMDK labvc.lab.local.vmdk gehört zu VMX labvc.lab.local.vmx
+2025-04-15 02:19:26,027 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] labvc.lab.local/labvc.lab.local.vmdk
+2025-04-15 02:19:26,030 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvc.lab.local/labvc.lab.local-000001.vmdk
+2025-04-15 02:19:26,031 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_9-flat.vmdk
+2025-04-15 02:19:26,032 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_8-flat.vmdk
+2025-04-15 02:19:26,033 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_3-flat.vmdk
+2025-04-15 02:19:26,034 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_2-flat.vmdk
+2025-04-15 02:19:26,036 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_1-flat.vmdk
+2025-04-15 02:19:26,037 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_7-flat.vmdk
+2025-04-15 02:19:26,037 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_6-flat.vmdk
+2025-04-15 02:19:26,038 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_5-flat.vmdk
+2025-04-15 02:19:26,041 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_4-flat.vmdk
+2025-04-15 02:19:27,117 - INFO - VMDK labvc.lab.local_6.vmdk gehört zu VMX labvc.lab.local.vmx
+2025-04-15 02:19:27,117 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] labvc.lab.local/labvc.lab.local_6.vmdk
+2025-04-15 02:19:27,213 - INFO - VMDK labvc.lab.local_2.vmdk gehört zu VMX labvc.lab.local.vmx
+2025-04-15 02:19:27,214 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] labvc.lab.local/labvc.lab.local_2.vmdk
+2025-04-15 02:19:28,290 - INFO - VMDK labvc.lab.local_14.vmdk gehört zu VMX labvc.lab.local.vmx
+2025-04-15 02:19:28,291 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] labvc.lab.local/labvc.lab.local_14.vmdk
+2025-04-15 02:19:29,361 - INFO - VMDK labvc.lab.local_10.vmdk gehört zu VMX labvc.lab.local.vmx
+2025-04-15 02:19:29,362 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] labvc.lab.local/labvc.lab.local_10.vmdk
+2025-04-15 02:19:29,364 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_1-000001-sesparse.vmdk
+2025-04-15 02:19:29,365 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_3-000001-sesparse.vmdk
+2025-04-15 02:19:29,365 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_2-000001-sesparse.vmdk
+2025-04-15 02:19:29,366 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_5-000001-sesparse.vmdk
+2025-04-15 02:19:29,367 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_4-000001-sesparse.vmdk
+2025-04-15 02:19:29,367 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_7-000001-sesparse.vmdk
+2025-04-15 02:19:30,430 - INFO - VMDK labvc.lab.local_9.vmdk gehört zu VMX labvc.lab.local.vmx
+2025-04-15 02:19:30,431 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] labvc.lab.local/labvc.lab.local_9.vmdk
+2025-04-15 02:19:31,494 - INFO - VMDK labvc.lab.local_5.vmdk gehört zu VMX labvc.lab.local.vmx
+2025-04-15 02:19:31,495 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] labvc.lab.local/labvc.lab.local_5.vmdk
+2025-04-15 02:19:32,572 - INFO - VMDK labvc.lab.local_1.vmdk gehört zu VMX labvc.lab.local.vmx
+2025-04-15 02:19:32,573 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] labvc.lab.local/labvc.lab.local_1.vmdk
+2025-04-15 02:19:32,576 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_6-000001-sesparse.vmdk
+2025-04-15 02:19:32,576 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_9-000001-sesparse.vmdk
+2025-04-15 02:19:32,577 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_8-000001-sesparse.vmdk
+2025-04-15 02:19:33,653 - INFO - VMDK labvc.lab.local_13.vmdk gehört zu VMX labvc.lab.local.vmx
+2025-04-15 02:19:33,654 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] labvc.lab.local/labvc.lab.local_13.vmdk
+2025-04-15 02:19:33,658 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvc.lab.local/labvc.lab.local_5-000001.vmdk
+2025-04-15 02:19:33,658 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvc.lab.local/labvc.lab.local_4-000001.vmdk
+2025-04-15 02:19:33,659 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvc.lab.local/labvc.lab.local_7-000001.vmdk
+2025-04-15 02:19:33,660 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvc.lab.local/labvc.lab.local_6-000001.vmdk
+2025-04-15 02:19:33,661 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvc.lab.local/labvc.lab.local_1-000001.vmdk
+2025-04-15 02:19:33,662 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvc.lab.local/labvc.lab.local_3-000001.vmdk
+2025-04-15 02:19:33,663 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvc.lab.local/labvc.lab.local_2-000001.vmdk
+2025-04-15 02:19:33,664 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvc.lab.local/labvc.lab.local_9-000001.vmdk
+2025-04-15 02:19:33,665 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvc.lab.local/labvc.lab.local_8-000001.vmdk
+2025-04-15 02:19:34,736 - INFO - VMDK labvc.lab.local_8.vmdk gehört zu VMX labvc.lab.local.vmx
+2025-04-15 02:19:34,736 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] labvc.lab.local/labvc.lab.local_8.vmdk
+2025-04-15 02:19:35,815 - INFO - VMDK labvc.lab.local_4.vmdk gehört zu VMX labvc.lab.local.vmx
+2025-04-15 02:19:35,816 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] labvc.lab.local/labvc.lab.local_4.vmdk
+2025-04-15 02:19:36,889 - INFO - VMDK labvc.lab.local_12.vmdk gehört zu VMX labvc.lab.local.vmx
+2025-04-15 02:19:36,889 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] labvc.lab.local/labvc.lab.local_12.vmdk
+2025-04-15 02:19:36,891 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local-flat.vmdk
+2025-04-15 02:19:36,892 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_15-flat.vmdk
+2025-04-15 02:19:36,893 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_14-flat.vmdk
+2025-04-15 02:19:36,893 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_11-flat.vmdk
+2025-04-15 02:19:36,894 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_10-flat.vmdk
+2025-04-15 02:19:36,895 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_13-flat.vmdk
+2025-04-15 02:19:36,895 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_12-flat.vmdk
+2025-04-15 02:19:36,896 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local-000001-sesparse.vmdk
+2025-04-15 02:19:36,897 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_15-000001-sesparse.vmdk
+2025-04-15 02:19:36,897 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_14-000001-sesparse.vmdk
+2025-04-15 02:19:36,898 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_11-000001-sesparse.vmdk
+2025-04-15 02:19:36,899 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_10-000001-sesparse.vmdk
+2025-04-15 02:19:36,902 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_13-000001-sesparse.vmdk
+2025-04-15 02:19:36,903 - INFO - Überspringe Hilfs-VMDK: [LAB] labvc.lab.local/labvc.lab.local_12-000001-sesparse.vmdk
+2025-04-15 02:19:36,904 - INFO - Prüfe Ordner: [LAB] test-ucs-import/ mit 2 Dateien
+2025-04-15 02:19:36,905 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] test-ucs-import/test-ucs-import_2.vmdk
+2025-04-15 02:19:36,905 - INFO - Überspringe Hilfs-VMDK: [LAB] test-ucs-import/test-ucs-import_2-flat.vmdk
+2025-04-15 02:19:36,906 - INFO - Prüfe Ordner: [LAB] rnhworker02/ mit 4 Dateien
+2025-04-15 02:19:36,907 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnhworker02/rnhworker02_4.vmdk
+2025-04-15 02:19:36,907 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnhworker02/rnhworker02_6.vmdk
+2025-04-15 02:19:36,908 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhworker02/rnhworker02_4-flat.vmdk
+2025-04-15 02:19:36,909 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhworker02/rnhworker02_6-flat.vmdk
+2025-04-15 02:19:36,910 - INFO - Prüfe Ordner: [LAB] labvcenter8/ mit 34 Dateien
+2025-04-15 02:19:36,911 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvcenter8/labvcenter8.vmdk
+2025-04-15 02:19:36,915 - INFO - Überspringe Hilfs-VMDK: [LAB] labvcenter8/labvcenter8_8-flat.vmdk
+2025-04-15 02:19:36,916 - INFO - Überspringe Hilfs-VMDK: [LAB] labvcenter8/labvcenter8_9-flat.vmdk
+2025-04-15 02:19:36,917 - INFO - Überspringe Hilfs-VMDK: [LAB] labvcenter8/labvcenter8_2-flat.vmdk
+2025-04-15 02:19:36,918 - INFO - Überspringe Hilfs-VMDK: [LAB] labvcenter8/labvcenter8_3-flat.vmdk
+2025-04-15 02:19:36,919 - INFO - Überspringe Hilfs-VMDK: [LAB] labvcenter8/labvcenter8_1-flat.vmdk
+2025-04-15 02:19:36,920 - INFO - Überspringe Hilfs-VMDK: [LAB] labvcenter8/labvcenter8_6-flat.vmdk
+2025-04-15 02:19:36,921 - INFO - Überspringe Hilfs-VMDK: [LAB] labvcenter8/labvcenter8_7-flat.vmdk
+2025-04-15 02:19:36,921 - INFO - Überspringe Hilfs-VMDK: [LAB] labvcenter8/labvcenter8_4-flat.vmdk
+2025-04-15 02:19:36,924 - INFO - Überspringe Hilfs-VMDK: [LAB] labvcenter8/labvcenter8_5-flat.vmdk
+2025-04-15 02:19:36,925 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvcenter8/labvcenter8_11.vmdk
+2025-04-15 02:19:36,926 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvcenter8/labvcenter8_15.vmdk
+2025-04-15 02:19:36,927 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvcenter8/labvcenter8_2.vmdk
+2025-04-15 02:19:36,927 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvcenter8/labvcenter8_6.vmdk
+2025-04-15 02:19:36,928 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvcenter8/labvcenter8_10.vmdk
+2025-04-15 02:19:36,928 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvcenter8/labvcenter8_14.vmdk
+2025-04-15 02:19:36,929 - INFO - Überspringe Hilfs-VMDK: [LAB] labvcenter8/labvcenter8_15-flat.vmdk
+2025-04-15 02:19:36,930 - INFO - Überspringe Hilfs-VMDK: [LAB] labvcenter8/labvcenter8_14-flat.vmdk
+2025-04-15 02:19:36,930 - INFO - Überspringe Hilfs-VMDK: [LAB] labvcenter8/labvcenter8_16-flat.vmdk
+2025-04-15 02:19:36,931 - INFO - Überspringe Hilfs-VMDK: [LAB] labvcenter8/labvcenter8_11-flat.vmdk
+2025-04-15 02:19:36,933 - INFO - Überspringe Hilfs-VMDK: [LAB] labvcenter8/labvcenter8_10-flat.vmdk
+2025-04-15 02:19:36,936 - INFO - Überspringe Hilfs-VMDK: [LAB] labvcenter8/labvcenter8_13-flat.vmdk
+2025-04-15 02:19:36,936 - INFO - Überspringe Hilfs-VMDK: [LAB] labvcenter8/labvcenter8_12-flat.vmdk
+2025-04-15 02:19:36,938 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvcenter8/labvcenter8_3.vmdk
+2025-04-15 02:19:36,939 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvcenter8/labvcenter8_7.vmdk
+2025-04-15 02:19:36,940 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvcenter8/labvcenter8_13.vmdk
+2025-04-15 02:19:36,941 - INFO - Überspringe Hilfs-VMDK: [LAB] labvcenter8/labvcenter8-flat.vmdk
+2025-04-15 02:19:36,941 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvcenter8/labvcenter8_8.vmdk
+2025-04-15 02:19:36,942 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvcenter8/labvcenter8_4.vmdk
+2025-04-15 02:19:36,943 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvcenter8/labvcenter8_12.vmdk
+2025-04-15 02:19:36,943 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvcenter8/labvcenter8_16.vmdk
+2025-04-15 02:19:36,946 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvcenter8/labvcenter8_9.vmdk
+2025-04-15 02:19:36,947 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvcenter8/labvcenter8_1.vmdk
+2025-04-15 02:19:36,948 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labvcenter8/labvcenter8_5.vmdk
+2025-04-15 02:19:36,949 - INFO - Prüfe Ordner: [LAB] labsf01/ mit 2 Dateien
+2025-04-15 02:19:36,950 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labsf01/labsf01.vmdk
+2025-04-15 02:19:36,950 - INFO - Überspringe Hilfs-VMDK: [LAB] labsf01/labsf01-flat.vmdk
+2025-04-15 02:19:36,951 - INFO - Prüfe Ordner: [LAB] csbveeam02/ mit 4 Dateien
+2025-04-15 02:19:36,952 - INFO - Überspringe Hilfs-VMDK: [LAB] csbveeam02/csbveeam02_1-flat.vmdk
+2025-04-15 02:19:36,953 - INFO - Überspringe Hilfs-VMDK: [LAB] csbveeam02/csbveeam02-flat.vmdk
+2025-04-15 02:19:36,953 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] csbveeam02/csbveeam02.vmdk
+2025-04-15 02:19:36,954 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] csbveeam02/csbveeam02_1.vmdk
+2025-04-15 02:19:36,955 - INFO - Prüfe Ordner: [LAB] rldadc01/ mit 2 Dateien
+2025-04-15 02:19:36,960 - INFO - Überspringe Hilfs-VMDK: [LAB] rldadc01/rldadc01-flat.vmdk
+2025-04-15 02:19:36,960 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rldadc01/rldadc01.vmdk
+2025-04-15 02:19:36,961 - INFO - Prüfe Ordner: [LAB] mkb_hüpfi/ mit 2 Dateien
+2025-04-15 02:19:36,962 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] mkb_hüpfi/mkb_hüpfi.vmdk
+2025-04-15 02:19:36,963 - INFO - Überspringe Hilfs-VMDK: [LAB] mkb_hüpfi/mkb_hüpfi-flat.vmdk
+2025-04-15 02:19:36,964 - INFO - Prüfe Ordner: [LAB] rbncsa01/ mit 2 Dateien
+2025-04-15 02:19:36,964 - INFO - Überspringe Hilfs-VMDK: [LAB] rbncsa01/rbncsa01-flat.vmdk
+2025-04-15 02:19:36,965 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rbncsa01/rbncsa01.vmdk
+2025-04-15 02:19:36,966 - INFO - Prüfe Ordner: [LAB] rnhigel12/ mit 4 Dateien
+2025-04-15 02:19:36,967 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhigel12/rnhigel12-flat.vmdk
+2025-04-15 02:19:36,971 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnhigel12/rnhigel12-000001.vmdk
+2025-04-15 02:19:36,971 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhigel12/rnhigel12-000001-sesparse.vmdk
+2025-04-15 02:19:38,047 - INFO - VMDK rnhigel12.vmdk gehört zu VMX rnhigel12.vmx
+2025-04-15 02:19:38,048 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] rnhigel12/rnhigel12.vmdk
+2025-04-15 02:19:38,050 - INFO - Prüfe Ordner: [LAB] geo01Win11/ mit 4 Dateien
+2025-04-15 02:19:38,051 - INFO - Überspringe Hilfs-VMDK: [LAB] geo01Win11/geo01Win11-000001-sesparse.vmdk
+2025-04-15 02:19:39,122 - INFO - VMDK geo01Win11.vmdk gehört zu VMX geo01Win11.vmx
+2025-04-15 02:19:39,123 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] geo01Win11/geo01Win11.vmdk
+2025-04-15 02:19:39,125 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] geo01Win11/geo01Win11-000001.vmdk
+2025-04-15 02:19:39,126 - INFO - Überspringe Hilfs-VMDK: [LAB] geo01Win11/geo01Win11-flat.vmdk
+2025-04-15 02:19:39,127 - INFO - Prüfe Ordner: [LAB] Packer VM OBE Test/ mit 4 Dateien
+2025-04-15 02:19:39,128 - INFO - Überspringe Hilfs-VMDK: [LAB] Packer VM OBE Test/Packer VM OBE Test-flat.vmdk
+2025-04-15 02:19:40,193 - INFO - VMDK Packer VM OBE Test.vmdk gehört zu VMX Packer VM OBE Test.vmx
+2025-04-15 02:19:40,194 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] Packer VM OBE Test/Packer VM OBE Test.vmdk
+2025-04-15 02:19:40,196 - INFO - Überspringe Hilfs-VMDK: [LAB] Packer VM OBE Test/Packer VM OBE Test-000001-sesparse.vmdk
+2025-04-15 02:19:40,196 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] Packer VM OBE Test/Packer VM OBE Test-000001.vmdk
+2025-04-15 02:19:40,197 - INFO - Prüfe Ordner: [LAB] rnh22dc02/ mit 2 Dateien
+2025-04-15 02:19:40,198 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnh22dc02/rnh22dc02.vmdk
+2025-04-15 02:19:40,198 - INFO - Überspringe Hilfs-VMDK: [LAB] rnh22dc02/rnh22dc02-flat.vmdk
+2025-04-15 02:19:40,199 - INFO - Prüfe Ordner: [LAB] Windows2019/ mit 2 Dateien
+2025-04-15 02:19:40,200 - INFO - Überspringe Hilfs-VMDK: [LAB] Windows2019/Windows2019-flat.vmdk
+2025-04-15 02:19:41,259 - INFO - VERWAISTE VMDK GEFUNDEN: [LAB] Windows2019/Windows2019.vmdk
+2025-04-15 02:19:41,262 - ERROR - Fehler bei der Verarbeitung der Datei Windows2019.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:19:41,263 - INFO - Prüfe Ordner: [LAB] BIGIP-16.1.0-0.0.19-vmware/ mit 4 Dateien
+2025-04-15 02:19:41,263 - INFO - Überspringe Hilfs-VMDK: [LAB] BIGIP-16.1.0-0.0.19-vmware/BIGIP-16.1.0-0.0.19-vmware-000001-sesparse.vmdk
+2025-04-15 02:19:41,264 - INFO - Überspringe Hilfs-VMDK: [LAB] BIGIP-16.1.0-0.0.19-vmware/BIGIP-16.1.0-0.0.19-vmware-flat.vmdk
+2025-04-15 02:19:41,265 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] BIGIP-16.1.0-0.0.19-vmware/BIGIP-16.1.0-0.0.19-vmware-000001.vmdk
+2025-04-15 02:19:42,317 - INFO - VMDK BIGIP-16.1.0-0.0.19-vmware.vmdk gehört zu VMX BIGIP-16.1.0-0.0.19-vmware.vmx
+2025-04-15 02:19:42,318 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] BIGIP-16.1.0-0.0.19-vmware/BIGIP-16.1.0-0.0.19-vmware.vmdk
+2025-04-15 02:19:42,320 - INFO - Prüfe Ordner: [LAB] Angelo-Test-02/ mit 2 Dateien
+2025-04-15 02:19:42,320 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] Angelo-Test-02/Angelo-Test-02.vmdk
+2025-04-15 02:19:42,321 - INFO - Überspringe Hilfs-VMDK: [LAB] Angelo-Test-02/Angelo-Test-02-flat.vmdk
+2025-04-15 02:19:42,321 - INFO - Prüfe Ordner: [LAB] rldadmconnect01/ mit 2 Dateien
+2025-04-15 02:19:42,322 - INFO - Überspringe Hilfs-VMDK: [LAB] rldadmconnect01/rldadmconnect01-flat.vmdk
+2025-04-15 02:19:42,322 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rldadmconnect01/rldadmconnect01.vmdk
+2025-04-15 02:19:42,323 - INFO - Prüfe Ordner: [LAB] labpkiissuing.lab.local/ mit 3 Dateien
+2025-04-15 02:19:42,323 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labpkiissuing.lab.local/labpkiissuing.lab.local.vmdk
+2025-04-15 02:19:42,324 - INFO - Überspringe Hilfs-VMDK: [LAB] labpkiissuing.lab.local/labpkiissuing.lab.local-flat.vmdk
+2025-04-15 02:19:42,325 - INFO - Überspringe Hilfs-VMDK: [LAB] labpkiissuing.lab.local/labpkiissuing.lab.local-ctk.vmdk
+2025-04-15 02:19:42,325 - INFO - Prüfe Ordner: [LAB] Haus der Bamherzigkeit/ mit 4 Dateien
+2025-04-15 02:19:43,391 - INFO - VMDK Haus der Bamherzigkeit.vmdk gehört zu VMX Haus der Bamherzigkeit.vmx
+2025-04-15 02:19:43,391 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] Haus der Bamherzigkeit/Haus der Bamherzigkeit.vmdk
+2025-04-15 02:19:43,394 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] Haus der Bamherzigkeit/Haus der Bamherzigkeit-000001.vmdk
+2025-04-15 02:19:43,395 - INFO - Überspringe Hilfs-VMDK: [LAB] Haus der Bamherzigkeit/Haus der Bamherzigkeit-flat.vmdk
+2025-04-15 02:19:43,395 - INFO - Überspringe Hilfs-VMDK: [LAB] Haus der Bamherzigkeit/Haus der Bamherzigkeit-000001-sesparse.vmdk
+2025-04-15 02:19:43,396 - INFO - Prüfe Ordner: [LAB] rnhwem01/ mit 2 Dateien
+2025-04-15 02:19:43,397 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhwem01/rnhwem01-flat.vmdk
+2025-04-15 02:19:43,398 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnhwem01/rnhwem01.vmdk
+2025-04-15 02:19:43,399 - INFO - Prüfe Ordner: [LAB] rnhWorkGW/ mit 2 Dateien
+2025-04-15 02:19:43,400 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhWorkGW/rnhWorkGW-flat.vmdk
+2025-04-15 02:19:43,401 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnhWorkGW/rnhWorkGW.vmdk
+2025-04-15 02:19:43,402 - INFO - Prüfe Ordner: [LAB] labconappliance/ mit 2 Dateien
+2025-04-15 02:19:43,405 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] labconappliance/labconappliance.vmdk
+2025-04-15 02:19:43,405 - INFO - Überspringe Hilfs-VMDK: [LAB] labconappliance/labconappliance-flat.vmdk
+2025-04-15 02:19:43,406 - INFO - Prüfe Ordner: [LAB] mkb_aadc02/ mit 2 Dateien
+2025-04-15 02:19:43,407 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] mkb_aadc02/mkb_aadc02_1.vmdk
+2025-04-15 02:19:43,408 - INFO - Überspringe Hilfs-VMDK: [LAB] mkb_aadc02/mkb_aadc02_1-flat.vmdk
+2025-04-15 02:19:43,408 - INFO - Prüfe Ordner: [LAB] paltst/ mit 2 Dateien
+2025-04-15 02:19:43,409 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] paltst/paltst.vmdk
+2025-04-15 02:19:43,409 - INFO - Überspringe Hilfs-VMDK: [LAB] paltst/paltst-flat.vmdk
+2025-04-15 02:19:43,410 - INFO - Prüfe Ordner: [LAB] thmicinga2/ mit 2 Dateien
+2025-04-15 02:19:43,411 - INFO - Überspringe Hilfs-VMDK: [LAB] thmicinga2/thmicinga2-flat.vmdk
+2025-04-15 02:19:43,411 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] thmicinga2/thmicinga2.vmdk
+2025-04-15 02:19:43,412 - INFO - Prüfe Ordner: [LAB] rnhunicon01/ mit 2 Dateien
+2025-04-15 02:19:43,416 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhunicon01/rnhunicon01-flat.vmdk
+2025-04-15 02:19:43,416 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnhunicon01/rnhunicon01.vmdk
+2025-04-15 02:19:43,417 - INFO - Prüfe Ordner: [LAB] BIG-IP-Next-04/ mit 2 Dateien
+2025-04-15 02:19:43,417 - INFO - Überspringe Hilfs-VMDK: [LAB] BIG-IP-Next-04/BIG-IP-Next-04-flat.vmdk
+2025-04-15 02:19:43,419 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] BIG-IP-Next-04/BIG-IP-Next-04.vmdk
+2025-04-15 02:19:43,420 - INFO - Prüfe Ordner: [LAB] rnhida/ mit 4 Dateien
+2025-04-15 02:19:43,420 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnhida/rnhida_1.vmdk
+2025-04-15 02:19:43,421 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhida/rnhida_1-flat.vmdk
+2025-04-15 02:19:43,422 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnhida/rnhida.vmdk
+2025-04-15 02:19:43,422 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhida/rnhida-flat.vmdk
+2025-04-15 02:19:43,423 - INFO - Prüfe Ordner: [LAB] mbk_aadc01/ mit 2 Dateien
+2025-04-15 02:19:43,423 - INFO - Überspringe Hilfs-VMDK: [LAB] mbk_aadc01/mbk_aadc01-flat.vmdk
+2025-04-15 02:19:43,424 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] mbk_aadc01/mbk_aadc01.vmdk
+2025-04-15 02:19:43,424 - INFO - Prüfe Ordner: [LAB] thmlnx/ mit 2 Dateien
+2025-04-15 02:19:43,427 - INFO - Überspringe Hilfs-VMDK: [LAB] thmlnx/thmlnx-flat.vmdk
+2025-04-15 02:19:43,427 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] thmlnx/thmlnx.vmdk
+2025-04-15 02:19:43,428 - INFO - Prüfe Ordner: [LAB] chd_NS001/ mit 2 Dateien
+2025-04-15 02:19:43,428 - INFO - Überspringe Hilfs-VMDK: [LAB] chd_NS001/chd_NS001-flat.vmdk
+2025-04-15 02:19:43,429 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] chd_NS001/chd_NS001.vmdk
+2025-04-15 02:19:43,430 - INFO - Prüfe Ordner: [LAB] begr_dc01.grotz.local/ mit 4 Dateien
+2025-04-15 02:19:43,430 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] begr_dc01.grotz.local/begr_dc01.grotz.local.vmdk
+2025-04-15 02:19:43,432 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] begr_dc01.grotz.local/begr_dc01.grotz.local_1.vmdk
+2025-04-15 02:19:43,432 - INFO - Überspringe Hilfs-VMDK: [LAB] begr_dc01.grotz.local/begr_dc01.grotz.local_1-flat.vmdk
+2025-04-15 02:19:43,433 - INFO - Überspringe Hilfs-VMDK: [LAB] begr_dc01.grotz.local/begr_dc01.grotz.local-flat.vmdk
+2025-04-15 02:19:43,434 - INFO - Prüfe Ordner: [LAB] Ubuntu Server/ mit 2 Dateien
+2025-04-15 02:19:44,509 - INFO - VERWAISTE VMDK GEFUNDEN: [LAB] Ubuntu Server/Ubuntu Server.vmdk
+2025-04-15 02:19:44,514 - ERROR - Fehler bei der Verarbeitung der Datei Ubuntu Server.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:19:44,514 - INFO - Überspringe Hilfs-VMDK: [LAB] Ubuntu Server/Ubuntu Server-flat.vmdk
+2025-04-15 02:19:44,515 - INFO - Prüfe Ordner: [LAB] cdeADM/ mit 2 Dateien
+2025-04-15 02:19:44,516 - INFO - Überspringe Hilfs-VMDK: [LAB] cdeADM/cdeADM-flat.vmdk
+2025-04-15 02:19:44,516 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] cdeADM/cdeADM.vmdk
+2025-04-15 02:19:44,517 - INFO - Prüfe Ordner: [LAB] JHNVEEAM01/ mit 6 Dateien
+2025-04-15 02:19:44,517 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNVEEAM01/JHNVEEAM01-flat.vmdk
+2025-04-15 02:19:44,518 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] JHNVEEAM01/JHNVEEAM01.vmdk
+2025-04-15 02:19:44,518 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNVEEAM01/JHNVEEAM01_2-flat.vmdk
+2025-04-15 02:19:44,519 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNVEEAM01/JHNVEEAM01_1-flat.vmdk
+2025-04-15 02:19:44,520 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] JHNVEEAM01/JHNVEEAM01_2.vmdk
+2025-04-15 02:19:44,522 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] JHNVEEAM01/JHNVEEAM01_1.vmdk
+2025-04-15 02:19:44,523 - INFO - Prüfe Ordner: [LAB] rnhmsix/ mit 2 Dateien
+2025-04-15 02:19:44,523 - INFO - Überspringe Hilfs-VMDK: [LAB] rnhmsix/rnhmsix-flat.vmdk
+2025-04-15 02:19:44,524 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rnhmsix/rnhmsix.vmdk
+2025-04-15 02:19:44,525 - INFO - Prüfe Ordner: [LAB] thmwebserver/ mit 2 Dateien
+2025-04-15 02:19:44,526 - INFO - Überspringe Hilfs-VMDK: [LAB] thmwebserver/thmwebserver-flat.vmdk
+2025-04-15 02:19:44,526 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] thmwebserver/thmwebserver.vmdk
+2025-04-15 02:19:44,527 - INFO - Prüfe Ordner: [LAB] Server 2022/ mit 2 Dateien
+2025-04-15 02:19:45,592 - INFO - VERWAISTE VMDK GEFUNDEN: [LAB] Server 2022/Server 2022.vmdk
+2025-04-15 02:19:45,597 - ERROR - Fehler bei der Verarbeitung der Datei Server 2022.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:19:45,598 - INFO - Überspringe Hilfs-VMDK: [LAB] Server 2022/Server 2022-flat.vmdk
+2025-04-15 02:19:45,598 - INFO - Prüfe Ordner: [LAB] bema_veeam01_br/ mit 2 Dateien
+2025-04-15 02:19:45,599 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] bema_veeam01_br/bema_veeam01_br.vmdk
+2025-04-15 02:19:45,599 - INFO - Überspringe Hilfs-VMDK: [LAB] bema_veeam01_br/bema_veeam01_br-flat.vmdk
+2025-04-15 02:19:45,600 - INFO - Prüfe Ordner: [LAB] JHNRHEL01/ mit 4 Dateien
+2025-04-15 02:19:45,600 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNRHEL01/JHNRHEL01_2-flat.vmdk
+2025-04-15 02:19:45,601 - INFO - Überspringe Hilfs-VMDK: [LAB] JHNRHEL01/JHNRHEL01_1-flat.vmdk
+2025-04-15 02:19:46,659 - INFO - VERWAISTE VMDK GEFUNDEN: [LAB] JHNRHEL01/JHNRHEL01_2.vmdk
+2025-04-15 02:19:46,663 - ERROR - Fehler bei der Verarbeitung der Datei JHNRHEL01_2.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:19:47,740 - INFO - VERWAISTE VMDK GEFUNDEN: [LAB] JHNRHEL01/JHNRHEL01_1.vmdk
+2025-04-15 02:19:47,745 - ERROR - Fehler bei der Verarbeitung der Datei JHNRHEL01_1.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:19:47,746 - INFO - Prüfe Ordner: [LAB] osb-ubntmaster/ mit 2 Dateien
+2025-04-15 02:19:48,813 - INFO - VERWAISTE VMDK GEFUNDEN: [LAB] osb-ubntmaster/osb-ubntmaster_6.vmdk
+2025-04-15 02:19:48,819 - ERROR - Fehler bei der Verarbeitung der Datei osb-ubntmaster_6.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:19:48,820 - INFO - Überspringe Hilfs-VMDK: [LAB] osb-ubntmaster/osb-ubntmaster_6-flat.vmdk
+2025-04-15 02:19:48,820 - INFO - Prüfe Ordner: [LAB] kvnvda2019-01/ mit 4 Dateien
+2025-04-15 02:19:48,821 - INFO - Überspringe Hilfs-VMDK: [LAB] kvnvda2019-01/kvnvda2019-01-000001-sesparse.vmdk
+2025-04-15 02:19:48,822 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] kvnvda2019-01/kvnvda2019-01-000001.vmdk
+2025-04-15 02:19:49,895 - INFO - VMDK kvnvda2019-01.vmdk gehört zu VMX kvnvda2019-01.vmx
+2025-04-15 02:19:49,896 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] kvnvda2019-01/kvnvda2019-01.vmdk
+2025-04-15 02:19:49,898 - INFO - Überspringe Hilfs-VMDK: [LAB] kvnvda2019-01/kvnvda2019-01-flat.vmdk
+2025-04-15 02:19:49,899 - INFO - Prüfe Ordner: [LAB] thmroyalserver/ mit 2 Dateien
+2025-04-15 02:19:49,900 - INFO - Überspringe Hilfs-VMDK: [LAB] thmroyalserver/thmroyalserver-flat.vmdk
+2025-04-15 02:19:49,901 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] thmroyalserver/thmroyalserver.vmdk
+2025-04-15 02:19:49,902 - INFO - Prüfe Ordner: [LAB] rbncdc01/ mit 2 Dateien
+2025-04-15 02:19:49,903 - INFO - Überspringe Hilfs-VMDK: [LAB] rbncdc01/rbncdc01-flat.vmdk
+2025-04-15 02:19:49,904 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] rbncdc01/rbncdc01.vmdk
+2025-04-15 02:19:49,904 - INFO - Prüfe Ordner: [LAB] thmapache2/ mit 4 Dateien
+2025-04-15 02:19:49,905 - INFO - Überspringe Hilfs-VMDK: [LAB] thmapache2/thmapache2_1-flat.vmdk
+2025-04-15 02:19:49,906 - INFO - Überspringe Hilfs-VMDK: [LAB] thmapache2/thmapache2-flat.vmdk
+2025-04-15 02:19:49,906 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] thmapache2/thmapache2.vmdk
+2025-04-15 02:19:49,909 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] thmapache2/thmapache2_1.vmdk
+2025-04-15 02:19:49,909 - INFO - Prüfe Ordner: [LAB] ob-tf-test-04/ mit 4 Dateien
+2025-04-15 02:19:49,910 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] ob-tf-test-04/ob-tf-test-04_IdentityDisk.vmdk
+2025-04-15 02:19:49,911 - INFO - Überspringe Hilfs-VMDK: [LAB] ob-tf-test-04/ob-tf-test-04_IdentityDisk-flat.vmdk
+2025-04-15 02:19:49,911 - INFO - Überspringe Hilfs-VMDK: [LAB] ob-tf-test-04/ob-tf-test-04-cf3272db-8a5e-4dbb-b25c-8c746e428598-xd-delta.vmdk
+2025-04-15 02:19:49,912 - INFO - Überspringe Hilfs-VMDK: [LAB] ob-tf-test-04/ob-tf-test-04-cf3272db-8a5e-4dbb-b25c-8c746e428598-xd-delta-sesparse.vmdk
+2025-04-15 02:19:49,913 - INFO - Prüfe Ordner: [LAB] Ubuntu 20.04 Desktop/ mit 4 Dateien
+2025-04-15 02:19:49,914 - INFO - Überspringe Hilfs-VMDK: [LAB] Ubuntu 20.04 Desktop/Ubuntu 20.04 Desktop_6-flat.vmdk
+2025-04-15 02:19:49,914 - INFO - Überspringe Hilfs-VMDK: [LAB] Ubuntu 20.04 Desktop/Ubuntu 20.04 Desktop_4-flat.vmdk
+2025-04-15 02:19:50,980 - INFO - VERWAISTE VMDK GEFUNDEN: [LAB] Ubuntu 20.04 Desktop/Ubuntu 20.04 Desktop_6.vmdk
+2025-04-15 02:19:50,984 - ERROR - Fehler bei der Verarbeitung der Datei Ubuntu 20.04 Desktop_6.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:19:52,036 - INFO - VERWAISTE VMDK GEFUNDEN: [LAB] Ubuntu 20.04 Desktop/Ubuntu 20.04 Desktop_4.vmdk
+2025-04-15 02:19:52,040 - ERROR - Fehler bei der Verarbeitung der Datei Ubuntu 20.04 Desktop_4.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:19:52,041 - INFO - Prüfe Ordner: [LAB] geo02Kali/ mit 6 Dateien
+2025-04-15 02:19:52,041 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] geo02Kali/geo02Kali_1.vmdk
+2025-04-15 02:19:52,042 - INFO - VMDK in Verwendung (direkter Treffer): [LAB] geo02Kali/geo02Kali-000002.vmdk
+2025-04-15 02:19:52,042 - INFO - Überspringe Hilfs-VMDK: [LAB] geo02Kali/geo02Kali-flat.vmdk
+2025-04-15 02:19:52,043 - INFO - Überspringe Hilfs-VMDK: [LAB] geo02Kali/geo02Kali_1-flat.vmdk
+2025-04-15 02:19:53,097 - INFO - VMDK geo02Kali.vmdk gehört zu VMX geo02Kali.vmx
+2025-04-15 02:19:53,097 - INFO - VMDK nicht verwaist (Funktionscheck): [LAB] geo02Kali/geo02Kali.vmdk
+2025-04-15 02:19:53,099 - INFO - Überspringe Hilfs-VMDK: [LAB] geo02Kali/geo02Kali-000002-sesparse.vmdk
+2025-04-15 02:19:53,103 - INFO - Scanne Datastore: Unity_Datastore_1
+2025-04-15 02:19:54,166 - INFO - 54 Ordner im Datastore Unity_Datastore_1 gefunden
+2025-04-15 02:19:54,167 - INFO - Prüfe Ordner: [Unity_Datastore_1] stvdev/ mit 2 Dateien
+2025-04-15 02:19:54,168 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] stvdev/stvdev.vmdk
+2025-04-15 02:19:54,170 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] stvdev/stvdev-flat.vmdk
+2025-04-15 02:19:54,170 - INFO - Prüfe Ordner: [Unity_Datastore_1] mpa-ctx-wem/ mit 2 Dateien
+2025-04-15 02:19:54,171 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-ctx-wem/mpa-ctx-wem.vmdk
+2025-04-15 02:19:54,171 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-ctx-wem/mpa-ctx-wem-flat.vmdk
+2025-04-15 02:19:54,172 - INFO - Prüfe Ordner: [Unity_Datastore_1] geo04Kubuntu/ mit 2 Dateien
+2025-04-15 02:19:54,173 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] geo04Kubuntu/geo04Kubuntu.vmdk
+2025-04-15 02:19:54,173 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] geo04Kubuntu/geo04Kubuntu-flat.vmdk
+2025-04-15 02:19:54,174 - INFO - Prüfe Ordner: [Unity_Datastore_1] labdemoveeam01/ mit 4 Dateien
+2025-04-15 02:19:54,174 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] labdemoveeam01/labdemoveeam01-000001.vmdk
+2025-04-15 02:19:55,232 - INFO - VMDK labdemoveeam01.vmdk gehört zu VMX labdemoveeam01.vmx
+2025-04-15 02:19:55,233 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_1] labdemoveeam01/labdemoveeam01.vmdk
+2025-04-15 02:19:55,235 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] labdemoveeam01/labdemoveeam01-000001-sesparse.vmdk
+2025-04-15 02:19:55,236 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] labdemoveeam01/labdemoveeam01-flat.vmdk
+2025-04-15 02:19:55,237 - INFO - Prüfe Ordner: [Unity_Datastore_1] mpa-ctx-w11-003/ mit 6 Dateien
+2025-04-15 02:19:55,237 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-ctx-w11-003/mpa-ctx-w11-003-fcf172ec-02b9-4e6e-b57d-2bf0b8cfdeea-xd-delta-sesparse.vmdk
+2025-04-15 02:19:55,238 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-ctx-w11-003/mpa-ctx-w11-003_TemporaryStorage.vmdk
+2025-04-15 02:19:55,238 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-ctx-w11-003/mpa-ctx-w11-003_IdentityDisk.vmdk
+2025-04-15 02:19:55,239 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-ctx-w11-003/mpa-ctx-w11-003-fcf172ec-02b9-4e6e-b57d-2bf0b8cfdeea-xd-delta.vmdk
+2025-04-15 02:19:55,240 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-ctx-w11-003/mpa-ctx-w11-003_TemporaryStorage-flat.vmdk
+2025-04-15 02:19:55,240 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-ctx-w11-003/mpa-ctx-w11-003_IdentityDisk-flat.vmdk
+2025-04-15 02:19:55,241 - INFO - Prüfe Ordner: [Unity_Datastore_1] mpa-msa-tf01/ mit 2 Dateien
+2025-04-15 02:19:55,241 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-msa-tf01/mpa-msa-tf01-flat.vmdk
+2025-04-15 02:19:55,242 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-msa-tf01/mpa-msa-tf01.vmdk
+2025-04-15 02:19:55,242 - INFO - Prüfe Ordner: [Unity_Datastore_1] labdemoveeam02/ mit 4 Dateien
+2025-04-15 02:19:55,243 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] labdemoveeam02/labdemoveeam02_1.vmdk
+2025-04-15 02:19:55,247 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] labdemoveeam02/labdemoveeam02_1-flat.vmdk
+2025-04-15 02:19:55,247 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] labdemoveeam02/labdemoveeam02.vmdk
+2025-04-15 02:19:55,248 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] labdemoveeam02/labdemoveeam02-flat.vmdk
+2025-04-15 02:19:55,248 - INFO - Prüfe Ordner: [Unity_Datastore_1] mpa-rds-w01/ mit 2 Dateien
+2025-04-15 02:19:55,249 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-rds-w01/mpa-rds-w01-flat.vmdk
+2025-04-15 02:19:55,249 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-rds-w01/mpa-rds-w01.vmdk
+2025-04-15 02:19:55,250 - INFO - Prüfe Ordner: [Unity_Datastore_1] stvcsp/ mit 4 Dateien
+2025-04-15 02:19:55,251 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] stvcsp/stvcsp-000001-sesparse.vmdk
+2025-04-15 02:19:55,251 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] stvcsp/stvcsp-000001.vmdk
+2025-04-15 02:19:56,313 - INFO - VMDK stvcsp.vmdk gehört zu VMX stvcsp.vmx
+2025-04-15 02:19:56,314 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_1] stvcsp/stvcsp.vmdk
+2025-04-15 02:19:56,316 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] stvcsp/stvcsp-flat.vmdk
+2025-04-15 02:19:56,317 - INFO - Prüfe Ordner: [Unity_Datastore_1] mpa-w11-base/ mit 2 Dateien
+2025-04-15 02:19:56,317 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-w11-base/mpa-w11-base-flat.vmdk
+2025-04-15 02:19:57,371 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_1] mpa-w11-base/mpa-w11-base.vmdk
+2025-04-15 02:19:57,375 - ERROR - Fehler bei der Verarbeitung der Datei mpa-w11-base.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:19:57,376 - INFO - Prüfe Ordner: [Unity_Datastore_1] msr-win11/ mit 2 Dateien
+2025-04-15 02:19:57,377 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] msr-win11/msr-win11-flat.vmdk
+2025-04-15 02:19:57,378 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] msr-win11/msr-win11.vmdk
+2025-04-15 02:19:57,378 - INFO - Prüfe Ordner: [Unity_Datastore_1] palazmigrate/ mit 2 Dateien
+2025-04-15 02:19:57,379 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] palazmigrate/palazmigrate.vmdk
+2025-04-15 02:19:57,380 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] palazmigrate/palazmigrate-flat.vmdk
+2025-04-15 02:19:57,381 - INFO - Prüfe Ordner: [Unity_Datastore_1] mpa-hrz-cs01/ mit 2 Dateien
+2025-04-15 02:19:57,381 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-hrz-cs01/mpa-hrz-cs01.vmdk
+2025-04-15 02:19:57,384 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-hrz-cs01/mpa-hrz-cs01-flat.vmdk
+2025-04-15 02:19:57,384 - INFO - Prüfe Ordner: [Unity_Datastore_1] F5_LAB_UDF_B/ mit 4 Dateien
+2025-04-15 02:19:57,385 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] F5_LAB_UDF_B/F5_LAB_UDF_B-flat.vmdk
+2025-04-15 02:19:57,386 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] F5_LAB_UDF_B/F5_LAB_UDF_B-000001-sesparse.vmdk
+2025-04-15 02:19:57,387 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] F5_LAB_UDF_B/F5_LAB_UDF_B-000001.vmdk
+2025-04-15 02:19:58,444 - INFO - VMDK F5_LAB_UDF_B.vmdk gehört zu VMX F5_LAB_UDF_B.vmx
+2025-04-15 02:19:58,445 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_1] F5_LAB_UDF_B/F5_LAB_UDF_B.vmdk
+2025-04-15 02:19:58,447 - INFO - Prüfe Ordner: [Unity_Datastore_1] stvpvs/ mit 6 Dateien
+2025-04-15 02:19:58,448 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] stvpvs/stvpvs-flat.vmdk
+2025-04-15 02:19:59,502 - INFO - VMDK stvpvs-000001.vmdk gehört zu VMX stvpvs.vmx
+2025-04-15 02:19:59,502 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_1] stvpvs/stvpvs-000001.vmdk
+2025-04-15 02:20:00,564 - INFO - VMDK stvpvs.vmdk gehört zu VMX stvpvs.vmx
+2025-04-15 02:20:00,564 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_1] stvpvs/stvpvs.vmdk
+2025-04-15 02:20:00,566 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] stvpvs/stvpvs-000002.vmdk
+2025-04-15 02:20:00,567 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] stvpvs/stvpvs-000001-sesparse.vmdk
+2025-04-15 02:20:00,568 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] stvpvs/stvpvs-000002-sesparse.vmdk
+2025-04-15 02:20:00,568 - INFO - Prüfe Ordner: [Unity_Datastore_1] dal-iva-uwm01/ mit 2 Dateien
+2025-04-15 02:20:00,569 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] dal-iva-uwm01/dal-iva-uwm01.vmdk
+2025-04-15 02:20:00,570 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] dal-iva-uwm01/dal-iva-uwm01-flat.vmdk
+2025-04-15 02:20:00,570 - INFO - Prüfe Ordner: [Unity_Datastore_1] palcdc01/ mit 2 Dateien
+2025-04-15 02:20:00,571 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] palcdc01/palcdc01.vmdk
+2025-04-15 02:20:00,572 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] palcdc01/palcdc01-flat.vmdk
+2025-04-15 02:20:00,572 - INFO - Prüfe Ordner: [Unity_Datastore_1] VPX/NSVPX-ESX/ mit 1 Dateien
+2025-04-15 02:20:01,637 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_1] VPX/NSVPX-ESX/NSVPX-ESX-14.1-43.50_nc_64-disk1.vmdk
+2025-04-15 02:20:01,644 - ERROR - Fehler bei der Verarbeitung der Datei NSVPX-ESX-14.1-43.50_nc_64-disk1.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:01,645 - INFO - Prüfe Ordner: [Unity_Datastore_1] mpa-inf-dc01/ mit 2 Dateien
+2025-04-15 02:20:01,647 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-inf-dc01/mpa-inf-dc01.vmdk
+2025-04-15 02:20:01,648 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-inf-dc01/mpa-inf-dc01-flat.vmdk
+2025-04-15 02:20:01,650 - INFO - Prüfe Ordner: [Unity_Datastore_1] labdemoveeamVTL/ mit 4 Dateien
+2025-04-15 02:20:01,654 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] labdemoveeamVTL/labdemoveeamVTL_1-flat.vmdk
+2025-04-15 02:20:01,654 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] labdemoveeamVTL/labdemoveeamVTL-flat.vmdk
+2025-04-15 02:20:01,656 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] labdemoveeamVTL/labdemoveeamVTL.vmdk
+2025-04-15 02:20:01,659 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] labdemoveeamVTL/labdemoveeamVTL_1.vmdk
+2025-04-15 02:20:01,661 - INFO - Prüfe Ordner: [Unity_Datastore_1] mpa-inf-fs01/ mit 4 Dateien
+2025-04-15 02:20:01,665 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-inf-fs01/mpa-inf-fs01.vmdk
+2025-04-15 02:20:01,666 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-inf-fs01/mpa-inf-fs01_1.vmdk
+2025-04-15 02:20:01,667 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-inf-fs01/mpa-inf-fs01_1-flat.vmdk
+2025-04-15 02:20:01,668 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-inf-fs01/mpa-inf-fs01-flat.vmdk
+2025-04-15 02:20:01,669 - INFO - Prüfe Ordner: [Unity_Datastore_1] mpa-rds-wa01/ mit 2 Dateien
+2025-04-15 02:20:01,669 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-rds-wa01/mpa-rds-wa01.vmdk
+2025-04-15 02:20:01,671 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-rds-wa01/mpa-rds-wa01-flat.vmdk
+2025-04-15 02:20:01,672 - INFO - Prüfe Ordner: [Unity_Datastore_1] stvelm/ mit 4 Dateien
+2025-04-15 02:20:01,672 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] stvelm/stvelm_1.vmdk
+2025-04-15 02:20:01,677 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] stvelm/stvelm.vmdk
+2025-04-15 02:20:01,678 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] stvelm/stvelm_1-flat.vmdk
+2025-04-15 02:20:01,678 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] stvelm/stvelm-flat.vmdk
+2025-04-15 02:20:01,679 - INFO - Prüfe Ordner: [Unity_Datastore_1] dmkmgmt01/ mit 2 Dateien
+2025-04-15 02:20:01,680 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] dmkmgmt01/dmkmgmt01.vmdk
+2025-04-15 02:20:01,680 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] dmkmgmt01/dmkmgmt01-flat.vmdk
+2025-04-15 02:20:01,681 - INFO - Prüfe Ordner: [Unity_Datastore_1] mpa-ctx-w11-001/ mit 6 Dateien
+2025-04-15 02:20:01,682 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-ctx-w11-001/mpa-ctx-w11-001_IdentityDisk.vmdk
+2025-04-15 02:20:01,683 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-ctx-w11-001/mpa-ctx-w11-001_TemporaryStorage.vmdk
+2025-04-15 02:20:01,684 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-ctx-w11-001/mpa-ctx-w11-001_TemporaryStorage-flat.vmdk
+2025-04-15 02:20:01,685 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-ctx-w11-001/mpa-ctx-w11-001_IdentityDisk-flat.vmdk
+2025-04-15 02:20:01,689 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-ctx-w11-001/mpa-ctx-w11-001-0a5b2c3e-b766-49d5-91e3-face96cc6e90-xd-delta.vmdk
+2025-04-15 02:20:01,690 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-ctx-w11-001/mpa-ctx-w11-001-0a5b2c3e-b766-49d5-91e3-face96cc6e90-xd-delta-sesparse.vmdk
+2025-04-15 02:20:01,692 - INFO - Prüfe Ordner: [Unity_Datastore_1] lblaunch02/ mit 2 Dateien
+2025-04-15 02:20:01,693 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] lblaunch02/lblaunch02-flat.vmdk
+2025-04-15 02:20:01,695 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] lblaunch02/lblaunch02.vmdk
+2025-04-15 02:20:01,696 - INFO - Prüfe Ordner: [Unity_Datastore_1] lblaunch01/ mit 2 Dateien
+2025-04-15 02:20:01,696 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] lblaunch01/lblaunch01-flat.vmdk
+2025-04-15 02:20:01,700 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] lblaunch01/lblaunch01.vmdk
+2025-04-15 02:20:01,700 - INFO - Prüfe Ordner: [Unity_Datastore_1] labccus01/ mit 4 Dateien
+2025-04-15 02:20:02,766 - INFO - VMDK labccus01_3.vmdk gehört zu VMX labccus01.vmx
+2025-04-15 02:20:02,767 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_1] labccus01/labccus01_3.vmdk
+2025-04-15 02:20:02,769 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] labccus01/labccus01_3-000001.vmdk
+2025-04-15 02:20:02,770 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] labccus01/labccus01_3-000001-sesparse.vmdk
+2025-04-15 02:20:02,771 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] labccus01/labccus01_3-flat.vmdk
+2025-04-15 02:20:02,771 - INFO - Prüfe Ordner: [Unity_Datastore_1] Windows 11 - Capture-baseDisk-kZIxF-datastore-8015/ mit 2 Dateien
+2025-04-15 02:20:02,772 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] Windows 11 - Capture-baseDisk-kZIxF-datastore-8015/Windows 11 - Capture-baseDisk-kZIxF-datastore-8015-flat.vmdk
+2025-04-15 02:20:03,826 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_1] Windows 11 - Capture-baseDisk-kZIxF-datastore-8015/Windows 11 - Capture-baseDisk-kZIxF-datastore-8015.vmdk
+2025-04-15 02:20:03,830 - ERROR - Fehler bei der Verarbeitung der Datei Windows 11 - Capture-baseDisk-kZIxF-datastore-8015.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:03,831 - INFO - Prüfe Ordner: [Unity_Datastore_1] mpa-hrz-m00/ mit 6 Dateien
+2025-04-15 02:20:04,887 - INFO - VMDK mpa-hrz-m00.vmdk gehört zu VMX mpa-hrz-m00.vmx
+2025-04-15 02:20:04,887 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_1] mpa-hrz-m00/mpa-hrz-m00.vmdk
+2025-04-15 02:20:05,944 - INFO - VMDK mpa-hrz-m00-000001.vmdk gehört zu VMX mpa-hrz-m00.vmx
+2025-04-15 02:20:05,945 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_1] mpa-hrz-m00/mpa-hrz-m00-000001.vmdk
+2025-04-15 02:20:05,947 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-hrz-m00/mpa-hrz-m00-000001-sesparse.vmdk
+2025-04-15 02:20:05,947 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-hrz-m00/mpa-hrz-m00-000002-sesparse.vmdk
+2025-04-15 02:20:05,948 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-hrz-m00/mpa-hrz-m00-000002.vmdk
+2025-04-15 02:20:05,949 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-hrz-m00/mpa-hrz-m00-flat.vmdk
+2025-04-15 02:20:05,949 - INFO - Prüfe Ordner: [Unity_Datastore_1] rnhWin11/ mit 14 Dateien
+2025-04-15 02:20:05,950 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] rnhWin11/rnhWin11-000001-sesparse.vmdk
+2025-04-15 02:20:05,950 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] rnhWin11/rnhWin11-000002-sesparse.vmdk
+2025-04-15 02:20:05,951 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] rnhWin11/rnhWin11-000003-sesparse.vmdk
+2025-04-15 02:20:05,951 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] rnhWin11/rnhWin11-000004-sesparse.vmdk
+2025-04-15 02:20:05,952 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] rnhWin11/rnhWin11-000005-sesparse.vmdk
+2025-04-15 02:20:05,953 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] rnhWin11/rnhWin11-000006-sesparse.vmdk
+2025-04-15 02:20:06,013 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_1] rnhWin11/rnhWin11.vmdk
+2025-04-15 02:20:06,018 - ERROR - Fehler bei der Verarbeitung der Datei rnhWin11.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:06,019 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] rnhWin11/rnhWin11-flat.vmdk
+2025-04-15 02:20:06,076 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_1] rnhWin11/rnhWin11-000004.vmdk
+2025-04-15 02:20:06,080 - ERROR - Fehler bei der Verarbeitung der Datei rnhWin11-000004.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:07,138 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_1] rnhWin11/rnhWin11-000001.vmdk
+2025-04-15 02:20:07,143 - ERROR - Fehler bei der Verarbeitung der Datei rnhWin11-000001.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:08,199 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_1] rnhWin11/rnhWin11-000005.vmdk
+2025-04-15 02:20:08,205 - ERROR - Fehler bei der Verarbeitung der Datei rnhWin11-000005.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:09,267 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_1] rnhWin11/rnhWin11-000002.vmdk
+2025-04-15 02:20:09,271 - ERROR - Fehler bei der Verarbeitung der Datei rnhWin11-000002.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:10,332 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_1] rnhWin11/rnhWin11-000006.vmdk
+2025-04-15 02:20:10,336 - ERROR - Fehler bei der Verarbeitung der Datei rnhWin11-000006.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:11,402 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_1] rnhWin11/rnhWin11-000003.vmdk
+2025-04-15 02:20:11,406 - ERROR - Fehler bei der Verarbeitung der Datei rnhWin11-000003.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:11,406 - INFO - Prüfe Ordner: [Unity_Datastore_1] mpa-inf-adm/ mit 2 Dateien
+2025-04-15 02:20:11,407 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-inf-adm/mpa-inf-adm-flat.vmdk
+2025-04-15 02:20:11,408 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-inf-adm/mpa-inf-adm.vmdk
+2025-04-15 02:20:11,408 - INFO - Prüfe Ordner: [Unity_Datastore_1] mpa-ctx-sf01/ mit 2 Dateien
+2025-04-15 02:20:11,409 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-ctx-sf01/mpa-ctx-sf01-flat.vmdk
+2025-04-15 02:20:11,410 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-ctx-sf01/mpa-ctx-sf01.vmdk
+2025-04-15 02:20:11,410 - INFO - Prüfe Ordner: [Unity_Datastore_1] stvload/ mit 2 Dateien
+2025-04-15 02:20:11,411 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] stvload/stvload.vmdk
+2025-04-15 02:20:11,411 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] stvload/stvload-flat.vmdk
+2025-04-15 02:20:11,412 - INFO - Prüfe Ordner: [Unity_Datastore_1] Windows 11-baseDisk-8FHDr-datastore-8015/ mit 2 Dateien
+2025-04-15 02:20:12,460 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_1] Windows 11-baseDisk-8FHDr-datastore-8015/Windows 11-baseDisk-8FHDr-datastore-8015.vmdk
+2025-04-15 02:20:12,465 - ERROR - Fehler bei der Verarbeitung der Datei Windows 11-baseDisk-8FHDr-datastore-8015.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:12,467 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] Windows 11-baseDisk-8FHDr-datastore-8015/Windows 11-baseDisk-8FHDr-datastore-8015-flat.vmdk
+2025-04-15 02:20:12,468 - INFO - Prüfe Ordner: [Unity_Datastore_1] dmkucspe01/ mit 3 Dateien
+2025-04-15 02:20:12,468 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] dmkucspe01/dmkucspe01-ctk.vmdk
+2025-04-15 02:20:12,469 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] dmkucspe01/dmkucspe01.vmdk
+2025-04-15 02:20:12,470 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] dmkucspe01/dmkucspe01-flat.vmdk
+2025-04-15 02:20:12,471 - INFO - Prüfe Ordner: [Unity_Datastore_1] geo03WinServ/ mit 2 Dateien
+2025-04-15 02:20:12,474 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] geo03WinServ/geo03WinServ.vmdk
+2025-04-15 02:20:12,475 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] geo03WinServ/geo03WinServ-flat.vmdk
+2025-04-15 02:20:12,475 - INFO - Prüfe Ordner: [Unity_Datastore_1] msr-ctx01/ mit 2 Dateien
+2025-04-15 02:20:12,476 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] msr-ctx01/msr-ctx01.vmdk
+2025-04-15 02:20:12,476 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] msr-ctx01/msr-ctx01-flat.vmdk
+2025-04-15 02:20:12,477 - INFO - Prüfe Ordner: [Unity_Datastore_1] mpa-rds-gw01/ mit 2 Dateien
+2025-04-15 02:20:12,478 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-rds-gw01/mpa-rds-gw01-flat.vmdk
+2025-04-15 02:20:12,479 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-rds-gw01/mpa-rds-gw01.vmdk
+2025-04-15 02:20:12,479 - INFO - Prüfe Ordner: [Unity_Datastore_1] csbveeam01/ mit 3 Dateien
+2025-04-15 02:20:12,480 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] csbveeam01/csbveeam01-ctk.vmdk
+2025-04-15 02:20:12,480 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] csbveeam01/csbveeam01-flat.vmdk
+2025-04-15 02:20:12,481 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] csbveeam01/csbveeam01.vmdk
+2025-04-15 02:20:12,482 - INFO - Prüfe Ordner: [Unity_Datastore_1] mpa-ctx-w11-c01/ mit 4 Dateien
+2025-04-15 02:20:12,485 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-ctx-w11-c01/mpa-ctx-w11-c01-f3102d48-444a-4119-b4b2-6121b0133f62-xd-copy-flat.vmdk
+2025-04-15 02:20:12,485 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-ctx-w11-c01/mpa-ctx-w11-c01-f3102d48-444a-4119-b4b2-6121b0133f62-xd-copy.vmdk
+2025-04-15 02:20:12,486 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-ctx-w11-c01/mpa-ctx-w11-c01_IdentityDisk-flat.vmdk
+2025-04-15 02:20:12,487 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-ctx-w11-c01/mpa-ctx-w11-c01_IdentityDisk.vmdk
+2025-04-15 02:20:12,488 - INFO - Prüfe Ordner: [Unity_Datastore_1] stvfact/ mit 3 Dateien
+2025-04-15 02:20:12,488 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] stvfact/stvfact-ctk.vmdk
+2025-04-15 02:20:12,488 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] stvfact/stvfact-flat.vmdk
+2025-04-15 02:20:12,489 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] stvfact/stvfact.vmdk
+2025-04-15 02:20:12,489 - INFO - Prüfe Ordner: [Unity_Datastore_1] mpa-ctx-ddc01/ mit 2 Dateien
+2025-04-15 02:20:12,490 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-ctx-ddc01/mpa-ctx-ddc01.vmdk
+2025-04-15 02:20:12,491 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-ctx-ddc01/mpa-ctx-ddc01-flat.vmdk
+2025-04-15 02:20:12,491 - INFO - Prüfe Ordner: [Unity_Datastore_1] palctx03/ mit 3 Dateien
+2025-04-15 02:20:12,492 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] palctx03/palctx03_5.vmdk
+2025-04-15 02:20:12,492 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] palctx03/palctx03_5-flat.vmdk
+2025-04-15 02:20:12,493 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] palctx03/palctx03_5-ctk.vmdk
+2025-04-15 02:20:12,497 - INFO - Prüfe Ordner: [Unity_Datastore_1] stvccc/ mit 2 Dateien
+2025-04-15 02:20:12,497 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] stvccc/stvccc-flat.vmdk
+2025-04-15 02:20:12,498 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] stvccc/stvccc.vmdk
+2025-04-15 02:20:12,499 - INFO - Prüfe Ordner: [Unity_Datastore_1] mpa-inf-sql01/ mit 2 Dateien
+2025-04-15 02:20:12,499 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-inf-sql01/mpa-inf-sql01-flat.vmdk
+2025-04-15 02:20:12,500 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-inf-sql01/mpa-inf-sql01.vmdk
+2025-04-15 02:20:12,501 - INFO - Prüfe Ordner: [Unity_Datastore_1] labAzureAgent/ mit 2 Dateien
+2025-04-15 02:20:12,501 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] labAzureAgent/labAzureAgent-flat.vmdk
+2025-04-15 02:20:12,502 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] labAzureAgent/labAzureAgent.vmdk
+2025-04-15 02:20:12,503 - INFO - Prüfe Ordner: [Unity_Datastore_1] geo05TestVPX_01/ mit 2 Dateien
+2025-04-15 02:20:12,503 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] geo05TestVPX_01/geo05TestVPX_01-flat.vmdk
+2025-04-15 02:20:12,504 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] geo05TestVPX_01/geo05TestVPX_01.vmdk
+2025-04-15 02:20:12,505 - INFO - Prüfe Ordner: [Unity_Datastore_1] stvsql/ mit 2 Dateien
+2025-04-15 02:20:12,508 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] stvsql/stvsql-flat.vmdk
+2025-04-15 02:20:12,509 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] stvsql/stvsql.vmdk
+2025-04-15 02:20:12,509 - INFO - Prüfe Ordner: [Unity_Datastore_1] BIG-IP-Next-CentralManager/ mit 2 Dateien
+2025-04-15 02:20:12,510 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] BIG-IP-Next-CentralManager/BIG-IP-Next-CentralManager.vmdk
+2025-04-15 02:20:12,511 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] BIG-IP-Next-CentralManager/BIG-IP-Next-CentralManager-flat.vmdk
+2025-04-15 02:20:12,512 - INFO - Prüfe Ordner: [Unity_Datastore_1] BIGIP-17.1.1.3-0.0.5-vmware/ mit 4 Dateien
+2025-04-15 02:20:12,513 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] BIGIP-17.1.1.3-0.0.5-vmware/BIGIP-17.1.1.3-0.0.5-vmware-000001.vmdk
+2025-04-15 02:20:13,576 - INFO - VMDK BIGIP-17.1.1.3-0.0.5-vmware.vmdk gehört zu VMX BIGIP-17.1.1.3-0.0.5-vmware.vmx
+2025-04-15 02:20:13,577 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_1] BIGIP-17.1.1.3-0.0.5-vmware/BIGIP-17.1.1.3-0.0.5-vmware.vmdk
+2025-04-15 02:20:13,579 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] BIGIP-17.1.1.3-0.0.5-vmware/BIGIP-17.1.1.3-0.0.5-vmware-flat.vmdk
+2025-04-15 02:20:13,580 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] BIGIP-17.1.1.3-0.0.5-vmware/BIGIP-17.1.1.3-0.0.5-vmware-000001-sesparse.vmdk
+2025-04-15 02:20:13,581 - INFO - Prüfe Ordner: [Unity_Datastore_1] mpa-ctx-fas01/ mit 3 Dateien
+2025-04-15 02:20:13,581 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] mpa-ctx-fas01/mpa-ctx-fas01.vmdk
+2025-04-15 02:20:13,582 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-ctx-fas01/mpa-ctx-fas01-flat.vmdk
+2025-04-15 02:20:13,582 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] mpa-ctx-fas01/mpa-ctx-fas01-ctk.vmdk
+2025-04-15 02:20:13,583 - INFO - Prüfe Ordner: [Unity_Datastore_1] thmtest/ mit 3 Dateien
+2025-04-15 02:20:13,584 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] thmtest/thmtest-ctk.vmdk
+2025-04-15 02:20:13,585 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] thmtest/thmtest-flat.vmdk
+2025-04-15 02:20:13,585 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] thmtest/thmtest.vmdk
+2025-04-15 02:20:13,586 - INFO - Prüfe Ordner: [Unity_Datastore_1] Win11Pool-01/ mit 2 Dateien
+2025-04-15 02:20:13,586 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_1] Win11Pool-01/Win11Pool-01-000006-sesparse.vmdk
+2025-04-15 02:20:13,589 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_1] Win11Pool-01/Win11Pool-01-000006.vmdk
+2025-04-15 02:20:13,595 - INFO - Scanne Datastore: Unity_Datastore_2
+2025-04-15 02:20:14,667 - INFO - 47 Ordner im Datastore Unity_Datastore_2 gefunden
+2025-04-15 02:20:14,668 - INFO - Prüfe Ordner: [Unity_Datastore_2] cdewebserver01/ mit 2 Dateien
+2025-04-15 02:20:14,670 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] cdewebserver01/cdewebserver01-flat.vmdk
+2025-04-15 02:20:14,671 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] cdewebserver01/cdewebserver01.vmdk
+2025-04-15 02:20:14,671 - INFO - Prüfe Ordner: [Unity_Datastore_2] vCLS-63246de0-0410-42eb-aee4-d8ec6e61a815/ mit 2 Dateien
+2025-04-15 02:20:14,672 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] vCLS-63246de0-0410-42eb-aee4-d8ec6e61a815/vCLS-63246de0-0410-42eb-aee4-d8ec6e61a815-flat.vmdk
+2025-04-15 02:20:15,728 - INFO - VMDK vCLS-63246de0-0410-42eb-aee4-d8ec6e61a815.vmdk gehört zu VMX vCLS-63246de0-0410-42eb-aee4-d8ec6e61a815.vmx
+2025-04-15 02:20:15,729 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] vCLS-63246de0-0410-42eb-aee4-d8ec6e61a815/vCLS-63246de0-0410-42eb-aee4-d8ec6e61a815.vmdk
+2025-04-15 02:20:15,731 - INFO - Prüfe Ordner: [Unity_Datastore_2] mpa-hrz-w11-01/ mit 8 Dateien
+2025-04-15 02:20:15,731 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-hrz-w11-01/mpa-hrz-w11-01_4-000001-digest-sesparse.vmdk
+2025-04-15 02:20:16,793 - INFO - VMDK mpa-hrz-w11-01_4.vmdk gehört zu VMX mpa-hrz-w11-01.vmx
+2025-04-15 02:20:16,793 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] mpa-hrz-w11-01/mpa-hrz-w11-01_4.vmdk
+2025-04-15 02:20:17,850 - INFO - VMDK mpa-hrz-w11-01_4-digest.vmdk gehört zu VMX mpa-hrz-w11-01.vmx
+2025-04-15 02:20:17,851 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] mpa-hrz-w11-01/mpa-hrz-w11-01_4-digest.vmdk
+2025-04-15 02:20:17,853 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-hrz-w11-01/mpa-hrz-w11-01_4-000001-sesparse.vmdk
+2025-04-15 02:20:18,914 - INFO - VMDK mpa-hrz-w11-01_4-000001-digest.vmdk gehört zu VMX mpa-hrz-w11-01.vmx
+2025-04-15 02:20:18,915 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] mpa-hrz-w11-01/mpa-hrz-w11-01_4-000001-digest.vmdk
+2025-04-15 02:20:18,917 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-hrz-w11-01/mpa-hrz-w11-01_4-digest-sesparse.vmdk
+2025-04-15 02:20:18,918 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] mpa-hrz-w11-01/mpa-hrz-w11-01_4-000001.vmdk
+2025-04-15 02:20:18,919 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-hrz-w11-01/mpa-hrz-w11-01_4-sesparse.vmdk
+2025-04-15 02:20:18,920 - INFO - Prüfe Ordner: [Unity_Datastore_2] labdc01/ mit 6 Dateien
+2025-04-15 02:20:18,920 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] labdc01/labdc01-000001-sesparse.vmdk
+2025-04-15 02:20:18,921 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] labdc01/labdc01-flat.vmdk
+2025-04-15 02:20:19,977 - INFO - VMDK labdc01.vmdk gehört zu VMX labdc01.vmx
+2025-04-15 02:20:19,977 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] labdc01/labdc01.vmdk
+2025-04-15 02:20:19,979 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] labdc01/labdc01_1.vmdk
+2025-04-15 02:20:19,980 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] labdc01/labdc01-000001.vmdk
+2025-04-15 02:20:19,981 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] labdc01/labdc01_1-flat.vmdk
+2025-04-15 02:20:19,981 - INFO - Prüfe Ordner: [Unity_Datastore_2] ReplicaDemo_replica/ mit 10 Dateien
+2025-04-15 02:20:19,982 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] ReplicaDemo_replica/ReplicaDemo-flat.vmdk
+2025-04-15 02:20:21,036 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_2] ReplicaDemo_replica/ReplicaDemo-000004.vmdk
+2025-04-15 02:20:21,039 - ERROR - Fehler bei der Verarbeitung der Datei ReplicaDemo-000004.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:21,040 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] ReplicaDemo_replica/ReplicaDemo-000005.vmdk
+2025-04-15 02:20:22,095 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_2] ReplicaDemo_replica/ReplicaDemo-000002.vmdk
+2025-04-15 02:20:22,099 - ERROR - Fehler bei der Verarbeitung der Datei ReplicaDemo-000002.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:23,154 - INFO - VMDK ReplicaDemo.vmdk gehört zu VMX ReplicaDemo_replica.vmx
+2025-04-15 02:20:23,154 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] ReplicaDemo_replica/ReplicaDemo.vmdk
+2025-04-15 02:20:24,210 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_2] ReplicaDemo_replica/ReplicaDemo-000003.vmdk
+2025-04-15 02:20:24,215 - ERROR - Fehler bei der Verarbeitung der Datei ReplicaDemo-000003.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:24,216 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] ReplicaDemo_replica/ReplicaDemo-000005-sesparse.vmdk
+2025-04-15 02:20:24,217 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] ReplicaDemo_replica/ReplicaDemo-000004-sesparse.vmdk
+2025-04-15 02:20:24,218 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] ReplicaDemo_replica/ReplicaDemo-000003-sesparse.vmdk
+2025-04-15 02:20:24,218 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] ReplicaDemo_replica/ReplicaDemo-000002-sesparse.vmdk
+2025-04-15 02:20:24,219 - INFO - Prüfe Ordner: [Unity_Datastore_2] New Virtual Machine/ mit 4 Dateien
+2025-04-15 02:20:24,220 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] New Virtual Machine/New Virtual Machine.vmdk
+2025-04-15 02:20:24,221 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] New Virtual Machine/New Virtual Machine_1.vmdk
+2025-04-15 02:20:24,222 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] New Virtual Machine/New Virtual Machine-flat.vmdk
+2025-04-15 02:20:24,225 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] New Virtual Machine/New Virtual Machine_1-flat.vmdk
+2025-04-15 02:20:24,226 - INFO - Prüfe Ordner: [Unity_Datastore_2] New Virtual Machine_2/ mit 2 Dateien
+2025-04-15 02:20:24,227 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] New Virtual Machine_2/New Virtual Machine.vmdk
+2025-04-15 02:20:24,227 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] New Virtual Machine_2/New Virtual Machine-flat.vmdk
+2025-04-15 02:20:24,228 - INFO - Prüfe Ordner: [Unity_Datastore_2] csbveeam03/ mit 2 Dateien
+2025-04-15 02:20:24,228 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] csbveeam03/csbveeam03-flat.vmdk
+2025-04-15 02:20:24,229 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] csbveeam03/csbveeam03.vmdk
+2025-04-15 02:20:24,229 - INFO - Prüfe Ordner: [Unity_Datastore_2] New Virtual Machine_1/ mit 2 Dateien
+2025-04-15 02:20:24,230 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] New Virtual Machine_1/New Virtual Machine.vmdk
+2025-04-15 02:20:24,232 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] New Virtual Machine_1/New Virtual Machine-flat.vmdk
+2025-04-15 02:20:24,235 - INFO - Prüfe Ordner: [Unity_Datastore_2] rldmaster01/ mit 2 Dateien
+2025-04-15 02:20:24,236 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] rldmaster01/rldmaster01.vmdk
+2025-04-15 02:20:24,237 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] rldmaster01/rldmaster01-flat.vmdk
+2025-04-15 02:20:24,238 - INFO - Prüfe Ordner: [Unity_Datastore_2] ReplicaDemo/ mit 3 Dateien
+2025-04-15 02:20:24,238 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] ReplicaDemo/ReplicaDemo-ctk.vmdk
+2025-04-15 02:20:24,239 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] ReplicaDemo/ReplicaDemo-flat.vmdk
+2025-04-15 02:20:24,240 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] ReplicaDemo/ReplicaDemo.vmdk
+2025-04-15 02:20:24,240 - INFO - Prüfe Ordner: [Unity_Datastore_2] mpa-ras-w22-01/ mit 2 Dateien
+2025-04-15 02:20:24,241 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-ras-w22-01/mpa-ras-w22-01-000003-sesparse.vmdk
+2025-04-15 02:20:24,242 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] mpa-ras-w22-01/mpa-ras-w22-01-000003.vmdk
+2025-04-15 02:20:24,242 - INFO - Prüfe Ordner: [Unity_Datastore_2] mpa-hrz-av01/ mit 2 Dateien
+2025-04-15 02:20:24,243 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-hrz-av01/mpa-hrz-av01-flat.vmdk
+2025-04-15 02:20:24,243 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] mpa-hrz-av01/mpa-hrz-av01.vmdk
+2025-04-15 02:20:24,244 - INFO - Prüfe Ordner: [Unity_Datastore_2] BIGIP-17.1.2-0.0.8-ha-vmware/ mit 4 Dateien
+2025-04-15 02:20:24,244 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] BIGIP-17.1.2-0.0.8-ha-vmware/BIGIP-17.1.2-0.0.8-ha-vmware-flat.vmdk
+2025-04-15 02:20:24,245 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] BIGIP-17.1.2-0.0.8-ha-vmware/BIGIP-17.1.2-0.0.8-ha-vmware-000001.vmdk
+2025-04-15 02:20:24,250 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] BIGIP-17.1.2-0.0.8-ha-vmware/BIGIP-17.1.2-0.0.8-ha-vmware-000001-sesparse.vmdk
+2025-04-15 02:20:25,313 - INFO - VMDK BIGIP-17.1.2-0.0.8-ha-vmware.vmdk gehört zu VMX BIGIP-17.1.2-0.0.8-ha-vmware.vmx
+2025-04-15 02:20:25,314 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] BIGIP-17.1.2-0.0.8-ha-vmware/BIGIP-17.1.2-0.0.8-ha-vmware.vmdk
+2025-04-15 02:20:25,316 - INFO - Prüfe Ordner: [Unity_Datastore_2] BIGIP-17.1.2-0.0.8-vmware/ mit 4 Dateien
+2025-04-15 02:20:25,317 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] BIGIP-17.1.2-0.0.8-vmware/BIGIP-17.1.2-0.0.8-vmware-flat.vmdk
+2025-04-15 02:20:25,318 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] BIGIP-17.1.2-0.0.8-vmware/BIGIP-17.1.2-0.0.8-vmware-000001-sesparse.vmdk
+2025-04-15 02:20:25,318 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] BIGIP-17.1.2-0.0.8-vmware/BIGIP-17.1.2-0.0.8-vmware-000001.vmdk
+2025-04-15 02:20:26,373 - INFO - VMDK BIGIP-17.1.2-0.0.8-vmware.vmdk gehört zu VMX BIGIP-17.1.2-0.0.8-vmware.vmx
+2025-04-15 02:20:26,373 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] BIGIP-17.1.2-0.0.8-vmware/BIGIP-17.1.2-0.0.8-vmware.vmdk
+2025-04-15 02:20:26,375 - INFO - Prüfe Ordner: [Unity_Datastore_2] mpa-hrz-w11-c01/ mit 8 Dateien
+2025-04-15 02:20:26,376 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-hrz-w11-c01/mpa-hrz-w11-c01_4-000001-digest-sesparse.vmdk
+2025-04-15 02:20:26,377 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-hrz-w11-c01/mpa-hrz-w11-c01_4-sesparse.vmdk
+2025-04-15 02:20:26,378 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-hrz-w11-c01/mpa-hrz-w11-c01_4-000001-sesparse.vmdk
+2025-04-15 02:20:26,379 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-hrz-w11-c01/mpa-hrz-w11-c01_4-digest-sesparse.vmdk
+2025-04-15 02:20:27,437 - INFO - VMDK mpa-hrz-w11-c01_4.vmdk gehört zu VMX mpa-hrz-w11-c01.vmx
+2025-04-15 02:20:27,437 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] mpa-hrz-w11-c01/mpa-hrz-w11-c01_4.vmdk
+2025-04-15 02:20:27,440 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] mpa-hrz-w11-c01/mpa-hrz-w11-c01_4-000001.vmdk
+2025-04-15 02:20:28,503 - INFO - VMDK mpa-hrz-w11-c01_4-000001-digest.vmdk gehört zu VMX mpa-hrz-w11-c01.vmx
+2025-04-15 02:20:28,504 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] mpa-hrz-w11-c01/mpa-hrz-w11-c01_4-000001-digest.vmdk
+2025-04-15 02:20:29,559 - INFO - VMDK mpa-hrz-w11-c01_4-digest.vmdk gehört zu VMX mpa-hrz-w11-c01.vmx
+2025-04-15 02:20:29,560 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] mpa-hrz-w11-c01/mpa-hrz-w11-c01_4-digest.vmdk
+2025-04-15 02:20:29,562 - INFO - Prüfe Ordner: [Unity_Datastore_2] mpa-ras-vdi-02/ mit 2 Dateien
+2025-04-15 02:20:29,564 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] mpa-ras-vdi-02/mpa-ras-vdi-02-000002.vmdk
+2025-04-15 02:20:29,564 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-ras-vdi-02/mpa-ras-vdi-02-000002-sesparse.vmdk
+2025-04-15 02:20:29,565 - INFO - Prüfe Ordner: [Unity_Datastore_2] mpa-srv22-base/ mit 2 Dateien
+2025-04-15 02:20:29,566 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-srv22-base/mpa-srv22-base-flat.vmdk
+2025-04-15 02:20:30,620 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_2] mpa-srv22-base/mpa-srv22-base.vmdk
+2025-04-15 02:20:30,626 - ERROR - Fehler bei der Verarbeitung der Datei mpa-srv22-base.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:30,626 - INFO - Prüfe Ordner: [Unity_Datastore_2] devops-packer-baseDisk-datastore-8016/ mit 2 Dateien
+2025-04-15 02:20:30,627 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] devops-packer-baseDisk-datastore-8016/01 Aug 2024 14-20-34.9814Z-flat.vmdk
+2025-04-15 02:20:31,679 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_2] devops-packer-baseDisk-datastore-8016/01 Aug 2024 14-20-34.9814Z.vmdk
+2025-04-15 02:20:31,684 - ERROR - Fehler bei der Verarbeitung der Datei 01 Aug 2024 14-20-34.9814Z.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:31,685 - INFO - Prüfe Ordner: [Unity_Datastore_2] cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8/ mit 8 Dateien
+2025-04-15 02:20:31,686 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8/cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8_4-000001-sesparse.vmdk
+2025-04-15 02:20:31,687 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8/cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8_4-000001.vmdk
+2025-04-15 02:20:31,687 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8/cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8_4-digest-flat.vmdk
+2025-04-15 02:20:31,688 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8/cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8_4-000001-digest-sesparse.vmdk
+2025-04-15 02:20:32,745 - INFO - VMDK cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8_4-digest.vmdk gehört zu VMX cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8.vmx
+2025-04-15 02:20:32,746 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8/cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8_4-digest.vmdk
+2025-04-15 02:20:32,749 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8/cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8_4-flat.vmdk
+2025-04-15 02:20:33,804 - INFO - VMDK cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8_4-000001-digest.vmdk gehört zu VMX cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8.vmx
+2025-04-15 02:20:33,805 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8/cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8_4-000001-digest.vmdk
+2025-04-15 02:20:34,855 - INFO - VMDK cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8_4.vmdk gehört zu VMX cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8.vmx
+2025-04-15 02:20:34,856 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8/cp-replica-42dc9118-ea1d-4e3d-810b-d668aec43ff8_4.vmdk
+2025-04-15 02:20:34,859 - INFO - Prüfe Ordner: [Unity_Datastore_2] labcc02/ mit 2 Dateien
+2025-04-15 02:20:34,859 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] labcc02/labcc02-flat.vmdk
+2025-04-15 02:20:34,859 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] labcc02/labcc02.vmdk
+2025-04-15 02:20:34,860 - INFO - Prüfe Ordner: [Unity_Datastore_2] NSVPX-ESX-14.1-17.38_nc_64/ mit 4 Dateien
+2025-04-15 02:20:34,861 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] NSVPX-ESX-14.1-17.38_nc_64/NSVPX-ESX-14.1-17.38_nc_64-flat.vmdk
+2025-04-15 02:20:35,914 - INFO - VMDK NSVPX-ESX-14.1-17.38_nc_64.vmdk gehört zu VMX NSVPX-ESX-14.1-17.38_nc_64.vmx
+2025-04-15 02:20:35,915 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] NSVPX-ESX-14.1-17.38_nc_64/NSVPX-ESX-14.1-17.38_nc_64.vmdk
+2025-04-15 02:20:35,917 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] NSVPX-ESX-14.1-17.38_nc_64/NSVPX-ESX-14.1-17.38_nc_64-000001.vmdk
+2025-04-15 02:20:35,918 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] NSVPX-ESX-14.1-17.38_nc_64/NSVPX-ESX-14.1-17.38_nc_64-000001-sesparse.vmdk
+2025-04-15 02:20:35,918 - INFO - Prüfe Ordner: [Unity_Datastore_2] vCLS-989f54d0-e58b-437f-ad8e-dd6797c8e5d7/ mit 2 Dateien
+2025-04-15 02:20:36,971 - INFO - VMDK vCLS-989f54d0-e58b-437f-ad8e-dd6797c8e5d7.vmdk gehört zu VMX vCLS-989f54d0-e58b-437f-ad8e-dd6797c8e5d7.vmx
+2025-04-15 02:20:36,972 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] vCLS-989f54d0-e58b-437f-ad8e-dd6797c8e5d7/vCLS-989f54d0-e58b-437f-ad8e-dd6797c8e5d7.vmdk
+2025-04-15 02:20:36,974 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] vCLS-989f54d0-e58b-437f-ad8e-dd6797c8e5d7/vCLS-989f54d0-e58b-437f-ad8e-dd6797c8e5d7-flat.vmdk
+2025-04-15 02:20:36,974 - INFO - Prüfe Ordner: [Unity_Datastore_2] mpa-ras-m00/ mit 8 Dateien
+2025-04-15 02:20:36,975 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-ras-m00/mpa-ras-m00-000003-sesparse.vmdk
+2025-04-15 02:20:36,975 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-ras-m00/mpa-ras-m00-000002-sesparse.vmdk
+2025-04-15 02:20:36,976 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-ras-m00/mpa-ras-m00-000004-sesparse.vmdk
+2025-04-15 02:20:36,977 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-ras-m00/mpa-ras-m00-flat.vmdk
+2025-04-15 02:20:38,028 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_2] mpa-ras-m00/mpa-ras-m00-000004.vmdk
+2025-04-15 02:20:38,033 - ERROR - Fehler bei der Verarbeitung der Datei mpa-ras-m00-000004.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:39,089 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_2] mpa-ras-m00/mpa-ras-m00-000003.vmdk
+2025-04-15 02:20:39,094 - ERROR - Fehler bei der Verarbeitung der Datei mpa-ras-m00-000003.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:40,151 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_2] mpa-ras-m00/mpa-ras-m00.vmdk
+2025-04-15 02:20:40,156 - ERROR - Fehler bei der Verarbeitung der Datei mpa-ras-m00.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:41,213 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_2] mpa-ras-m00/mpa-ras-m00-000002.vmdk
+2025-04-15 02:20:41,217 - ERROR - Fehler bei der Verarbeitung der Datei mpa-ras-m00-000002.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:41,217 - INFO - Prüfe Ordner: [Unity_Datastore_2] mpa-ras-cb01/ mit 4 Dateien
+2025-04-15 02:20:41,218 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-ras-cb01/mpa-ras-cb01-flat.vmdk
+2025-04-15 02:20:41,219 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-ras-cb01/mpa-ras-cb01-000001-sesparse.vmdk
+2025-04-15 02:20:42,275 - INFO - VMDK mpa-ras-cb01.vmdk gehört zu VMX mpa-ras-cb01.vmx
+2025-04-15 02:20:42,275 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] mpa-ras-cb01/mpa-ras-cb01.vmdk
+2025-04-15 02:20:42,278 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] mpa-ras-cb01/mpa-ras-cb01-000001.vmdk
+2025-04-15 02:20:42,279 - INFO - Prüfe Ordner: [Unity_Datastore_2] Oto-F5VE02.naprstek.intern/ mit 3 Dateien
+2025-04-15 02:20:42,279 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] Oto-F5VE02.naprstek.intern/Oto-F5VE02.naprstek.intern.vmdk
+2025-04-15 02:20:42,280 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] Oto-F5VE02.naprstek.intern/Oto-F5VE02.naprstek.intern-flat.vmdk
+2025-04-15 02:20:42,281 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] Oto-F5VE02.naprstek.intern/Oto-F5VE02.naprstek.intern-ctk.vmdk
+2025-04-15 02:20:42,282 - INFO - Prüfe Ordner: [Unity_Datastore_2] vCLS-0f9a26db-1293-4c18-b9a2-36453f07c661/ mit 2 Dateien
+2025-04-15 02:20:42,282 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] vCLS-0f9a26db-1293-4c18-b9a2-36453f07c661/vCLS-0f9a26db-1293-4c18-b9a2-36453f07c661-flat.vmdk
+2025-04-15 02:20:43,347 - INFO - VMDK vCLS-0f9a26db-1293-4c18-b9a2-36453f07c661.vmdk gehört zu VMX vCLS-0f9a26db-1293-4c18-b9a2-36453f07c661.vmx
+2025-04-15 02:20:43,347 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] vCLS-0f9a26db-1293-4c18-b9a2-36453f07c661/vCLS-0f9a26db-1293-4c18-b9a2-36453f07c661.vmdk
+2025-04-15 02:20:43,349 - INFO - Prüfe Ordner: [Unity_Datastore_2] rldweblinux01/ mit 2 Dateien
+2025-04-15 02:20:43,351 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] rldweblinux01/rldweblinux01-flat.vmdk
+2025-04-15 02:20:43,351 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] rldweblinux01/rldweblinux01.vmdk
+2025-04-15 02:20:43,352 - INFO - Prüfe Ordner: [Unity_Datastore_2] esxi-virtuall01/ mit 2 Dateien
+2025-04-15 02:20:43,352 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] esxi-virtuall01/esxi-virtuall01.vmdk
+2025-04-15 02:20:43,353 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] esxi-virtuall01/esxi-virtuall01-flat.vmdk
+2025-04-15 02:20:43,354 - INFO - Prüfe Ordner: [Unity_Datastore_2] mpa-ctx-m01/ mit 4 Dateien
+2025-04-15 02:20:43,354 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-ctx-m01/mpa-ctx-m01-000001-sesparse.vmdk
+2025-04-15 02:20:43,355 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-ctx-m01/mpa-ctx-m01-flat.vmdk
+2025-04-15 02:20:44,413 - INFO - VMDK mpa-ctx-m01.vmdk gehört zu VMX mpa-ctx-m01.vmx
+2025-04-15 02:20:44,414 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] mpa-ctx-m01/mpa-ctx-m01.vmdk
+2025-04-15 02:20:44,415 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] mpa-ctx-m01/mpa-ctx-m01-000001.vmdk
+2025-04-15 02:20:44,416 - INFO - Prüfe Ordner: [Unity_Datastore_2] Neue virtuelle Maschine/ mit 2 Dateien
+2025-04-15 02:20:44,417 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] Neue virtuelle Maschine/Neue virtuelle Maschine-flat.vmdk
+2025-04-15 02:20:44,418 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] Neue virtuelle Maschine/Neue virtuelle Maschine.vmdk
+2025-04-15 02:20:44,418 - INFO - Prüfe Ordner: [Unity_Datastore_2] rldcvad01/ mit 2 Dateien
+2025-04-15 02:20:44,418 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] rldcvad01/rldcvad01-flat.vmdk
+2025-04-15 02:20:44,419 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] rldcvad01/rldcvad01.vmdk
+2025-04-15 02:20:44,419 - INFO - Prüfe Ordner: [Unity_Datastore_2] Oto-CloudConnector02.naprstek.intern/ mit 3 Dateien
+2025-04-15 02:20:44,420 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] Oto-CloudConnector02.naprstek.intern/Oto-CloudConnector02.naprstek.intern.vmdk
+2025-04-15 02:20:44,421 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] Oto-CloudConnector02.naprstek.intern/Oto-CloudConnector02.naprstek.intern-flat.vmdk
+2025-04-15 02:20:44,422 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] Oto-CloudConnector02.naprstek.intern/Oto-CloudConnector02.naprstek.intern-ctk.vmdk
+2025-04-15 02:20:44,423 - INFO - Prüfe Ordner: [Unity_Datastore_2] mpa-ctx-pvs01/ mit 2 Dateien
+2025-04-15 02:20:44,423 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] mpa-ctx-pvs01/mpa-ctx-pvs01.vmdk
+2025-04-15 02:20:44,426 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-ctx-pvs01/mpa-ctx-pvs01-flat.vmdk
+2025-04-15 02:20:44,427 - INFO - Prüfe Ordner: [Unity_Datastore_2] F5_Lab/ mit 2 Dateien
+2025-04-15 02:20:44,428 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] F5_Lab/F5_Lab.vmdk
+2025-04-15 02:20:44,428 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] F5_Lab/F5_Lab-flat.vmdk
+2025-04-15 02:20:44,429 - INFO - Prüfe Ordner: [Unity_Datastore_2] mpa-ras-m01/ mit 6 Dateien
+2025-04-15 02:20:44,429 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-ras-m01/mpa-ras-m01-000001-sesparse.vmdk
+2025-04-15 02:20:44,430 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-ras-m01/mpa-ras-m01-000002-sesparse.vmdk
+2025-04-15 02:20:45,492 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_2] mpa-ras-m01/mpa-ras-m01-000001.vmdk
+2025-04-15 02:20:45,496 - ERROR - Fehler bei der Verarbeitung der Datei mpa-ras-m01-000001.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:45,498 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-ras-m01/mpa-ras-m01-flat.vmdk
+2025-04-15 02:20:46,548 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_2] mpa-ras-m01/mpa-ras-m01-000002.vmdk
+2025-04-15 02:20:46,551 - ERROR - Fehler bei der Verarbeitung der Datei mpa-ras-m01-000002.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:47,603 - INFO - VERWAISTE VMDK GEFUNDEN: [Unity_Datastore_2] mpa-ras-m01/mpa-ras-m01.vmdk
+2025-04-15 02:20:47,607 - ERROR - Fehler bei der Verarbeitung der Datei mpa-ras-m01.vmdk: unsupported operand type(s) for /: 'NoneType' and 'int'
+2025-04-15 02:20:47,608 - INFO - Prüfe Ordner: [Unity_Datastore_2] labctx01/ mit 4 Dateien
+2025-04-15 02:20:47,608 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] labctx01/labctx01_1.vmdk
+2025-04-15 02:20:47,609 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] labctx01/labctx01-flat.vmdk
+2025-04-15 02:20:47,609 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] labctx01/labctx01_1-flat.vmdk
+2025-04-15 02:20:47,610 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] labctx01/labctx01.vmdk
+2025-04-15 02:20:47,611 - INFO - Prüfe Ordner: [Unity_Datastore_2] mpa-ras-vdi-01/ mit 2 Dateien
+2025-04-15 02:20:47,611 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] mpa-ras-vdi-01/mpa-ras-vdi-01-000002.vmdk
+2025-04-15 02:20:47,612 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-ras-vdi-01/mpa-ras-vdi-01-000002-sesparse.vmdk
+2025-04-15 02:20:47,613 - INFO - Prüfe Ordner: [Unity_Datastore_2] labctx02/ mit 6 Dateien
+2025-04-15 02:20:47,613 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] labctx02/labctx02_6.vmdk
+2025-04-15 02:20:47,614 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] labctx02/labctx02_4.vmdk
+2025-04-15 02:20:47,616 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] labctx02/labctx02_6-flat.vmdk
+2025-04-15 02:20:47,617 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] labctx02/labctx02_4-flat.vmdk
+2025-04-15 02:20:47,617 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] labctx02/labctx02_6-ctk.vmdk
+2025-04-15 02:20:47,618 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] labctx02/labctx02_4-ctk.vmdk
+2025-04-15 02:20:47,619 - INFO - Prüfe Ordner: [Unity_Datastore_2] labddc01.lab.local/ mit 2 Dateien
+2025-04-15 02:20:47,619 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] labddc01.lab.local/labddc01.lab.local-flat.vmdk
+2025-04-15 02:20:47,620 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] labddc01.lab.local/labddc01.lab.local.vmdk
+2025-04-15 02:20:47,621 - INFO - Prüfe Ordner: [Unity_Datastore_2] cp-template-57527757-e310-4899-aa5d-b770d66651d8/ mit 4 Dateien
+2025-04-15 02:20:47,622 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] cp-template-57527757-e310-4899-aa5d-b770d66651d8/cp-template-57527757-e310-4899-aa5d-b770d66651d8-000001-sesparse.vmdk
+2025-04-15 02:20:47,622 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] cp-template-57527757-e310-4899-aa5d-b770d66651d8/cp-template-57527757-e310-4899-aa5d-b770d66651d8-000003-sesparse.vmdk
+2025-04-15 02:20:48,678 - INFO - VMDK cp-template-57527757-e310-4899-aa5d-b770d66651d8-000003.vmdk gehört zu VMX cp-template-57527757-e310-4899-aa5d-b770d66651d8.vmx
+2025-04-15 02:20:48,680 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] cp-template-57527757-e310-4899-aa5d-b770d66651d8/cp-template-57527757-e310-4899-aa5d-b770d66651d8-000003.vmdk
+2025-04-15 02:20:48,682 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] cp-template-57527757-e310-4899-aa5d-b770d66651d8/cp-template-57527757-e310-4899-aa5d-b770d66651d8-000001.vmdk
+2025-04-15 02:20:48,683 - INFO - Prüfe Ordner: [Unity_Datastore_2] Oto-UbuntuF5-01/ mit 2 Dateien
+2025-04-15 02:20:48,684 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] Oto-UbuntuF5-01/Oto-UbuntuF5-01.vmdk
+2025-04-15 02:20:48,685 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] Oto-UbuntuF5-01/Oto-UbuntuF5-01-flat.vmdk
+2025-04-15 02:20:48,686 - INFO - Prüfe Ordner: [Unity_Datastore_2] LAMP_v7-BT/ mit 2 Dateien
+2025-04-15 02:20:48,687 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] LAMP_v7-BT/LAMP_v7-BT.vmdk
+2025-04-15 02:20:48,687 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] LAMP_v7-BT/LAMP_v7-BT-flat.vmdk
+2025-04-15 02:20:48,688 - INFO - Prüfe Ordner: [Unity_Datastore_2] cdeBigIP_WAF/ mit 2 Dateien
+2025-04-15 02:20:48,689 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] cdeBigIP_WAF/cdeBigIP_WAF.vmdk
+2025-04-15 02:20:48,690 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] cdeBigIP_WAF/cdeBigIP_WAF-flat.vmdk
+2025-04-15 02:20:48,693 - INFO - Prüfe Ordner: [Unity_Datastore_2] mpa-hrz-m01/ mit 10 Dateien
+2025-04-15 02:20:48,694 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] mpa-hrz-m01/mpa-hrz-m01-000004.vmdk
+2025-04-15 02:20:49,755 - INFO - VMDK mpa-hrz-m01-000001.vmdk gehört zu VMX mpa-hrz-m01.vmx
+2025-04-15 02:20:49,756 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] mpa-hrz-m01/mpa-hrz-m01-000001.vmdk
+2025-04-15 02:20:50,826 - INFO - VMDK mpa-hrz-m01.vmdk gehört zu VMX mpa-hrz-m01.vmx
+2025-04-15 02:20:50,827 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] mpa-hrz-m01/mpa-hrz-m01.vmdk
+2025-04-15 02:20:50,829 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-hrz-m01/mpa-hrz-m01-000001-sesparse.vmdk
+2025-04-15 02:20:50,830 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-hrz-m01/mpa-hrz-m01-000002-sesparse.vmdk
+2025-04-15 02:20:50,831 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-hrz-m01/mpa-hrz-m01-000003-sesparse.vmdk
+2025-04-15 02:20:50,832 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-hrz-m01/mpa-hrz-m01-000004-sesparse.vmdk
+2025-04-15 02:20:51,907 - INFO - VMDK mpa-hrz-m01-000002.vmdk gehört zu VMX mpa-hrz-m01.vmx
+2025-04-15 02:20:51,907 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] mpa-hrz-m01/mpa-hrz-m01-000002.vmdk
+2025-04-15 02:20:52,960 - INFO - VMDK mpa-hrz-m01-000003.vmdk gehört zu VMX mpa-hrz-m01.vmx
+2025-04-15 02:20:52,960 - INFO - VMDK nicht verwaist (Funktionscheck): [Unity_Datastore_2] mpa-hrz-m01/mpa-hrz-m01-000003.vmdk
+2025-04-15 02:20:52,963 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-hrz-m01/mpa-hrz-m01-flat.vmdk
+2025-04-15 02:20:52,963 - INFO - Prüfe Ordner: [Unity_Datastore_2] labcaus01/ mit 2 Dateien
+2025-04-15 02:20:52,964 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] labcaus01/labcaus01-flat.vmdk
+2025-04-15 02:20:52,965 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] labcaus01/labcaus01.vmdk
+2025-04-15 02:20:52,966 - INFO - Prüfe Ordner: [Unity_Datastore_2] mpa-hrz-cs02/ mit 2 Dateien
+2025-04-15 02:20:52,966 - INFO - VMDK in Verwendung (direkter Treffer): [Unity_Datastore_2] mpa-hrz-cs02/mpa-hrz-cs02.vmdk
+2025-04-15 02:20:52,967 - INFO - Überspringe Hilfs-VMDK: [Unity_Datastore_2] mpa-hrz-cs02/mpa-hrz-cs02-flat.vmdk
+2025-04-15 02:20:52,967 - INFO - Insgesamt 0 verwaiste VMDKs gefunden
+2025-04-15 02:20:52,968 - WARNING - KEINE VERWAISTEN VMDKs GEFUNDEN!
+2025-04-15 02:20:52,969 - WARNING - Keine verwaisten VMDKs gefunden!
+2025-04-15 02:20:52,969 - INFO - 
+Diagnose-Tool abgeschlossen. Siehe Log-Datei für Details.
+2025-04-15 02:20:52,980 - INFO - Verbindung zum vCenter getrennt.
