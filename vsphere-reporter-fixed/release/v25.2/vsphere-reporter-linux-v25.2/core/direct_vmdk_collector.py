@@ -121,9 +121,6 @@ def collect_orphaned_vmdks(client):
     # Eine Liste für alle VMDKs
     all_vmdks = []
     
-    # Initialisiere die Sammlung von bekannten VM-Pfaden
-    all_vm_paths = set()
-    
     try:
         # Zugriff auf vSphere-Content
         content = client.service_instance.content
