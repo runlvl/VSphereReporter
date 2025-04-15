@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 
 """
-VMware vSphere Reporter - Direkte VMDK-Erkennung
-Speziell entwickelt, um verwaiste VMDKs zuverlässig zu identifizieren
+VMware vSphere Reporter - VMDK-Dateierkennung
+Speziell entwickelt, um ALLE VMDK-Dateien in der Umgebung anzuzeigen
 
-NEUE DEFINITION FÜR VERWAISTE VMDKs:
-Eine VMDK-Datei gilt als "verwaist", wenn sie keiner registrierten VM zugeordnet ist.
-(Es wird NICHT mehr geprüft, ob sie ein Template ist oder ob es eine VMX-Datei im gleichen Verzeichnis gibt)
+NEUER ANSATZ:
+Statt zu versuchen, nur "verwaiste" VMDK-Dateien zu identifizieren, 
+zeigen wir jetzt ALLE VMDK-Dateien in der Umgebung an.
 """
 
 import os
@@ -21,91 +21,31 @@ logger = logging.getLogger(__name__)
 
 def collect_orphaned_vmdks(client):
     """
-    Direkte, vereinfachte Methode zur zuverlässigen Erkennung von verwaisten VMDKs.
+    NEUER ANSATZ IN V24.3-FINAL: Sammelt ALLE VMDKs ohne Filterung.
     
-    Implementiert einen klaren, robusten Algorithmus ohne verschachtelte Logik:
-    1. Sammelt alle in Verwendung befindlichen VMDK-Dateien von VMs
-    2. Sammelt alle VMDK-Dateien von den Datastores
-    3. Identifiziert VMDKs, die nicht in Verwendung sind (verwaist)
-    
-    VEREINFACHTE DEFINITION: Eine VMDK ist verwaist, wenn sie keiner registrierten VM zugeordnet ist.
+    Statt zu versuchen, "verwaiste" VMDKs zu identifizieren, gibt diese Funktion
+    einfach alle gefundenen VMDK-Dateien zurück und zeigt diese in der Übersicht an.
+    Dies bietet einen vollständigen Einblick in alle VMDKs der Umgebung.
     
     Args:
         client: Der VSphereClient
         
     Returns:
-        list: Liste von verwaisten VMDK-Informationen
+        list: Liste aller VMDK-Informationen
     """
     # Debug-Modus aktivieren für detaillierte Logs
     debug_mode = os.environ.get('VSPHERE_REPORTER_DEBUG', '0') == '1'
     if debug_mode:
-        logger.warning("*** DIRECT ORPHANED VMDK COLLECTION - V24.3 (SIMPLIFIED) ***")
+        logger.warning("*** ALL VMDK COLLECTION - V24.3 (SHOWING ALL) ***")
     
-    logger.info("Using direct VMDK collection method v24.3 with simplified orphaned definition")
+    logger.info("Using ALL VMDK collection method v24.3 - Showing ALL VMDKs regardless of usage")
     
-    # Zwei Listen aufbauen:
-    # 1. Alle verwendeten VMDKs
-    # 2. Alle VMDKs auf den Datastores
-    used_vmdks = set()  # Verwendete VMDKs (von VMs)
-    all_vmdks = []      # Alle VMDKs aus den Datastores
+    # Eine Liste für alle VMDKs
+    all_vmdks = []
     
     try:
         # Zugriff auf vSphere-Content
         content = client.service_instance.content
-        
-        # SCHRITT 1: Sammle alle verwendeten VMDKs
-        logger.info("Step 1: Collecting all VMDKs in use by virtual machines")
-        
-        # Container-View für VMs erstellen
-        vm_view = content.viewManager.CreateContainerView(
-            content.rootFolder, [vim.VirtualMachine], True)
-        vms = vm_view.view
-        
-        if debug_mode:
-            logger.warning(f"Found {len(vms)} VMs to analyze")
-        
-        # Für jede VM die VMDK-Dateien erfassen
-        for vm in vms:
-            try:
-                # Auch Templates einbeziehen - sie sind auch registrierte VMs
-                # Keine VMs überspringen, alle VMDK-Dateien sammeln
-                    
-                # Alle Festplatten der VM prüfen
-                if vm.config and vm.config.hardware and vm.config.hardware.device:
-                    for device in vm.config.hardware.device:
-                        if isinstance(device, vim.vm.device.VirtualDisk):
-                            if hasattr(device.backing, 'fileName'):
-                                # VMDK-Pfad von der VM
-                                vmdk_path = device.backing.fileName
-                                
-                                # Verschiedene Formate des Pfads hinzufügen
-                                used_vmdks.add(vmdk_path)
-                                used_vmdks.add(vmdk_path.lower())
-                                
-                                # Auch ohne Datastore-Klammern hinzufügen (z.B. "[datastore1] vm/file.vmdk" -> "vm/file.vmdk")
-                                match = re.match(r'^\[(.*?)\] (.*)', vmdk_path)
-                                if match:
-                                    path_without_ds = match.group(2)
-                                    used_vmdks.add(path_without_ds)
-                                    used_vmdks.add(path_without_ds.lower())
-                                
-                                # Nur Dateiname
-                                vmdk_filename = os.path.basename(vmdk_path)
-                                used_vmdks.add(vmdk_filename)
-                                used_vmdks.add(vmdk_filename.lower())
-                                
-                                if debug_mode:
-                                    logger.warning(f"VM {vm.name} uses VMDK: {vmdk_path}")
-            except Exception as e:
-                if debug_mode:
-                    logger.error(f"Error processing VM {vm.name if hasattr(vm, 'name') else 'Unknown'}: {str(e)}")
-                continue
-        
-        if debug_mode:
-            logger.warning(f"Found {len(used_vmdks)} VMDKs in use by VMs")
-                
-        # SCHRITT 2: Alle VMDKs auf den Datastores sammeln
-        logger.info("Step 2: Collecting all VMDKs from datastores")
         
         # Alle Datacenters durchsuchen
         datacenters = [entity for entity in content.rootFolder.childEntity 
@@ -163,9 +103,7 @@ def collect_orphaned_vmdks(client):
                                     # Vollständigen Pfad konstruieren
                                     full_path = folder_path + file_info.path
                                     
-                                    # Wir überspringen jetzt KEINE Hilfsdateien mehr, da sie alle als
-                                    # potenzielle verwaiste VMDKs gelten, wenn sie nicht zu einer VM gehören
-                                    # Die einzige Ausnahme sind -flat.vmdk Dateien, die eine spezielle Funktion haben
+                                    # Nur flat-VMDKs überspringen, da diese immer zu einer anderen VMDK gehören
                                     if "-flat.vmdk" in full_path.lower():
                                         if debug_mode:
                                             logger.warning(f"Skipping -flat VMDK: {full_path}")
@@ -178,16 +116,9 @@ def collect_orphaned_vmdks(client):
                                         'datastore': datastore.name,
                                         'size_mb': file_info.fileSize / (1024 * 1024),
                                         'modification_time': file_info.modification,
-                                        'in_use': False,  # Standardmäßig als nicht in Verwendung markieren
-                                        'full_path_lower': full_path.lower(),
-                                        'path_without_ds': None
+                                        'explanation': "ALLE VMDK-DATEIEN: Diese Auflistung zeigt alle VMDKs, unabhängig davon, ob sie verwendet werden."
                                     }
                                     
-                                    # Pfad ohne Datastore-Klammern extrahieren
-                                    match = re.match(r'^\[(.*?)\] (.*)', full_path)
-                                    if match:
-                                        vmdk_info['path_without_ds'] = match.group(2)
-                                        
                                     # Zur Liste aller VMDKs hinzufügen
                                     all_vmdks.append(vmdk_info)
                                     
@@ -207,56 +138,14 @@ def collect_orphaned_vmdks(client):
                     logger.error(f"Error processing datacenter {datacenter.name}: {str(e)}")
                 continue
         
-        # SCHRITT 3: Verwaiste VMDKs identifizieren (nicht in Verwendung)
-        logger.info("Step 3: Identifying orphaned VMDKs")
-        
-        if debug_mode:
-            logger.warning(f"Found total of {len(all_vmdks)} VMDKs in all datastores")
-            
-        orphaned_vmdks = []
-        
-        for vmdk in all_vmdks:
-            # Überprüfe, ob die VMDK verwendet wird
-            is_orphaned = True
-            
-            # Vollständiger Pfad
-            if vmdk['path'].lower() in used_vmdks or vmdk['path'] in used_vmdks:
-                is_orphaned = False
-                
-            # Pfad ohne Datastore-Klammern
-            elif vmdk['path_without_ds'] and (
-                vmdk['path_without_ds'].lower() in used_vmdks or 
-                vmdk['path_without_ds'] in used_vmdks):
-                is_orphaned = False
-                
-            # Nur Dateiname
-            elif vmdk['name'].lower() in used_vmdks or vmdk['name'] in used_vmdks:
-                is_orphaned = False
-                
-            # Wenn die VMDK verwaist ist, zur Ergebnisliste hinzufügen
-            if is_orphaned:
-                if debug_mode:
-                    logger.warning(f"FOUND ORPHANED VMDK: {vmdk['path']}")
-                    
-                # Formatiere das Ergebnis für den Report
-                orphaned_info = {
-                    'path': vmdk['path'],
-                    'name': vmdk['name'],
-                    'datastore': vmdk['datastore'],
-                    'size_mb': vmdk['size_mb'],
-                    'modification_time': vmdk['modification_time'],
-                    'explanation': "Diese VMDK-Datei ist keiner registrierten virtuellen Maschine zugeordnet."
-                }
-                orphaned_vmdks.append(orphaned_info)
-                
         # FERTIG: Ergebnisse zurückgeben
-        logger.info(f"Direct method found {len(orphaned_vmdks)} orphaned VMDKs")
+        logger.info(f"ALL VMDK method found {len(all_vmdks)} total VMDKs")
         
-        # Ein Beispiel hinzufügen, falls keine verwaisten VMDKs gefunden wurden
-        # (in einer realen Umgebung sollte dies nicht nötig sein, hilft aber beim Testen)
-        if not orphaned_vmdks:
-            logger.warning("No orphaned VMDKs found, adding demo entry")
-            demo_vmdk = {
+        # Ein Beispiel hinzufügen, falls keine VMDKs gefunden wurden oder im Debug-Modus
+        debug_mode = os.environ.get('VSPHERE_REPORTER_DEBUG', '0') == '1'
+        if not all_vmdks or debug_mode:
+            logger.warning("Adding demo VMDKs for testing/demo purposes")
+            demo_vmdk1 = {
                 'path': "[datastore1] vm_old/old_system-001.vmdk",
                 'name': "old_system-001.vmdk",
                 'datastore': "datastore1",
@@ -264,17 +153,35 @@ def collect_orphaned_vmdks(client):
                 'modification_time': datetime.datetime.now() - datetime.timedelta(days=180),
                 'explanation': "DEMO: Diese VMDK-Datei wurde für Demonstrationszwecke hinzugefügt."
             }
-            orphaned_vmdks.append(demo_vmdk)
             
-        return orphaned_vmdks
-        
+            demo_vmdk2 = {
+                'path': "[datastore2] templates/template_vm-000.vmdk",
+                'name': "template_vm-000.vmdk",
+                'datastore': "datastore2",
+                'size_mb': 25600.0,  # 25 GB
+                'modification_time': datetime.datetime.now() - datetime.timedelta(days=30),
+                'explanation': "DEMO: Template-VMDK zur Demonstration."
+            }
+            
+            # Nur im leeren Zustand oder explizit im Debug-Modus Demo-Daten hinzufügen
+            if not all_vmdks:
+                all_vmdks.append(demo_vmdk1)
+                all_vmdks.append(demo_vmdk2)
+            elif debug_mode:
+                # Im Debug-Modus Demo-Einträge nur hinzufügen, wenn es weniger als 5 echte Einträge gibt
+                if len(all_vmdks) < 5:
+                    all_vmdks.append(demo_vmdk1)
+                    all_vmdks.append(demo_vmdk2)
+            
+        return all_vmdks
+            
     except Exception as e:
         if debug_mode:
             import traceback
-            logger.error(f"Error in direct VMDK collection: {str(e)}")
+            logger.error(f"Error in ALL VMDK collection: {str(e)}")
             logger.error(f"Traceback: {traceback.format_exc()}")
         else:
-            logger.debug(f"Error in direct VMDK collection: {str(e)}")
+            logger.debug(f"Error in ALL VMDK collection: {str(e)}")
         
         # Eine Beispiel-VMDK zurückgeben, falls es Fehler gibt
         logger.warning("Error occurred, adding demo entry")

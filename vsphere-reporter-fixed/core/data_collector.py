@@ -130,7 +130,7 @@ class DataCollector:
         data = {
             'vmware_tools': self.collect_vmware_tools_info(),
             'snapshots': EnhancedDataCollector.collect_snapshots(self.client),
-            'orphaned_vmdks': direct_collect_orphaned_vmdks(self.client)  # Neue direkte VMDK-Erkennungsmethode
+            'orphaned_vmdks': direct_collect_orphaned_vmdks(self.client)  # Zeigt jetzt ALLE VMDKs an, nicht nur verwaiste
         }
         
         # Optionale Daten je nach Konfiguration sammeln
