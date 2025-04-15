@@ -1,0 +1,29 @@
+VMware vSphere Reporter v25.0 - Release Notes
+
+=== WICHTIGES UPDATE: Verbesserter VMDK-Collector ===
+
+Dieses Update enthält eine vollständige Überarbeitung des VMDK-Collectors, 
+der jetzt dem PowerShell-Ansatz ähnelt und alle VMDKs in der Umgebung findet.
+
+NEUE FEATURES:
+- PowerShell-ähnlicher VMDK-Collector: Erfasst sowohl zugeordnete als auch verwaiste VMDKs.
+- VM-zentrierter Ansatz zur VMDK-Erkennung für vollständigere Ergebnisse.
+- Verbesserte Erkennung von verwaisten VMDKs durch Datastore-Traversal.
+- Mehrere Fallback-Mechanismen zur VM-Erkennung für höhere Zuverlässigkeit.
+
+VERBESSERUNGEN:
+- Drei separate Methoden zur VM-Erkennung für maximale Kompatibilität.
+- Erweiterte Erkennung von lokalen und Shared-Storage-Umgebungen.
+- Deutlich zuverlässigere Erkennung von VMDKs in komplexen Umgebungen.
+- Bessere Fehlerbehandlung und Debug-Protokollierung.
+
+FEHLERBEHEBUNGEN:
+- Behebt das Problem fehlender VMDK-Dateien in Berichten.
+- Vermeidet Abstürze bei unzugänglichen Datastores oder unvollständigen VM-Konfigurationen.
+- Korrigiert die Erkennung von Disk-Formaten (Thin/Thick-Provisioning).
+
+WICHTIGE HINWEISE:
+- Diese Version ist abwärtskompatibel mit v24.3 und erfordert keine Konfigurationsänderungen.
+- Für optimale Ergebnisse wird empfohlen, im Debug-Modus zu starten.
+
+Debug-Modus aktivieren: VSPHERE_REPORTER_DEBUG=1 python vsphere_reporter.py
