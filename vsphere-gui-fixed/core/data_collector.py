@@ -12,6 +12,7 @@ import sys
 import os
 from pyVmomi import vim
 from contextlib import contextmanager
+from core.enhanced_collector import EnhancedDataCollector
 
 # Configure the logger
 logger = logging.getLogger(__name__)
@@ -124,11 +125,11 @@ class DataCollector:
                 'networks': True
             }
             
-        # Pflichtdaten sammeln
+        # Pflichtdaten sammeln mit verbesserten V24.0-Methoden
         data = {
             'vmware_tools': self.collect_vmware_tools_info(),
-            'snapshots': self.collect_snapshot_info(),
-            'orphaned_vmdks': self.collect_orphaned_vmdks()
+            'snapshots': EnhancedDataCollector.collect_snapshots(self.client),
+            'orphaned_vmdks': EnhancedDataCollector.collect_orphaned_vmdks(self.client)
         }
         
         # Optionale Daten je nach Konfiguration sammeln
@@ -309,59 +310,59 @@ class DataCollector:
             logger.warning("*** SNAPSHOTS COLLECTION - DEBUG MODE ACTIVE ***")
         
         logger.info("Collecting snapshot information")
-        # Direkte Property-Abfrage über vCenter statt Objektverarbeitung
-        # Diese Methode ist robuster als die objektbasierte Abfrage
         
-        # PropertyCollector verwenden - direkter Zugriff auf das vCenter-Inventar
-        content = self.client.service_instance.content
-        container = content.viewManager.CreateContainerView(
-            content.rootFolder, [vim.VirtualMachine], True)
-        
-        # Property-Spezifikationen für die Abfrage definieren
-        property_spec = vim.PropertySpec()
-        property_spec.type = vim.VirtualMachine
-        property_spec.pathSet = [
-            'name', 
-            'snapshot', 
-            'config.template'
-        ]
-        
-        # Traversal-Spezifikation festlegen, um alle VMs zu durchlaufen
-        traversal_spec = vim.TraversalSpec()
-        traversal_spec.name = 'traverseEntities'
-        traversal_spec.path = 'view'
-        traversal_spec.skip = False
-        traversal_spec.type = type(container)
-        
-        # Objekt-Spezifikation festlegen
-        obj_spec = vim.ObjectSpec()
-        obj_spec.obj = container
-        obj_spec.skip = True
-        obj_spec.selectSet = [traversal_spec]
-        
-        # Filter-Spezifikation erstellen
-        filter_spec = vim.PropertyFilterSpec()
-        filter_spec.objectSet = [obj_spec]
-        filter_spec.propSet = [property_spec]
-        
-        # Properties abrufen
+        # In V24.0 - Verbesserte Snapshot-Erkennung mit direktem Content-Browse
+        # Anstatt die PropertyCollector zu verwenden, greifen wir direkt auf VMs zu
+        # Dies verbessert die Zuverlässigkeit erheblich
         try:
-            logger.info("Retrieving VM snapshot information using PropertyCollector")
-            result = content.propertyCollector.RetrieveContents([filter_spec])
+            content = self.client.service_instance.content
+            vm_view = content.viewManager.CreateContainerView(
+                content.rootFolder, [vim.VirtualMachine], True)
+            vms = vm_view.view
             
             if debug_mode:
-                logger.warning(f"PropertyCollector returned {len(result)} VM results")
-                
+                logger.warning(f"Found {len(vms)} VMs to check for snapshots")
+            
+            snapshot_info_list = []
+            vm_with_snapshot_count = 0
+            
+            for vm in vms:
+                try:
+                    # Ignore templates
+                    if vm.config.template:
+                        continue
+                        
+                    # Check if VM has snapshots
+                    if vm.snapshot:
+                        snapshots = self._get_vm_snapshots(vm)
+                        if snapshots:
+                            vm_with_snapshot_count += 1
+                            snapshot_info_list.extend(snapshots)
+                            
+                            if debug_mode:
+                                logger.warning(f"VM {vm.name} has {len(snapshots)} snapshots")
+                except Exception as e:
+                    if debug_mode:
+                        logger.error(f"Error processing VM {vm.name} for snapshots: {str(e)}")
+                    else:
+                        logger.debug(f"Error processing VM {vm.name} for snapshots: {str(e)}")
+            
+            # Sort by create time (oldest first)
+            snapshot_info_list.sort(key=lambda x: x['create_time'])
+            
+            logger.info(f"Found {len(snapshot_info_list)} snapshots across {vm_with_snapshot_count} VMs")
+            return snapshot_info_list
+            
         except Exception as e:
             if debug_mode:
                 import traceback
-                logger.error(f"Error retrieving snapshot properties: {str(e)}")
+                logger.error(f"Error accessing VMs for snapshots: {str(e)}")
                 logger.error(f"Traceback: {traceback.format_exc()}")
             else:
-                logger.debug(f"Error retrieving snapshot properties: {str(e)}")
+                logger.debug(f"Error accessing VMs for snapshots: {str(e)}")
             
-            # Fallback auf die normalen Objekte, wenn PropertyCollector fehlschlägt
-            logger.warning("PropertyCollector failed, using fallback method")
+            # Fallback auf die traditionelle Methode
+            logger.warning("Direct VM access failed, using fallback method for snapshots")
             return self._collect_snapshot_info_fallback()
         
         snapshot_info_list = []
