@@ -119,26 +119,19 @@ class EnhancedDataCollector:
                 # Alter berechnen
                 create_time = snapshot.createTime
                 
-                # BUGFIX v24.1: Verbesserte Lösung für "can't subtract offset-naive and offset-aware datetimes"
+                # BUGFIX: Lösung für "can't subtract offset-naive and offset-aware datetimes"
                 # Stelle sicher, dass beide Datumswerte entweder mit oder ohne Zeitzoneninformationen sind
-                # Immer UTC für konsistente Berechnungen verwenden
-                now = datetime.datetime.now(datetime.timezone.utc)
+                now = datetime.datetime.now()
                 
                 # Prüfen, ob create_time Zeitzoneninformation enthält
                 if create_time.tzinfo is not None:
-                    # create_time hat bereits Zeitzone
-                    # Für zuverlässige Berechnung zur UTC konvertieren
-                    try:
-                        # Versuch die Zeit in UTC zu konvertieren
-                        create_time = create_time.astimezone(datetime.timezone.utc)
-                    except Exception as e:
-                        logger.debug(f"Zeitzonenkonvertierung fehlgeschlagen: {str(e)}")
-                        # Falls Konvertierung fehlschlägt, behalte die Zeit und verwende die gleiche Zeitzone für now
-                        now = now.astimezone(create_time.tzinfo)
+                    # create_time hat Zeitzone, stelle sicher, dass now auch eine hat
+                    # Verwende die gleiche Zeitzone wie create_time (beste Methode für genaue Berechnung)
+                    now = now.replace(tzinfo=create_time.tzinfo)
                 else:
-                    # create_time hat keine Zeitzone, füge UTC hinzu für korrekte Berechnung
-                    # Dies ist besser als die Zeitzone zu entfernen, da die Berechnung präziser ist
-                    create_time = create_time.replace(tzinfo=datetime.timezone.utc)
+                    # create_time hat keine Zeitzone, stelle sicher, dass jetzt auch keine hat
+                    # Falls create_time Zeitzone hat, entferne sie
+                    create_time = create_time.replace(tzinfo=None)
                 
                 # Jetzt ist es sicher, die Subtraktion durchzuführen
                 age = now - create_time
@@ -173,27 +166,19 @@ class EnhancedDataCollector:
         # Debug-Modus-Check für verbesserte Protokollierung
         debug_mode = os.environ.get('VSPHERE_REPORTER_DEBUG', '0') == '1'
         if debug_mode:
-            logger.warning("*** ENHANCED ORPHANED VMDK COLLECTION - V24.1 ***")
+            logger.warning("*** ENHANCED ORPHANED VMDK COLLECTION - V24.0 ***")
         
-        logger.info("Using enhanced v24.1 orphaned VMDK collection")
+        logger.info("Using enhanced v24.0 orphaned VMDK collection")
         
-        # Globaler Exception-Handler - Tool darf nicht abstürzen, auch bei unerwarteten Fehlern
+        # Registrierte VMDKs mit verbessertem Ansatz sammeln
+        registered_vmdks = set()
+        
         try:
-            # Registrierte VMDKs mit verbessertem Ansatz sammeln
-            registered_vmdks = set()
-            
-            try:
-                # Direkter Zugriff auf alle VMs
-                content = client.service_instance.content
-                vm_view = content.viewManager.CreateContainerView(
-                    content.rootFolder, [vim.VirtualMachine], True)
-                vms = vm_view.view
-            except Exception as e:
-                if debug_mode:
-                    logger.error(f"Fehler beim Zugriff auf VMs: {str(e)}")
-                else:
-                    logger.debug(f"Fehler beim Zugriff auf VMs: {str(e)}")
-                vms = []
+            # Direkter Zugriff auf alle VMs
+            content = client.service_instance.content
+            vm_view = content.viewManager.CreateContainerView(
+                content.rootFolder, [vim.VirtualMachine], True)
+            vms = vm_view.view
             
             # Erfasse alle registrierten VMDKs
             for vm in vms:
@@ -276,118 +261,111 @@ class EnhancedDataCollector:
                             
                             # Verarbeite die Suchergebnisse mit verbesserter Fehlerbehandlung
                             for result in search_results:
-                                try:
-                                    folder_path = result.folderPath
+                                folder_path = result.folderPath
+                                
+                                # Verbessertes Logging für Nachverfolgung
+                                if debug_mode:
+                                    logger.warning(f"Checking folder: {folder_path} with {len(result.file)} files")
                                     
-                                    # Überprüfe, ob die Dateien-Eigenschaft existiert und nicht leer ist
-                                    if not hasattr(result, 'file') or not result.file:
-                                        if debug_mode:
-                                            logger.warning(f"Folder {folder_path} has no files or file property")
-                                        continue
-                                    
-                                    # Verbessertes Logging für Nachverfolgung
-                                    if debug_mode:
-                                        logger.warning(f"Checking folder: {folder_path} with {len(result.file)} files")
-                                    
-                                    for file_info in result.file:
+                                for file_info in result.file:
+                                    try:
+                                        if not file_info.path.lower().endswith('.vmdk'):
+                                            continue
+                                            
+                                        # Vollständigen Pfad konstruieren
+                                        full_path = folder_path + file_info.path
+                                        normalized_path = full_path.lower()
+                                        
+                                        # Prüfe auf Hilfs-VMDK-Dateien (delta, flat)
+                                        if ("-flat.vmdk" in normalized_path or 
+                                            "-delta.vmdk" in normalized_path or 
+                                            "-ctk.vmdk" in normalized_path or
+                                            "-rdm.vmdk" in normalized_path or
+                                            "-sesparse.vmdk" in normalized_path):
+                                            if debug_mode:
+                                                logger.warning(f"Skipping auxiliary VMDK: {full_path}")
+                                            continue
+                                        
+                                        # Zuverlässige Prüfung, ob VMDK in Verwendung ist
+                                        if (full_path in registered_vmdks or 
+                                            full_path.lower() in registered_vmdks):
+                                            if debug_mode:
+                                                logger.warning(f"VMDK in use (direct match): {full_path}")
+                                            continue
+                                            
+                                        # Extrahiere Pfad ohne Datastore-Klammern
+                                        match = re.match(r'^\[(.*?)\] (.*)', full_path)
+                                        if match:
+                                            path_without_ds = match.group(2)
+                                            if (path_without_ds in registered_vmdks or 
+                                                path_without_ds.lower() in registered_vmdks):
+                                                if debug_mode:
+                                                    logger.warning(f"VMDK in use (path match): {full_path}")
+                                                continue
+                                        
+                                        # Weitere Validierung für verwaiste VMDKs
+                                        # Prüfe, ob in demselben Verzeichnis eine VM-Konfiguration existiert
+                                        is_orphaned = True
+                                        folder_content = None
+                                        
                                         try:
-                                            if not file_info.path.lower().endswith('.vmdk'):
-                                                continue
+                                            # Suche nach VMX-Dateien im selben Verzeichnis
+                                            vmx_spec = vim.HostDatastoreBrowserSearchSpec()
+                                            vmx_spec.matchPattern = ["*.vmx"]
+                                            
+                                            folder_without_brackets = folder_path
+                                            if folder_path.endswith('/'):
+                                                folder_without_brackets = folder_path[:-1]
                                                 
-                                            # Vollständigen Pfad konstruieren
-                                            full_path = folder_path + file_info.path
-                                            normalized_path = full_path.lower()
+                                            # Führe eine Suche nach VMX-Dateien durch
+                                            task = browser.SearchDatastore_Task(folder_without_brackets, vmx_spec)
+                                            client.wait_for_task(task)
+                                            folder_content = task.info.result
                                             
-                                            # Prüfe auf Hilfs-VMDK-Dateien (delta, flat)
-                                            if ("-flat.vmdk" in normalized_path or 
-                                                "-delta.vmdk" in normalized_path or 
-                                                "-ctk.vmdk" in normalized_path or
-                                                "-rdm.vmdk" in normalized_path or
-                                                "-sesparse.vmdk" in normalized_path or
-                                                "~" in normalized_path):
+                                            # Wenn VMX-Dateien gefunden wurden, ist die VMDK möglicherweise nicht verwaist
+                                            if folder_content and folder_content.file:
                                                 if debug_mode:
-                                                    logger.warning(f"Skipping auxiliary VMDK: {full_path}")
-                                                continue
-                                            
-                                            # Zuverlässige Prüfung, ob VMDK in Verwendung ist
-                                            if (full_path in registered_vmdks or 
-                                                full_path.lower() in registered_vmdks):
-                                                if debug_mode:
-                                                    logger.warning(f"VMDK in use (direct match): {full_path}")
-                                                continue
-                                            
-                                            # Extrahiere Pfad ohne Datastore-Klammern
-                                            match = re.match(r'^\[(.*?)\] (.*)', full_path)
-                                            if match:
-                                                path_without_ds = match.group(2)
-                                                if (path_without_ds in registered_vmdks or 
-                                                    path_without_ds.lower() in registered_vmdks):
-                                                    if debug_mode:
-                                                        logger.warning(f"VMDK in use (path match): {full_path}")
-                                                    continue
-                                            
-                                            # Weitere Validierung für verwaiste VMDKs
-                                            # Prüfe, ob in demselben Verzeichnis eine VM-Konfiguration existiert
-                                            is_orphaned = True
-                                            folder_content = None
-                                            
-                                            # VMX-Dateien im selben Verzeichnis suchen
-                                            try:
-                                                vmx_spec = vim.HostDatastoreBrowserSearchSpec()
-                                                vmx_spec.matchPattern = ["*.vmx"]
+                                                    logger.warning(f"Found {len(folder_content.file)} VMX files in the same folder")
                                                 
-                                                folder_without_brackets = folder_path
-                                                if folder_path.endswith('/'):
-                                                    folder_without_brackets = folder_path[:-1]
-                                                    
-                                                # Führe eine Suche nach VMX-Dateien durch
-                                                task = browser.SearchDatastore_Task(folder_without_brackets, vmx_spec)
-                                                client.wait_for_task(task)
-                                                folder_content = task.info.result
+                                                # VMDK-Basisname ohne Erweiterung
+                                                vmdk_base = os.path.splitext(file_info.path)[0]
                                                 
-                                                # Wenn VMX-Dateien gefunden wurden, ist die VMDK möglicherweise nicht verwaist
-                                                if folder_content and folder_content.file:
-                                                    if debug_mode:
-                                                        logger.warning(f"Found {len(folder_content.file)} VMX files in the same folder")
+                                                # Prüfe, ob eine VMX mit ähnlichem Namen existiert
+                                                for vmx_file in folder_content.file:
+                                                    vmx_base = os.path.splitext(vmx_file.path)[0]
                                                     
-                                                    # VMDK-Basisname ohne Erweiterung
-                                                    vmdk_base = os.path.splitext(file_info.path)[0]
-                                                    
-                                                    # Prüfe, ob eine VMX mit ähnlichem Namen existiert
-                                                    for vmx_file in folder_content.file:
-                                                        vmx_base = os.path.splitext(vmx_file.path)[0]
-                                                        
-                                                        # Wenn VMX- und VMDK-Namen ähnlich sind, ist die VMDK wahrscheinlich nicht verwaist
-                                                        if vmdk_base == vmx_base or vmdk_base.startswith(vmx_base) or vmx_base.startswith(vmdk_base):
-                                                            is_orphaned = False
-                                                            if debug_mode:
-                                                                logger.warning(f"VMDK might belong to VMX: {vmx_file.path}")
-                                                            break
-                                            except Exception as e:
-                                                if debug_mode:
-                                                    logger.error(f"Error checking for VMX files: {str(e)}")
-                                                # Im Zweifelsfall weiter prüfen
-                                            
-                                            # Nur wirklich verwaiste VMDKs zur Liste hinzufügen
-                                            if is_orphaned:
-                                                if debug_mode:
-                                                    logger.warning(f"FOUND ORPHANED VMDK: {full_path}")
-                                                    
-                                                orphaned_info = {
-                                                    'path': full_path,
-                                                    'name': file_info.path,
-                                                    'datastore': datastore.name,
-                                                    'size_mb': file_info.fileSize / (1024 * 1024),
-                                                    'modification_time': file_info.modification,
-                                                    'explanation': "Diese VMDK-Datei ist keiner virtuellen Maschine zugeordnet."
-                                                }
-                                                orphaned_vmdks.append(orphaned_info)
+                                                    # Wenn VMX- und VMDK-Namen ähnlich sind, ist die VMDK wahrscheinlich nicht verwaist
+                                                    if vmdk_base == vmx_base or vmdk_base.startswith(vmx_base) or vmx_base.startswith(vmdk_base):
+                                                        is_orphaned = False
+                                                        if debug_mode:
+                                                            logger.warning(f"VMDK might belong to VMX: {vmx_file.path}")
+                                                        break
                                         except Exception as e:
                                             if debug_mode:
-                                                logger.error(f"Error processing file {file_info.path}: {str(e)}")
-                                            else:
-                                                logger.debug(f"Error processing file: {str(e)}")
-                                            continue
+                                                logger.error(f"Error checking for VMX files: {str(e)}")
+                                            # Im Zweifelsfall weiter prüfen
+                                        
+                                        # Nur wirklich verwaiste VMDKs zur Liste hinzufügen
+                                        if is_orphaned:
+                                            if debug_mode:
+                                                logger.warning(f"FOUND ORPHANED VMDK: {full_path}")
+                                                
+                                            orphaned_info = {
+                                                'path': full_path,
+                                                'name': file_info.path,
+                                                'datastore': datastore.name,
+                                                'size_mb': file_info.fileSize / (1024 * 1024),
+                                                'modification_time': file_info.modification,
+                                                'explanation': "Diese VMDK-Datei ist keiner virtuellen Maschine zugeordnet."
+                                            }
+                                            orphaned_vmdks.append(orphaned_info)
+                                        
+                                    except Exception as e:
+                                        if debug_mode:
+                                            logger.error(f"Error processing file {file_info.path}: {str(e)}")
+                                        else:
+                                            logger.debug(f"Error processing file: {str(e)}")
+                                        continue
                         except Exception as e:
                             if debug_mode:
                                 logger.error(f"Error processing datastore {datastore.name}: {str(e)}")
@@ -401,7 +379,7 @@ class EnhancedDataCollector:
                         logger.debug(f"Error processing datacenter: {str(e)}")
                     continue
                         
-            logger.info(f"Enhanced v24.1 method found {len(orphaned_vmdks)} orphaned VMDKs")
+            logger.info(f"Enhanced v24.0 method found {len(orphaned_vmdks)} orphaned VMDKs")
             return orphaned_vmdks
             
         except Exception as e:
