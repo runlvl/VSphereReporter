@@ -1,0 +1,65 @@
+VMware vSphere Reporter v25.0 - Installations- und Update-Anleitung
+=====================================================================
+
+LINUX-INSTALLATION:
+------------------
+1. Entpacken Sie das TAR.GZ-Archiv:
+   tar -xzf vsphere-reporter-linux-v25.0.tar.gz
+
+2. Wechseln Sie in das entpackte Verzeichnis:
+   cd vsphere-reporter-linux-v25.0
+
+3. Installieren Sie die erforderlichen Abhängigkeiten:
+   pip install -r requirements.txt
+
+4. Starten Sie das Programm:
+   python vsphere_reporter.py
+
+   ODER mit Debug-Modus für erweiterte Protokollierung:
+   VSPHERE_REPORTER_DEBUG=1 python vsphere_reporter.py
+
+
+WINDOWS-INSTALLATION:
+-------------------
+1. Entpacken Sie die ZIP-Datei in einen Ordner Ihrer Wahl.
+
+2. Öffnen Sie eine Eingabeaufforderung im entpackten Verzeichnis.
+
+3. Installieren Sie die erforderlichen Abhängigkeiten:
+   pip install -r requirements.txt
+
+4. Starten Sie das Programm:
+   python vsphere_reporter.py
+
+   ODER mit Debug-Modus für erweiterte Protokollierung:
+   set VSPHERE_REPORTER_DEBUG=1
+   python vsphere_reporter.py
+
+
+UPDATE VON EINER FRÜHEREN VERSION:
+--------------------------------
+1. Sichern Sie Ihre bestehende Installation (optional).
+
+2. Installieren Sie die neue Version wie oben beschrieben.
+
+3. Wenn Sie benutzerdefinierte Anpassungen oder Konfigurationen haben,
+   übertragen Sie diese in die neue Version.
+
+
+HINWEISE:
+--------
+- Diese Version enthält einen völlig überarbeiteten VMDK-Collector.
+- Es wird empfohlen, den Debug-Modus zu aktivieren, um die erweiterte Protokollierung zu nutzen.
+- Bei Problemen prüfen Sie die Log-Dateien im 'logs'-Verzeichnis.
+- Die VSphereReporter-Klasse verfügt jetzt über PowerShell-ähnliche Funktionen.
+
+
+ANFORDERUNGEN:
+-------------
+- Python 3.8 oder höher
+- PyVmomi 7.0.0 oder höher
+- PyQt5 5.15.0 oder höher (für die GUI)
+- Reportlab 3.6.0 oder höher (für PDF-Export)
+- Python-docx 0.8.11 oder höher (für DOCX-Export)
+- Jinja2 3.0.0 oder höher (für HTML-Vorlagen)
+- Humanize 3.0.0 oder höher (für benutzerfreundliche Formatierung)
