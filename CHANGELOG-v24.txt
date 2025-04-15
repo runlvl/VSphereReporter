@@ -1,5 +1,14 @@
 # VMware vSphere Reporter v24.0 - Änderungsprotokoll
 
+## Spezielles Debug-Tool
+
+### Neues Debug-Tool für Snapshots und verwaiste VMDKs
+- Implementierung eines dedizierten Diagnose-Tools `vsphere-reporter-debug-tool-v24.zip`
+- Umfassende Logging-Funktionalität mit detaillierten Statusmeldungen
+- Export aller gefundenen Daten in JSON-Format zur weiteren Analyse
+- Benutzerfreundliche Skripte für Windows und Linux
+- Ausführliche Anleitung zur Verwendung des Tools (ANLEITUNG-DEBUG-TOOL-V24.md)
+
 ## Verbesserungen bei der Erkennung von Snapshots und verwaisten VMDKs
 
 ### Snapshot-Erkennung
