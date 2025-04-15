@@ -1,0 +1,42 @@
+VMware vSphere Reporter - Version 26.0 - Changelog
+===============================================
+
+Veröffentlichungsdatum: 15. April 2025
+
+HAUPTVERBESSERUNGEN
+------------------
+* Erheblich verbesserte Erkennung von verwaisten VMDK-Dateien
+* Neue Template-VM Behandlung für zuverlässigere VMDK-Zuordnung
+* Optimierter Algorithmus zur Unterscheidung zwischen verschiedenen VMDK-Typen
+
+DETAILLIERTE ÄNDERUNGEN
+----------------------
+1. VMDK-Erkennung:
+   - Implementierung einer verbesserten Template-VM Erkennung und Kennzeichnung
+   - Template-Status wird jetzt in allen Pfadvergleichen berücksichtigt
+   - Spezielle Markierung von Hilfsdateien mit "HELPER:"-Präfix für bessere Kategorisierung
+   - Verbesserte Pfadnormalisierung für zuverlässigeren Vergleich
+
+2. Orphaned VMDK Filter:
+   - Mehrschichtige Vergleichsmethoden für höhere Zuverlässigkeit
+   - Verbesserte Behandlung von speziellen VMDKs (-flat, -delta, -ctk, etc.)
+   - Zusätzliche Prüfung zur Vermeidung von Templates in Orphaned-Listen
+   - Optimierte Zuordnung von VMDKs zu ihren VMs durch mehrere Vergleichsmethoden
+
+3. Berichtsfunktionalität:
+   - Präzisere Erklärungstexte für verschiedene VMDK-Typen
+   - Erweiterte Details für Hilfsdateien und Template-VMs
+
+BEKANNTE PROBLEME
+----------------
+* Keine
+
+VORAUSSETZUNGEN
+--------------
+* Python 3.8 oder höher
+* PyQt5 5.15 oder höher
+* pyVmomi 7.0 oder höher
+* reportlab 3.6 oder höher
+* python-docx 0.8.11 oder höher
+* Jinja2 3.0 oder höher
+* humanize 3.0 oder höher

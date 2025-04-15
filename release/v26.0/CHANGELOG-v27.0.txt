@@ -1,0 +1,21 @@
+VMware vSphere Reporter - Änderungsprotokoll v27.0
+==================================================
+
+NEUE FUNKTIONEN
+--------------
+* Neue VMDK-Anzeige: Zeigt jetzt ALLE VMDKs in der Umgebung an, nicht nur potentiell verwaiste
+* Status-Markierung für VMDKs eingeführt: AKTIV, TEMPLATE, POTENTIALLY ORPHANED
+* Detaillierte Erklärungstexte für jeden VMDK-Status
+
+VERBESSERUNGEN
+-------------
+* Erweiterte VMDK-Tabelle mit Status und Erklärungsfeldern
+* Farbkodierung in der Tabelle für verschiedene VMDK-Status
+* Informationsfeld über die neue Darstellung aller VMDKs
+
+TECHNISCHE ÄNDERUNGEN
+-------------------
+* Umgestaltung des direct_vmdk_collector.py, um alle VMDKs zurückzugeben
+* Verbesserte Verarbeitung von Templates und Hilfsdateien
+* Neue CSS-Klassen für Status-basierte Formatierung hinzugefügt
+* Optimierte Datendarstellung für die Status-basierte Filterung

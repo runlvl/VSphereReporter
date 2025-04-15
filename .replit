@@ -43,6 +43,14 @@ args = "VMwareMonitor_v24_3_Final"
 task = "workflow.run"
 args = "VMwareMonitorEnhanced"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "VSphereReporterV26Demo"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "VSphereReporterV27Demo"
+
 [[workflows.workflow]]
 name = "VSphereReporter"
 author = "agent"
@@ -158,6 +166,36 @@ task = "packager.installForAll"
 task = "shell.exec"
 args = "cd vsphere-reporter-fixed && VSPHERE_REPORTER_DEBUG=1 python vsphere_reporter.py"
 
+[[workflows.workflow]]
+name = "VSphereReporterV26Demo"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd release/v26.0/ && python -m http.server 5005"
+waitForPort = 5005
+
+[[workflows.workflow]]
+name = "VSphereReporterV27Demo"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd release/v27.0/ && python -m http.server 5007"
+waitForPort = 5007
+
 [deployment]
 run = ["sh", "-c", "pip install -r requirements.txt || pip install pyVmomi>=7.0.0 PyQt5>=5.15.0 reportlab>=3.6.0 python-docx>=0.8.11 jinja2>=3.0.0 humanize>=3.0.0 && python vsphere_reporter.py"]
 
@@ -172,3 +210,11 @@ externalPort = 3000
 [[ports]]
 localPort = 5002
 externalPort = 3001
+
+[[ports]]
+localPort = 5005
+externalPort = 3002
+
+[[ports]]
+localPort = 5007
+externalPort = 3003
