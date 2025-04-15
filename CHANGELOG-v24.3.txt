@@ -1,0 +1,28 @@
+# VMware vSphere Reporter - Änderungshistorie v24.3
+
+## Version 24.3 (15.04.2025)
+
+### Korrekturen
+- **Verbesserte VMDK-Erkennung**: Vollständig überarbeiteter Algorithmus zur zuverlässigen Erkennung von verwaisten VMDK-Dateien
+- **Zuverlässigere Datensammlung**: Deutlich verbesserte Fehlerbehandlung bei der Datensammlung
+- **Konsistente Ergebnisse**: Verbesserte Stabilität der Erkennung von verwaisten VMDKs
+- **Verbesserte Filterung**: Optimierte Filterkriterien für Hilfs-VMDK-Dateien
+
+### Technische Details
+- Komplett neugeschriebene VMDK-Erkennungslogik mit klarer Struktur und minimaler Verschachtelung
+- Verbesserte Logik zum Vergleich von VMDK-Pfaden (sowohl mit als auch ohne Datastore-Klammern)
+- Erweiterte Methoden zum Prüfen, ob eine VMDK zu einer VMX-Datei gehört
+- Reduzierte Codetiefe zur Vermeidung von Syntaxfehlern bei verschachtelten try-except-Blöcken
+
+### Weitere Verbesserungen
+- Verbesserte Debug-Logging-Optionen für vereinfachte Fehlersuche
+- Detailliertere Statusinformationen während der Datensammlung
+- Reduzierte Menge an falsch-positiven Ergebnissen bei der Erkennung verwaister VMDKs
+- Erhöhte Performance durch optimierte Suchlogik
+
+### Hinweise für Administratoren
+- Die Version 24.3 ist abwärtskompatibel zu älteren Versionen der Software
+- Für optimale Ergebnisse wird empfohlen, den Debug-Modus zu aktivieren, falls keine verwaisten VMDKs gefunden werden
+
+---
+© Bechtle GmbH 2025
