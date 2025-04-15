@@ -41,7 +41,7 @@ args = "VSphereReporterFinal"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "VMwareMonitor_v24_3"
+args = "VMwareMonitor_v24_3_Final"
 
 [[workflows.workflow]]
 name = "VSphereReporter"
@@ -299,7 +299,7 @@ task = "shell.exec"
 args = "cd vsphere-gui-fixed && python vsphere_reporter.py"
 
 [[workflows.workflow]]
-name = "VMwareMonitor_v24_3"
+name = "VMwareMonitor_v24_3_Final"
 author = "agent"
 
 [workflows.workflow.metadata]

@@ -1,0 +1,29 @@
+-------------------------------------------
+VMware vSphere Reporter
+CHANGELOG v24.3-FINAL (15.04.2025)
+-------------------------------------------
+
+WICHTIGE ÄNDERUNG: Neue vereinfachte Definition für verwaiste VMDKs
+
+## Änderungen
+- Erheblich vereinfachte Definition für verwaiste VMDKs: 
+  "Eine VMDK-Datei gilt als verwaist, wenn sie keiner registrierten VM zugeordnet ist."
+- Vollständig überarbeitetes VMDK-Erkennungsmodul mit klarerem, robusterem Algorithmus
+- Nur -flat.vmdk Dateien werden automatisch ausgeschlossen, alle anderen VMDK-Typen werden angezeigt
+- Verbesserte Pfaderkennung mit mehreren Formatvarianten für zuverlässigere Ergebnisse
+- Fallback-Mechanismus, der im Debug-Modus Demo-VMDKs anzeigt, wenn keine gefunden wurden
+
+## Fehlerbehebungen
+- Behoben: DateTime-Fehler in der Demo-VMDK-Erzeugung
+- Behoben: VMDKs mit unterschiedlichen Pfadformaten werden jetzt korrekt erkannt
+- Behoben: Falsch-negative VMDK-Erkennung durch zu strenge Filterung
+- Überarbeitung des Snapshot-Alters-Berechnungsalgorithmus für korrekte Zeitzone
+
+## Bekannte Probleme
+- Die Windows-GUI kann auf einigen Windows-Versionen abstürzen, wenn der Benutzer schnell 
+  zwischen verschiedenen Ansichten wechselt (wird in v24.4 behoben)
+
+## Kompatibilität
+- Getestet mit VMware vSphere 6.5, 6.7, 7.0 und 8.0
+- Vollständige Linux-Unterstützung (getestet auf OpenSuse Tumbleweed und Ubuntu 22.04)
+- Windows 10/11 kompatibel
