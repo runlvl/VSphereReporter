@@ -1,0 +1,27 @@
+VMware vSphere Reporter v29.1 - CHANGELOG (FINAL)
+
+DATUM: 05. Mai 2025
+
+FIXES:
+- VMware Tools Power-Status wird nun korrekt angezeigt (Hourglass-Icon ersetzt durch statusspezifische Icons)
+- Null-Checks für verwaiste VMDK-Dateien hinzugefügt, um Abstürze zu verhindern
+- Export-Funktionalität für HTML, PDF und DOCX vollständig implementiert
+- Demo-Modus wurde verbessert, damit keine "NoneType"-Fehler mehr auftreten
+- Login-Seite wurde aktualisiert, um den Demo-Modus-Button immer anzuzeigen
+- Behoben: Konflikt zwischen verschiedenen ReportGenerator-Implementierungen, der Export-Fehler verursachte
+- Behoben: Zirkulärer Import in report_generator-Modul, der "unexpected keyword argument" Fehler verursachte
+- Behoben: Nach Anmeldung mit echten Anmeldedaten wird nun korrekt der Live-Modus anstatt des Demo-Modus aktiviert
+
+OPTIMIERUNGEN:
+- Verbesserte Fehlerbehandlung bei VMDK-Erkennung
+- Erhöhte Zuverlässigkeit beim Export aller Berichtsformate
+- Bessere Benutzerführung durch konsistente Anzeige des Demo-Modus-Buttons
+
+ZUSÄTZLICHE INFORMATIONEN:
+- Die Anwendung ist nun vollständig webbasiert und kann auf jedem modernen Browser verwendet werden
+- Standardport ist 5000, kann aber mit --port Parameter geändert werden
+- Installationsanweisungen bleiben unverändert:
+  * Windows: setup.bat ausführen, dann run.bat starten
+  * Linux: setup.sh ausführen, dann run.sh starten
+
+Copyright © 2025 Bechtle GmbH
