@@ -1,0 +1,194 @@
+/* 
+   VMware vSphere Reporter v29.0
+   Benutzerdefinierte Stile im Bechtle Corporate Design
+*/
+
+:root {
+    --bechtle-dark-blue: #00355e;
+    --bechtle-orange: #da6f1e;
+    --bechtle-green: #23a96a;
+    --bechtle-light-gray: #f3f3f3;
+    --bechtle-dark-gray: #5a5a5a;
+}
+
+/* Allgemeine Stile */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bechtle-light-gray);
+    color: #333;
+}
+
+.navbar {
+    background-color: var(--bechtle-dark-blue);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand img {
+    height: 40px;
+}
+
+.nav-link {
+    color: white !important;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Karten und Container */
+.card {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    border: none;
+}
+
+.card-header {
+    background-color: var(--bechtle-dark-blue);
+    color: white;
+    border-radius: 8px 8px 0 0 !important;
+    font-weight: 600;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--bechtle-dark-blue);
+    border-color: var(--bechtle-dark-blue);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #00294d;
+    border-color: #00294d;
+}
+
+.btn-success {
+    background-color: var(--bechtle-green);
+    border-color: var(--bechtle-green);
+}
+
+.btn-success:hover, .btn-success:focus {
+    background-color: #1e9259;
+    border-color: #1e9259;
+}
+
+.btn-warning {
+    background-color: var(--bechtle-orange);
+    border-color: var(--bechtle-orange);
+    color: white;
+}
+
+.btn-warning:hover, .btn-warning:focus {
+    background-color: #c26319;
+    border-color: #c26319;
+    color: white;
+}
+
+/* Abschnittstitel */
+.section-title {
+    color: var(--bechtle-dark-blue);
+    border-bottom: 2px solid var(--bechtle-orange);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Statusanzeigen */
+.connection-status {
+    font-size: 0.9rem;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.connected {
+    background-color: var(--bechtle-green);
+    color: white;
+}
+
+.disconnected {
+    background-color: var(--bechtle-dark-gray);
+    color: white;
+}
+
+/* Fortschrittsbalken */
+.progress-bar {
+    background-color: var(--bechtle-dark-blue);
+}
+
+/* Feature-Icons */
+.feature-icon {
+    font-size: 2rem;
+    color: var(--bechtle-dark-blue);
+    margin-bottom: 15px;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--bechtle-dark-blue);
+    color: white;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+/* Formulare */
+.form-check-input:checked {
+    background-color: var(--bechtle-dark-blue);
+    border-color: var(--bechtle-dark-blue);
+}
+
+/* Berichtsoptionen */
+.report-section {
+    border-left: 3px solid var(--bechtle-dark-blue);
+    padding-left: 15px;
+    margin-bottom: 20px;
+}
+
+/* Export-Optionen */
+.export-option {
+    cursor: pointer;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 15px;
+    transition: all 0.3s;
+}
+
+.export-option:hover {
+    border-color: var(--bechtle-dark-blue);
+    background-color: rgba(0, 53, 94, 0.05);
+}
+
+.export-option.selected {
+    border-color: var(--bechtle-dark-blue);
+    background-color: rgba(0, 53, 94, 0.1);
+}
+
+.export-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: var(--bechtle-dark-blue);
+}
+
+/* Responsives Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    .feature-icon {
+        font-size: 1.5rem;
+    }
+}
+
+/* Ladeanimationen */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--bechtle-dark-blue);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
