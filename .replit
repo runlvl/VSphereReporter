@@ -60,6 +60,10 @@ args = "VSphereReporterV28Demo"
 task = "workflow.run"
 args = "DownloadsDemo"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "VSphereReporterV29Demo"
+
 [[workflows.workflow]]
 name = "VSphereReporter"
 author = "agent"
@@ -218,6 +222,15 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd release/downloads && python -m http.server 5000"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "VSphereReporterV29Demo"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd vsphere-reporter-v29.0 && python -m http.server 5000"
 waitForPort = 5000
 
 [deployment]

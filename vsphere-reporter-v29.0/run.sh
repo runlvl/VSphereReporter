@@ -1,48 +1,41 @@
 #!/bin/bash
+# VMware vSphere Reporter v29.0 - Startskript für Linux
+# Copyright (c) 2025 Bechtle GmbH
 
-echo "Starting VMware vSphere Reporter Web Edition v29.0..."
-echo
-echo "This terminal will remain open while the application is running."
-echo "Press Ctrl+C to stop the application."
-echo
+echo "==================================================================="
+echo "      VMware vSphere Reporter v29.0 - Web Edition (Linux)"
+echo "==================================================================="
+echo ""
 
-# Check if virtual environment exists and activate it
-if [ -d "venv" ]; then
-    echo "Activating virtual environment..."
-    source venv/bin/activate
-fi
-
-# Check if Python is installed
-if ! command -v python3 &> /dev/null; then
-    echo "Error: Python 3 is not installed or not in your PATH."
-    echo "Please install Python 3.8 or higher and try again."
-    echo
+# Prüfe, ob die virtuelle Umgebung existiert
+if [ ! -d "venv" ]; then
+    echo "FEHLER: Virtuelle Umgebung nicht gefunden."
+    echo "Bitte führen Sie zuerst ./setup.sh aus."
     exit 1
 fi
 
-# Get the port number from environment or use default
-PORT=${PORT:-5000}
+# Aktiviere virtuelle Umgebung
+echo "Aktiviere virtuelle Umgebung..."
+source venv/bin/activate
 
-echo "Opening your browser to http://localhost:$PORT when the server is ready..."
-echo
-
-# Check the operating system to determine how to open the browser
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    # Try to detect the desktop environment and use appropriate browser opener
-    if command -v xdg-open &> /dev/null; then
-        (sleep 3 && xdg-open "http://localhost:$PORT") &
-    elif command -v gnome-open &> /dev/null; then
-        (sleep 3 && gnome-open "http://localhost:$PORT") &
-    elif command -v kde-open &> /dev/null; then
-        (sleep 3 && kde-open "http://localhost:$PORT") &
-    fi
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-    # macOS
-    (sleep 3 && open "http://localhost:$PORT") &
+# Exportiere Debug-Modus, wenn angegeben
+if [ "$1" == "--debug" ] || [ "$1" == "-d" ]; then
+    export VSPHERE_REPORTER_DEBUG=1
+    echo "Debug-Modus aktiviert."
+else
+    export VSPHERE_REPORTER_DEBUG=0
 fi
 
-# Start the application
-PORT=$PORT python3 app.py
+# Exportiere Host und Port für die Flask-Anwendung
+export VSPHERE_REPORTER_HOST=0.0.0.0
+export VSPHERE_REPORTER_PORT=5000
 
-echo
-echo "Application stopped."
+# Starte die Anwendung
+echo "Starte VMware vSphere Reporter v29.0..."
+echo "Sobald die Anwendung gestartet ist, können Sie sie unter folgender URL aufrufen:"
+echo "http://localhost:5000"
+echo ""
+echo "Drücken Sie Strg+C, um die Anwendung zu beenden."
+echo ""
+
+python app.py
