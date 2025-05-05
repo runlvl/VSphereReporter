@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VMware vSphere Reporter v28.0 - Datastores Demo</title>
+    <style>
+        :root {
+            --bechtle-dark-blue: #00355e;
+            --bechtle-orange: #da6f1e;
+            --bechtle-green: #23a96a;
+            --bechtle-light-gray: #f3f3f3;
+            --bechtle-dark-gray: #5a5a5a;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: var(--bechtle-light-gray);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            color: var(--bechtle-orange);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        nav ul li a:hover {
+            opacity: 0.8;
+        }
+        
+        .page-title {
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 20px;
+        }
+        
+        .info-box {
+            background-color: white;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-box h2 {
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-box p {
+            margin-bottom: 15px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--bechtle-light-gray);
+        }
+        
+        tr:hover {
+            background-color: #e5e5e5;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            border-radius: 5px;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .progress-green {
+            background-color: var(--bechtle-green);
+        }
+        
+        .progress-orange {
+            background-color: var(--bechtle-orange);
+        }
+        
+        .progress-red {
+            background-color: #e74c3c;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            margin-bottom: 40px;
+            color: var(--bechtle-dark-blue);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+        
+        footer p {
+            margin: 5px 0;
+        }
+        
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 20px;
+            }
+            
+            nav ul li {
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">VMware vSphere <span>Reporter</span></div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Startseite</a></li>
+                    <li><a href="demo-menu.html">Demo-Menü</a></li>
+                    <li><a href="downloads.html">Downloads</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <h1 class="page-title">Datastores Übersicht</h1>
+        
+        <div class="info-box">
+            <h2>Datastores Informationen</h2>
+            <p>
+                Die Datastores-Ansicht bietet detaillierte Informationen über Ihre vSphere-Datenspeicher, 
+                einschließlich Kapazitätsnutzung, Performance-Metriken und VMDK-Zuordnungen.
+                Mit diesen Informationen können Sie Speicherprobleme proaktiv identifizieren und beheben.
+            </p>
+        </div>
+        
+        <div class="info-box">
+            <h2>Datastores</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Typ</th>
+                        <th>Kapazität</th>
+                        <th>Frei</th>
+                        <th>Auslastung</th>
+                        <th>VMDK-Anzahl</th>
+                        <th>Zugehörige Hosts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>PROD-DS01-SAN</td>
+                        <td>VMFS 6.0</td>
+                        <td>8.0 TB</td>
+                        <td>2.3 TB</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-bar progress-orange" style="width: 71%">71%</div>
+                            </div>
+                        </td>
+                        <td>127</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>PROD-DS02-SAN</td>
+                        <td>VMFS 6.0</td>
+                        <td>8.0 TB</td>
+                        <td>3.1 TB</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-bar progress-green" style="width: 61%">61%</div>
+                            </div>
+                        </td>
+                        <td>92</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>PROD-DS03-SAN</td>
+                        <td>VMFS 6.0</td>
+                        <td>8.0 TB</td>
+                        <td>0.8 TB</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-bar progress-red" style="width: 90%">90%</div>
+                            </div>
+                        </td>
+                        <td>145</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>VSAN-Cluster-ProdCluster</td>
+                        <td>vSAN</td>
+                        <td>24.0 TB</td>
+                        <td>10.2 TB</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-bar progress-green" style="width: 57%">57%</div>
+                            </div>
+                        </td>
+                        <td>215</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>DEV-DS01-SAN</td>
+                        <td>VMFS 6.0</td>
+                        <td>4.0 TB</td>
+                        <td>1.8 TB</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-bar progress-green" style="width: 55%">55%</div>
+                            </div>
+                        </td>
+                        <td>67</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>DEV-DS02-NFS</td>
+                        <td>NFS 4.1</td>
+                        <td>6.0 TB</td>
+                        <td>2.7 TB</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-bar progress-green" style="width: 55%">55%</div>
+                            </div>
+                        </td>
+                        <td>82</td>
+                        <td>2</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="info-box">
+            <h2>Detaillierte Datastore-Informationen - PROD-DS01-SAN</h2>
+            <p>
+                Im tatsächlichen VMware vSphere Reporter würde hier eine detaillierte Ansicht des ausgewählten
+                Datastores mit erweiterten Informationen und VMDK-Zuordnungen angezeigt werden.
+            </p>
+            <table>
+                <tr>
+                    <td><strong>Name:</strong></td>
+                    <td>PROD-DS01-SAN</td>
+                </tr>
+                <tr>
+                    <td><strong>Typ:</strong></td>
+                    <td>VMFS 6.0</td>
+                </tr>
+                <tr>
+                    <td><strong>Hardware:</strong></td>
+                    <td>HPE Primera 650 SAN, LUN ID: 2301</td>
+                </tr>
+                <tr>
+                    <td><strong>Gesamtkapazität:</strong></td>
+                    <td>8.0 TB</td>
+                </tr>
+                <tr>
+                    <td><strong>Bereitgestellt:</strong></td>
+                    <td>5.7 TB (71%)</td>
+                </tr>
+                <tr>
+                    <td><strong>Frei:</strong></td>
+                    <td>2.3 TB (29%)</td>
+                </tr>
+                <tr>
+                    <td><strong>Verbundene Hosts:</strong></td>
+                    <td>esx01.labvcenter.lab.local, esx02.labvcenter.lab.local, esx03.labvcenter.lab.local, esx04.labvcenter.lab.local</td>
+                </tr>
+                <tr>
+                    <td><strong>Anzahl VMDKs:</strong></td>
+                    <td>127</td>
+                </tr>
+                <tr>
+                    <td><strong>Speicherrichtlinie:</strong></td>
+                    <td>PROD-TIER1-RAID6</td>
+                </tr>
+                <tr>
+                    <td><strong>Multipathing:</strong></td>
+                    <td>VMW_PSP_RR (Round Robin)</td>
+                </tr>
+            </table>
+            
+            <h3 style="margin-top: 20px; color: var(--bechtle-dark-blue);">Top 5 VMDKs nach Größe</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>VM Name</th>
+                        <th>VMDK Pfad</th>
+                        <th>Größe</th>
+                        <th>Format</th>
+                        <th>Thin/Thick</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>oracle-db01</td>
+                        <td>[PROD-DS01-SAN] oracle-db01/oracle-db01_1.vmdk</td>
+                        <td>2048 GB</td>
+                        <td>VMDK</td>
+                        <td>Thick Provision Eager Zeroed</td>
+                    </tr>
+                    <tr>
+                        <td>sql-db01</td>
+                        <td>[PROD-DS01-SAN] sql-db01/sql-db01_1.vmdk</td>
+                        <td>1024 GB</td>
+                        <td>VMDK</td>
+                        <td>Thick Provision Eager Zeroed</td>
+                    </tr>
+                    <tr>
+                        <td>file-server01</td>
+                        <td>[PROD-DS01-SAN] file-server01/file-server01_1.vmdk</td>
+                        <td>500 GB</td>
+                        <td>VMDK</td>
+                        <td>Thick Provision Lazy Zeroed</td>
+                    </tr>
+                    <tr>
+                        <td>erp-app01</td>
+                        <td>[PROD-DS01-SAN] erp-app01/erp-app01_1.vmdk</td>
+                        <td>350 GB</td>
+                        <td>VMDK</td>
+                        <td>Thin Provision</td>
+                    </tr>
+                    <tr>
+                        <td>backup-server01</td>
+                        <td>[PROD-DS01-SAN] backup-server01/backup-server01_1.vmdk</td>
+                        <td>256 GB</td>
+                        <td>VMDK</td>
+                        <td>Thin Provision</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <a href="demo-menu.html" class="back-link">« Zurück zum Demo-Menü</a>
+    </div>
+    
+    <footer>
+        <p>VMware vSphere Reporter v28.0 © 2025 Bechtle GmbH</p>
+        <p>Alle Rechte vorbehalten.</p>
+    </footer>
+</body>
+</html>

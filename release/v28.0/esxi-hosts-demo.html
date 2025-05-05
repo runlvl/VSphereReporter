@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VMware vSphere Reporter v28.0 - ESXi-Hosts Demo</title>
+    <style>
+        :root {
+            --bechtle-dark-blue: #00355e;
+            --bechtle-orange: #da6f1e;
+            --bechtle-green: #23a96a;
+            --bechtle-light-gray: #f3f3f3;
+            --bechtle-dark-gray: #5a5a5a;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: var(--bechtle-light-gray);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            color: var(--bechtle-orange);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        nav ul li a:hover {
+            opacity: 0.8;
+        }
+        
+        .page-title {
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 20px;
+        }
+        
+        .info-box {
+            background-color: white;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-box h2 {
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-box p {
+            margin-bottom: 15px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--bechtle-light-gray);
+        }
+        
+        tr:hover {
+            background-color: #e5e5e5;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .status-green {
+            background-color: var(--bechtle-green);
+        }
+        
+        .status-orange {
+            background-color: var(--bechtle-orange);
+        }
+        
+        .status-red {
+            background-color: #e74c3c;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            margin-bottom: 40px;
+            color: var(--bechtle-dark-blue);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+        
+        footer p {
+            margin: 5px 0;
+        }
+        
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 20px;
+            }
+            
+            nav ul li {
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">VMware vSphere <span>Reporter</span></div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Startseite</a></li>
+                    <li><a href="demo-menu.html">Demo-Menü</a></li>
+                    <li><a href="downloads.html">Downloads</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <h1 class="page-title">ESXi-Hosts Übersicht</h1>
+        
+        <div class="info-box">
+            <h2>ESXi-Hosts Informationen</h2>
+            <p>
+                Die ESXi-Hosts-Ansicht bietet einen umfassenden Überblick über alle ESXi-Hosts in Ihrer vSphere-Umgebung.
+                Sie können den Zustand, die Hardware-Spezifikationen, die Auslastung und die Konfigurationsdetails aller Hosts einsehen.
+            </p>
+        </div>
+        
+        <div class="info-box">
+            <h2>ESXi-Hosts</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Hostname</th>
+                        <th>Version</th>
+                        <th>CPU</th>
+                        <th>CPU Nutzung</th>
+                        <th>RAM (GB)</th>
+                        <th>RAM Nutzung</th>
+                        <th>Cluster</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="status-indicator status-green"></span> Online</td>
+                        <td>esx01.labvcenter.lab.local</td>
+                        <td>7.0 Update 3</td>
+                        <td>2x Intel Xeon Gold 6254 (36 Kerne)</td>
+                        <td>32%</td>
+                        <td>512 GB</td>
+                        <td>65%</td>
+                        <td>ProdCluster</td>
+                    </tr>
+                    <tr>
+                        <td><span class="status-indicator status-green"></span> Online</td>
+                        <td>esx02.labvcenter.lab.local</td>
+                        <td>7.0 Update 3</td>
+                        <td>2x Intel Xeon Gold 6254 (36 Kerne)</td>
+                        <td>28%</td>
+                        <td>512 GB</td>
+                        <td>60%</td>
+                        <td>ProdCluster</td>
+                    </tr>
+                    <tr>
+                        <td><span class="status-indicator status-green"></span> Online</td>
+                        <td>esx03.labvcenter.lab.local</td>
+                        <td>7.0 Update 3</td>
+                        <td>2x Intel Xeon Gold 6254 (36 Kerne)</td>
+                        <td>45%</td>
+                        <td>512 GB</td>
+                        <td>72%</td>
+                        <td>ProdCluster</td>
+                    </tr>
+                    <tr>
+                        <td><span class="status-indicator status-orange"></span> Wartung</td>
+                        <td>esx04.labvcenter.lab.local</td>
+                        <td>7.0 Update 3</td>
+                        <td>2x Intel Xeon Gold 6254 (36 Kerne)</td>
+                        <td>0%</td>
+                        <td>512 GB</td>
+                        <td>0%</td>
+                        <td>ProdCluster</td>
+                    </tr>
+                    <tr>
+                        <td><span class="status-indicator status-green"></span> Online</td>
+                        <td>esx05.labvcenter.lab.local</td>
+                        <td>7.0 Update 2</td>
+                        <td>2x Intel Xeon Gold 6254 (36 Kerne)</td>
+                        <td>38%</td>
+                        <td>512 GB</td>
+                        <td>56%</td>
+                        <td>DevCluster</td>
+                    </tr>
+                    <tr>
+                        <td><span class="status-indicator status-green"></span> Online</td>
+                        <td>esx06.labvcenter.lab.local</td>
+                        <td>7.0 Update 2</td>
+                        <td>2x Intel Xeon Gold 6254 (36 Kerne)</td>
+                        <td>42%</td>
+                        <td>512 GB</td>
+                        <td>58%</td>
+                        <td>DevCluster</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="info-box">
+            <h2>Detaillierte Host-Informationen - esx01.labvcenter.lab.local</h2>
+            <p>
+                Im tatsächlichen VMware vSphere Reporter würde hier eine detaillierte Ansicht des ausgewählten
+                ESXi-Hosts mit erweiterten Informationen angezeigt werden.
+            </p>
+            <table>
+                <tr>
+                    <td><strong>Hostname:</strong></td>
+                    <td>esx01.labvcenter.lab.local</td>
+                </tr>
+                <tr>
+                    <td><strong>IP-Adresse:</strong></td>
+                    <td>10.10.10.101</td>
+                </tr>
+                <tr>
+                    <td><strong>ESXi-Version:</strong></td>
+                    <td>VMware ESXi 7.0.3 build-20328353</td>
+                </tr>
+                <tr>
+                    <td><strong>System:</strong></td>
+                    <td>HPE ProLiant DL380 Gen10 (SKU: 868703-B21)</td>
+                </tr>
+                <tr>
+                    <td><strong>BIOS-Version:</strong></td>
+                    <td>U30 v2.42 (04/15/2024)</td>
+                </tr>
+                <tr>
+                    <td><strong>CPU:</strong></td>
+                    <td>2x Intel Xeon Gold 6254 CPU @ 3.10GHz (36 Kerne, 72 logische Prozessoren)</td>
+                </tr>
+                <tr>
+                    <td><strong>RAM:</strong></td>
+                    <td>512 GB (16x 32GB RDIMM, 3200 MT/s, Dual Rank)</td>
+                </tr>
+                <tr>
+                    <td><strong>Netzwerk:</strong></td>
+                    <td>8x 10GbE HPE Ethernet 10Gb 2-port 562FLR-SFP+ Adapter</td>
+                </tr>
+                <tr>
+                    <td><strong>Lokaler Speicher:</strong></td>
+                    <td>2x 480GB SSD RAID1 (ESXi Boot), 2x 1.92TB NVMe (VSan Cache)</td>
+                </tr>
+                <tr>
+                    <td><strong>Uptime:</strong></td>
+                    <td>126 Tage, 14 Stunden, 32 Minuten</td>
+                </tr>
+                <tr>
+                    <td><strong>VMs:</strong></td>
+                    <td>45 aktiv</td>
+                </tr>
+            </table>
+        </div>
+        
+        <a href="demo-menu.html" class="back-link">« Zurück zum Demo-Menü</a>
+    </div>
+    
+    <footer>
+        <p>VMware vSphere Reporter v28.0 © 2025 Bechtle GmbH</p>
+        <p>Alle Rechte vorbehalten.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VMware vSphere Reporter v28.0 - Demo-Menü</title>
+    <style>
+        :root {
+            --bechtle-dark-blue: #00355e;
+            --bechtle-orange: #da6f1e;
+            --bechtle-green: #23a96a;
+            --bechtle-light-gray: #f3f3f3;
+            --bechtle-dark-gray: #5a5a5a;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: var(--bechtle-light-gray);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            color: var(--bechtle-orange);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        nav ul li a:hover {
+            opacity: 0.8;
+        }
+        
+        .main-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .menu-item {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .menu-item-header {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .menu-item-content {
+            padding: 20px;
+        }
+        
+        .menu-item-content p {
+            margin-bottom: 15px;
+            color: var(--bechtle-dark-gray);
+        }
+        
+        .menu-button {
+            display: inline-block;
+            background-color: var(--bechtle-orange);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .menu-button:hover {
+            background-color: #c05f15;
+        }
+        
+        .page-title {
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .page-description {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--bechtle-dark-gray);
+        }
+        
+        footer {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+        
+        footer p {
+            margin: 5px 0;
+        }
+        
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 20px;
+            }
+            
+            nav ul li {
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">VMware vSphere <span>Reporter</span></div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Startseite</a></li>
+                    <li><a href="downloads.html">Downloads</a></li>
+                    <li><a href="CHANGELOG-v28.md">Changelog</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <h1 class="page-title">VMware vSphere Reporter v28.0 Demo</h1>
+        <p class="page-description">
+            Erkunden Sie die Funktionen des VMware vSphere Reporters anhand dieser interaktiven Demos.
+        </p>
+        
+        <div class="main-menu">
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <h2>Topologie-Visualisierung</h2>
+                </div>
+                <div class="menu-item-content">
+                    <p>
+                        Interaktive hierarchische Darstellung der vSphere-Umgebung mit erweiterten Filtermöglichkeiten
+                        und benutzerdefinierten Ansichten.
+                    </p>
+                    <a href="vsphere-topology-demo.html" class="menu-button">Demo ansehen</a>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <h2>VMDK-Management</h2>
+                </div>
+                <div class="menu-item-content">
+                    <p>
+                        Verbesserte Erkennung und Klassifizierung von VMDKs mit Status-Indikatoren und detaillierten
+                        Zuordnungsinformationen.
+                    </p>
+                    <a href="vsphere-vmdk-demo.html" class="menu-button">Demo ansehen</a>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <h2>ESXi-Hosts</h2>
+                </div>
+                <div class="menu-item-content">
+                    <p>
+                        Übersicht aller ESXi-Hosts mit detaillierten Informationen zu Hardware, Konfiguration
+                        und Leistungskennzahlen.
+                    </p>
+                    <a href="esxi-hosts-demo.html" class="menu-button">Demo ansehen</a>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <h2>Datenspeicher</h2>
+                </div>
+                <div class="menu-item-content">
+                    <p>
+                        Umfassende Analyse aller Datenspeicher mit Kapazitätsauslastung, Performance-Metriken
+                        und VMDK-Zuordnungen.
+                    </p>
+                    <a href="datastores-demo.html" class="menu-button">Demo ansehen</a>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <h2>Cluster</h2>
+                </div>
+                <div class="menu-item-content">
+                    <p>
+                        Detaillierte Informationen zu vSphere-Clustern, HA/DRS-Konfigurationen und
+                        Ressourcenverteilung innerhalb der Cluster.
+                    </p>
+                    <a href="clusters-demo.html" class="menu-button">Demo ansehen</a>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <h2>Ressourcenpools</h2>
+                </div>
+                <div class="menu-item-content">
+                    <p>
+                        Analyse der Ressourcenpools mit Einblick in Reservierungen, Limits und
+                        Ressourcenverteilung unter den virtuellen Maschinen.
+                    </p>
+                    <a href="resource-pools-demo.html" class="menu-button">Demo ansehen</a>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <h2>Netzwerke</h2>
+                </div>
+                <div class="menu-item-content">
+                    <p>
+                        Visualisierung der virtuellen Netzwerkkonfiguration mit Informationen zu vSwitches,
+                        Portgruppen und VM-Netzwerkadaptern.
+                    </p>
+                    <a href="networks-demo.html" class="menu-button">Demo ansehen</a>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <h2>Download</h2>
+                </div>
+                <div class="menu-item-content">
+                    <p>
+                        Laden Sie die aktuelle Version des VMware vSphere Reporters für Windows oder Linux
+                        herunter und testen Sie alle Funktionen in Ihrer Umgebung.
+                    </p>
+                    <a href="downloads.html" class="menu-button">Zu den Downloads</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>VMware vSphere Reporter v28.0 © 2025 Bechtle GmbH</p>
+        <p>Alle Rechte vorbehalten.</p>
+    </footer>
+</body>
+</html>
