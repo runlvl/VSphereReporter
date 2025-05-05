@@ -1,0 +1,303 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1><i class="fas fa-camera"></i> Snapshot-Übersicht</h1>
+
+<div class="content-section">
+    <p class="lead">Übersicht über vorhandene VM-Snapshots, sortiert nach Alter (älteste zuerst).</p>
+    
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-info-circle"></i> Informationen zu Snapshots</span>
+                        <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#snapshotInfoCollapse">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="collapse" id="snapshotInfoCollapse">
+                    <div class="card-body">
+                        <p>Snapshots erfassen den Zustand einer virtuellen Maschine zu einem bestimmten Zeitpunkt, einschließlich aller Daten auf 
+                        den virtuellen Festplatten, des Speicherzustands der VM sowie der VM-Konfiguration.</p>
+                        
+                        <p><strong>Best Practices für Snapshots:</strong></p>
+                        <ul>
+                            <li>Snapshots sollten als kurzfristige Lösung und nicht als langfristige Backup-Strategie verwendet werden</li>
+                            <li>Langfristige Snapshots können die Performance beeinträchtigen und den Speicherplatz stark erhöhen</li>
+                            <li>Empfehlung: Snapshots nicht länger als 72 Stunden behalten</li>
+                            <li>Anzahl der Snapshots pro VM auf maximal 2-3 beschränken</li>
+                        </ul>
+                        
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i> <strong>Achtung:</strong> Snapshots sind keine Backups! 
+                            Bei Ausfall des Datastores sind auch die Snapshots betroffen.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if snapshots %}
+    <div class="table-responsive">
+        <table class="table table-striped datatable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Virtuelle Maschine</th>
+                    <th>Erstellungsdatum</th>
+                    <th>Alter</th>
+                    <th>Größe</th>
+                    <th>Beschreibung</th>
+                    <th>VM Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for snapshot in snapshots %}
+                <tr class="{{ 'table-danger' if (now - snapshot.create_time).days > 30 else 'table-warning' if (now - snapshot.create_time).days > 7 else '' }}">
+                    <td>{{ snapshot.name }}</td>
+                    <td>{{ snapshot.vm_name }}</td>
+                    <td class="timestamp">{{ snapshot.create_time }}</td>
+                    <td class="age" data-days="{{ (now - snapshot.create_time).days }}">
+                        {% set days = (now - snapshot.create_time).days %}
+                        {% if days > 30 %}
+                            <span class="text-danger">{{ days }} Tage</span>
+                        {% elif days > 7 %}
+                            <span class="text-warning">{{ days }} Tage</span>
+                        {% else %}
+                            {{ days }} Tage
+                        {% endif %}
+                    </td>
+                    <td class="data-size">{{ snapshot.size_bytes }}</td>
+                    <td>{{ snapshot.description|default("Keine Beschreibung") }}</td>
+                    <td>
+                        {% if snapshot.state == "poweredOn" %}
+                            <span class="text-success"><i class="fas fa-power-off"></i> An</span>
+                        {% else %}
+                            <span class="text-secondary"><i class="fas fa-power-off"></i> Aus</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Statistik-Kacheln -->
+    <div class="row mt-4">
+        {% set total_snapshots = snapshots|length %}
+        
+        {% set critical_snapshots = 0 %}
+        {% set warning_snapshots = 0 %}
+        {% set ok_snapshots = 0 %}
+        {% for snapshot in snapshots %}
+            {% set days = (now - snapshot.create_time).days %}
+            {% if days > 30 %}
+                {% set critical_snapshots = critical_snapshots + 1 %}
+            {% elif days > 7 %}
+                {% set warning_snapshots = warning_snapshots + 1 %}
+            {% else %}
+                {% set ok_snapshots = ok_snapshots + 1 %}
+            {% endif %}
+        {% endfor %}
+        
+        {% set total_size = 0 %}
+        {% for snapshot in snapshots %}
+            {% set total_size = total_size + snapshot.size_bytes %}
+        {% endfor %}
+        {% set total_size_gb = total_size / 1073741824 %}
+        
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body bg-danger text-white">
+                    <h3 class="card-title">{{ critical_snapshots }}</h3>
+                    <p class="card-text">Kritisch (> 30 Tage)</p>
+                </div>
+                <div class="card-footer">
+                    {{ ((critical_snapshots / total_snapshots) * 100)|round(1) }}%
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body bg-warning">
+                    <h3 class="card-title">{{ warning_snapshots }}</h3>
+                    <p class="card-text">Warnung (7-30 Tage)</p>
+                </div>
+                <div class="card-footer">
+                    {{ ((warning_snapshots / total_snapshots) * 100)|round(1) }}%
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body bg-success text-white">
+                    <h3 class="card-title">{{ ok_snapshots }}</h3>
+                    <p class="card-text">OK (< 7 Tage)</p>
+                </div>
+                <div class="card-footer">
+                    {{ ((ok_snapshots / total_snapshots) * 100)|round(1) }}%
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body bg-info text-white">
+                    <h3 class="card-title">{{ total_size_gb|round(1) }} GB</h3>
+                    <p class="card-text">Gesamtgröße</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Altersverteilung -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-chart-bar"></i> Altersverteilung der Snapshots
+                </div>
+                <div class="card-body">
+                    <canvas id="snapshotAgeChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Zurück zum Dashboard
+        </a>
+        <a href="{{ url_for('generate_report') }}" class="btn btn-primary">
+            <i class="fas fa-file-export"></i> Bericht erstellen
+        </a>
+    </div>
+    
+    {% else %}
+    <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i> Keine aktiven Snapshots gefunden. Perfekt!
+    </div>
+    
+    <div class="mt-4">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Zurück zum Dashboard
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+{% if demo_mode %}
+<div class="alert alert-warning mt-4">
+    <i class="fas fa-info-circle"></i> <strong>Demo-Modus:</strong> Die angezeigten Daten sind Beispieldaten und spiegeln keine echte vSphere-Umgebung wider.
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0"></script>
+<script>
+    $(document).ready(function() {
+        // DataTable Initialisierung
+        $('.datatable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/de-DE.json"
+            },
+            "pageLength": 25,
+            "order": [[3, "desc"]] // Sortiere nach Alter (Spalte 3) absteigend
+        });
+        
+        // Format der Zeitstempel und Größenangaben
+        $('.timestamp').each(function() {
+            const timestamp = $(this).text();
+            if (timestamp && !timestamp.includes('Unbekannt')) {
+                const date = new Date(timestamp);
+                $(this).text(date.toLocaleDateString('de-DE') + ' ' + date.toLocaleTimeString('de-DE'));
+            }
+        });
+        
+        $('.data-size').each(function() {
+            const bytes = parseInt($(this).text(), 10);
+            if (!isNaN(bytes)) {
+                if (bytes >= 1073741824) {
+                    $(this).text((bytes / 1073741824).toFixed(2) + ' GB');
+                } else if (bytes >= 1048576) {
+                    $(this).text((bytes / 1048576).toFixed(2) + ' MB');
+                } else if (bytes >= 1024) {
+                    $(this).text((bytes / 1024).toFixed(2) + ' KB');
+                } else {
+                    $(this).text(bytes + ' B');
+                }
+            }
+        });
+        
+        // Chart.js für Altersverteilung
+        const ages = Array.from(document.querySelectorAll('.age')).map(el => parseInt(el.getAttribute('data-days')));
+        
+        // Erstelle Bins für das Histogramm
+        const bins = [
+            {label: '0-7 Tage', count: 0, color: '#23a96a'}, // Bechtle green
+            {label: '8-14 Tage', count: 0, color: '#ffb74d'},
+            {label: '15-30 Tage', count: 0, color: '#ffa726'},
+            {label: '31-60 Tage', count: 0, color: '#ef6c00'},
+            {label: '61-90 Tage', count: 0, color: '#e65100'},
+            {label: '> 90 Tage', count: 0, color: '#da6f1e'} // Bechtle orange
+        ];
+        
+        // Zähle die Snapshots pro Bin
+        ages.forEach(age => {
+            if (age <= 7) bins[0].count++;
+            else if (age <= 14) bins[1].count++;
+            else if (age <= 30) bins[2].count++;
+            else if (age <= 60) bins[3].count++;
+            else if (age <= 90) bins[4].count++;
+            else bins[5].count++;
+        });
+        
+        // Erstelle das Chart
+        if(document.getElementById('snapshotAgeChart')) {
+            const ctx = document.getElementById('snapshotAgeChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: bins.map(bin => bin.label),
+                    datasets: [{
+                        label: 'Anzahl Snapshots',
+                        data: bins.map(bin => bin.count),
+                        backgroundColor: bins.map(bin => bin.color),
+                        borderColor: bins.map(bin => bin.color),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+{% endblock %}
