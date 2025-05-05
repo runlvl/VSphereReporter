@@ -122,6 +122,18 @@
             color: #856404;
         }
         
+        /* Topology-Container */
+        .topology-container {
+            width: 100%;
+            height: 650px;
+            border: 1px solid var(--bechtle-light-gray);
+            border-radius: 8px;
+            background-color: white;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
         .nav-container {
             display: flex;
             overflow-x: auto;
@@ -370,7 +382,16 @@
             <h2>{{ section.title }}</h2>
             <p class="description">{{ section.description }}</p>
             
-            {% if section.id == 'vmware_tools' %}
+            {% if section.id == 'topology' %}
+                <div class="topology-container">
+                    {{ topology_chart|safe }}
+                </div>
+                
+                <div class="alert alert-info">
+                    <p><strong>Hinweis:</strong> Die interaktive Topologieübersicht zeigt die hierarchische Struktur Ihrer vSphere-Umgebung. Klicken Sie auf die Elemente, um Details zu sehen oder Teilbereiche ein-/auszuklappen.</p>
+                </div>
+
+            {% elif section.id == 'vmware_tools' %}
                 {% if data.vmware_tools|length > 0 %}
                 <table>
                     <thead>

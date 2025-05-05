@@ -1,52 +1,74 @@
 # VMware vSphere Reporter v27.0
 
-## Neuer Ansatz zur VMDK-Berichterstattung
+## Übersicht
 
-Die Version 27.0 des VMware vSphere Reporters führt einen grundlegend neuen Ansatz zur VMDK-Berichterstattung ein. Anstatt nur "verwaiste" VMDK-Dateien zu identifizieren, zeigt der Reporter jetzt **ALLE** VMDK-Dateien in der Umgebung an, mit einer deutlichen Kennzeichnung jener Dateien, die potentiell verwaist sein könnten.
+VMware vSphere Reporter ist ein leistungsstarkes Tool zur Erstellung umfassender Berichte über Ihre VMware vSphere-Umgebung. Diese Version enthält erhebliche Verbesserungen bei der Visualisierung und VMDK-Berichterstattung.
 
-### Hauptmerkmale
+## Neue Funktionen in Version 27.0
 
-- **Komplette VMDK-Übersicht**: Alle VMDKs werden angezeigt, nicht nur potenziell verwaiste
-- **Status-Indikatoren**: Jede VMDK wird mit einem Status versehen:
-  - `AKTIV`: In Verwendung durch eine VM
-  - `TEMPLATE`: Teil eines VM-Templates
-  - `POTENTIALLY ORPHANED`: Möglicherweise verwaist und sollte überprüft werden
-- **Farbkodierung**: Intuitive visuelle Unterscheidung zwischen den verschiedenen VMDK-Typen
-- **Detaillierte Erklärungen**: Verbesserte Beschreibungen, warum eine VMDK als potenziell verwaist eingestuft wurde
+### Interaktive Topologie-Visualisierung
 
-### Vorteile des neuen Ansatzes
+Die Version 27.0 führt eine interaktive grafische Darstellung Ihrer vSphere-Umgebung ein. Diese Topologie-Visualisierung bietet:
 
-1. **Bessere Entscheidungsgrundlage**: Administratoren sehen alle VMDKs und können fundierte Entscheidungen treffen
-2. **Reduziertes Risiko**: Verhindert versehentliches Löschen wichtiger Dateien
-3. **Verbesserte Ressourcenverwaltung**: Ermöglicht einen Überblick über alle VMDK-Ressourcen
-4. **Höhere Genauigkeit**: Der VM-zentrierte Ansatz mit Datastore-Durchsuchung bietet präzisere Ergebnisse
+- Hierarchische Darstellung von vCenter, Datacenters, Clustern, Hosts und VMs
+- Farbkodierte und formbasierte Unterscheidung verschiedener Komponententypen
+- Interaktives Ein- und Ausklappen von Umgebungselementen
+- Detailansicht per Mauszeiger-Hover
+- Optimierte Darstellung auch bei großen Umgebungen
 
-### Technische Verbesserungen
+### Verbesserter VMDK-Bericht mit Statusanzeigen
 
-- Multiple Pfadvergleiche für bessere Treffersicherheit
-- Verbesserte Template-VM-Handhabung
-- Erkennung von Helper-VMDK-Dateien
-- Bessere Erkennung temporärer VMDKs durch Namensmusteranalyse
+Der VMDK-Bericht wurde grundlegend überarbeitet:
+
+- Anzeige ALLER VMDKs mit Statusindikator (AKTIV, TEMPLATE, POTENTIALLY ORPHANED)
+- Farbkodierte Unterscheidung der verschiedenen VMDK-Status
+- Verbesserte Erkennung verwaister VMDKs mit detaillierten Erklärungen
+- Bessere Übersichtlichkeit durch klare visuelle Hervorhebungen
+
+### Optimierte Berichtsstruktur
+
+- Neuanordnung der Berichtsabschnitte mit Topologie-Übersicht am Anfang
+- Verbesserte Navigation zwischen den Abschnitten
+- Performanceoptimierungen für schnelleres Laden großer Berichte
 
 ## Installation
 
 ### Windows
 
-1. Laden Sie das neueste Windows-Paket herunter: `vsphere-reporter-windows-v27.0.zip`
-2. Entpacken Sie das Paket in ein Verzeichnis Ihrer Wahl
-3. Starten Sie die Anwendung über `vsphere_reporter.py` oder die erstellte Verknüpfung
+1. Laden Sie das Installationspaket `vsphere-reporter-windows-v27.0.zip` herunter
+2. Entpacken Sie die Datei in ein beliebiges Verzeichnis
+3. Führen Sie `setup.exe` aus und folgen Sie den Anweisungen des Installationsassistenten
 
-### Linux
+### Linux (OpenSuse Tumbleweed)
 
-1. Laden Sie das neueste Linux-Paket herunter: `vsphere-reporter-linux-v27.0.tar.gz`
-2. Entpacken Sie das Archiv: `tar -xzvf vsphere-reporter-linux-v27.0.tar.gz`
-3. Wechseln Sie in das Verzeichnis: `cd vsphere-reporter-v27.0`
-4. Führen Sie das Programm aus: `python vsphere_reporter.py`
+1. Laden Sie das Paket `vsphere-reporter-linux-v27.0.tar.gz` herunter
+2. Entpacken Sie es mit `tar -xzf vsphere-reporter-linux-v27.0.tar.gz`
+3. Wechseln Sie in das Verzeichnis und führen Sie `./setup.sh` aus
 
-## Kontakt
+## Voraussetzungen
 
-Bei Fragen, Feedback oder Problemen wenden Sie sich bitte an das Bechtle Cloud Solutions Team.
+- Python 3.11 oder höher
+- Netzwerkzugriff auf den vCenter Server
+- Benutzeranmeldeinformationen mit mindestens Lesezugriff auf die vSphere-Umgebung
+- Moderne Webbrowser für optimale Darstellung der interaktiven Berichtselemente (Chrome oder Edge empfohlen)
 
----
+## Dokumentation
 
-© 2025 Bechtle GmbH. Alle Rechte vorbehalten.
+Die vollständige Dokumentation finden Sie im Ordner `docs`:
+- `TOPOLOGY_FEATURE_GUIDE.md` - Detaillierte Anleitung zur Verwendung der Topologie-Visualisierung
+- `INSTALLATIONSANLEITUNG.md` - Ausführliche Installationsanleitung für alle Plattformen
+- `BENUTZERHANDBUCH.md` - Umfassendes Handbuch zur Verwendung des Tools
+
+## Bekannte Probleme
+
+- Bei sehr großen Umgebungen (>1000 VMs) kann die Topologie-Visualisierung zu Verzögerungen führen
+- Die interaktive Topologie ist derzeit nur im HTML-Bericht verfügbar, nicht in DOCX oder PDF
+- Firefox zeigt unter bestimmten Umständen ein abweichendes Verhalten bei der Bericht-Navigation
+
+Vollständige Details finden Sie in `CHANGELOG-v27.0.txt`
+
+## Lizenz
+
+Dieses Produkt ist urheberrechtlich geschützt durch die Bechtle GmbH. Alle Rechte vorbehalten.
+
+Copyright © 2025 Bechtle GmbH

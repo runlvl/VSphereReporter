@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VMware vSphere Reporter v27.0 - Topologie Demo</title>
+    <style>
+        :root {
+            --bechtle-dark-blue: #00355e;
+            --bechtle-orange: #da6f1e;
+            --bechtle-green: #23a96a;
+            --bechtle-light-gray: #f3f3f3;
+            --bechtle-dark-gray: #5a5a5a;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-title h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .header-title p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        h2 {
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--bechtle-light-gray);
+        }
+        
+        p {
+            margin-bottom: 20px;
+        }
+        
+        .demo-container {
+            margin: 30px 0;
+        }
+        
+        .topology-container {
+            width: 100%;
+            height: 650px;
+            border: 1px solid var(--bechtle-light-gray);
+            border-radius: 8px;
+            background-color: white;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            background-color: var(--bechtle-light-gray);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .feature-card h3 {
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 10px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: var(--bechtle-orange);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        
+        .cta-button:hover {
+            background-color: #c05f15;
+            text-decoration: none;
+        }
+        
+        footer {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .alert-info {
+            background-color: rgba(0, 53, 94, 0.1);
+            border-left: 5px solid var(--bechtle-dark-blue);
+        }
+    </style>
+    <!-- ECharts wird für die Demo benötigt -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-title">
+                <h1>VMware vSphere Reporter v27.0</h1>
+                <p>Interaktive Topologie-Visualisierung (Demo)</p>
+            </div>
+            <div>
+                <p>Bechtle Cloud Solutions | Datacenter & Endpoint</p>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <h2>Neue Topologie-Visualisierung</h2>
+        <p>Die Version 27.0 des VMware vSphere Reporters führt eine interaktive graphische Darstellung der vSphere-Umgebung ein. Sie können mit dem Diagramm interagieren, um die Struktur zu erkunden.</p>
+        
+        <div class="alert alert-info">
+            <p><strong>Hinweis:</strong> Dies ist eine Demo-Vorschau der Topologie-Funktion. Für ein vollständiges Erlebnis nutzen Sie bitte die vollständige Anwendung mit Verbindung zu Ihrer vSphere-Umgebung.</p>
+        </div>
+        
+        <div class="demo-container">
+            <div class="topology-container" id="topology-chart"></div>
+        </div>
+        
+        <h2>Hauptmerkmale der neuen Version</h2>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>Interaktive Topologie</h3>
+                <p>Erkunden Sie Ihre vSphere-Umgebung mit interaktiven Diagrammen, die die Beziehungen zwischen vCenter, Datacenters, Clustern, Hosts und VMs visualisieren.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>VMDK-Statusanzeigen</h3>
+                <p>Verbesserte VMDK-Berichte mit farbkodierten Statusanzeigen für aktive, Template- und potenziell verwaiste VMDKs.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>Optimierte Navigation</h3>
+                <p>Verbesserte Berichtsstruktur mit leichterer Navigation zwischen den verschiedenen Abschnitten für eine bessere Benutzererfahrung.</p>
+            </div>
+        </div>
+        
+        <a href="#" class="cta-button">Vollversion herunterladen</a>
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <p>Copyright © 2025 Bechtle GmbH. Alle Rechte vorbehalten.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Demo-Chart erstellen
+        document.addEventListener('DOMContentLoaded', function() {
+            var chartContainer = document.getElementById('topology-chart');
+            var chart = echarts.init(chartContainer);
+            
+            // Beispieldaten für die Visualisierung
+            var option = {
+                title: {
+                    text: 'VMware vSphere Infrastruktur',
+                    subtext: 'Interaktive Übersicht der virtuellen Umgebung',
+                    textStyle: {
+                        color: '#00355e',
+                        fontSize: 20
+                    },
+                    subtextStyle: {
+                        color: '#5a5a5a',
+                        fontSize: 14
+                    }
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{b}: {c}'
+                },
+                legend: [
+                    {
+                        data: [
+                            { name: 'vCenter', icon: 'rect', itemStyle: { color: '#00355e' } },
+                            { name: 'Datacenter', icon: 'roundRect', itemStyle: { color: '#00355e' } },
+                            { name: 'Cluster', icon: 'diamond', itemStyle: { color: '#da6f1e' } },
+                            { name: 'Host', icon: 'circle', itemStyle: { color: '#23a96a' } },
+                            { name: 'VM', icon: 'emptyCircle', itemStyle: { color: '#5a5a5a' } },
+                            { name: 'Template', icon: 'pin', itemStyle: { color: '#5a5a5a' } },
+                            { name: 'Datastore', icon: 'rect', itemStyle: { color: '#6a5acd' } },
+                            { name: 'Netzwerk', icon: 'roundRect', itemStyle: { color: '#008b8b' } }
+                        ],
+                        bottom: 'bottom',
+                        orient: 'horizontal',
+                        itemWidth: 25,
+                        itemHeight: 14
+                    }
+                ],
+                series: [
+                    {
+                        type: 'tree',
+                        name: 'VMware vSphere Topologie',
+                        data: [
+                            {
+                                name: 'vcenter.example.com',
+                                value: 'vCenter Server',
+                                symbol: 'rect',
+                                symbolSize: 30,
+                                itemStyle: { color: '#00355e' },
+                                children: [
+                                    {
+                                        name: 'Datacenter NORD',
+                                        symbol: 'roundRect',
+                                        symbolSize: 25,
+                                        itemStyle: { color: '#00355e' },
+                                        children: [
+                                            {
+                                                name: 'Produktions-Cluster',
+                                                value: '3 Hosts, 45 VMs',
+                                                symbol: 'diamond',
+                                                symbolSize: 20,
+                                                itemStyle: { color: '#da6f1e' },
+                                                children: [
+                                                    {
+                                                        name: 'esxi01.example.com',
+                                                        value: '24 Cores, 256GB RAM',
+                                                        symbol: 'circle',
+                                                        symbolSize: 15,
+                                                        itemStyle: { color: '#23a96a' },
+                                                        children: [
+                                                            {
+                                                                name: 'web-server-01',
+                                                                value: '4 vCPUs, 16GB RAM',
+                                                                symbol: 'emptyCircle',
+                                                                symbolSize: 10,
+                                                                itemStyle: { color: '#5a5a5a' }
+                                                            },
+                                                            {
+                                                                name: 'db-server-01',
+                                                                value: '8 vCPUs, 64GB RAM',
+                                                                symbol: 'emptyCircle',
+                                                                symbolSize: 10,
+                                                                itemStyle: { color: '#5a5a5a' }
+                                                            },
+                                                            {
+                                                                name: 'app-server-01',
+                                                                value: '4 vCPUs, 32GB RAM',
+                                                                symbol: 'emptyCircle',
+                                                                symbolSize: 10,
+                                                                itemStyle: { color: '#5a5a5a' }
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        name: 'esxi02.example.com',
+                                                        value: '24 Cores, 256GB RAM',
+                                                        symbol: 'circle',
+                                                        symbolSize: 15,
+                                                        itemStyle: { color: '#23a96a' },
+                                                        children: [
+                                                            {
+                                                                name: 'web-server-02',
+                                                                value: '4 vCPUs, 16GB RAM',
+                                                                symbol: 'emptyCircle',
+                                                                symbolSize: 10,
+                                                                itemStyle: { color: '#5a5a5a' }
+                                                            },
+                                                            {
+                                                                name: 'db-server-02',
+                                                                value: '8 vCPUs, 64GB RAM',
+                                                                symbol: 'emptyCircle',
+                                                                symbolSize: 10,
+                                                                itemStyle: { color: '#5a5a5a' }
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        name: 'Datastores',
+                                        symbol: 'rect',
+                                        symbolSize: 25,
+                                        itemStyle: { color: '#6a5acd' },
+                                        children: [
+                                            {
+                                                name: 'SAN-STORAGE-01',
+                                                value: 'Kapazität: 2 TB',
+                                                symbol: 'rect',
+                                                symbolSize: 15,
+                                                itemStyle: { color: '#6a5acd' }
+                                            },
+                                            {
+                                                name: 'SAN-STORAGE-02',
+                                                value: 'Kapazität: 4 TB',
+                                                symbol: 'rect',
+                                                symbolSize: 15,
+                                                itemStyle: { color: '#6a5acd' }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        name: 'Netzwerke',
+                                        symbol: 'roundRect',
+                                        symbolSize: 25,
+                                        itemStyle: { color: '#008b8b' },
+                                        children: [
+                                            {
+                                                name: 'VLAN-PROD',
+                                                value: 'Typ: Standard Switch, VMs: 25',
+                                                symbol: 'roundRect',
+                                                symbolSize: 15,
+                                                itemStyle: { color: '#008b8b' }
+                                            },
+                                            {
+                                                name: 'VLAN-TEST',
+                                                value: 'Typ: Standard Switch, VMs: 15',
+                                                symbol: 'roundRect',
+                                                symbolSize: 15,
+                                                itemStyle: { color: '#008b8b' }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        layout: 'orthogonal',
+                        orient: 'LR',
+                        initialTreeDepth: 2,
+                        label: {
+                            position: 'right',
+                            color: '#000000',
+                            fontSize: 12,
+                            fontFamily: 'Arial'
+                        },
+                        leaves: {
+                            label: {
+                                position: 'right',
+                                color: '#000000',
+                                fontSize: 12,
+                                fontFamily: 'Arial'
+                            }
+                        },
+                        symbolSize: 20,
+                        roam: true,
+                        expandAndCollapse: true,
+                        animationDuration: 550,
+                        animationDurationUpdate: 750
+                    }
+                ]
+            };
+            
+            chart.setOption(option);
+            
+            // Responsive Chart
+            window.addEventListener('resize', function() {
+                chart.resize();
+            });
+        });
+    </script>
+</body>
+</html>
