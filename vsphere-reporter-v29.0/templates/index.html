@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}VMware vSphere Reporter Web - Home{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h4>VMware vSphere Reporter</h4>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Welcome to the VMware vSphere Reporter Web Edition v29.0</h5>
+                <p class="card-text">
+                    This application allows you to generate comprehensive reports for your VMware vSphere environment.
+                    Get insights into VM configurations, snapshots, VMware Tools status, and identify potentially orphaned VMDKs.
+                </p>
+                
+                {% if is_connected %}
+                <div class="mb-4">
+                    <div class="connection-status connected">
+                        <i class="bi bi-plug-fill"></i> Connected to vCenter: {{ connection_info.server }} ({{ connection_info.username }})
+                    </div>
+                </div>
+                
+                <div class="card mb-4">
+                    <div class="card-header">Generate Report</div>
+                    <div class="card-body">
+                        <form action="{{ url_for('generate_report') }}" method="post">
+                            <div class="form-group mb-3">
+                                <label for="export_format" class="form-label">Export Format:</label>
+                                <select name="export_format" id="export_format" class="form-select">
+                                    <option value="html">HTML</option>
+                                    <option value="pdf">PDF</option>
+                                    <option value="docx">DOCX</option>
+                                </select>
+                            </div>
+                            
+                            <h6>Report Sections:</h6>
+                            <p class="text-muted small">Select the sections to include in your report. You can configure more detailed options in the <a href="{{ url_for('options') }}">Report Options</a> page.</p>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" name="vmware_tools" id="vmware_tools" {% if report_options.vmware_tools %}checked{% endif %}>
+                                        <label class="form-check-label" for="vmware_tools">VMware Tools Status</label>
+                                    </div>
+                                    
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" name="snapshots" id="snapshots" {% if report_options.snapshots %}checked{% endif %}>
+                                        <label class="form-check-label" for="snapshots">VM Snapshots</label>
+                                    </div>
+                                    
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" name="orphaned_vmdks" id="orphaned_vmdks" {% if report_options.orphaned_vmdks %}checked{% endif %}>
+                                        <label class="form-check-label" for="orphaned_vmdks">VMDK Status</label>
+                                    </div>
+                                    
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" name="vm_hardware" id="vm_hardware" {% if report_options.vm_hardware %}checked{% endif %}>
+                                        <label class="form-check-label" for="vm_hardware">VM Hardware Information</label>
+                                    </div>
+                                    
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" name="topology" id="topology" {% if report_options.topology %}checked{% endif %}>
+                                        <label class="form-check-label" for="topology">Infrastructure Topology</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" name="datastores" id="datastores" {% if report_options.datastores %}checked{% endif %}>
+                                        <label class="form-check-label" for="datastores">Datastores</label>
+                                    </div>
+                                    
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" name="clusters" id="clusters" {% if report_options.clusters %}checked{% endif %}>
+                                        <label class="form-check-label" for="clusters">Clusters</label>
+                                    </div>
+                                    
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" name="esxi_hosts" id="esxi_hosts" {% if report_options.esxi_hosts %}checked{% endif %}>
+                                        <label class="form-check-label" for="esxi_hosts">ESXi Hosts</label>
+                                    </div>
+                                    
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" name="resource_pools" id="resource_pools" {% if report_options.resource_pools %}checked{% endif %}>
+                                        <label class="form-check-label" for="resource_pools">Resource Pools</label>
+                                    </div>
+                                    
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" name="networks" id="networks" {% if report_options.networks %}checked{% endif %}>
+                                        <label class="form-check-label" for="networks">Networks</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary">Generate Report</button>
+                                <a href="{{ url_for('options') }}" class="btn btn-secondary">Configure Options</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                {% else %}
+                <div class="mb-4">
+                    <div class="connection-status disconnected">
+                        <i class="bi bi-plug"></i> Not connected to vCenter
+                    </div>
+                </div>
+                
+                <div class="alert alert-info">
+                    <h5 class="alert-heading">Connect to vCenter</h5>
+                    <p>Please connect to your vCenter server first to generate reports.</p>
+                    <a href="{{ url_for('connect') }}" class="btn btn-primary">Connect to vCenter</a>
+                </div>
+                {% endif %}
+                
+                <div class="mt-4">
+                    <h5>About This Application</h5>
+                    <p>
+                        The VMware vSphere Reporter is a comprehensive reporting tool designed for IT administrators 
+                        and system operators to gain insights into their VMware infrastructure. This web-based version 
+                        provides a user-friendly interface to generate detailed reports on various aspects of your 
+                        vSphere environment.
+                    </p>
+                    <p>
+                        <strong>Key Features:</strong>
+                    </p>
+                    <ul>
+                        <li>VMware Tools status reporting</li>
+                        <li>VM snapshot management and age analysis</li>
+                        <li>Orphaned VMDK detection and reporting</li>
+                        <li>Infrastructure topology visualization</li>
+                        <li>Detailed VM hardware information</li>
+                        <li>Datastore utilization analysis</li>
+                        <li>Export reports in multiple formats (HTML, PDF, DOCX)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

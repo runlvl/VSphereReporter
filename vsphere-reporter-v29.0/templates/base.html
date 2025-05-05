@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}VMware vSphere Reporter{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome für Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    
+    <!-- Bechtle Farbschema und benutzerdefinierte Styles -->
+    <style>
+        :root {
+            --bechtle-dark-blue: #00355e;
+            --bechtle-orange: #da6f1e;
+            --bechtle-green: #23a96a;
+            --bechtle-light-gray: #f3f3f3;
+            --bechtle-dark-gray: #5a5a5a;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bechtle-light-gray);
+            color: #333;
+        }
+        
+        .navbar {
+            background-color: var(--bechtle-dark-blue);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand img {
+            height: 40px;
+        }
+        
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        .navbar-toggler {
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .btn-primary {
+            background-color: var(--bechtle-dark-blue);
+            border-color: var(--bechtle-dark-blue);
+        }
+        
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: #00294d;
+            border-color: #00294d;
+        }
+        
+        .btn-success {
+            background-color: var(--bechtle-green);
+            border-color: var(--bechtle-green);
+        }
+        
+        .btn-success:hover, .btn-success:focus {
+            background-color: #1e9259;
+            border-color: #1e9259;
+        }
+        
+        .btn-warning {
+            background-color: var(--bechtle-orange);
+            border-color: var(--bechtle-orange);
+            color: white;
+        }
+        
+        .btn-warning:hover, .btn-warning:focus {
+            background-color: #c26319;
+            border-color: #c26319;
+            color: white;
+        }
+        
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border: none;
+        }
+        
+        .card-header {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            border-radius: 8px 8px 0 0 !important;
+            font-weight: 600;
+        }
+        
+        .footer {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        
+        /* Zusätzliche Klassen für die Anwendung */
+        .connection-status {
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        
+        .connected {
+            background-color: var(--bechtle-green);
+            color: white;
+        }
+        
+        .disconnected {
+            background-color: var(--bechtle-dark-gray);
+            color: white;
+        }
+        
+        .section-title {
+            color: var(--bechtle-dark-blue);
+            border-bottom: 2px solid var(--bechtle-orange);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--bechtle-dark-blue);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 15px;
+        }
+        
+        .progress-bar {
+            background-color: var(--bechtle-dark-blue);
+        }
+        
+        /* Responsive Anpassungen */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .feature-icon {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="{{ url_for('static', filename='img/logo_bechtle.png') }}" alt="Bechtle Logo">
+                <span class="ms-2">VMware vSphere Reporter</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    {% if connected %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('options') }}">Berichtsoptionen</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('disconnect') }}">Trennen</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('connect') }}">Verbinden</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                {% if connected %}
+                <span class="connection-status connected ms-3">
+                    <i class="fas fa-check-circle"></i> Verbunden
+                </span>
+                {% else %}
+                <span class="connection-status disconnected ms-3">
+                    <i class="fas fa-times-circle"></i> Nicht verbunden
+                </span>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hauptinhalt -->
+    <div class="container mt-4">
+        {% block content %}{% endblock %}
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer mt-auto">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2025 Bechtle GmbH. Alle Rechte vorbehalten.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p>VMware vSphere Reporter v29.0</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- jQuery (für AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Allgemeine JavaScript-Funktionen -->
+    <script>
+        $(document).ready(function() {
+            // Automatische Anzeige von Bootstrap-Toasts
+            $('.toast').toast('show');
+            
+            // Tooltip-Initialisierung
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

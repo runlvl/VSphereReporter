@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}VMware vSphere Reporter Web - Report Options{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h4>Report Options</h4>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('options') }}" method="post">
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2">Virtual Machine Sections</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" name="vmware_tools" id="vmware_tools" {% if report_options.vmware_tools %}checked{% endif %}>
+                                    <label class="form-check-label" for="vmware_tools">VMware Tools Status</label>
+                                    <small class="form-text text-muted d-block">Includes information about VMware Tools versions and status for all VMs</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" name="snapshots" id="snapshots" {% if report_options.snapshots %}checked{% endif %}>
+                                    <label class="form-check-label" for="snapshots">VM Snapshots</label>
+                                    <small class="form-text text-muted d-block">Includes information about VM snapshots, including age and size</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" name="orphaned_vmdks" id="orphaned_vmdks" {% if report_options.orphaned_vmdks %}checked{% endif %}>
+                                    <label class="form-check-label" for="orphaned_vmdks">VMDK Status</label>
+                                    <small class="form-text text-muted d-block">Includes information about all VMDKs, with potential orphaned VMDK detection</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" name="vm_hardware" id="vm_hardware" {% if report_options.vm_hardware %}checked{% endif %}>
+                                    <label class="form-check-label" for="vm_hardware">VM Hardware Information</label>
+                                    <small class="form-text text-muted d-block">Includes detailed hardware information for all VMs</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2">Infrastructure Sections</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" name="datastores" id="datastores" {% if report_options.datastores %}checked{% endif %}>
+                                    <label class="form-check-label" for="datastores">Datastores</label>
+                                    <small class="form-text text-muted d-block">Includes information about datastores, including capacity and usage</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" name="clusters" id="clusters" {% if report_options.clusters %}checked{% endif %}>
+                                    <label class="form-check-label" for="clusters">Clusters</label>
+                                    <small class="form-text text-muted d-block">Includes information about clusters, including HA and DRS configuration</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" name="esxi_hosts" id="esxi_hosts" {% if report_options.esxi_hosts %}checked{% endif %}>
+                                    <label class="form-check-label" for="esxi_hosts">ESXi Hosts</label>
+                                    <small class="form-text text-muted d-block">Includes information about ESXi hosts, including hardware and software details</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" name="resource_pools" id="resource_pools" {% if report_options.resource_pools %}checked{% endif %}>
+                                    <label class="form-check-label" for="resource_pools">Resource Pools</label>
+                                    <small class="form-text text-muted d-block">Includes information about resource pools and their configuration</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" name="networks" id="networks" {% if report_options.networks %}checked{% endif %}>
+                                    <label class="form-check-label" for="networks">Networks</label>
+                                    <small class="form-text text-muted d-block">Includes information about networks, including standard and distributed switches</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" name="topology" id="topology" {% if report_options.topology %}checked{% endif %}>
+                                    <label class="form-check-label" for="topology">Infrastructure Topology</label>
+                                    <small class="form-text text-muted d-block">Includes an interactive topology diagram of your vSphere environment</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2">Action Buttons</h5>
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-primary">Save Options</button>
+                            <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
+                            <button type="button" id="selectAll" class="btn btn-outline-primary ms-2">Select All</button>
+                            <button type="button" id="deselectAll" class="btn btn-outline-secondary">Deselect All</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('selectAll').addEventListener('click', function() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => checkbox.checked = true);
+    });
+    
+    document.getElementById('deselectAll').addEventListener('click', function() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => checkbox.checked = false);
+    });
+</script>
+{% endblock %}
