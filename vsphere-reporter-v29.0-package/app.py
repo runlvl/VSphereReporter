@@ -269,11 +269,13 @@ def export(format):
             snapshots = vsphere_client.get_snapshots()
             orphaned_vmdks = vsphere_client.get_orphaned_vmdks()
         
-        # Report-Generator initialisieren
-        generator = ReportGenerator(app.config['UPLOAD_FOLDER'], 
-                                   session.get('vcenter_server', 'Demo vCenter'),
-                                   session.get('username', 'demo-user'),
-                                   app.config['DEMO_MODE'])
+        # Report-Generator initialisieren mit benannten Parametern
+        generator = ReportGenerator(
+            output_dir=app.config['UPLOAD_FOLDER'], 
+            vcenter_server=session.get('vcenter_server', 'Demo vCenter'),
+            username=session.get('username', 'demo-user'),
+            demo_mode=app.config['DEMO_MODE']
+        )
         
         # Basierend auf dem Format exportieren
         if format == 'html':
@@ -336,11 +338,13 @@ def export_single(report_type, format):
             else:
                 data['orphaned_vmdks'] = vsphere_client.get_orphaned_vmdks()
         
-        # Report-Generator initialisieren
-        generator = ReportGenerator(app.config['UPLOAD_FOLDER'], 
-                                   session.get('vcenter_server', 'Demo vCenter'),
-                                   session.get('username', 'demo-user'),
-                                   app.config['DEMO_MODE'])
+        # Report-Generator initialisieren mit benannten Parametern
+        generator = ReportGenerator(
+            output_dir=app.config['UPLOAD_FOLDER'], 
+            vcenter_server=session.get('vcenter_server', 'Demo vCenter'),
+            username=session.get('username', 'demo-user'),
+            demo_mode=app.config['DEMO_MODE']
+        )
         
         # Basierend auf dem Format exportieren
         filename = f"{report_type}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.{format}"
