@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berichtsoptionen - VMware vSphere Reporter v29.0</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+</head>
+<body>
+    <!-- Navigationsleiste -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="{{ url_for('static', filename='img/logo_bechtle.png') }}" alt="Bechtle Logo">
+                VMware vSphere Reporter
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Startseite</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('options') }}">Berichtsoptionen</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('disconnect') }}">Trennen</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Seiten-Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Berichtsoptionen</h1>
+            <p class="lead">Wählen Sie die gewünschten Inhalte für Ihren vSphere-Bericht</p>
+        </div>
+    </section>
+
+    <!-- Hauptinhalt -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Berichtsoptionen-Formular -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-gear me-2"></i> Konfigurieren Sie Ihren Bericht
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="{{ url_for('options') }}">
+                            <div class="mb-4">
+                                <h5>Pflichtabschnitte</h5>
+                                <p class="text-muted small">Diese Abschnitte sind immer im Bericht enthalten</p>
+                                
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="include_vmware_tools" name="include_vmware_tools" checked disabled>
+                                    <input type="hidden" name="include_vmware_tools" value="on">
+                                    <label class="form-check-label" for="include_vmware_tools">
+                                        <strong>VMware Tools-Status</strong>
+                                        <div class="text-muted small">Zeigt VMs mit veralteten oder nicht installierten VMware Tools</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="include_snapshots" name="include_snapshots" checked disabled>
+                                    <input type="hidden" name="include_snapshots" value="on">
+                                    <label class="form-check-label" for="include_snapshots">
+                                        <strong>VM-Snapshots</strong>
+                                        <div class="text-muted small">Listet alle Snapshots, sortiert nach Alter (älteste zuerst)</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="include_orphaned_vmdks" name="include_orphaned_vmdks" checked disabled>
+                                    <input type="hidden" name="include_orphaned_vmdks" value="on">
+                                    <label class="form-check-label" for="include_orphaned_vmdks">
+                                        <strong>Verwaiste VMDK-Dateien</strong>
+                                        <div class="text-muted small">Identifiziert VMDK-Dateien, die keiner VM zugeordnet sind</div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h5>Optionale Abschnitte</h5>
+                                <p class="text-muted small">Wählen Sie die gewünschten zusätzlichen Abschnitte</p>
+                                
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="include_vm_list" name="include_vm_list" checked>
+                                    <label class="form-check-label" for="include_vm_list">
+                                        <strong>VM-Liste</strong>
+                                        <div class="text-muted small">Übersicht aller virtuellen Maschinen</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="include_vm_details" name="include_vm_details">
+                                    <label class="form-check-label" for="include_vm_details">
+                                        <strong>VM-Details</strong>
+                                        <div class="text-muted small">Detaillierte Informationen zu jeder VM</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="include_esxi_info" name="include_esxi_info" checked>
+                                    <label class="form-check-label" for="include_esxi_info">
+                                        <strong>ESXi-Host-Informationen</strong>
+                                        <div class="text-muted small">Übersicht und Auslastung der ESXi-Hosts</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="include_datastore_info" name="include_datastore_info" checked>
+                                    <label class="form-check-label" for="include_datastore_info">
+                                        <strong>Datastore-Informationen</strong>
+                                        <div class="text-muted small">Übersicht und Auslastung der Datastores</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="include_network_info" name="include_network_info">
+                                    <label class="form-check-label" for="include_network_info">
+                                        <strong>Netzwerk-Informationen</strong>
+                                        <div class="text-muted small">Übersicht der virtuellen und physischen Netzwerke</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="include_distributed_switches" name="include_distributed_switches">
+                                    <label class="form-check-label" for="include_distributed_switches">
+                                        <strong>Distributed Switches</strong>
+                                        <div class="text-muted small">Informationen zu Distributed vSwitches</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="include_clusters" name="include_clusters" checked>
+                                    <label class="form-check-label" for="include_clusters">
+                                        <strong>Cluster-Informationen</strong>
+                                        <div class="text-muted small">Übersicht und Konfiguration der Cluster</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="include_resource_pools" name="include_resource_pools">
+                                    <label class="form-check-label" for="include_resource_pools">
+                                        <strong>Resource Pool-Informationen</strong>
+                                        <div class="text-muted small">Übersicht und Konfiguration der Resource Pools</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="include_topology" name="include_topology" checked>
+                                    <label class="form-check-label" for="include_topology">
+                                        <strong>Infrastruktur-Topologie</strong>
+                                        <div class="text-muted small">Visualisierung der vSphere-Infrastruktur</div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h5>Exportformat</h5>
+                                <p class="text-muted small">Wählen Sie das gewünschte Ausgabeformat</p>
+                                
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="export_format" id="export_html" value="html" checked>
+                                    <label class="form-check-label" for="export_html">
+                                        <strong>HTML</strong>
+                                        <div class="text-muted small">Interaktive Webseite mit umfassenden Funktionen</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="export_format" id="export_pdf" value="pdf">
+                                    <label class="form-check-label" for="export_pdf">
+                                        <strong>PDF</strong>
+                                        <div class="text-muted small">Druckoptimiertes Dokument zum Teilen</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="export_format" id="export_docx" value="docx">
+                                    <label class="form-check-label" for="export_docx">
+                                        <strong>Word (DOCX)</strong>
+                                        <div class="text-muted small">Editierbares Word-Dokument</div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <button type="button" id="select-all-btn" class="btn btn-outline-secondary me-2">Alle auswählen</button>
+                                    <button type="button" id="deselect-all-btn" class="btn btn-outline-secondary">Alle abwählen</button>
+                                </div>
+                                <div>
+                                    <a href="/" class="btn btn-outline-secondary me-2">Abbrechen</a>
+                                    <button type="submit" class="btn btn-primary">Bericht erstellen</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- Verbindungsinfo -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-server me-2"></i> Verbindungsstatus
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="bg-success rounded-circle me-2" style="width: 12px; height: 12px;"></div>
+                            <strong>Verbunden mit vCenter</strong>
+                        </div>
+                        <p class="mb-1">Server: <span class="text-primary">{{ session.get('server') }}</span></p>
+                        <p class="mb-0">Benutzer: <span class="text-primary">{{ session.get('username') }}</span></p>
+                    </div>
+                </div>
+                
+                <!-- Hilfe -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-question-circle me-2"></i> Hilfe
+                    </div>
+                    <div class="card-body">
+                        <h5>Empfohlene Einstellungen</h5>
+                        <p class="small">Abhängig von der Größe Ihrer vSphere-Umgebung können einige Berichte länger dauern. Entfernen Sie nicht benötigte Komponenten, um die Berichtsgenerierung zu beschleunigen.</p>
+                        
+                        <h5>Exportformate</h5>
+                        <ul class="small">
+                            <li><strong>HTML</strong>: Beste Option für interaktive Berichte mit Sortier- und Filterfunktionen</li>
+                            <li><strong>PDF</strong>: Ideal für die formale Dokumentation und zum Ausdrucken</li>
+                            <li><strong>DOCX</strong>: Nützlich, wenn Sie den Bericht nach dem Export bearbeiten möchten</li>
+                        </ul>
+                        
+                        <h5>Berichtszeit</h5>
+                        <p class="small">Die Dauer der Berichtsgenerierung hängt von der Größe Ihrer Umgebung ab. Bei großen Umgebungen kann die Berichtserstellung mehrere Minuten dauern.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>VMware vSphere Reporter v29.0</h5>
+                    <p>Ein umfassendes Berichts- und Analyse-Tool für VMware vSphere-Umgebungen.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p>© 2025 Bechtle GmbH. Alle Rechte vorbehalten.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Optional checkboxes (ohne die Pflichtfelder)
+            const optionalCheckboxes = document.querySelectorAll('input[type="checkbox"]:not([disabled])');
+            
+            // "Alle auswählen" Button
+            document.getElementById('select-all-btn').addEventListener('click', function() {
+                optionalCheckboxes.forEach(checkbox => checkbox.checked = true);
+            });
+            
+            // "Alle abwählen" Button
+            document.getElementById('deselect-all-btn').addEventListener('click', function() {
+                optionalCheckboxes.forEach(checkbox => checkbox.checked = false);
+            });
+        });
+    </script>
+</body>
+</html>
