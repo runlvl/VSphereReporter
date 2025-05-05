@@ -2,138 +2,81 @@
 # -*- coding: utf-8 -*-
 """
 VMware vSphere Reporter - Web Edition v29.0
-Logger-Modul für konsistentes Logging in der gesamten Anwendung
+Logging-Konfiguration und Hilfsfunktionen
 """
 
 import os
 import sys
 import logging
-from logging.handlers import RotatingFileHandler
-import datetime
+import traceback
+from pathlib import Path
+from datetime import datetime
 
-def setup_logger(name, log_dir=None, debug_mode=False):
+def configure_logging(logger_name, level=logging.INFO):
     """
-    Richtet einen Logger mit konsistenter Formatierung ein
+    Konfiguriert das Logger-System mit einer Konsolen- und einer Dateiausgabe
     
     Args:
-        name: Name des Loggers
-        log_dir: Verzeichnis für Logdateien (optional)
-        debug_mode: True für Debug-Modus mit ausführlicheren Logs
+        logger_name: Name des Loggers
+        level: Logging-Level (default: INFO)
         
     Returns:
-        logging.Logger: Konfigurierter Logger
+        Ein konfigurierter Logger
     """
     # Logger erstellen
-    logger = logging.getLogger(name)
+    logger = logging.getLogger(logger_name)
+    logger.setLevel(level)
     
-    # Bestehende Handler entfernen, um doppeltes Logging zu vermeiden
-    for handler in logger.handlers[:]:
-        logger.removeHandler(handler)
+    # Entferne alle bestehenden Handler, falls der Logger bereits existiert
+    if logger.handlers:
+        logger.handlers.clear()
     
-    # Level basierend auf Debug-Modus setzen
-    logger.setLevel(logging.DEBUG if debug_mode else logging.INFO)
-    
-    # Formatierung für reguläre Logs
-    regular_formatter = logging.Formatter(
+    # Formatter erstellen
+    formatter = logging.Formatter(
         '%(asctime)s - %(levelname)s - %(message)s',
-        '%Y-%m-%d %H:%M:%S'
+        datefmt='%Y-%m-%d %H:%M:%S'
     )
     
-    # Formatierung für Debug-Logs
-    debug_formatter = logging.Formatter(
-        '%(asctime)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(funcName)s - %(message)s',
-        '%Y-%m-%d %H:%M:%S'
-    )
-    
-    # Konsolenausgabe
+    # Konsolen-Handler erstellen
     console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setLevel(logging.DEBUG if debug_mode else logging.INFO)
-    console_handler.setFormatter(debug_formatter if debug_mode else regular_formatter)
+    console_handler.setLevel(level)
+    console_handler.setFormatter(formatter)
     logger.addHandler(console_handler)
     
-    # Datei-Logging, falls ein Verzeichnis angegeben ist
-    if log_dir:
-        if not os.path.exists(log_dir):
-            os.makedirs(log_dir)
-        
-        timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
-        log_file = os.path.join(log_dir, f'{name}_{timestamp}.log')
-        
-        # Reguläre Logdatei
-        file_handler = RotatingFileHandler(
-            log_file,
-            maxBytes=10 * 1024 * 1024,  # 10 MB
-            backupCount=5
-        )
-        file_handler.setLevel(logging.DEBUG if debug_mode else logging.INFO)
-        file_handler.setFormatter(debug_formatter if debug_mode else regular_formatter)
-        logger.addHandler(file_handler)
-        
-        # Separate Fehler-Logdatei
-        error_log_file = os.path.join(log_dir, f'{name}_{timestamp}_error.log')
-        error_file_handler = RotatingFileHandler(
-            error_log_file,
-            maxBytes=5 * 1024 * 1024,  # 5 MB
-            backupCount=5
-        )
-        error_file_handler.setLevel(logging.ERROR)
-        error_file_handler.setFormatter(debug_formatter)
-        logger.addHandler(error_file_handler)
+    # Log-Verzeichnis erstellen, falls es nicht existiert
+    log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'logs')
+    os.makedirs(log_dir, exist_ok=True)
     
-    # Log-Nachricht zur Initialisierung
-    logger.info(f"Logger '{name}' initialisiert (Debug-Modus: {'Aktiv' if debug_mode else 'Inaktiv'})")
+    # Dateinamen mit Datum generieren
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_file = os.path.join(log_dir, f"vsphere_reporter_{timestamp}.log")
+    
+    # Datei-Handler erstellen
+    file_handler = logging.FileHandler(log_file, encoding='utf-8')
+    file_handler.setLevel(level)
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+    
+    logger.info(f"Logging initialisiert (Level: {logging.getLevelName(level)})")
+    logger.info(f"Log-Datei: {log_file}")
     
     return logger
 
-class BrowserConsoleHandler(logging.Handler):
+def log_exception(logger, exception, message=None):
     """
-    Spezieller Handler, der Logs an die Browserkonsole sendet
-    Wird verwendet, um Logs über die JavaScript-Konsole des Browsers für Frontend-Debugging anzuzeigen
+    Protokolliert eine Exception mit Stacktrace
+    
+    Args:
+        logger: Der Logger
+        exception: Die zu protokollierende Exception
+        message: Optionale Nachricht
     """
-    def __init__(self):
-        """Initialisiert den Browser-Konsolen-Handler"""
-        super().__init__()
-        self.logs = []
+    if message:
+        logger.error(f"{message}: {str(exception)}")
+    else:
+        logger.error(str(exception))
     
-    def emit(self, record):
-        """
-        Fügt einen Logeintrag hinzu
-        
-        Args:
-            record: Der Logeintrag
-        """
-        try:
-            log_entry = self.format(record)
-            self.logs.append({
-                'time': record.created,
-                'level': record.levelname,
-                'message': log_entry
-            })
-            
-            # Begrenze die Anzahl der gespeicherten Logs
-            if len(self.logs) > 1000:
-                self.logs = self.logs[-1000:]
-        except Exception:
-            self.handleError(record)
-    
-    def get_logs(self, level=None, limit=100):
-        """
-        Gibt die gespeicherten Logs zurück
-        
-        Args:
-            level: Optional Loglevel-Filter (z.B. 'DEBUG', 'INFO', 'ERROR')
-            limit: Maximale Anzahl der zurückgegebenen Logs
-            
-        Returns:
-            list: Gefilterte Logs
-        """
-        if level:
-            filtered_logs = [log for log in self.logs if log['level'] == level]
-        else:
-            filtered_logs = self.logs
-        
-        return filtered_logs[-limit:]
-    
-    def clear(self):
-        """Löscht alle gespeicherten Logs"""
-        self.logs = []
+    exc_type, exc_value, exc_traceback = sys.exc_info()
+    if exc_traceback:
+        tb_lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
+        logger.error("".join(tb_lines))

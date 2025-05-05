@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Berichtsgenerierung - VMware vSphere Reporter v29.0</title>
+    <title>VMware vSphere Reporter - Berichtsstatus</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <meta http-equiv="refresh" content="3;url={{ url_for('report_status') }}" {% if status.complete or status.error %}disabled{% endif %}>
 </head>
 <body>
     <!-- Navigationsleiste -->
@@ -25,262 +26,113 @@
                         <a class="nav-link" href="/">Startseite</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('options') }}">Berichtsoptionen</a>
+                        <a class="nav-link" href="{{ url_for('connect') }}">Verbinden</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('disconnect') }}">Trennen</a>
+                        <a class="nav-link" href="{{ url_for('report_options') }}">Berichtsoptionen</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Seiten-Header -->
-    <section class="page-header">
-        <div class="container">
-            <h1>vSphere-Bericht generieren</h1>
-            <p class="lead">VMware vSphere Reporter v29.0</p>
-        </div>
-    </section>
-
     <!-- Hauptinhalt -->
-    <div class="container">
+    <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <!-- Berichtsübersicht -->
-                <div id="report-setup" class="card mb-4">
-                    <div class="card-header">
-                        <i class="bi bi-list-check me-2"></i> Berichtsübersicht
-                    </div>
-                    <div class="card-body">
-                        <h5>Ausgewählte Berichtsoptionen:</h5>
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <ul class="list-group">
-                                    {% if options.get('include_vmware_tools', True) %}
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        VMware Tools-Status
-                                        <span class="badge bg-success rounded-pill"><i class="bi bi-check"></i></span>
-                                    </li>
-                                    {% endif %}
-                                    
-                                    {% if options.get('include_snapshots', True) %}
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        VM-Snapshots
-                                        <span class="badge bg-success rounded-pill"><i class="bi bi-check"></i></span>
-                                    </li>
-                                    {% endif %}
-                                    
-                                    {% if options.get('include_orphaned_vmdks', True) %}
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        Verwaiste VMDK-Dateien
-                                        <span class="badge bg-success rounded-pill"><i class="bi bi-check"></i></span>
-                                    </li>
-                                    {% endif %}
-                                    
-                                    {% if options.get('include_vm_list', False) %}
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        VM-Liste
-                                        <span class="badge bg-success rounded-pill"><i class="bi bi-check"></i></span>
-                                    </li>
-                                    {% endif %}
-                                    
-                                    {% if options.get('include_vm_details', False) %}
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        VM-Details
-                                        <span class="badge bg-success rounded-pill"><i class="bi bi-check"></i></span>
-                                    </li>
-                                    {% endif %}
-                                </ul>
+                <h2 class="mb-4"><i class="bi bi-hourglass-split me-2"></i>Berichtsverarbeitung</h2>
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schließen"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <div class="card mb-4">
+                    <div class="card-body p-4">
+                        <h4 class="card-title mb-4">
+                            {% if status.complete %}
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>Bericht abgeschlossen
+                            {% elif status.error %}
+                                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Fehler bei der Berichtserstellung
+                            {% else %}
+                                <i class="bi bi-arrow-repeat me-2"></i>Erstelle Bericht...
+                            {% endif %}
+                        </h4>
+                        
+                        <div class="progress mb-4">
+                            <div class="progress-bar {% if status.error %}bg-danger{% endif %}" 
+                                 role="progressbar" 
+                                 style="width: {{ status.progress }}%;" 
+                                 aria-valuenow="{{ status.progress }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                {{ status.progress }}%
+                            </div>
+                        </div>
+                        
+                        <p class="status-message lead">{{ status.message }}</p>
+                        
+                        {% if not status.complete and not status.error %}
+                            <div class="text-center my-4">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Wird geladen...</span>
+                                </div>
+                                <p class="mt-2 text-muted">Die Seite wird automatisch aktualisiert...</p>
                             </div>
                             
-                            <div class="col-md-6">
-                                <ul class="list-group">
-                                    {% if options.get('include_esxi_info', False) %}
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        ESXi-Host-Informationen
-                                        <span class="badge bg-success rounded-pill"><i class="bi bi-check"></i></span>
-                                    </li>
-                                    {% endif %}
-                                    
-                                    {% if options.get('include_datastore_info', False) %}
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        Datastore-Informationen
-                                        <span class="badge bg-success rounded-pill"><i class="bi bi-check"></i></span>
-                                    </li>
-                                    {% endif %}
-                                    
-                                    {% if options.get('include_network_info', False) %}
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        Netzwerk-Informationen
-                                        <span class="badge bg-success rounded-pill"><i class="bi bi-check"></i></span>
-                                    </li>
-                                    {% endif %}
-                                    
-                                    {% if options.get('include_clusters', False) %}
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        Cluster-Informationen
-                                        <span class="badge bg-success rounded-pill"><i class="bi bi-check"></i></span>
-                                    </li>
-                                    {% endif %}
-                                    
-                                    {% if options.get('include_topology', False) %}
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        Infrastruktur-Topologie
-                                        <span class="badge bg-success rounded-pill"><i class="bi bi-check"></i></span>
-                                    </li>
-                                    {% endif %}
-                                </ul>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <h5>Exportformat:</h5>
-                            <span class="badge bg-primary">
-                                {% if options.get('export_format') == 'html' %}
-                                HTML
-                                {% elif options.get('export_format') == 'pdf' %}
-                                PDF
-                                {% elif options.get('export_format') == 'docx' %}
-                                Word (DOCX)
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                {% if status.stage == 'connecting' %}
+                                    Verbindung zum vCenter wird hergestellt...
+                                {% elif status.stage == 'collecting' %}
+                                    Daten werden aus der vSphere-Umgebung gesammelt. Dies kann je nach Größe der Umgebung einige Zeit dauern.
+                                {% elif status.stage == 'processing' %}
+                                    Daten werden verarbeitet und analysiert...
+                                {% elif status.stage == 'generating' %}
+                                    Bericht wird generiert...
                                 {% else %}
-                                HTML
+                                    Bearbeitung läuft...
                                 {% endif %}
-                            </span>
-                        </div>
-                        
-                        <div class="alert alert-info">
-                            <i class="bi bi-info-circle me-2"></i>
-                            Die Generierung des Berichts kann je nach Größe Ihrer vSphere-Umgebung und den ausgewählten Optionen einige Zeit in Anspruch nehmen.
-                        </div>
-                        
-                        <div class="text-center">
-                            <button id="start-report-button" class="btn btn-primary btn-lg">
-                                <i class="bi bi-file-earmark-text me-2"></i>
-                                Bericht generieren
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Fortschrittsanzeige (initial ausgeblendet) -->
-                <div id="report-progress" class="card mb-4 d-none">
-                    <div class="card-header">
-                        <i class="bi bi-arrow-repeat me-2"></i> Berichtsgenerierung läuft...
-                    </div>
-                    <div class="card-body">
-                        <div class="progress mb-3">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        
-                        <p id="status-message" class="text-center">Initialisiere Berichtsgenerierung...</p>
-                        
-                        <div class="text-center">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Lädt...</span>
                             </div>
-                        </div>
+                        {% endif %}
+                        
+                        {% if status.complete %}
+                            <div class="alert alert-success">
+                                <i class="bi bi-check-circle me-2"></i>Der Bericht wurde erfolgreich erstellt. Sie werden in Kürze zur Berichtsansicht weitergeleitet.
+                            </div>
+                            <script>
+                                // Automatische Weiterleitung nach 2 Sekunden
+                                setTimeout(function() {
+                                    window.location.href = "{{ url_for('report_view') }}";
+                                }, 2000);
+                            </script>
+                        {% endif %}
+                        
+                        {% if status.error %}
+                            <div class="alert alert-danger">
+                                <i class="bi bi-exclamation-triangle me-2"></i>Bei der Berichtserstellung ist ein Fehler aufgetreten.
+                                <p class="mt-2 mb-0">Bitte überprüfen Sie Ihre Verbindungsdaten und die ausgewählten Optionen, und versuchen Sie es erneut.</p>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
                 
-                <!-- Erfolgsmeldung (initial ausgeblendet) -->
-                <div id="report-success" class="card mb-4 d-none">
-                    <div class="card-header bg-success text-white">
-                        <i class="bi bi-check-circle me-2"></i> Bericht erfolgreich erstellt
-                    </div>
-                    <div class="card-body">
-                        <p>Ihr vSphere-Bericht wurde erfolgreich erstellt und steht nun zum Download bereit.</p>
-                        
-                        <div class="d-grid gap-2">
-                            <a id="report-download-link" href="#" class="btn btn-primary">
-                                <i class="bi bi-download me-2"></i>
-                                Bericht herunterladen
-                            </a>
-                            <a id="report-view-link" href="#" class="btn btn-outline-primary">
-                                <i class="bi bi-eye me-2"></i>
-                                Bericht im Browser anzeigen
-                            </a>
-                            <a href="{{ url_for('options') }}" class="btn btn-outline-secondary">
-                                <i class="bi bi-sliders me-2"></i>
-                                Neuen Bericht erstellen
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Fehlermeldung (initial ausgeblendet) -->
-                <div id="report-error" class="card mb-4 d-none">
-                    <div class="card-header bg-danger text-white">
-                        <i class="bi bi-exclamation-triangle me-2"></i> Fehler bei der Berichtsgenerierung
-                    </div>
-                    <div class="card-body">
-                        <p>Bei der Generierung des Berichts ist ein Fehler aufgetreten:</p>
-                        <div class="alert alert-danger">
-                            <p id="error-message" class="mb-0"></p>
-                        </div>
-                        
-                        <div class="d-grid gap-2">
-                            <a href="{{ url_for('options') }}" class="btn btn-primary">
-                                <i class="bi bi-arrow-left me-2"></i>
-                                Zurück zu den Berichtsoptionen
-                            </a>
-                            <button id="retry-button" class="btn btn-outline-primary">
-                                <i class="bi bi-arrow-repeat me-2"></i>
-                                Erneut versuchen
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-4">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <i class="bi bi-info-circle me-2"></i> Hinweise
-                    </div>
-                    <div class="card-body">
-                        <h5>Berichtsdetails</h5>
-                        <p class="small">Der Bericht sammelt Informationen zu den folgenden Bereichen, abhängig von Ihrer Auswahl:</p>
-                        
-                        <ul class="small">
-                            <li><strong>VMware Tools:</strong> Prüft VMware Tools-Status und -Versionen auf allen VMs</li>
-                            <li><strong>Snapshots:</strong> Identifiziert alte Snapshots, sortiert nach Alter</li>
-                            <li><strong>Verwaiste VMDKs:</strong> Findet nicht zugeordnete VMDK-Dateien</li>
-                            <li><strong>Infrastruktur:</strong> ESXi-Hosts, Datastore, Netzwerke und mehr</li>
-                        </ul>
-                        
-                        <h5>Berichtsformat</h5>
-                        <p class="small">
-                            {% if options.get('export_format') == 'html' %}
-                            Der HTML-Bericht bietet interaktive Funktionen wie Sortierung, Filterung und detaillierte Ansichten.
-                            {% elif options.get('export_format') == 'pdf' %}
-                            Das PDF-Format ist optimal für die Dokumentation und das Ausdrucken des Berichts.
-                            {% elif options.get('export_format') == 'docx' %}
-                            Das DOCX-Format erlaubt die nachträgliche Bearbeitung des Berichts in Microsoft Word.
-                            {% else %}
-                            Der Bericht wird in einem leicht lesbaren Format erstellt.
-                            {% endif %}
-                        </p>
-                        
-                        <div class="alert alert-warning mb-0">
-                            <i class="bi bi-lightbulb me-2"></i>
-                            <strong>Tipp:</strong> Große vSphere-Umgebungen können zu längeren Verarbeitungszeiten führen, besonders bei der Analyse verwaister VMDKs. Bitte haben Sie Geduld während der Berichtsgenerierung.
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <i class="bi bi-server me-2"></i> Verbindungsstatus
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-2">
-                            <div class="bg-success rounded-circle me-2" style="width: 12px; height: 12px;"></div>
-                            <strong>Verbunden mit vCenter</strong>
-                        </div>
-                        <p class="mb-1">Server: <span class="text-primary">{{ session.get('server') }}</span></p>
-                        <p class="mb-0">Benutzer: <span class="text-primary">{{ session.get('username') }}</span></p>
-                    </div>
+                <div class="text-center mt-4">
+                    {% if status.error %}
+                        <a href="{{ url_for('report_options') }}" class="btn btn-primary">
+                            <i class="bi bi-arrow-left me-2"></i>Zurück zu den Berichtsoptionen
+                        </a>
+                    {% endif %}
+                    
+                    <a href="{{ url_for('disconnect') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-power me-2"></i>Trennen
+                    </a>
                 </div>
             </div>
         </div>
@@ -301,8 +153,6 @@
         </div>
     </footer>
 
-    <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/report.js') }}"></script>
 </body>
 </html>

@@ -72,6 +72,18 @@ args = "VSphereReporterV29DemoPackage"
 task = "workflow.run"
 args = "Downloads"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "VSphereReporterV29Web"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "StaticDemo"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "StaticDemoV29"
+
 [[workflows.workflow]]
 name = "VSphereReporter"
 author = "agent"
@@ -259,6 +271,33 @@ task = "shell.exec"
 args = "cd release/downloads && python -m http.server 5000"
 waitForPort = 5000
 
+[[workflows.workflow]]
+name = "VSphereReporterV29Web"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd vsphere-reporter-v29.0-package && python app.py"
+waitForPort = 5009
+
+[[workflows.workflow]]
+name = "StaticDemo"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd vsphere-reporter-v29.0-package/static && python -m http.server 5000"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "StaticDemoV29"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd vsphere-reporter-v29.0-package/static && python -m http.server 5009"
+waitForPort = 5009
+
 [deployment]
 run = ["sh", "-c", "pip install -r requirements.txt || pip install pyVmomi>=7.0.0 PyQt5>=5.15.0 reportlab>=3.6.0 python-docx>=0.8.11 jinja2>=3.0.0 humanize>=3.0.0 && python vsphere_reporter.py"]
 
@@ -289,6 +328,10 @@ externalPort = 3003
 [[ports]]
 localPort = 5008
 externalPort = 5000
+
+[[ports]]
+localPort = 5009
+externalPort = 6000
 
 [[ports]]
 localPort = 5010

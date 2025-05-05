@@ -2,242 +2,101 @@
 # -*- coding: utf-8 -*-
 """
 VMware vSphere Reporter - Web Edition v29.0
-Fehlerbehandlungsmodul für benutzerfreundliche Fehlermeldungen
+Fehlerbehandlung und -management
 """
 
 import logging
-import re
-import ssl
-import socket
-from urllib.error import URLError
-from http.client import HTTPException
-import requests.exceptions
-from ssl import SSLError
-import pyVmomi
-from pyVmomi import vim
+import traceback
+import sys
+from functools import wraps
 
-logger = logging.getLogger('vsphere_reporter')
+class VSphereReporterError(Exception):
+    """Basisklasse für alle VSphere Reporter-spezifischen Fehler"""
+    pass
 
-# Fehlerklassen nach Kategorie
-CONNECTION_ERRORS = (
-    ConnectionError,
-    ConnectionRefusedError,
-    ConnectionResetError,
-    ConnectionAbortedError,
-    socket.timeout,
-    socket.error,
-    TimeoutError,
-    URLError,
-    requests.exceptions.ConnectionError,
-    requests.exceptions.Timeout,
-    SSLError,
-    ssl.SSLError,
-    HTTPException
-)
+class ConnectionError(VSphereReporterError):
+    """Fehler bei der Verbindung zum vCenter"""
+    pass
 
-AUTHENTICATION_ERRORS = (
-    vim.fault.InvalidLogin,
-    vim.fault.NoPermission,
-    vim.fault.NotAuthenticated
-)
+class AuthenticationError(VSphereReporterError):
+    """Fehler bei der Authentifizierung am vCenter"""
+    pass
 
-SERVER_ERRORS = (
-    vim.fault.HostDisconnected,
-    vim.fault.NotFound,
-    vim.fault.ResourceInUse,
-    vim.fault.TaskInProgress,
-    vim.fault.InvalidState
-)
+class VMDKError(VSphereReporterError):
+    """Fehler bei der VMDK-Verarbeitung"""
+    pass
 
-PERMISSION_ERRORS = (
-    vim.fault.NoPermission,
-    vim.fault.AuthMinimumAdminPermission
-)
+class ReportGenerationError(VSphereReporterError):
+    """Fehler bei der Berichtsgenerierung"""
+    pass
 
-def friendly_error_message(exception):
+def handle_vsphere_error(logger=None):
     """
-    Konvertiert technische Fehlermeldungen in benutzerfreundliche Nachrichten
+    Dekorator zur Behandlung von vSphere-spezifischen Fehlern
     
     Args:
-        exception: Die aufgetretene Exception
+        logger: Optional, ein Logger-Objekt
         
     Returns:
-        str: Eine benutzerfreundliche Fehlermeldung
+        Dekorierte Funktion
     """
-    logger.debug(f"Fehlerbehandlung für Exception: {type(exception).__name__}: {str(exception)}")
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except Exception as e:
+                # Hole den Stacktrace
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                stack_trace = traceback.format_exception(exc_type, exc_value, exc_traceback)
+                
+                # Extrahiere Klassenname und Modulname für bessere Fehlermeldungen
+                func_name = func.__name__
+                module_name = func.__module__
+                
+                # Erstelle Fehlermeldung
+                error_message = f"Fehler in {module_name}.{func_name}: {str(e)}"
+                
+                # Protokolliere den Fehler, wenn ein Logger übergeben wurde
+                if logger:
+                    logger.error(error_message)
+                    logger.error("".join(stack_trace))
+                
+                # Übersetze spezifische vSphere-Fehler in unsere eigenen Fehlerklassen
+                try:
+                    # pyVmomi-Fehler-Behandlung
+                    import pyVmomi
+                    from pyVmomi import vim
+                    
+                    if isinstance(e, vim.fault.InvalidLogin):
+                        raise AuthenticationError("Ungültige Anmeldedaten") from e
+                    elif isinstance(e, (vim.fault.HostConnectFault, vim.fault.NotAuthenticated)):
+                        raise ConnectionError(f"Verbindungsproblem: {str(e)}") from e
+                    # Füge weitere vSphere-spezifische Fehlerbehandlungen hinzu
+                except ImportError:
+                    # pyVmomi ist nicht verfügbar, ignoriere die spezifische Behandlung
+                    pass
+                
+                # Reiche den ursprünglichen Fehler weiter, wenn er nicht behandelt wurde
+                raise
+        
+        return wrapper
     
-    # Verbindungsfehler
-    if isinstance(exception, CONNECTION_ERRORS):
-        return _handle_connection_error(exception)
+    return decorator
+
+def format_exception(exception):
+    """
+    Formatiert eine Exception für die Anzeige
     
-    # Authentifizierungsfehler
-    elif isinstance(exception, AUTHENTICATION_ERRORS):
-        return _handle_authentication_error(exception)
-    
-    # Server-Fehler
-    elif isinstance(exception, SERVER_ERRORS):
-        return _handle_server_error(exception)
-    
-    # Berechtigungsfehler
-    elif isinstance(exception, PERMISSION_ERRORS):
-        return _handle_permission_error(exception)
-    
-    # VMware spezifische Fehler
-    elif isinstance(exception, vim.fault.VimFault):
-        return _handle_vim_fault(exception)
-    
-    # Generische Fehler
+    Args:
+        exception: Die zu formatierende Exception
+        
+    Returns:
+        str: Formatierte Fehlermeldung
+    """
+    if isinstance(exception, VSphereReporterError):
+        # Für unsere eigenen Fehler zeigen wir nur die Meldung an
+        return str(exception)
     else:
-        return _handle_generic_error(exception)
-
-def _handle_connection_error(exception):
-    """
-    Behandelt Verbindungsfehler
-    
-    Args:
-        exception: Die aufgetretene Exception
-        
-    Returns:
-        str: Eine benutzerfreundliche Fehlermeldung
-    """
-    error_message = str(exception)
-    
-    if isinstance(exception, (SSLError, ssl.SSLError)):
-        return "SSL-Fehler beim Verbinden mit dem vCenter. Bitte aktivieren Sie die Option 'Selbstsignierte SSL-Zertifikate ignorieren' oder stellen Sie sicher, dass das Zertifikat des Servers gültig ist."
-    
-    elif isinstance(exception, (socket.timeout, TimeoutError, requests.exceptions.Timeout)):
-        return "Zeitüberschreitung bei der Verbindung zum vCenter-Server. Bitte überprüfen Sie die Netzwerkverbindung und stellen Sie sicher, dass der Server erreichbar ist."
-    
-    elif isinstance(exception, (ConnectionRefusedError, requests.exceptions.ConnectionError)) or "connection refused" in error_message.lower():
-        return "Verbindung zum vCenter-Server wurde verweigert. Bitte überprüfen Sie die Serveradresse und stellen Sie sicher, dass der Server läuft und über Port 443 erreichbar ist."
-    
-    elif "certificate verify failed" in error_message.lower():
-        return "Die Überprüfung des SSL-Zertifikats ist fehlgeschlagen. Bitte aktivieren Sie die Option 'Selbstsignierte SSL-Zertifikate ignorieren'."
-    
-    elif "unknown host" in error_message.lower() or "name or service not known" in error_message.lower():
-        return "Der angegebene Hostname konnte nicht aufgelöst werden. Bitte überprüfen Sie die Serveradresse."
-    
-    else:
-        return f"Verbindungsfehler: {str(exception)}"
-
-def _handle_authentication_error(exception):
-    """
-    Behandelt Authentifizierungsfehler
-    
-    Args:
-        exception: Die aufgetretene Exception
-        
-    Returns:
-        str: Eine benutzerfreundliche Fehlermeldung
-    """
-    if isinstance(exception, vim.fault.InvalidLogin):
-        return "Ungültiger Benutzername oder Passwort. Bitte überprüfen Sie Ihre Anmeldeinformationen."
-    
-    elif isinstance(exception, vim.fault.NotAuthenticated):
-        return "Authentifizierungsfehler. Bitte melden Sie sich erneut an."
-    
-    else:
-        return f"Authentifizierungsfehler: {str(exception)}"
-
-def _handle_server_error(exception):
-    """
-    Behandelt Server-Fehler
-    
-    Args:
-        exception: Die aufgetretene Exception
-        
-    Returns:
-        str: Eine benutzerfreundliche Fehlermeldung
-    """
-    if isinstance(exception, vim.fault.HostDisconnected):
-        return "Ein oder mehrere ESXi-Hosts sind nicht mit dem vCenter verbunden. Dies kann zu unvollständigen Berichten führen."
-    
-    elif isinstance(exception, vim.fault.NotFound):
-        return "Eine angeforderte Ressource wurde auf dem Server nicht gefunden."
-    
-    elif isinstance(exception, vim.fault.ResourceInUse):
-        return "Eine Ressource wird derzeit verwendet und kann nicht bearbeitet werden."
-    
-    elif isinstance(exception, vim.fault.TaskInProgress):
-        return "Eine Aufgabe wird bereits ausgeführt. Bitte versuchen Sie es später erneut."
-    
-    elif isinstance(exception, vim.fault.InvalidState):
-        return "Die Aktion kann im aktuellen Zustand nicht ausgeführt werden."
-    
-    else:
-        return f"Server-Fehler: {str(exception)}"
-
-def _handle_permission_error(exception):
-    """
-    Behandelt Berechtigungsfehler
-    
-    Args:
-        exception: Die aufgetretene Exception
-        
-    Returns:
-        str: Eine benutzerfreundliche Fehlermeldung
-    """
-    if isinstance(exception, vim.fault.NoPermission):
-        return "Unzureichende Berechtigungen für diese Aktion. Bitte stellen Sie sicher, dass Ihr Benutzer mindestens Leserechte auf alle vSphere-Objekte hat."
-    
-    elif isinstance(exception, vim.fault.AuthMinimumAdminPermission):
-        return "Diese Aktion erfordert Administratorrechte."
-    
-    else:
-        return f"Berechtigungsfehler: {str(exception)}"
-
-def _handle_vim_fault(exception):
-    """
-    Behandelt VMware spezifische Fehler
-    
-    Args:
-        exception: Die aufgetretene Exception
-        
-    Returns:
-        str: Eine benutzerfreundliche Fehlermeldung
-    """
-    # Extrahiere den Fehlertyp aus der Klassennamen
-    error_type = type(exception).__name__
-    error_message = str(exception)
-    
-    # Entferne den namespace und extrahiere den lesbaren Fehlernamen
-    if error_type.startswith('vim.fault.'):
-        error_type = error_type[10:]  # Entferne 'vim.fault.'
-    
-    # Formatiere den Fehlernamen für bessere Lesbarkeit
-    error_type = re.sub(r'([a-z])([A-Z])', r'\1 \2', error_type)
-    
-    return f"vSphere-Fehler ({error_type}): {error_message}"
-
-def _handle_generic_error(exception):
-    """
-    Behandelt generische Fehler
-    
-    Args:
-        exception: Die aufgetretene Exception
-        
-    Returns:
-        str: Eine benutzerfreundliche Fehlermeldung
-    """
-    error_type = type(exception).__name__
-    error_message = str(exception)
-    
-    # Spezialbehandlung für bekannte Typen
-    if error_type == 'AttributeError' and 'NoneType' in error_message:
-        return "Fehler beim Zugriff auf eine Ressource: Ein erforderliches Objekt wurde nicht gefunden. Dies kann auf fehlende Daten oder Berechtigungen hinweisen."
-    
-    elif error_type == 'TypeError':
-        return "Interner Fehler bei der Verarbeitung von Daten. Bitte melden Sie diesen Fehler dem Support."
-    
-    elif error_type == 'ValueError':
-        return f"Ungültiger Wert: {error_message}"
-    
-    elif error_type == 'KeyError':
-        return "Fehler beim Zugriff auf Daten: Ein erforderlicher Schlüssel wurde nicht gefunden."
-    
-    elif error_type == 'IndexError':
-        return "Fehler beim Zugriff auf Daten: Index außerhalb des gültigen Bereichs."
-    
-    else:
-        # Generische Nachricht für unbekannte Fehler
-        return f"Ein Fehler ist aufgetreten: {error_type} - {error_message}"
+        # Für andere Fehler zeigen wir den Typ und die Meldung an
+        return f"{type(exception).__name__}: {str(exception)}"
