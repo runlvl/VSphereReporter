@@ -232,6 +232,11 @@ def demo_login():
     session['vcenter_server'] = 'Demo vCenter'
     session['username'] = 'demo-user@vsphere.local'
     
+    # Stellen Sie sicher, dass vsphere_client auf None gesetzt ist, damit keine Fehler auftreten
+    global vsphere_client
+    vsphere_client = None
+    
+    logger.info("Demo-Modus aktiviert - vsphere_client auf None gesetzt")
     flash('Demo-Modus aktiviert. Sie verwenden simulierte Daten.', 'info')
     return redirect(url_for('index'))
 
