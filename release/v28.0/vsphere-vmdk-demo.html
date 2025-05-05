@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VMware vSphere Reporter v28.0 - VMDK Management Demo</title>
+    <style>
+        :root {
+            --bechtle-dark-blue: #00355e;
+            --bechtle-orange: #da6f1e;
+            --bechtle-green: #23a96a;
+            --bechtle-light-gray: #f3f3f3;
+            --bechtle-dark-gray: #5a5a5a;
+            --status-active: #23a96a;
+            --status-template: #6a5acd;
+            --status-orphaned: #da6f1e;
+            --status-unknown: #5a5a5a;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-title h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .header-title p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        h2 {
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--bechtle-light-gray);
+        }
+        
+        p {
+            margin-bottom: 20px;
+        }
+        
+        .toolbar {
+            background-color: var(--bechtle-light-gray);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .search-container {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .filter-button {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .filter-button:hover {
+            background-color: var(--bechtle-light-gray);
+        }
+        
+        .filter-button.active {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+        }
+        
+        .export-button {
+            background-color: var(--bechtle-orange);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        
+        .export-button:hover {
+            background-color: #c05f15;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .status-active {
+            background-color: var(--status-active);
+        }
+        
+        .status-template {
+            background-color: var(--status-template);
+        }
+        
+        .status-orphaned {
+            background-color: var(--status-orphaned);
+        }
+        
+        .status-unknown {
+            background-color: var(--status-unknown);
+        }
+        
+        .status-helper {
+            background-color: var(--bechtle-light-gray);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: white;
+        }
+        
+        th {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            text-align: left;
+            padding: 12px 15px;
+        }
+        
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--bechtle-light-gray);
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--bechtle-light-gray);
+        }
+        
+        tr:hover {
+            background-color: rgba(218, 111, 30, 0.1);
+        }
+        
+        .vmdk-status {
+            font-weight: bold;
+        }
+        
+        .vmdk-status-active {
+            color: var(--status-active);
+        }
+        
+        .vmdk-status-template {
+            color: var(--status-template);
+        }
+        
+        .vmdk-status-orphaned {
+            color: var(--status-orphaned);
+        }
+        
+        .vmdk-status-unknown {
+            color: var(--status-unknown);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            background-color: var(--bechtle-light-gray);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .feature-card h3 {
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 10px;
+        }
+        
+        .legend {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: var(--bechtle-light-gray);
+            border-radius: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        
+        .banner {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .banner h2 {
+            color: white;
+            border-bottom: none;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+        
+        .banner p {
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: var(--bechtle-orange);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-right: 10px;
+        }
+        
+        .cta-button:hover {
+            background-color: #c05f15;
+            text-decoration: none;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 14px;
+            z-index: 1000;
+            max-width: 300px;
+            display: none;
+        }
+        
+        .has-tooltip:hover + .tooltip {
+            display: block;
+        }
+        
+        footer {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content, .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .toolbar {
+                flex-direction: column;
+            }
+            
+            .filter-container {
+                justify-content: center;
+            }
+            
+            .search-container {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-title">
+                <h1>VMware vSphere Reporter v28.0</h1>
+                <p>Verbesserte VMDK-Management-Funktionen</p>
+            </div>
+            <div class="header-logo">
+                <div style="color: white; font-weight: bold;">BECHTLE</div>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <h2>VMDK-Management</h2>
+        <p>
+            Die Version 28.0 des VMware vSphere Reporters bietet einen neuen Ansatz zum VMDK-Management: 
+            Statt nur potenziell verwaiste VMDKs anzuzeigen, werden nun ALLE VMDKs in der Umgebung mit 
+            ihrem jeweiligen Status aufgelistet. Dies bietet einen umfassenden Überblick und reduziert 
+            das Risiko, wichtige VMDKs fälschlicherweise als verwaist zu klassifizieren.
+        </p>
+        
+        <!-- VMDK Toolbar -->
+        <div class="toolbar">
+            <div class="search-container">
+                <input type="text" id="vmdk-search" placeholder="Nach VMDK-Namen, Datastore oder Status suchen...">
+            </div>
+            <div class="filter-container">
+                <button class="filter-button active" data-filter="all">
+                    <span class="status-indicator" style="background-color: #333;"></span>
+                    Alle
+                </button>
+                <button class="filter-button" data-filter="AKTIV">
+                    <span class="status-indicator status-active"></span>
+                    Aktive VMDKs
+                </button>
+                <button class="filter-button" data-filter="TEMPLATE">
+                    <span class="status-indicator status-template"></span>
+                    Templates
+                </button>
+                <button class="filter-button" data-filter="VERWAIST">
+                    <span class="status-indicator status-orphaned"></span>
+                    Potentiell verwaist
+                </button>
+                <button class="filter-button" data-filter="HELPER">
+                    <span class="status-indicator status-helper"></span>
+                    Hilfsdateien
+                </button>
+            </div>
+            <button class="export-button" id="export-vmdks">Als CSV exportieren</button>
+        </div>
+        
+        <!-- VMDK Table -->
+        <table id="vmdk-table">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>VM</th>
+                    <th>Datastore</th>
+                    <th>Pfad</th>
+                    <th>Größe</th>
+                    <th>Letzte Änderung</th>
+                    <th>Erklärung</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-status="AKTIV">
+                    <td>
+                        <span class="status-indicator status-active"></span>
+                        <span class="vmdk-status vmdk-status-active">AKTIV</span>
+                    </td>
+                    <td>web01</td>
+                    <td>SAN-DS01</td>
+                    <td>[SAN-DS01] web01/web01.vmdk</td>
+                    <td>40.0 GB</td>
+                    <td>2025-04-15 10:30:22</td>
+                    <td>Diese VMDK ist einer aktiven VM zugeordnet.</td>
+                </tr>
+                <tr data-status="AKTIV">
+                    <td>
+                        <span class="status-indicator status-active"></span>
+                        <span class="vmdk-status vmdk-status-active">AKTIV</span>
+                    </td>
+                    <td>web01</td>
+                    <td>SAN-DS01</td>
+                    <td>[SAN-DS01] web01/web01_1.vmdk</td>
+                    <td>100.0 GB</td>
+                    <td>2025-04-15 10:30:22</td>
+                    <td>Diese VMDK ist einer aktiven VM zugeordnet.</td>
+                </tr>
+                <tr data-status="AKTIV">
+                    <td>
+                        <span class="status-indicator status-active"></span>
+                        <span class="vmdk-status vmdk-status-active">AKTIV</span>
+                    </td>
+                    <td>db01</td>
+                    <td>SSD-DS01</td>
+                    <td>[SSD-DS01] db01/db01.vmdk</td>
+                    <td>40.0 GB</td>
+                    <td>2025-04-10 08:15:45</td>
+                    <td>Diese VMDK ist einer aktiven VM zugeordnet.</td>
+                </tr>
+                <tr data-status="AKTIV">
+                    <td>
+                        <span class="status-indicator status-active"></span>
+                        <span class="vmdk-status vmdk-status-active">AKTIV</span>
+                    </td>
+                    <td>db01</td>
+                    <td>SSD-DS01</td>
+                    <td>[SSD-DS01] db01/db01_data.vmdk</td>
+                    <td>500.0 GB</td>
+                    <td>2025-04-10 08:15:45</td>
+                    <td>Diese VMDK ist einer aktiven VM zugeordnet.</td>
+                </tr>
+                <tr data-status="TEMPLATE">
+                    <td>
+                        <span class="status-indicator status-template"></span>
+                        <span class="vmdk-status vmdk-status-template">TEMPLATE</span>
+                    </td>
+                    <td>web-template</td>
+                    <td>SAN-DS02</td>
+                    <td>[SAN-DS02] templates/web-template/web-template.vmdk</td>
+                    <td>40.0 GB</td>
+                    <td>2025-03-20 14:22:10</td>
+                    <td>Diese VMDK gehört zu einem VM-Template.</td>
+                </tr>
+                <tr data-status="HELPER">
+                    <td>
+                        <span class="status-indicator status-helper"></span>
+                        <span class="vmdk-status">HELPER</span>
+                    </td>
+                    <td>web01</td>
+                    <td>SAN-DS01</td>
+                    <td>[SAN-DS01] web01/web01-ctk.vmdk</td>
+                    <td>1.0 KB</td>
+                    <td>2025-04-15 10:30:22</td>
+                    <td>Diese VMDK ist eine Hilfsdatei ohne eigentliche Daten.</td>
+                </tr>
+                <tr data-status="VERWAIST">
+                    <td>
+                        <span class="status-indicator status-orphaned"></span>
+                        <span class="vmdk-status vmdk-status-orphaned">POTENZIELL VERWAIST</span>
+                    </td>
+                    <td>-</td>
+                    <td>SAN-DS01</td>
+                    <td>[SAN-DS01] old-apps/app03.vmdk</td>
+                    <td>20.0 GB</td>
+                    <td>2024-10-05 09:12:34</td>
+                    <td>Diese VMDK konnte keiner VM zugeordnet werden. Sie könnte verwaist sein, oder sie gehört zu einer VM, deren Konfiguration nicht gelesen werden konnte.</td>
+                </tr>
+                <tr data-status="VERWAIST">
+                    <td>
+                        <span class="status-indicator status-orphaned"></span>
+                        <span class="vmdk-status vmdk-status-orphaned">POTENZIELL VERWAIST</span>
+                    </td>
+                    <td>-</td>
+                    <td>SAN-DS01</td>
+                    <td>[SAN-DS01] old-apps/app03_1.vmdk</td>
+                    <td>50.0 GB</td>
+                    <td>2024-10-05 09:12:34</td>
+                    <td>Diese VMDK konnte keiner VM zugeordnet werden. Sie könnte verwaist sein, oder sie gehört zu einer VM, deren Konfiguration nicht gelesen werden konnte.</td>
+                </tr>
+                <tr data-status="VERWAIST">
+                    <td>
+                        <span class="status-indicator status-orphaned"></span>
+                        <span class="vmdk-status vmdk-status-orphaned">POTENZIELL VERWAIST</span>
+                    </td>
+                    <td>-</td>
+                    <td>SSD-DS01</td>
+                    <td>[SSD-DS01] temp/backup-disk.vmdk</td>
+                    <td>200.0 GB</td>
+                    <td>2025-02-18 16:45:02</td>
+                    <td>Diese VMDK konnte keiner VM zugeordnet werden. Sie könnte verwaist sein, oder sie gehört zu einer VM, deren Konfiguration nicht gelesen werden konnte.</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <span class="status-indicator status-active"></span>
+                <span>AKTIV: von laufender VM genutzt</span>
+            </div>
+            <div class="legend-item">
+                <span class="status-indicator status-template"></span>
+                <span>TEMPLATE: Teil eines VM-Templates</span>
+            </div>
+            <div class="legend-item">
+                <span class="status-indicator status-orphaned"></span>
+                <span>POTENZIELL VERWAIST: keine VM-Zuordnung gefunden</span>
+            </div>
+            <div class="legend-item">
+                <span class="status-indicator status-helper"></span>
+                <span>HELPER: Hilfsdatei ohne eigentliche Daten</span>
+            </div>
+        </div>
+        
+        <h2>Neue Funktionen im VMDK-Management</h2>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>Ganzheitlicher Überblick</h3>
+                <p>Anstatt nur verwaiste VMDKs anzuzeigen, bietet Version 28.0 eine Gesamtübersicht aller VMDKs mit klarem Status.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Verbesserte Klassifizierung</h3>
+                <p>Mehrstufige Pfadanalyse und umfangreichere Kriterien für zuverlässigere Erkennung von VM-Zuordnungen.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Leistungsstarke Suchfunktion</h3>
+                <p>Echtzeitsuche und Filterung nach Namen, Status, Datastore oder anderen Attributen.</p>
+            </div>
+            <div class="feature-card">
+                <h3>CSV-Export</h3>
+                <p>Export der VMDK-Daten für Dokumentation, externe Analyse oder Automatisierung.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Detaillierte Erklärungen</h3>
+                <p>Klare Erklärungen für jeden VMDK-Status, um Entscheidungen zu erleichtern.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Hilfsdatei-Erkennung</h3>
+                <p>Automatische Identifikation von Hilfsdateien wie Change Tracking-VMDKs, die keine eigentlichen Daten enthalten.</p>
+            </div>
+        </div>
+        
+        <div class="banner">
+            <h2>Optimierte Datensammlung</h2>
+            <p>
+                Die Version 28.0 bietet eine bis zu 40% schnellere Abfrage von VMDK-Informationen, 
+                verbesserte Fehlerbehandlung bei Netzwerkproblemen und intelligente Zwischenspeicherung 
+                häufig abgefragter Daten.
+            </p>
+            <a href="VMDK_MANAGEMENT.md" class="cta-button">Vollständige Dokumentation ansehen</a>
+        </div>
+        
+        <a href="vsphere-topology-demo.html" class="cta-button">Zurück zur Topologie-Demo</a>
+        <a href="README-V28.0.md" class="cta-button">Vollständige Release Notes ansehen</a>
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <div>
+                <p>VMware vSphere Reporter v28.0</p>
+                <p>© 2025 Bechtle GmbH. Alle Rechte vorbehalten.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filter-Buttons
+            const filterButtons = document.querySelectorAll('.filter-button');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Entferne aktiven Status von allen Buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Setze aktiven Status für diesen Button
+                    this.classList.add('active');
+                    
+                    // Filtere die Tabelle
+                    const filter = this.getAttribute('data-filter');
+                    filterVMDKTable(filter);
+                });
+            });
+            
+            // Suchfeld
+            const searchInput = document.getElementById('vmdk-search');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    // Hole aktiven Filter
+                    const activeFilter = document.querySelector('.filter-button.active').getAttribute('data-filter');
+                    
+                    // Wende Filter und Suche an
+                    filterVMDKTable(activeFilter, this.value.toLowerCase());
+                });
+            }
+            
+            // CSV-Export
+            const exportButton = document.getElementById('export-vmdks');
+            if (exportButton) {
+                exportButton.addEventListener('click', function() {
+                    exportToCSV('vmdk-table', 'vsphere_vmdks.csv');
+                });
+            }
+            
+            function filterVMDKTable(statusFilter, searchTerm = '') {
+                const table = document.getElementById('vmdk-table');
+                const rows = table.querySelectorAll('tbody tr');
+                
+                rows.forEach(row => {
+                    const status = row.getAttribute('data-status');
+                    const rowText = row.textContent.toLowerCase();
+                    
+                    // Statusfilter anwenden
+                    const statusMatch = statusFilter === 'all' || status.includes(statusFilter);
+                    
+                    // Suchfilter anwenden
+                    const searchMatch = searchTerm === '' || rowText.includes(searchTerm);
+                    
+                    // Zeile ein-/ausblenden
+                    if (statusMatch && searchMatch) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+            
+            function exportToCSV(tableId, filename) {
+                const table = document.getElementById(tableId);
+                const rows = table.querySelectorAll('tr');
+                
+                // CSV-Header erstellen
+                const headers = [];
+                const headerCells = rows[0].querySelectorAll('th');
+                headerCells.forEach(cell => {
+                    headers.push('"' + cell.textContent.trim() + '"');
+                });
+                
+                // CSV-Zeilen erstellen
+                const csvData = [];
+                csvData.push(headers.join(','));
+                
+                // Nur sichtbare Zeilen exportieren
+                for (let i = 1; i < rows.length; i++) {
+                    if (rows[i].style.display !== 'none') {
+                        const rowData = [];
+                        const cells = rows[i].querySelectorAll('td');
+                        cells.forEach(cell => {
+                            // Extrahiere nur den Text ohne Status-Indikator
+                            let text = cell.textContent.trim();
+                            rowData.push('"' + text.replace(/"/g, '""') + '"');
+                        });
+                        csvData.push(rowData.join(','));
+                    }
+                }
+                
+                // CSV-Datei erstellen und herunterladen
+                const csv = csvData.join('\n');
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                
+                // Datei herunterladen, wenn der Browser es unterstützt
+                if (navigator.msSaveBlob) {
+                    // IE11 Support
+                    navigator.msSaveBlob(blob, filename);
+                } else {
+                    // Moderne Browser
+                    link.href = URL.createObjectURL(blob);
+                    link.setAttribute('download', filename);
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

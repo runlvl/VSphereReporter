@@ -1,0 +1,21 @@
+ÄNDERUNGEN IN VERSION 23.1:
+
+- Behoben: AttributeError in main_window.py bzgl. 'get_selected_formats'
+  * Nicht existierende Methoden wurden ersetzt durch den korrekten Methodenaufruf
+  * Starker Fokus auf Fehlervermeidung zur Absturzverhinderung
+
+- Verbesserte Fehlerbehandlung in der Berichtgenerierung
+  * Drei-Ebenen-Fallback-System implementiert
+  * Detailliertere Fehlerprotokolle zur besseren Diagnose
+
+- Verbesserte Benutzerfreundlichkeit
+  * Feste Navigationsleiste im HTML-Bericht bleibt beim Scrollen sichtbar
+  * Verbesserte Sprungmarken für VM-Snapshots und verwaiste VMDKs
+
+- Umfassende Dokumentation
+  * Ausführliche Fehlerbehebungshinweise in README-FIXED-V4.txt
+  * Detailliertere Fehleranzeige im Log-Widget
+  
+- Überprüfungsmechanismen für die Report-Optionen-Auswahl verbessert
+
+Diese Version sollte die kritischen Probleme beheben, die in früheren Versionen zum Absturz der Anwendung führten.

@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ report_title }} - {{ report_date.strftime('%d.%m.%Y') }}</title>
+    <style>
+        :root {
+            --bechtle-dark-blue: #00355e;
+            --bechtle-orange: #da6f1e;
+            --bechtle-green: #23a96a;
+            --bechtle-light-gray: #f3f3f3;
+            --bechtle-dark-gray: #5a5a5a;
+            --status-active: #23a96a;
+            --status-template: #6a5acd;
+            --status-orphaned: #da6f1e;
+            --status-unknown: #5a5a5a;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-title h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .header-title p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .header-logo img {
+            height: 40px;
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .report-section {
+            margin-bottom: 40px;
+        }
+        
+        h2 {
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--bechtle-light-gray);
+        }
+        
+        .section-description {
+            margin-bottom: 20px;
+            color: var(--bechtle-dark-gray);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: white;
+        }
+        
+        th {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            text-align: left;
+            padding: 12px 15px;
+        }
+        
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--bechtle-light-gray);
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--bechtle-light-gray);
+        }
+        
+        tr:hover {
+            background-color: rgba(218, 111, 30, 0.1);
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .status-active {
+            background-color: var(--status-active);
+        }
+        
+        .status-template {
+            background-color: var(--status-template);
+        }
+        
+        .status-orphaned {
+            background-color: var(--status-orphaned);
+        }
+        
+        .status-unknown {
+            background-color: var(--status-unknown);
+        }
+        
+        .vmdk-status {
+            font-weight: bold;
+        }
+        
+        .vmdk-status-active {
+            color: var(--status-active);
+        }
+        
+        .vmdk-status-template {
+            color: var(--status-template);
+        }
+        
+        .vmdk-status-orphaned {
+            color: var(--status-orphaned);
+        }
+        
+        .vmdk-status-unknown {
+            color: var(--status-unknown);
+        }
+        
+        .snapshot-age-warning {
+            color: var(--bechtle-orange);
+            font-weight: bold;
+        }
+        
+        .snapshot-age-critical {
+            color: red;
+            font-weight: bold;
+        }
+        
+        .topology-container {
+            width: 100%;
+            height: 600px;
+            border: 1px solid var(--bechtle-light-gray);
+            border-radius: 8px;
+            background-color: white;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .toolbar {
+            background-color: var(--bechtle-light-gray);
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .search-container {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .filter-button {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .filter-button:hover {
+            background-color: var(--bechtle-light-gray);
+        }
+        
+        .filter-button.active {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+        }
+        
+        .export-button {
+            background-color: var(--bechtle-orange);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        
+        .export-button:hover {
+            background-color: #c05f15;
+        }
+        
+        .legend {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: var(--bechtle-light-gray);
+            border-radius: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        
+        footer {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-logo img {
+            height: 30px;
+            margin-bottom: 10px;
+        }
+        
+        .footer-text p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 14px;
+            z-index: 1000;
+            max-width: 300px;
+            display: none;
+        }
+        
+        .has-tooltip:hover + .tooltip {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content, .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .header-logo, .footer-logo {
+                margin-bottom: 15px;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-title">
+                <h1>{{ report_title }}</h1>
+                <p>Generiert am {{ report_date.strftime('%d.%m.%Y um %H:%M') }} Uhr</p>
+            </div>
+            <div class="header-logo">
+                {% if bechtle_logo %}
+                <img src="data:image/png;base64,{{ bechtle_logo }}" alt="Bechtle Logo">
+                {% else %}
+                <div style="color: white; font-weight: bold;">BECHTLE</div>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <!-- Navigation Menu -->
+        <div class="report-section">
+            <h2>Inhaltsverzeichnis</h2>
+            <ul>
+                {% for section in sections %}
+                <li><a href="#{{ section.id }}">{{ section.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <!-- Topology Section -->
+        <div id="topology" class="report-section">
+            <h2>Infrastruktur-Topologie</h2>
+            <p class="section-description">Interaktive graphische Übersicht der vSphere-Infrastruktur.</p>
+            
+            <div class="topology-container">
+                {{ topology_chart|safe }}
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <span class="status-indicator" style="background-color: var(--bechtle-dark-blue);"></span>
+                    <span>vCenter / Datacenter</span>
+                </div>
+                <div class="legend-item">
+                    <span class="status-indicator" style="background-color: var(--bechtle-orange);"></span>
+                    <span>Cluster</span>
+                </div>
+                <div class="legend-item">
+                    <span class="status-indicator" style="background-color: var(--bechtle-green);"></span>
+                    <span>Host</span>
+                </div>
+                <div class="legend-item">
+                    <span class="status-indicator" style="background-color: var(--bechtle-dark-gray);"></span>
+                    <span>VM / Template</span>
+                </div>
+                <div class="legend-item">
+                    <span class="status-indicator" style="background-color: #6a5acd;"></span>
+                    <span>Datastore</span>
+                </div>
+                <div class="legend-item">
+                    <span class="status-indicator" style="background-color: #008b8b;"></span>
+                    <span>Netzwerk</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- VMware Tools Section -->
+        {% if data.vmware_tools %}
+        <div id="vmware_tools" class="report-section">
+            <h2>VMware Tools Versionen</h2>
+            <p class="section-description">VMware Tools Versionen für alle virtuellen Maschinen, sortiert nach ältester Version zuerst.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>VM Name</th>
+                        <th>VMware Tools Version</th>
+                        <th>Status</th>
+                        <th>VM Version</th>
+                        <th>Betriebssystem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vm in data.vmware_tools %}
+                    <tr>
+                        <td>{{ vm.name }}</td>
+                        <td>{{ vm.tools_version }}</td>
+                        <td>{{ vm.tools_status }}</td>
+                        <td>{{ vm.vm_version }}</td>
+                        <td>{{ vm.guest_full_name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        
+        <!-- Snapshots Section -->
+        {% if data.snapshots %}
+        <div id="snapshots" class="report-section">
+            <h2>VM Snapshots</h2>
+            <p class="section-description">Snapshots aller virtuellen Maschinen, sortiert nach ältesten zuerst.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>VM Name</th>
+                        <th>Snapshot Name</th>
+                        <th>Erstellungsdatum</th>
+                        <th>Alter (Tage)</th>
+                        <th>Beschreibung</th>
+                        <th>Größe</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for snapshot in data.snapshots %}
+                    <tr>
+                        <td>{{ snapshot.vm_name }}</td>
+                        <td>{{ snapshot.name }}</td>
+                        <td>{{ snapshot.create_time|format_datetime }}</td>
+                        <td class="{% if snapshot.age_days > 30 %}snapshot-age-critical{% elif snapshot.age_days > 14 %}snapshot-age-warning{% endif %}">
+                            {{ snapshot.age_days }}
+                        </td>
+                        <td>{{ snapshot.description }}</td>
+                        <td>{{ snapshot.size_mb|format_size }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        
+        <!-- VMDKs Section -->
+        {% if data.orphaned_vmdks %}
+        <div id="orphaned_vmdks" class="report-section">
+            <h2>VMDK-Dateien</h2>
+            <p class="section-description">Übersicht aller VMDK-Dateien in der Umgebung mit Status und Zuordnungsinformationen.</p>
+            
+            <!-- VMDK Toolbar -->
+            <div class="toolbar">
+                <div class="search-container">
+                    <input type="text" id="vmdk-search" placeholder="Nach VMDK-Namen, Datastore oder Status suchen...">
+                </div>
+                <div class="filter-container">
+                    <button class="filter-button active" data-filter="all">
+                        <span class="status-indicator" style="background-color: #333;"></span>
+                        Alle
+                    </button>
+                    <button class="filter-button" data-filter="AKTIV">
+                        <span class="status-indicator status-active"></span>
+                        Aktive VMDKs
+                    </button>
+                    <button class="filter-button" data-filter="TEMPLATE">
+                        <span class="status-indicator status-template"></span>
+                        Templates
+                    </button>
+                    <button class="filter-button" data-filter="VERWAIST">
+                        <span class="status-indicator status-orphaned"></span>
+                        Potentiell verwaist
+                    </button>
+                </div>
+                <button class="export-button" id="export-vmdks">Als CSV exportieren</button>
+            </div>
+            
+            <table id="vmdk-table">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>VM</th>
+                        <th>Datastore</th>
+                        <th>Pfad</th>
+                        <th>Größe</th>
+                        <th>Letzte Änderung</th>
+                        <th class="has-tooltip">Erklärung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vmdk in data.orphaned_vmdks %}
+                    <tr data-status="{{ vmdk.status }}">
+                        <td>
+                            <span class="status-indicator 
+                                {% if 'AKTIV' in vmdk.status %}status-active
+                                {% elif 'TEMPLATE' in vmdk.status %}status-template
+                                {% elif 'VERWAIST' in vmdk.status %}status-orphaned
+                                {% else %}status-unknown{% endif %}"></span>
+                            <span class="vmdk-status 
+                                {% if 'AKTIV' in vmdk.status %}vmdk-status-active
+                                {% elif 'TEMPLATE' in vmdk.status %}vmdk-status-template
+                                {% elif 'VERWAIST' in vmdk.status %}vmdk-status-orphaned
+                                {% else %}vmdk-status-unknown{% endif %}">
+                                {{ vmdk.status }}
+                            </span>
+                        </td>
+                        <td>{{ vmdk.vm or '-' }}</td>
+                        <td>{{ vmdk.datastore }}</td>
+                        <td>{{ vmdk.path }}</td>
+                        <td>{{ vmdk.size_mb|format_size }}</td>
+                        <td>{{ vmdk.modification_time|format_datetime }}</td>
+                        <td class="has-tooltip">{{ vmdk.explanation }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        
+        <!-- VMs Section -->
+        {% if data.vms %}
+        <div id="vms" class="report-section">
+            <h2>Virtuelle Maschinen</h2>
+            <p class="section-description">Übersicht aller virtuellen Maschinen in der Umgebung.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>vCPUs</th>
+                        <th>RAM (MB)</th>
+                        <th>Host</th>
+                        <th>Betriebssystem</th>
+                        <th>IP-Adresse</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vm in data.vms %}
+                    <tr>
+                        <td>{{ vm.name }}</td>
+                        <td>{{ vm.status }}</td>
+                        <td>{{ vm.cpu }}</td>
+                        <td>{{ vm.memory_mb }}</td>
+                        <td>{{ vm.host }}</td>
+                        <td>{{ vm.guest_full_name }}</td>
+                        <td>{{ vm.ip_address }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        
+        <!-- Hosts Section -->
+        {% if data.hosts %}
+        <div id="hosts" class="report-section">
+            <h2>ESXi Hosts</h2>
+            <p class="section-description">Übersicht aller ESXi Hosts in der Umgebung.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Version</th>
+                        <th>CPU Modell</th>
+                        <th>CPU Kerne</th>
+                        <th>RAM (GB)</th>
+                        <th>Cluster</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for host in data.hosts %}
+                    <tr>
+                        <td>{{ host.name }}</td>
+                        <td>{{ host.status }}</td>
+                        <td>{{ host.version }}</td>
+                        <td>{{ host.cpu_model }}</td>
+                        <td>{{ host.cpu_cores }}</td>
+                        <td>{{ host.memory_size|format_size }}</td>
+                        <td>{{ host.cluster }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        
+        <!-- Datastores Section -->
+        {% if data.datastores %}
+        <div id="datastores" class="report-section">
+            <h2>Datastores</h2>
+            <p class="section-description">Übersicht aller Datastores in der Umgebung.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Typ</th>
+                        <th>Kapazität</th>
+                        <th>Freier Speicher</th>
+                        <th>Auslastung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ds in data.datastores %}
+                    <tr>
+                        <td>{{ ds.name }}</td>
+                        <td>{{ ds.type }}</td>
+                        <td>{{ ds.capacity|format_size }}</td>
+                        <td>{{ ds.free_space|format_size }}</td>
+                        <td>{{ ((ds.capacity - ds.free_space) / ds.capacity * 100)|format_percent }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        
+        <!-- Clusters Section -->
+        {% if data.clusters %}
+        <div id="clusters" class="report-section">
+            <h2>Cluster</h2>
+            <p class="section-description">Übersicht aller Cluster in der Umgebung.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Anzahl Hosts</th>
+                        <th>Anzahl VMs</th>
+                        <th>DRS aktiviert</th>
+                        <th>HA aktiviert</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cluster in data.clusters %}
+                    <tr>
+                        <td>{{ cluster.name }}</td>
+                        <td>{{ cluster.host_count }}</td>
+                        <td>{{ cluster.vm_count }}</td>
+                        <td>{{ 'Ja' if cluster.drs_enabled else 'Nein' }}</td>
+                        <td>{{ 'Ja' if cluster.ha_enabled else 'Nein' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        
+        <!-- Resource Pools Section -->
+        {% if data.resource_pools %}
+        <div id="resource_pools" class="report-section">
+            <h2>Resource Pools</h2>
+            <p class="section-description">Übersicht aller Resource Pools in der Umgebung.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>CPU Shares</th>
+                        <th>Memory Shares</th>
+                        <th>CPU Reservation</th>
+                        <th>Memory Reservation</th>
+                        <th>Limits</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pool in data.resource_pools %}
+                    <tr>
+                        <td>{{ pool.name }}</td>
+                        <td>{{ pool.cpu_shares }}</td>
+                        <td>{{ pool.memory_shares }}</td>
+                        <td>{{ pool.cpu_reservation }}</td>
+                        <td>{{ pool.memory_reservation }}</td>
+                        <td>{{ pool.cpu_limit if pool.cpu_limit > 0 else 'Unlimited' }} / {{ pool.memory_limit if pool.memory_limit > 0 else 'Unlimited' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        
+        <!-- Networks Section -->
+        {% if data.networks %}
+        <div id="networks" class="report-section">
+            <h2>Netzwerke</h2>
+            <p class="section-description">Übersicht aller Netzwerke in der Umgebung.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Typ</th>
+                        <th>VLAN ID</th>
+                        <th>Anzahl VMs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for network in data.networks %}
+                    <tr>
+                        <td>{{ network.name }}</td>
+                        <td>{{ network.type }}</td>
+                        <td>{{ network.vlan_id if network.vlan_id else '-' }}</td>
+                        <td>{{ network.vm_count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-text">
+                <p>VMware vSphere Reporter v28.0</p>
+                <p>© {{ report_date.year }} Bechtle GmbH. Alle Rechte vorbehalten.</p>
+            </div>
+            <div class="footer-logo">
+                {% if bechtle_logo %}
+                <img src="data:image/png;base64,{{ bechtle_logo }}" alt="Bechtle Logo">
+                {% endif %}
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // VMDK-Tabelle Filterfunktionen
+        document.addEventListener('DOMContentLoaded', function() {
+            // VMDK-Daten für Client-seitige Filterung
+            const vmdkData = {{ vmdk_data_json|safe }};
+            
+            // Filter-Buttons
+            const filterButtons = document.querySelectorAll('.filter-button');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Entferne aktiven Status von allen Buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Setze aktiven Status für diesen Button
+                    this.classList.add('active');
+                    
+                    // Filtere die Tabelle
+                    const filter = this.getAttribute('data-filter');
+                    filterVMDKTable(filter);
+                });
+            });
+            
+            // Suchfeld
+            const searchInput = document.getElementById('vmdk-search');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    // Hole aktiven Filter
+                    const activeFilter = document.querySelector('.filter-button.active').getAttribute('data-filter');
+                    
+                    // Wende Filter und Suche an
+                    filterVMDKTable(activeFilter, this.value.toLowerCase());
+                });
+            }
+            
+            // CSV-Export
+            const exportButton = document.getElementById('export-vmdks');
+            if (exportButton) {
+                exportButton.addEventListener('click', function() {
+                    exportToCSV('vmdk-table', 'vsphere_vmdks.csv');
+                });
+            }
+            
+            function filterVMDKTable(statusFilter, searchTerm = '') {
+                const table = document.getElementById('vmdk-table');
+                const rows = table.querySelectorAll('tbody tr');
+                
+                rows.forEach(row => {
+                    const status = row.getAttribute('data-status');
+                    const rowText = row.textContent.toLowerCase();
+                    
+                    // Statusfilter anwenden
+                    const statusMatch = statusFilter === 'all' || status.includes(statusFilter);
+                    
+                    // Suchfilter anwenden
+                    const searchMatch = searchTerm === '' || rowText.includes(searchTerm);
+                    
+                    // Zeile ein-/ausblenden
+                    if (statusMatch && searchMatch) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+            
+            function exportToCSV(tableId, filename) {
+                const table = document.getElementById(tableId);
+                const rows = table.querySelectorAll('tr');
+                
+                // CSV-Header erstellen
+                const headers = [];
+                const headerCells = rows[0].querySelectorAll('th');
+                headerCells.forEach(cell => {
+                    headers.push('"' + cell.textContent.trim() + '"');
+                });
+                
+                // CSV-Zeilen erstellen
+                const csvData = [];
+                csvData.push(headers.join(','));
+                
+                // Nur sichtbare Zeilen exportieren
+                for (let i = 1; i < rows.length; i++) {
+                    if (rows[i].style.display !== 'none') {
+                        const rowData = [];
+                        const cells = rows[i].querySelectorAll('td');
+                        cells.forEach(cell => {
+                            // Extrahiere nur den Text ohne Status-Indikator
+                            let text = cell.textContent.trim();
+                            rowData.push('"' + text.replace(/"/g, '""') + '"');
+                        });
+                        csvData.push(rowData.join(','));
+                    }
+                }
+                
+                // CSV-Datei erstellen und herunterladen
+                const csv = csvData.join('\n');
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                
+                // Datei herunterladen, wenn der Browser es unterstützt
+                if (navigator.msSaveBlob) {
+                    // IE11 Support
+                    navigator.msSaveBlob(blob, filename);
+                } else {
+                    // Moderne Browser
+                    link.href = URL.createObjectURL(blob);
+                    link.setAttribute('download', filename);
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            }
+            
+            // Tooltips für Erklärungsspalte
+            const hasTooltipElements = document.querySelectorAll('.has-tooltip');
+            hasTooltipElements.forEach(element => {
+                element.addEventListener('mouseenter', function(e) {
+                    const tooltipText = this.textContent;
+                    
+                    // Erstelle Tooltip
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'tooltip';
+                    tooltip.textContent = tooltipText;
+                    document.body.appendChild(tooltip);
+                    
+                    // Positioniere Tooltip
+                    const rect = this.getBoundingClientRect();
+                    tooltip.style.left = rect.left + 'px';
+                    tooltip.style.top = (rect.bottom + 5) + 'px';
+                    tooltip.style.display = 'block';
+                    
+                    // Entferne Tooltip beim Verlassen
+                    this.addEventListener('mouseleave', function() {
+                        document.body.removeChild(tooltip);
+                    }, { once: true });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

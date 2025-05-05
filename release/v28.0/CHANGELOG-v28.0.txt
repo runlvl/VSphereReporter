@@ -1,0 +1,61 @@
+--------------------------------------
+VMware vSphere Reporter Version 28.0
+--------------------------------------
+Veröffentlicht am: 5. Mai 2025
+Kompatibilität: VMware vSphere 6.7, 7.0, 8.0
+
+NEUERUNGEN:
+
+[+] Erweiterte Topologie-Visualisierung mit zusätzlichen Funktionen
+    - Verbesserte Darstellung der Beziehungen zwischen Komponenten
+    - Filtermöglichkeiten nach Komponententypen (Hosts, VMs, Datastores)
+    - Exportfunktion des Topologie-Diagramms als SVG oder PNG
+    - Verbesserte Leistung bei großen Umgebungen (>1000 VMs)
+    - Detailliertere Tooltip-Informationen mit Ressourcenauslastung
+
+[+] VMDK-Management-Funktionen
+    - Neue Suchfunktion für VMDKs nach Namen, Größe oder Status
+    - Exportmöglichkeit der VMDK-Liste im CSV-Format
+    - Verbesserte Erklärungen zur VMDK-Klassifizierung
+    - Gruppierungsfunktion nach Datastore oder VM
+
+[+] PDF-Berichte mit Topologie-Diagrammen
+    - PDF-Exporte enthalten jetzt auch statische Topologie-Visualisierungen
+    - Anpassbare Detailtiefe für PDF-Exporte
+    - Verbesserte Formatierung der Tabellen in PDF-Berichten
+
+VERBESSERUNGEN:
+
+[*] Optimierte Datensammlung
+    - Bis zu 40% schnellere Abfrage von VMDK-Informationen
+    - Verbesserte Fehlerbehandlung bei Netzwerkproblemen
+    - Intelligente Zwischenspeicherung häufig abgefragter Daten
+
+[*] Benutzeroberfläche
+    - Überarbeitete Bechtle-Farbpalette gemäß aktuellstem Corporate Design
+    - Verbesserte Barrierefreiheit (WCAG 2.1 AA-Konformität)
+    - Responsives Design für unterschiedliche Bildschirmgrößen
+
+[*] Wartbarkeit
+    - Modularer Code für einfachere zukünftige Erweiterungen
+    - Umfassendere Logging-Funktionen für bessere Diagnose
+    - Code-Optimierungen für geringeren Speicherverbrauch
+
+FEHLERBEHEBUNGEN:
+
+[*] Behoben: Speicherauslastung erhöhte sich kontinuierlich bei langen Sitzungen
+[*] Behoben: Topologie-Diagramm wurde nicht korrekt aktualisiert nach Daten-Neuladen
+[*] Behoben: Falscher VMDK-Status bei einigen Template-VMs mit mehreren Disks
+[*] Behoben: Absturz bei Verbindung zu vCenter mit bestimmten nicht-ASCII-Zeichen im Hostname
+[*] Behoben: Falsche Sortierung der Snapshots nach Alter in exportierten Berichten
+
+BEKANNTE PROBLEME:
+
+[!] Bei der Verwendung von vSphere 6.7 steht die erweiterte VMDK-Suche nur eingeschränkt zur Verfügung
+[!] Die Barrierefreiheitsfunktionen sind in der Linux-Version noch nicht vollständig implementiert
+[!] Bei besonders komplexen Umgebungen kann die Topologie-Visualisierung sehr langsam werden
+
+--------------------------------------
+Bechtle GmbH
+Cloud Solutions | Datacenter & Endpoint
+--------------------------------------
