@@ -38,6 +38,8 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'vsphere-reporter-v29-se
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['UPLOAD_FOLDER'] = os.path.join(tempfile.gettempdir(), 'vsphere-reporter-exports')
 app.config['DEMO_MODE'] = os.environ.get('VSPHERE_REPORTER_DEMO', 'False').lower() in ('true', '1', 't')
+app.config['JSON_AS_ASCII'] = False  # Stellt sicher, dass JSON-Antworten Unicode-Zeichen korrekt verarbeiten
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 # Stelle sicher, dass das Export-Verzeichnis existiert
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
