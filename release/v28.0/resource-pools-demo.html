@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VMware vSphere Reporter v28.0 - Ressourcenpools Demo</title>
+    <style>
+        :root {
+            --bechtle-dark-blue: #00355e;
+            --bechtle-orange: #da6f1e;
+            --bechtle-green: #23a96a;
+            --bechtle-light-gray: #f3f3f3;
+            --bechtle-dark-gray: #5a5a5a;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: var(--bechtle-light-gray);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            color: var(--bechtle-orange);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        nav ul li a:hover {
+            opacity: 0.8;
+        }
+        
+        .page-title {
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 20px;
+        }
+        
+        .info-box {
+            background-color: white;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-box h2 {
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-box p {
+            margin-bottom: 15px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--bechtle-light-gray);
+        }
+        
+        tr:hover {
+            background-color: #e5e5e5;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .status-green {
+            background-color: var(--bechtle-green);
+        }
+        
+        .status-orange {
+            background-color: var(--bechtle-orange);
+        }
+        
+        .status-red {
+            background-color: #e74c3c;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            border-radius: 5px;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .progress-green {
+            background-color: var(--bechtle-green);
+        }
+        
+        .progress-orange {
+            background-color: var(--bechtle-orange);
+        }
+        
+        .progress-red {
+            background-color: #e74c3c;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            margin-bottom: 40px;
+            color: var(--bechtle-dark-blue);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+        
+        footer p {
+            margin: 5px 0;
+        }
+        
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 20px;
+            }
+            
+            nav ul li {
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">VMware vSphere <span>Reporter</span></div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Startseite</a></li>
+                    <li><a href="demo-menu.html">Demo-Menü</a></li>
+                    <li><a href="downloads.html">Downloads</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <h1 class="page-title">Ressourcenpools Übersicht</h1>
+        
+        <div class="info-box">
+            <h2>Ressourcenpools Informationen</h2>
+            <p>
+                Die Ressourcenpools-Ansicht bietet detaillierte Informationen über die Ressourcenverwaltung in Ihrer vSphere-Umgebung.
+                Ressourcenpools ermöglichen es, CPU- und Arbeitsspeicher-Ressourcen zu gruppieren und dedizierte Leistungstöpfe für Anwendungsgruppen bereitzustellen.
+            </p>
+        </div>
+        
+        <div class="info-box">
+            <h2>Ressourcenpools</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Cluster</th>
+                        <th>VMs</th>
+                        <th>CPU Shares</th>
+                        <th>CPU Limit</th>
+                        <th>CPU Reservierung</th>
+                        <th>Speicher Shares</th>
+                        <th>Speicher Limit</th>
+                        <th>Speicher Reservierung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Production</td>
+                        <td>ProdCluster</td>
+                        <td>128</td>
+                        <td>High (8000)</td>
+                        <td>Unbegrenzt</td>
+                        <td>48 GHz</td>
+                        <td>High (8000)</td>
+                        <td>Unbegrenzt</td>
+                        <td>512 GB</td>
+                    </tr>
+                    <tr>
+                        <td>Test</td>
+                        <td>ProdCluster</td>
+                        <td>42</td>
+                        <td>Normal (4000)</td>
+                        <td>72 GHz</td>
+                        <td>Keine</td>
+                        <td>Normal (4000)</td>
+                        <td>768 GB</td>
+                        <td>Keine</td>
+                    </tr>
+                    <tr>
+                        <td>Development</td>
+                        <td>ProdCluster</td>
+                        <td>16</td>
+                        <td>Low (2000)</td>
+                        <td>36 GHz</td>
+                        <td>Keine</td>
+                        <td>Low (2000)</td>
+                        <td>384 GB</td>
+                        <td>Keine</td>
+                    </tr>
+                    <tr>
+                        <td>DevOps</td>
+                        <td>DevCluster</td>
+                        <td>32</td>
+                        <td>High (8000)</td>
+                        <td>Unbegrenzt</td>
+                        <td>24 GHz</td>
+                        <td>High (8000)</td>
+                        <td>Unbegrenzt</td>
+                        <td>256 GB</td>
+                    </tr>
+                    <tr>
+                        <td>QA</td>
+                        <td>DevCluster</td>
+                        <td>14</td>
+                        <td>Normal (4000)</td>
+                        <td>36 GHz</td>
+                        <td>Keine</td>
+                        <td>Normal (4000)</td>
+                        <td>256 GB</td>
+                        <td>Keine</td>
+                    </tr>
+                    <tr>
+                        <td>Infrastructure</td>
+                        <td>MGMTCluster</td>
+                        <td>22</td>
+                        <td>High (8000)</td>
+                        <td>Unbegrenzt</td>
+                        <td>24 GHz</td>
+                        <td>High (8000)</td>
+                        <td>Unbegrenzt</td>
+                        <td>256 GB</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="info-box">
+            <h2>Detaillierte Ressourcenpool-Informationen - Production</h2>
+            <p>
+                Im tatsächlichen VMware vSphere Reporter würde hier eine detaillierte Ansicht des ausgewählten
+                Ressourcenpools mit CPU- und Speicherauslastung sowie VM-Zuordnungen angezeigt werden.
+            </p>
+            <table>
+                <tr>
+                    <td><strong>Name:</strong></td>
+                    <td>Production</td>
+                </tr>
+                <tr>
+                    <td><strong>Cluster:</strong></td>
+                    <td>ProdCluster</td>
+                </tr>
+                <tr>
+                    <td><strong>Status:</strong></td>
+                    <td>Normal</td>
+                </tr>
+                <tr>
+                    <td><strong>Anzahl VMs:</strong></td>
+                    <td>128</td>
+                </tr>
+                <tr>
+                    <td><strong>CPU Shares:</strong></td>
+                    <td>High (8000)</td>
+                </tr>
+                <tr>
+                    <td><strong>CPU Limit:</strong></td>
+                    <td>Unbegrenzt</td>
+                </tr>
+                <tr>
+                    <td><strong>CPU Reservierung:</strong></td>
+                    <td>48 GHz</td>
+                </tr>
+                <tr>
+                    <td><strong>RAM Shares:</strong></td>
+                    <td>High (8000)</td>
+                </tr>
+                <tr>
+                    <td><strong>RAM Limit:</strong></td>
+                    <td>Unbegrenzt</td>
+                </tr>
+                <tr>
+                    <td><strong>RAM Reservierung:</strong></td>
+                    <td>512 GB</td>
+                </tr>
+            </table>
+            
+            <h3 style="margin-top: 20px; color: var(--bechtle-dark-blue);">CPU Auslastung</h3>
+            <div class="progress-container">
+                <div class="progress-bar progress-orange" style="width: 68%">68%</div>
+            </div>
+            <p style="margin-top: 5px; font-size: 14px;">98.5 GHz von 145.2 GHz verwendet</p>
+            
+            <h3 style="margin-top: 20px; color: var(--bechtle-dark-blue);">RAM Auslastung</h3>
+            <div class="progress-container">
+                <div class="progress-bar progress-orange" style="width: 74%">74%</div>
+            </div>
+            <p style="margin-top: 5px; font-size: 14px;">891 GB von 1200 GB verwendet</p>
+            
+            <h3 style="margin-top: 20px; color: var(--bechtle-dark-blue);">Top 5 VMs nach CPU-Nutzung</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>VM Name</th>
+                        <th>CPU Nutzung</th>
+                        <th>RAM Nutzung</th>
+                        <th>CPU Shares</th>
+                        <th>RAM Shares</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>sql-db01</td>
+                        <td>12.2 GHz</td>
+                        <td>96 GB</td>
+                        <td>High</td>
+                        <td>High</td>
+                    </tr>
+                    <tr>
+                        <td>oracle-db01</td>
+                        <td>10.8 GHz</td>
+                        <td>128 GB</td>
+                        <td>High</td>
+                        <td>High</td>
+                    </tr>
+                    <tr>
+                        <td>sap-app01</td>
+                        <td>8.4 GHz</td>
+                        <td>64 GB</td>
+                        <td>High</td>
+                        <td>High</td>
+                    </tr>
+                    <tr>
+                        <td>erp-app01</td>
+                        <td>7.2 GHz</td>
+                        <td>48 GB</td>
+                        <td>High</td>
+                        <td>High</td>
+                    </tr>
+                    <tr>
+                        <td>web-server01</td>
+                        <td>6.4 GHz</td>
+                        <td>32 GB</td>
+                        <td>Normal</td>
+                        <td>Normal</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <a href="demo-menu.html" class="back-link">« Zurück zum Demo-Menü</a>
+    </div>
+    
+    <footer>
+        <p>VMware vSphere Reporter v28.0 © 2025 Bechtle GmbH</p>
+        <p>Alle Rechte vorbehalten.</p>
+    </footer>
+</body>
+</html>

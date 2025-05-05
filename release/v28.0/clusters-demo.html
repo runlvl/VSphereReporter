@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VMware vSphere Reporter v28.0 - Cluster Demo</title>
+    <style>
+        :root {
+            --bechtle-dark-blue: #00355e;
+            --bechtle-orange: #da6f1e;
+            --bechtle-green: #23a96a;
+            --bechtle-light-gray: #f3f3f3;
+            --bechtle-dark-gray: #5a5a5a;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: var(--bechtle-light-gray);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            color: var(--bechtle-orange);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        nav ul li a:hover {
+            opacity: 0.8;
+        }
+        
+        .page-title {
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 20px;
+        }
+        
+        .info-box {
+            background-color: white;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-box h2 {
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-box p {
+            margin-bottom: 15px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--bechtle-light-gray);
+        }
+        
+        tr:hover {
+            background-color: #e5e5e5;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .status-green {
+            background-color: var(--bechtle-green);
+        }
+        
+        .status-orange {
+            background-color: var(--bechtle-orange);
+        }
+        
+        .status-red {
+            background-color: #e74c3c;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            border-radius: 5px;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .progress-green {
+            background-color: var(--bechtle-green);
+        }
+        
+        .progress-orange {
+            background-color: var(--bechtle-orange);
+        }
+        
+        .progress-red {
+            background-color: #e74c3c;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            margin-bottom: 40px;
+            color: var(--bechtle-dark-blue);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+        
+        footer p {
+            margin: 5px 0;
+        }
+        
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 20px;
+            }
+            
+            nav ul li {
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">VMware vSphere <span>Reporter</span></div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Startseite</a></li>
+                    <li><a href="demo-menu.html">Demo-Menü</a></li>
+                    <li><a href="downloads.html">Downloads</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <h1 class="page-title">vSphere Cluster Übersicht</h1>
+        
+        <div class="info-box">
+            <h2>Cluster Informationen</h2>
+            <p>
+                Die Cluster-Ansicht bietet detaillierte Informationen über die vSphere-Cluster in Ihrer Umgebung,
+                einschließlich HA/DRS-Konfigurationen, Ressourcennutzung und Performance-Metriken.
+            </p>
+        </div>
+        
+        <div class="info-box">
+            <h2>vSphere Cluster</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Name</th>
+                        <th>Datacenter</th>
+                        <th>Hosts</th>
+                        <th>VMs</th>
+                        <th>CPU Auslastung</th>
+                        <th>RAM Auslastung</th>
+                        <th>vSAN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="status-indicator status-green"></span> Normal</td>
+                        <td>ProdCluster</td>
+                        <td>LUZ-DC01</td>
+                        <td>4</td>
+                        <td>186</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-bar progress-orange" style="width: 68%">68%</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-bar progress-orange" style="width: 72%">72%</div>
+                            </div>
+                        </td>
+                        <td>Aktiviert</td>
+                    </tr>
+                    <tr>
+                        <td><span class="status-indicator status-green"></span> Normal</td>
+                        <td>DevCluster</td>
+                        <td>LUZ-DC01</td>
+                        <td>2</td>
+                        <td>52</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-bar progress-green" style="width: 45%">45%</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-bar progress-green" style="width: 58%">58%</div>
+                            </div>
+                        </td>
+                        <td>Nicht aktiviert</td>
+                    </tr>
+                    <tr>
+                        <td><span class="status-indicator status-green"></span> Normal</td>
+                        <td>MGMTCluster</td>
+                        <td>LUZ-DC01</td>
+                        <td>2</td>
+                        <td>22</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-bar progress-green" style="width: 35%">35%</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-bar progress-green" style="width: 42%">42%</div>
+                            </div>
+                        </td>
+                        <td>Nicht aktiviert</td>
+                    </tr>
+                    <tr>
+                        <td><span class="status-indicator status-orange"></span> Achtung</td>
+                        <td>TestCluster</td>
+                        <td>LUZ-DC02</td>
+                        <td>3</td>
+                        <td>48</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-bar progress-red" style="width: 92%">92%</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-bar progress-orange" style="width: 78%">78%</div>
+                            </div>
+                        </td>
+                        <td>Aktiviert</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="info-box">
+            <h2>Detaillierte Cluster-Konfiguration - ProdCluster</h2>
+            <p>
+                Im tatsächlichen VMware vSphere Reporter würde hier eine detaillierte Ansicht des ausgewählten
+                Clusters mit erweiterten Konfigurationsinformationen und Performance-Metriken angezeigt werden.
+            </p>
+            <table>
+                <tr>
+                    <td><strong>Name:</strong></td>
+                    <td>ProdCluster</td>
+                </tr>
+                <tr>
+                    <td><strong>Datacenter:</strong></td>
+                    <td>LUZ-DC01</td>
+                </tr>
+                <tr>
+                    <td><strong>vSphere Version:</strong></td>
+                    <td>7.0 Update 3</td>
+                </tr>
+                <tr>
+                    <td><strong>Hosts:</strong></td>
+                    <td>4 (esx01, esx02, esx03, esx04)</td>
+                </tr>
+                <tr>
+                    <td><strong>Gesamt CPU:</strong></td>
+                    <td>144 Kerne (288 logische Prozessoren)</td>
+                </tr>
+                <tr>
+                    <td><strong>Gesamt RAM:</strong></td>
+                    <td>2048 GB</td>
+                </tr>
+                <tr>
+                    <td><strong>DRS Status:</strong></td>
+                    <td>Aktiviert (Automatisierungsstufe: Vollständig automatisiert)</td>
+                </tr>
+                <tr>
+                    <td><strong>HA Status:</strong></td>
+                    <td>Aktiviert (Host-Überwachung aktiviert, VM-Überwachung aktiviert)</td>
+                </tr>
+                <tr>
+                    <td><strong>HA Admission Control:</strong></td>
+                    <td>Eingeschaltet (Toleranz: 1 Host-Ausfall)</td>
+                </tr>
+                <tr>
+                    <td><strong>vSAN Status:</strong></td>
+                    <td>Aktiviert (Deduplizierung und Komprimierung aktiviert)</td>
+                </tr>
+                <tr>
+                    <td><strong>EVC Mode:</strong></td>
+                    <td>Intel Skylake</td>
+                </tr>
+                <tr>
+                    <td><strong>Ressourcen-Pools:</strong></td>
+                    <td>3 (Production, Development, Testing)</td>
+                </tr>
+            </table>
+            
+            <h3 style="margin-top: 20px; color: var(--bechtle-dark-blue);">DRS Regeln</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Typ</th>
+                        <th>VMs</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>DB-Server-Separation</td>
+                        <td>Anti-Affinity</td>
+                        <td>oracle-db01, sql-db01, oracle-db02</td>
+                        <td>Aktiviert</td>
+                    </tr>
+                    <tr>
+                        <td>Web-App-Separation</td>
+                        <td>Anti-Affinity</td>
+                        <td>web-server01, web-server02, web-server03</td>
+                        <td>Aktiviert</td>
+                    </tr>
+                    <tr>
+                        <td>App-DB-Affinity</td>
+                        <td>Affinity</td>
+                        <td>erp-app01, erp-db01</td>
+                        <td>Aktiviert</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <a href="demo-menu.html" class="back-link">« Zurück zum Demo-Menü</a>
+    </div>
+    
+    <footer>
+        <p>VMware vSphere Reporter v28.0 © 2025 Bechtle GmbH</p>
+        <p>Alle Rechte vorbehalten.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VMware vSphere Reporter v28.0 - Netzwerke Demo</title>
+    <style>
+        :root {
+            --bechtle-dark-blue: #00355e;
+            --bechtle-orange: #da6f1e;
+            --bechtle-green: #23a96a;
+            --bechtle-light-gray: #f3f3f3;
+            --bechtle-dark-gray: #5a5a5a;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: var(--bechtle-light-gray);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            color: var(--bechtle-orange);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        nav ul li a:hover {
+            opacity: 0.8;
+        }
+        
+        .page-title {
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 20px;
+        }
+        
+        .info-box {
+            background-color: white;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-box h2 {
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-box p {
+            margin-bottom: 15px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--bechtle-light-gray);
+        }
+        
+        tr:hover {
+            background-color: #e5e5e5;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .status-green {
+            background-color: var(--bechtle-green);
+        }
+        
+        .status-orange {
+            background-color: var(--bechtle-orange);
+        }
+        
+        .status-red {
+            background-color: #e74c3c;
+        }
+        
+        .chip {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .chip-blue {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+        }
+        
+        .chip-orange {
+            background-color: var(--bechtle-orange);
+            color: white;
+        }
+        
+        .chip-green {
+            background-color: var(--bechtle-green);
+            color: white;
+        }
+        
+        .chip-gray {
+            background-color: var(--bechtle-dark-gray);
+            color: white;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            margin-bottom: 40px;
+            color: var(--bechtle-dark-blue);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+        
+        footer p {
+            margin: 5px 0;
+        }
+        
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 20px;
+            }
+            
+            nav ul li {
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">VMware vSphere <span>Reporter</span></div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Startseite</a></li>
+                    <li><a href="demo-menu.html">Demo-Menü</a></li>
+                    <li><a href="downloads.html">Downloads</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <h1 class="page-title">Netzwerke Übersicht</h1>
+        
+        <div class="info-box">
+            <h2>Netzwerk Informationen</h2>
+            <p>
+                Die Netzwerk-Ansicht bietet detaillierte Informationen über die virtuellen Netzwerkkonfigurationen 
+                in Ihrer vSphere-Umgebung, einschließlich vSwitches, Distributed Switches, Portgruppen und VLAN-Konfigurationen.
+            </p>
+        </div>
+        
+        <div class="info-box">
+            <h2>vSwitches und Distributed Switches</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Typ</th>
+                        <th>Hosts</th>
+                        <th>Anzahl Uplinks</th>
+                        <th>MTU</th>
+                        <th>Anzahl Portgruppen</th>
+                        <th>VLANs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>vDS-PROD</td>
+                        <td>vSphere Distributed Switch</td>
+                        <td>6</td>
+                        <td>4</td>
+                        <td>9000</td>
+                        <td>12</td>
+                        <td>10, 20, 30, 40, 50, 100-105</td>
+                    </tr>
+                    <tr>
+                        <td>vDS-MGMT</td>
+                        <td>vSphere Distributed Switch</td>
+                        <td>8</td>
+                        <td>2</td>
+                        <td>1500</td>
+                        <td>4</td>
+                        <td>1, 5, 10, 15</td>
+                    </tr>
+                    <tr>
+                        <td>vDS-vSAN</td>
+                        <td>vSphere Distributed Switch</td>
+                        <td>4</td>
+                        <td>2</td>
+                        <td>9000</td>
+                        <td>1</td>
+                        <td>200</td>
+                    </tr>
+                    <tr>
+                        <td>vSwitch0-DEV</td>
+                        <td>Standard vSwitch</td>
+                        <td>2</td>
+                        <td>2</td>
+                        <td>1500</td>
+                        <td>4</td>
+                        <td>60, 61, 62, 63</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="info-box">
+            <h2>Portgruppen</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Switch</th>
+                        <th>VLAN</th>
+                        <th>Anzahl VMs</th>
+                        <th>Netzwerksicherheit</th>
+                        <th>Verkehrsformung</th>
+                        <th>Failover Reihenfolge</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>PG-PROD-APP</td>
+                        <td>vDS-PROD</td>
+                        <td>10</td>
+                        <td>42</td>
+                        <td>
+                            <div class="chip chip-green">Promiscuous Mode: Ablehnen</div>
+                            <div class="chip chip-green">MAC-Adressänderungen: Ablehnen</div>
+                            <div class="chip chip-green">Gefälschte Übertragungen: Ablehnen</div>
+                        </td>
+                        <td>Keine</td>
+                        <td>Aktiv: vmnic0,vmnic1; Standby: vmnic2,vmnic3</td>
+                    </tr>
+                    <tr>
+                        <td>PG-PROD-DB</td>
+                        <td>vDS-PROD</td>
+                        <td>20</td>
+                        <td>18</td>
+                        <td>
+                            <div class="chip chip-green">Promiscuous Mode: Ablehnen</div>
+                            <div class="chip chip-green">MAC-Adressänderungen: Ablehnen</div>
+                            <div class="chip chip-green">Gefälschte Übertragungen: Ablehnen</div>
+                        </td>
+                        <td>Keine</td>
+                        <td>Aktiv: vmnic0,vmnic1; Standby: vmnic2,vmnic3</td>
+                    </tr>
+                    <tr>
+                        <td>PG-PROD-WEB</td>
+                        <td>vDS-PROD</td>
+                        <td>30</td>
+                        <td>24</td>
+                        <td>
+                            <div class="chip chip-green">Promiscuous Mode: Ablehnen</div>
+                            <div class="chip chip-green">MAC-Adressänderungen: Ablehnen</div>
+                            <div class="chip chip-green">Gefälschte Übertragungen: Ablehnen</div>
+                        </td>
+                        <td>Keine</td>
+                        <td>Aktiv: vmnic0,vmnic1; Standby: vmnic2,vmnic3</td>
+                    </tr>
+                    <tr>
+                        <td>PG-MGMT-VMs</td>
+                        <td>vDS-MGMT</td>
+                        <td>15</td>
+                        <td>12</td>
+                        <td>
+                            <div class="chip chip-green">Promiscuous Mode: Ablehnen</div>
+                            <div class="chip chip-green">MAC-Adressänderungen: Ablehnen</div>
+                            <div class="chip chip-green">Gefälschte Übertragungen: Ablehnen</div>
+                        </td>
+                        <td>Keine</td>
+                        <td>Aktiv: vmnic4,vmnic5</td>
+                    </tr>
+                    <tr>
+                        <td>PG-vSAN</td>
+                        <td>vDS-vSAN</td>
+                        <td>200</td>
+                        <td>0</td>
+                        <td>
+                            <div class="chip chip-green">Promiscuous Mode: Ablehnen</div>
+                            <div class="chip chip-green">MAC-Adressänderungen: Ablehnen</div>
+                            <div class="chip chip-green">Gefälschte Übertragungen: Ablehnen</div>
+                        </td>
+                        <td>Keine</td>
+                        <td>Aktiv: vmnic6,vmnic7</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="info-box">
+            <h2>Detaillierte vSwitch-Informationen - vDS-PROD</h2>
+            <p>
+                Im tatsächlichen VMware vSphere Reporter würde hier eine detaillierte Ansicht des ausgewählten
+                vSwitches mit erweiterten Konfigurationsinformationen angezeigt werden.
+            </p>
+            <table>
+                <tr>
+                    <td><strong>Name:</strong></td>
+                    <td>vDS-PROD</td>
+                </tr>
+                <tr>
+                    <td><strong>Typ:</strong></td>
+                    <td>vSphere Distributed Switch</td>
+                </tr>
+                <tr>
+                    <td><strong>Version:</strong></td>
+                    <td>7.0.0</td>
+                </tr>
+                <tr>
+                    <td><strong>Anzahl Ports:</strong></td>
+                    <td>2000</td>
+                </tr>
+                <tr>
+                    <td><strong>MTU:</strong></td>
+                    <td>9000</td>
+                </tr>
+                <tr>
+                    <td><strong>Verbundene Hosts:</strong></td>
+                    <td>6 (esx01, esx02, esx03, esx04, esx05, esx06)</td>
+                </tr>
+                <tr>
+                    <td><strong>Uplinks pro Host:</strong></td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td><strong>Netzwerkbereiche:</strong></td>
+                    <td>10.10.10.0/24, 10.10.20.0/24, 10.10.30.0/24, 10.10.40.0/24, 10.10.50.0/24, 10.10.100.0/24 - 10.10.105.0/24</td>
+                </tr>
+                <tr>
+                    <td><strong>NetFlow:</strong></td>
+                    <td>Aktiviert (Collector: netflow-collector.intranet.example.com:9996)</td>
+                </tr>
+            </table>
+            
+            <h3 style="margin-top: 20px; color: var(--bechtle-dark-blue);">Uplink-Konfiguration</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Host</th>
+                        <th>vmnic0</th>
+                        <th>vmnic1</th>
+                        <th>vmnic2</th>
+                        <th>vmnic3</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>esx01</td>
+                        <td>Uplink1 (Aktiv)</td>
+                        <td>Uplink2 (Aktiv)</td>
+                        <td>Uplink3 (Standby)</td>
+                        <td>Uplink4 (Standby)</td>
+                    </tr>
+                    <tr>
+                        <td>esx02</td>
+                        <td>Uplink1 (Aktiv)</td>
+                        <td>Uplink2 (Aktiv)</td>
+                        <td>Uplink3 (Standby)</td>
+                        <td>Uplink4 (Standby)</td>
+                    </tr>
+                    <tr>
+                        <td>esx03</td>
+                        <td>Uplink1 (Aktiv)</td>
+                        <td>Uplink2 (Aktiv)</td>
+                        <td>Uplink3 (Standby)</td>
+                        <td>Uplink4 (Standby)</td>
+                    </tr>
+                    <tr>
+                        <td>esx04</td>
+                        <td>Uplink1 (Aktiv)</td>
+                        <td>Uplink2 (Aktiv)</td>
+                        <td>Uplink3 (Standby)</td>
+                        <td>Uplink4 (Standby)</td>
+                    </tr>
+                    <tr>
+                        <td>esx05</td>
+                        <td>Uplink1 (Aktiv)</td>
+                        <td>Uplink2 (Aktiv)</td>
+                        <td>Uplink3 (Standby)</td>
+                        <td>Uplink4 (Standby)</td>
+                    </tr>
+                    <tr>
+                        <td>esx06</td>
+                        <td>Uplink1 (Aktiv)</td>
+                        <td>Uplink2 (Aktiv)</td>
+                        <td>Uplink3 (Standby)</td>
+                        <td>Uplink4 (Standby)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <a href="demo-menu.html" class="back-link">« Zurück zum Demo-Menü</a>
+    </div>
+    
+    <footer>
+        <p>VMware vSphere Reporter v28.0 © 2025 Bechtle GmbH</p>
+        <p>Alle Rechte vorbehalten.</p>
+    </footer>
+</body>
+</html>
