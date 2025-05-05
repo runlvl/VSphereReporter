@@ -3,102 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VMware vSphere Reporter v29.0</title>
+    <title>VMware vSphere Reporter - Startseite</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <style>
-        :root {
-            --bechtle-blue: #00355e;
-            --bechtle-orange: #da6f1e;
-            --bechtle-green: #23a96a;
-            --bechtle-light-gray: #f3f3f3;
-            --bechtle-dark-gray: #5a5a5a;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bechtle-light-gray);
-            color: var(--bechtle-dark-gray);
-        }
-        
-        .navbar {
-            background-color: var(--bechtle-blue);
-        }
-        
-        .navbar-brand img {
-            height: 40px;
-        }
-        
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .card-header {
-            background-color: var(--bechtle-blue);
-            color: white;
-            border-radius: 10px 10px 0 0 !important;
-            font-weight: 600;
-        }
-        
-        .btn-primary {
-            background-color: var(--bechtle-blue);
-            border-color: var(--bechtle-blue);
-        }
-        
-        .btn-primary:hover, .btn-primary:focus {
-            background-color: #002745;
-            border-color: #002745;
-        }
-        
-        .btn-success {
-            background-color: var(--bechtle-green);
-            border-color: var(--bechtle-green);
-        }
-        
-        .btn-success:hover, .btn-success:focus {
-            background-color: #1c8a56;
-            border-color: #1c8a56;
-        }
-        
-        .feature-icon {
-            background-color: var(--bechtle-blue);
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-        
-        .footer {
-            background-color: var(--bechtle-blue);
-            color: white;
-            padding: 30px 0;
-            margin-top: 50px;
-        }
-        
-        .hero-section {
-            background: linear-gradient(135deg, var(--bechtle-blue) 0%, #004880 100%);
-            color: white;
-            padding: 60px 0;
-            margin-bottom: 40px;
-        }
-        
-        .badge-bechtle {
-            background-color: var(--bechtle-orange);
-            color: white;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 </head>
 <body>
     <!-- Navigationsleiste -->
@@ -116,210 +24,133 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="/">Startseite</a>
                     </li>
-                    {% if connected %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('options') }}">Berichtsoptionen</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('disconnect') }}">Trennen</a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('connect') }}">Verbinden</a>
-                    </li>
-                    {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
 
     <!-- Hero-Bereich -->
-    <section class="hero-section">
-        <div class="container text-center">
+    <section class="hero-section text-center">
+        <div class="container">
             <h1 class="display-4">VMware vSphere Reporter v29.0</h1>
-            <p class="lead mb-4">Umfassende Berichterstattung und Analyse für Ihre VMware vSphere-Umgebung</p>
-            <div class="d-flex justify-content-center gap-3">
-                {% if connected %}
-                <a href="{{ url_for('options') }}" class="btn btn-success btn-lg px-4">Bericht erstellen</a>
-                {% else %}
-                <a href="{{ url_for('connect') }}" class="btn btn-light btn-lg px-4">Mit vCenter verbinden</a>
-                {% endif %}
+            <p class="lead">Ein umfassendes Tool zur Analyse und Berichterstellung für Ihre VMware vSphere-Umgebung</p>
+            <a href="{{ url_for('connect') }}" class="btn btn-light btn-lg">
+                <i class="bi bi-cloud-check me-2"></i>Mit vCenter verbinden
+            </a>
+            
+            {% if demo_mode %}
+            <div class="mt-4">
+                <span class="badge bg-warning text-dark p-2">
+                    <i class="bi bi-info-circle me-1"></i> Demo-Modus aktiv
+                </span>
             </div>
-            <div class="mt-3">
-                <span class="badge badge-bechtle">Version 29.0</span>
-                <span class="badge bg-light text-dark">Web Edition</span>
-            </div>
+            {% endif %}
         </div>
     </section>
 
     <!-- Hauptinhalt -->
-    <div class="container">
-        <!-- Status-Meldung -->
-        {% if connected %}
-        <div class="alert alert-success mb-4">
-            <strong>Verbunden mit vCenter:</strong> {{ session.get('server') }} als {{ session.get('username') }}
-        </div>
-        {% endif %}
-
+    <div class="container my-5">
         <!-- Features -->
-        <div class="row mb-5">
-            <div class="col-12 text-center mb-4">
-                <h2>Hauptfunktionen</h2>
-                <p class="text-muted">Entdecken Sie die leistungsstarken Features des VMware vSphere Reporters</p>
-            </div>
-            
-            <div class="col-md-4 mb-4">
+        <h2 class="text-center mb-4">Hauptfunktionen</h2>
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
                 <div class="card h-100">
-                    <div class="card-body text-center">
-                        <div class="feature-icon mx-auto">
-                            <i class="bi bi-hdd-rack"></i>
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="feature-icon me-3">
+                                <i class="bi bi-tools"></i>
+                            </div>
+                            <h5 class="card-title mb-0">VMware Tools-Analyse</h5>
                         </div>
-                        <h4>VMware Tools Status</h4>
-                        <p>Identifizieren Sie veraltete oder nicht installierte VMware Tools-Versionen auf all Ihren virtuellen Maschinen.</p>
+                        <p class="card-text">Identifizieren Sie veraltete VMware Tools-Versionen, um Sicherheit und Kompatibilität in Ihrer Umgebung zu gewährleisten.</p>
                     </div>
                 </div>
             </div>
             
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4">
                 <div class="card h-100">
-                    <div class="card-body text-center">
-                        <div class="feature-icon mx-auto">
-                            <i class="bi bi-camera"></i>
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="feature-icon me-3">
+                                <i class="bi bi-camera"></i>
+                            </div>
+                            <h5 class="card-title mb-0">Snapshot-Management</h5>
                         </div>
-                        <h4>Snapshot-Analyse</h4>
-                        <p>Erkennen Sie alte Snapshots, die potenziell Speicherplatz verschwenden und die Performance beeinträchtigen können.</p>
+                        <p class="card-text">Erkennen Sie alte Snapshots, die Speicherplatz verschwenden und potenzielle Leistungsprobleme verursachen können.</p>
                     </div>
                 </div>
             </div>
             
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4">
                 <div class="card h-100">
-                    <div class="card-body text-center">
-                        <div class="feature-icon mx-auto">
-                            <i class="bi bi-disc"></i>
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="feature-icon me-3">
+                                <i class="bi bi-hdd"></i>
+                            </div>
+                            <h5 class="card-title mb-0">Verwaiste VMDK-Erkennung</h5>
                         </div>
-                        <h4>Verwaiste VMDKs</h4>
-                        <p>Finden Sie verwaiste VMDK-Dateien, die keiner VM zugeordnet sind und wertvollen Speicherplatz belegen.</p>
+                        <p class="card-text">Spüren Sie verwaiste VMDK-Dateien auf, die keiner VM zugewiesen sind und wertvollen Speicherplatz belegen.</p>
                     </div>
                 </div>
             </div>
             
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4">
                 <div class="card h-100">
-                    <div class="card-body text-center">
-                        <div class="feature-icon mx-auto">
-                            <i class="bi bi-diagram-3"></i>
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="feature-icon me-3">
+                                <i class="bi bi-tv"></i>
+                            </div>
+                            <h5 class="card-title mb-0">Infrastruktur-Topologie</h5>
                         </div>
-                        <h4>Infrastruktur-Topologie</h4>
-                        <p>Visualisieren Sie Ihre gesamte vSphere-Infrastruktur mit interaktiven Diagrammen.</p>
+                        <p class="card-text">Visualisieren Sie die Beziehungen zwischen VMs, Hosts, Datastores und Netzwerken für ein besseres Verständnis Ihrer Umgebung.</p>
                     </div>
                 </div>
             </div>
             
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4">
                 <div class="card h-100">
-                    <div class="card-body text-center">
-                        <div class="feature-icon mx-auto">
-                            <i class="bi bi-file-earmark-text"></i>
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="feature-icon me-3">
+                                <i class="bi bi-file-earmark-text"></i>
+                            </div>
+                            <h5 class="card-title mb-0">Flexible Exportformate</h5>
                         </div>
-                        <h4>Multi-Format-Exporte</h4>
-                        <p>Exportieren Sie Berichte in verschiedenen Formaten: HTML, PDF und DOCX.</p>
+                        <p class="card-text">Exportieren Sie Berichte in HTML, PDF oder DOCX-Format für verschiedene Anwendungsfälle und Präsentationen.</p>
                     </div>
                 </div>
             </div>
             
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4">
                 <div class="card h-100">
-                    <div class="card-body text-center">
-                        <div class="feature-icon mx-auto">
-                            <i class="bi bi-globe"></i>
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="feature-icon me-3">
+                                <i class="bi bi-browser-chrome"></i>
+                            </div>
+                            <h5 class="card-title mb-0">Web-basierte Oberfläche</h5>
                         </div>
-                        <h4>Browser-Zugriff</h4>
-                        <p>Greifen Sie von überall aus über einen Webbrowser auf den Reporter zu, ohne lokale Installation.</p>
+                        <p class="card-text">Zugriff von jedem modernen Webbrowser aus, ohne lokale Installation erforderlich.</p>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Vorteile der Web-Version -->
-        <div class="row mb-5">
-            <div class="col-12 text-center mb-4">
-                <h2>Vorteile der Web-Version</h2>
-                <p class="text-muted">Was ist neu in Version 29.0</p>
-            </div>
-            
-            <div class="col-lg-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        Plattformunabhängigkeit
-                    </div>
-                    <div class="card-body">
-                        <p>Mit der neuen webbasierten Architektur können Sie den VMware vSphere Reporter von jedem Gerät mit einem modernen Browser aus verwenden - egal ob Windows, Linux, macOS oder sogar Mobilgeräte.</p>
-                        <ul>
-                            <li>Keine lokale Installation erforderlich</li>
-                            <li>Einfache Bereitstellung in Unternehmensnetzwerken</li>
-                            <li>Zentralisierter Zugriff für mehrere Benutzer</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        Verbesserte Benutzeroberfläche
-                    </div>
-                    <div class="card-body">
-                        <p>Das neue responsive Design bietet eine moderne, benutzerfreundliche Oberfläche mit verbesserter Lesbarkeit und einfacherer Navigation.</p>
-                        <ul>
-                            <li>Interaktive Visualisierungen</li>
-                            <li>Optimiert für Desktop- und Mobilgeräte</li>
-                            <li>Intuitiver Arbeitsablauf für Berichtserstellung</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        Verbesserter VMDK-Sammler
-                    </div>
-                    <div class="card-body">
-                        <p>Der neue VM-zentrische Ansatz zur Erkennung von verwaisten VMDK-Dateien liefert genauere Ergebnisse und reduziert falsch positive Meldungen.</p>
-                        <ul>
-                            <li>Verbesserte Erkennung von tatsächlich verwaisten VMDKs</li>
-                            <li>Intelligente Klassifizierung von VMDK-Typen</li>
-                            <li>Detaillierte Informationen zu jeder potenziell verwaisten VMDK</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        Robuste Fehlerbehandlung
-                    </div>
-                    <div class="card-body">
-                        <p>Das neue Fehlerbehandlungssystem bietet klare, benutzerfreundliche Meldungen und erhöht die Stabilität der Anwendung erheblich.</p>
-                        <ul>
-                            <li>Detaillierte Fehlerprotokolle für Administratoren</li>
-                            <li>Benutzerfreundliche Fehlermeldungen</li>
-                            <li>Automatische Wiederherstellung nach bestimmten Fehlern</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        
         <!-- Call to Action -->
-        <div class="text-center mb-5">
-            {% if connected %}
-            <a href="{{ url_for('options') }}" class="btn btn-success btn-lg">Bericht jetzt erstellen</a>
-            {% else %}
-            <a href="{{ url_for('connect') }}" class="btn btn-primary btn-lg">Mit vCenter verbinden</a>
-            {% endif %}
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card bg-light border-0">
+                    <div class="card-body p-4 text-center">
+                        <h3 class="mb-3">Starten Sie jetzt Ihre erste Analyse</h3>
+                        <p class="mb-4">Verbinden Sie sich mit Ihrem vCenter-Server und entdecken Sie Optimierungspotenziale in Ihrer VMware-Umgebung.</p>
+                        <a href="{{ url_for('connect') }}" class="btn btn-primary btn-lg">
+                            <i class="bi bi-cloud-check me-2"></i>Mit vCenter verbinden
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -338,8 +169,6 @@
         </div>
     </footer>
 
-    <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 </body>
 </html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VMware vSphere Reporter v29.0 - Web Edition</title>
+    <style>
+        :root {
+            --blue: #00355e;      /* Bechtle Dunkelblau */
+            --orange: #da6f1e;    /* Bechtle Orange */
+            --green: #23a96a;     /* Bechtle Grün */
+            --light-gray: #f3f3f3;
+            --dark-gray: #5a5a5a;
+        }
+        
+        body {
+            font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background-color: var(--blue);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 15px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+        }
+        
+        .hero {
+            background-color: var(--blue);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: white;
+            color: var(--blue);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .btn:hover {
+            background-color: #f3f3f3;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .demo-note {
+            background-color: rgba(218, 111, 30, 0.1);
+            border-left: 4px solid var(--orange);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 4px;
+        }
+        
+        .demo-note h3 {
+            color: var(--orange);
+            margin-top: 0;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .feature-card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--blue);
+            margin-bottom: 1rem;
+        }
+        
+        footer {
+            background-color: var(--blue);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="img/logo_bechtle.png" alt="Bechtle Logo">
+            <h1>VMware vSphere Reporter</h1>
+        </div>
+    </header>
+    
+    <div class="hero">
+        <h1>VMware vSphere Reporter v29.0</h1>
+        <p>Ein umfassendes Analyse- und Reporting-Tool für VMware vSphere-Umgebungen</p>
+        <a href="http://localhost:5009" class="btn">Zur Anwendung</a>
+    </div>
+    
+    <div class="container">
+        <div class="demo-note">
+            <h3>Statische Demo-Seite</h3>
+            <p>Dies ist eine einfache statische Seite für den VMware vSphere Reporter v29.0. Bitte klicken Sie auf den Link oben, um zur vollständigen Web-Anwendung zu gelangen.</p>
+        </div>
+        
+        <h2>Hauptfunktionen</h2>
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>VMware Tools-Analyse</h3>
+                <p>Identifiziert veraltete VMware Tools-Versionen, sortiert nach Alter, um Ihre Umgebung aktuell zu halten.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>Snapshot-Management</h3>
+                <p>Erkennt und analysiert VM-Snapshots mit detaillierten Alters- und Größeninformationen.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💾</div>
+                <h3>Orphaned VMDK-Erkennung</h3>
+                <p>Zuverlässige Identifikation von potenziell verwaisten VMDK-Dateien, um Speicherplatz freizugeben.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Vollständig webbasiert</h3>
+                <p>Einfacher Zugriff über jeden modernen Webbrowser, ohne lokale Installation erforderlich.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📄</div>
+                <h3>Flexible Exportformate</h3>
+                <p>Exportieren Sie Berichte in HTML, PDF oder DOCX-Format für verschiedene Anwendungsfälle.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Sichere Verbindung</h3>
+                <p>Verschlüsselte Verbindung zu vCenter mit optionaler SSL-Zertifikatsprüfung.</p>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 Bechtle GmbH. Alle Rechte vorbehalten.</p>
+    </footer>
+</body>
+</html>
