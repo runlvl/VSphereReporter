@@ -99,7 +99,7 @@
                 <tbody>
                     {% for vm in vms_with_tools %}
                     <tr>
-                        <td>{{ vm.name }}</td>
+                        <td>{{ vm.vm_name }}</td>
                         <td>{{ vm.os }}</td>
                         <td>
                             {% if vm.tools_status == 'Current' %}
@@ -152,7 +152,7 @@
                             </span>
                             {% endif %}
                         </td>
-                        <td>{{ vm.host }}</td>
+                        <td>{{ vm.esxi_host }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

@@ -443,7 +443,7 @@ class VSphereClient:
         """
         Prüft, ob eine VMDK-Datei verwaist ist.
         
-        Eine VMDK gilt als verwaist, wenn sie keiner VM zugeordnet ist.
+        Eine VMDK gilt als verwaist, wenn sie keiner aktiven VM zugeordnet ist.
         
         Args:
             datastore: Datastore-Objekt
@@ -452,24 +452,52 @@ class VSphereClient:
         Returns:
             bool: True, wenn die VMDK verwaist ist
         """
-        # Im echten System würden wir hier aufwändigere Prüfungen durchführen
-        # Für dieses Beispiel verwenden wir eine vereinfachte Methode
+        # Im Demo-Modus Zufallswerte zurückgeben, aber mit besserer Logik
+        if os.environ.get('VSPHERE_REPORTER_DEMO', 'False').lower() in ('true', '1', 't'):
+            # Ausschließen von bestimmten Dateien auch im Demo-Modus
+            if "template" in vmdk_path.lower() or "_template" in vmdk_path.lower():
+                return False
+            
+            # Prüfen, ob "-flat.vmdk", "-delta.vmdk" oder "-ctk.vmdk" im Namen vorkommt
+            # Diese sind niemals direkt verwaist (gehören zu einer Haupt-VMDK)
+            if any(suffix in vmdk_path for suffix in ["-flat.vmdk", "-delta.vmdk", "-ctk.vmdk", "-sesparse.vmdk"]):
+                return False
+                
+            # Für Demo-Zwecke nehmen wir an, dass etwa 15% der VMDKs verwaist sind (realistischer)
+            import random
+            return random.random() < 0.15
+                
+        # Produktionsmodus - echte Prüfung durchführen
         
-        # Ausschließen von bestimmten Dateien (z.B. Template-VMDKs)
+        # 1. Ausschließen von bestimmten Dateien (z.B. Template-VMDKs, ISO-Dateien)
         if "template" in vmdk_path.lower() or "_template" in vmdk_path.lower():
             return False
         
-        # Prüfen, ob "-flat.vmdk" im Namen vorkommt (diese sind nie direkt verwaist)
-        if "-flat.vmdk" in vmdk_path:
+        # 2. Prüfen, ob es sich um eine Hilfsdatei handelt
+        if any(suffix in vmdk_path for suffix in ["-flat.vmdk", "-delta.vmdk", "-ctk.vmdk", "-sesparse.vmdk"]):
             return False
+            
+        # 3. Alle VMs abrufen und prüfen, ob die VMDK verwendet wird
+        vms = self.get_all_vms()
+        ds_name = datastore.name
         
-        # Zugehörige VMX-Datei suchen (ohne echte Implementierung)
-        vmx_path = vmdk_path.replace(".vmdk", ".vmx")
-        
-        # Hier würde eine echte Prüfung erfolgen
-        # Für Demo-Zwecke nehmen wir an, dass 20% der VMDKs verwaist sind
-        import random
-        return random.random() < 0.2
+        for vm in vms:
+            try:
+                # Alle virtuellen Festplatten der VM durchgehen
+                for device in vm.config.hardware.device:
+                    # Prüfen, ob es sich um eine Festplatte handelt
+                    if hasattr(device, 'backing') and hasattr(device.backing, 'fileName'):
+                        disk_path = device.backing.fileName
+                        
+                        # Wenn der Pfad die VMDK enthält, ist sie nicht verwaist
+                        if f"[{ds_name}] {vmdk_path}" in disk_path:
+                            return False
+            except Exception as e:
+                logger.warning(f"Fehler beim Prüfen von VM {vm.name}: {str(e)}")
+                continue
+                
+        # Wenn wir hier ankommen, wurde die VMDK keiner VM zugeordnet
+        return True
     
     def _guess_if_thin_provisioned(self, file_info):
         """

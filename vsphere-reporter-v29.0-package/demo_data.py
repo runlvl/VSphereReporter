@@ -131,6 +131,22 @@ def generate_vmware_tools_data(count=30):
             tools_version = str(random.choice([current_version] + old_versions))
         elif tools_status == 'Unmanaged':
             tools_version = "Unknown"
+            
+        # Zusätzliche Felder für vollständige Kompatibilität mit dem Template
+        tools_running_status = 'Running'
+        if tools_status == 'NotRunning':
+            tools_running_status = 'Not Running'
+        elif tools_status == 'NotInstalled':
+            tools_running_status = 'Not Available'
+            
+        # Power-Status
+        power_state = random.choices(['poweredOn', 'poweredOff'], weights=[0.85, 0.15], k=1)[0]
+        
+        # Update-Zeit (für VMs mit installierten Tools)
+        tools_update_time = None
+        if tools_status != 'NotInstalled':
+            update_days_ago = random.randint(1, 180)
+            tools_update_time = (datetime.now() - timedelta(days=update_days_ago)).strftime("%Y-%m-%d")
         
         # Eintrag erstellen
         result.append({
@@ -138,6 +154,9 @@ def generate_vmware_tools_data(count=30):
             "esxi_host": esxi_host,
             "tools_version": tools_version,
             "tools_status": tools_status,
+            "tools_running_status": tools_running_status,
+            "power_state": power_state,
+            "tools_update_time": tools_update_time,
             "os": os_type,
             "last_boot": boot_date
         })
