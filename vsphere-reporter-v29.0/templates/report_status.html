@@ -1,92 +1,257 @@
 {% extends "base.html" %}
 
-{% block title %}VMware vSphere Reporter Web - Report Status{% endblock %}
+{% block title %}VMware vSphere Reporter - Bericht wird generiert{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-8 offset-md-2">
-        <div class="card">
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
             <div class="card-header">
-                <h4>Report Generation Status</h4>
+                <h4 class="mb-0">Bericht wird generiert</h4>
             </div>
             <div class="card-body">
-                <div class="alert alert-success mb-4">
-                    <h5 class="alert-heading">Report Generated Successfully!</h5>
-                    <p>Your report has been successfully generated and is ready for download.</p>
-                </div>
-                
-                <div class="mb-4">
-                    <h5>Report Details</h5>
-                    <table class="table">
-                        <tr>
-                            <th>Report Type:</th>
-                            <td>
-                                {% if report_type == 'html' %}
-                                    HTML Report
-                                {% elif report_type == 'pdf' %}
-                                    PDF Report
-                                {% elif report_type == 'docx' %}
-                                    Word Document (DOCX)
-                                {% else %}
-                                    Unknown Format
-                                {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>File Size:</th>
-                            <td>{{ file_size }} MB</td>
-                        </tr>
-                        <tr>
-                            <th>Generation Time:</th>
-                            <td>{{ now.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                        </tr>
-                    </table>
-                </div>
-                
-                <div class="mb-4">
-                    <h5>Download Options</h5>
-                    <p>You can download your report using the button below.</p>
-                    <a href="{{ url_for('download_report') }}" class="btn btn-primary">
-                        <i class="bi bi-download"></i> Download Report
-                    </a>
-                </div>
-                
-                <div class="mt-4">
-                    <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
-                    <a href="{{ url_for('generate_report') }}" class="btn btn-outline-primary ms-2">Generate Another Report</a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="card mt-4">
-            <div class="card-header">
-                <h4>What's Next?</h4>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5>Report Analysis</h5>
-                        <p>After downloading your report, you might want to:</p>
-                        <ul>
-                            <li>Review VM configurations for optimization opportunities</li>
-                            <li>Check for old snapshots that should be consolidated</li>
-                            <li>Identify potentially orphaned VMDKs to reclaim storage</li>
-                            <li>Verify VMware Tools versions are up-to-date</li>
-                        </ul>
+                <div id="progressContainer">
+                    <div class="progress mb-3" style="height: 25px;">
+                        <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">0%</div>
                     </div>
-                    <div class="col-md-6">
-                        <h5>Additional Actions</h5>
-                        <p>Other actions you can take:</p>
-                        <ul>
-                            <li>Generate a report with different options</li>
-                            <li>Share the report with your team</li>
-                            <li>Schedule regular reports to track changes over time</li>
-                            <li>Use the report to plan infrastructure maintenance</li>
-                        </ul>
+                    
+                    <div id="statusMessage" class="alert alert-info">
+                        <div class="d-flex align-items-center">
+                            <div class="spinner-border spinner-border-sm me-2" role="status">
+                                <span class="visually-hidden">Wird geladen...</span>
+                            </div>
+                            <span>Initialisiere Berichtsgenerierung...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="mb-0">Ausgewählte Optionen</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6>Berichtsabschnitte:</h6>
+                            <ul class="mb-3">
+                                {% if options.include_vmware_tools %}
+                                <li>VMware Tools Status</li>
+                                {% endif %}
+                                
+                                {% if options.include_snapshots %}
+                                <li>VM-Snapshots</li>
+                                {% endif %}
+                                
+                                {% if options.include_orphaned_vmdks %}
+                                <li>Verwaiste VMDKs</li>
+                                {% endif %}
+                                
+                                {% if options.include_vm_list %}
+                                <li>VM-Liste</li>
+                                {% endif %}
+                                
+                                {% if options.include_vm_details %}
+                                <li>VM-Details</li>
+                                {% endif %}
+                                
+                                {% if options.include_esxi_info %}
+                                <li>ESXi-Host Informationen</li>
+                                {% endif %}
+                                
+                                {% if options.include_datastore_info %}
+                                <li>Datastore Informationen</li>
+                                {% endif %}
+                                
+                                {% if options.include_network_info %}
+                                <li>Netzwerk Informationen</li>
+                                {% endif %}
+                                
+                                {% if options.include_distributed_switches %}
+                                <li>Distributed Switches</li>
+                                {% endif %}
+                                
+                                {% if options.include_clusters %}
+                                <li>Cluster Informationen</li>
+                                {% endif %}
+                                
+                                {% if options.include_resource_pools %}
+                                <li>Resource Pools</li>
+                                {% endif %}
+                                
+                                {% if options.include_topology %}
+                                <li>Infrastruktur-Topologie</li>
+                                {% endif %}
+                            </ul>
+                            
+                            <h6>Exportformat:</h6>
+                            <p>
+                                {% if options.export_format == "html" %}
+                                <span class="badge bg-primary">HTML</span>
+                                {% elif options.export_format == "pdf" %}
+                                <span class="badge bg-danger">PDF</span>
+                                {% elif options.export_format == "docx" %}
+                                <span class="badge bg-info">DOCX</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Wird angezeigt, wenn der Bericht fertig ist -->
+                <div id="completedContainer" style="display: none;">
+                    <div class="alert alert-success">
+                        <h5><i class="fas fa-check-circle me-2"></i>Bericht erfolgreich erstellt!</h5>
+                        <p class="mb-0">Ihr Bericht wurde erfolgreich generiert und steht zum Download bereit.</p>
+                    </div>
+                    
+                    <div class="text-center mb-4">
+                        <a id="downloadButton" href="#" class="btn btn-primary btn-lg">
+                            <i class="fas fa-download me-2"></i>Bericht herunterladen
+                        </a>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Was möchten Sie als nächstes tun?</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <a href="{{ url_for('options') }}" class="btn btn-outline-primary">
+                                    <i class="fas fa-sync-alt me-2"></i>Neuen Bericht erstellen
+                                </a>
+                                <a href="{{ url_for('disconnect') }}" class="btn btn-outline-danger">
+                                    <i class="fas fa-power-off me-2"></i>Verbindung trennen
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Wird angezeigt, wenn ein Fehler auftritt -->
+                <div id="errorContainer" style="display: none;">
+                    <div class="alert alert-danger">
+                        <h5><i class="fas fa-exclamation-triangle me-2"></i>Fehler bei der Berichtsgenerierung</h5>
+                        <p id="errorMessage" class="mb-0">Ein unerwarteter Fehler ist aufgetreten.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Mögliche Behebung</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>Bitte versuchen Sie Folgendes:</p>
+                            <ul>
+                                <li>Prüfen Sie Ihre Verbindung zum vCenter-Server</li>
+                                <li>Versuchen Sie, weniger Berichtsabschnitte auszuwählen</li>
+                                <li>Stellen Sie sicher, dass Ihr Benutzer ausreichende Berechtigungen hat</li>
+                                <li>Starten Sie die Anwendung neu und versuchen Sie es erneut</li>
+                            </ul>
+                            
+                            <div class="d-grid gap-2">
+                                <a href="{{ url_for('options') }}" class="btn btn-primary">
+                                    <i class="fas fa-arrow-left me-2"></i>Zurück zu den Optionen
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        let reportId = null;
+        let checkInterval = null;
+        
+        // Starten Sie die Berichtsgenerierung
+        function startReport() {
+            $.ajax({
+                url: '/api/report/start',
+                type: 'POST',
+                dataType: 'json',
+                success: function(data) {
+                    if (data.success) {
+                        reportId = data.report_id;
+                        // Status-Abruf starten
+                        checkInterval = setInterval(checkProgress, 1000);
+                    } else {
+                        showError(data.error || 'Fehler beim Starten der Berichtsgenerierung');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    let errorMsg = 'Fehler beim Starten der Berichtsgenerierung';
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.error) {
+                            errorMsg = response.error;
+                        }
+                    } catch (e) {
+                        console.error('Fehler beim Parsen der Fehlermeldung', e);
+                    }
+                    showError(errorMsg);
+                }
+            });
+        }
+        
+        // Fortschritt abrufen
+        function checkProgress() {
+            if (!reportId) return;
+            
+            $.ajax({
+                url: '/api/report/progress/' + reportId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if (data.success) {
+                        updateProgress(data);
+                        
+                        if (data.completed) {
+                            clearInterval(checkInterval);
+                            showComplete(data);
+                        } else if (data.error) {
+                            clearInterval(checkInterval);
+                            showError(data.error);
+                        }
+                    } else {
+                        showError(data.error || 'Fehler beim Abrufen des Fortschritts');
+                        clearInterval(checkInterval);
+                    }
+                },
+                error: function() {
+                    // Wenn der Abruf fehlschlägt, weiter versuchen (könnte temporär sein)
+                    console.warn('Fortschrittsabruf fehlgeschlagen, versuche es erneut...');
+                }
+            });
+        }
+        
+        // Fortschrittsanzeige aktualisieren
+        function updateProgress(data) {
+            const progress = data.progress || 0;
+            $('#progressBar').css('width', progress + '%').attr('aria-valuenow', progress).text(progress + '%');
+            $('#statusMessage span').text(data.message || 'Berichtsgenerierung läuft...');
+        }
+        
+        // Fertigmeldung anzeigen
+        function showComplete(data) {
+            $('#progressContainer').hide();
+            $('#completedContainer').show();
+            
+            // Download-Link setzen
+            if (data.output_file) {
+                $('#downloadButton').attr('href', '/download/' + reportId + '/' + data.output_file);
+            }
+        }
+        
+        // Fehlermeldung anzeigen
+        function showError(message) {
+            $('#progressContainer').hide();
+            $('#errorContainer').show();
+            $('#errorMessage').text(message || 'Ein unbekannter Fehler ist aufgetreten');
+        }
+        
+        // Berichtsgenerierung starten
+        startReport();
+    });
+</script>
 {% endblock %}

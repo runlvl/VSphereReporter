@@ -1,142 +1,157 @@
 {% extends "base.html" %}
 
-{% block title %}VMware vSphere Reporter Web - Home{% endblock %}
+{% block title %}VMware vSphere Reporter - Home{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-8 offset-md-2">
-        <div class="card">
-            <div class="card-header">
-                <h4>VMware vSphere Reporter</h4>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">Welcome to the VMware vSphere Reporter Web Edition v29.0</h5>
-                <p class="card-text">
-                    This application allows you to generate comprehensive reports for your VMware vSphere environment.
-                    Get insights into VM configurations, snapshots, VMware Tools status, and identify potentially orphaned VMDKs.
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <!-- Willkommens-Banner -->
+        <div class="card mb-4">
+            <div class="card-body text-center py-5">
+                <h1 class="display-5 mb-3">Willkommen beim VMware vSphere Reporter</h1>
+                <p class="lead mb-4">
+                    Ein umfassendes Tool zur Analyse und Dokumentation Ihrer VMware vSphere-Umgebung
                 </p>
                 
-                {% if is_connected %}
-                <div class="mb-4">
-                    <div class="connection-status connected">
-                        <i class="bi bi-plug-fill"></i> Connected to vCenter: {{ connection_info.server }} ({{ connection_info.username }})
-                    </div>
-                </div>
-                
-                <div class="card mb-4">
-                    <div class="card-header">Generate Report</div>
-                    <div class="card-body">
-                        <form action="{{ url_for('generate_report') }}" method="post">
-                            <div class="form-group mb-3">
-                                <label for="export_format" class="form-label">Export Format:</label>
-                                <select name="export_format" id="export_format" class="form-select">
-                                    <option value="html">HTML</option>
-                                    <option value="pdf">PDF</option>
-                                    <option value="docx">DOCX</option>
-                                </select>
-                            </div>
-                            
-                            <h6>Report Sections:</h6>
-                            <p class="text-muted small">Select the sections to include in your report. You can configure more detailed options in the <a href="{{ url_for('options') }}">Report Options</a> page.</p>
-                            
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-check form-switch mb-2">
-                                        <input class="form-check-input" type="checkbox" name="vmware_tools" id="vmware_tools" {% if report_options.vmware_tools %}checked{% endif %}>
-                                        <label class="form-check-label" for="vmware_tools">VMware Tools Status</label>
-                                    </div>
-                                    
-                                    <div class="form-check form-switch mb-2">
-                                        <input class="form-check-input" type="checkbox" name="snapshots" id="snapshots" {% if report_options.snapshots %}checked{% endif %}>
-                                        <label class="form-check-label" for="snapshots">VM Snapshots</label>
-                                    </div>
-                                    
-                                    <div class="form-check form-switch mb-2">
-                                        <input class="form-check-input" type="checkbox" name="orphaned_vmdks" id="orphaned_vmdks" {% if report_options.orphaned_vmdks %}checked{% endif %}>
-                                        <label class="form-check-label" for="orphaned_vmdks">VMDK Status</label>
-                                    </div>
-                                    
-                                    <div class="form-check form-switch mb-2">
-                                        <input class="form-check-input" type="checkbox" name="vm_hardware" id="vm_hardware" {% if report_options.vm_hardware %}checked{% endif %}>
-                                        <label class="form-check-label" for="vm_hardware">VM Hardware Information</label>
-                                    </div>
-                                    
-                                    <div class="form-check form-switch mb-2">
-                                        <input class="form-check-input" type="checkbox" name="topology" id="topology" {% if report_options.topology %}checked{% endif %}>
-                                        <label class="form-check-label" for="topology">Infrastructure Topology</label>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-6">
-                                    <div class="form-check form-switch mb-2">
-                                        <input class="form-check-input" type="checkbox" name="datastores" id="datastores" {% if report_options.datastores %}checked{% endif %}>
-                                        <label class="form-check-label" for="datastores">Datastores</label>
-                                    </div>
-                                    
-                                    <div class="form-check form-switch mb-2">
-                                        <input class="form-check-input" type="checkbox" name="clusters" id="clusters" {% if report_options.clusters %}checked{% endif %}>
-                                        <label class="form-check-label" for="clusters">Clusters</label>
-                                    </div>
-                                    
-                                    <div class="form-check form-switch mb-2">
-                                        <input class="form-check-input" type="checkbox" name="esxi_hosts" id="esxi_hosts" {% if report_options.esxi_hosts %}checked{% endif %}>
-                                        <label class="form-check-label" for="esxi_hosts">ESXi Hosts</label>
-                                    </div>
-                                    
-                                    <div class="form-check form-switch mb-2">
-                                        <input class="form-check-input" type="checkbox" name="resource_pools" id="resource_pools" {% if report_options.resource_pools %}checked{% endif %}>
-                                        <label class="form-check-label" for="resource_pools">Resource Pools</label>
-                                    </div>
-                                    
-                                    <div class="form-check form-switch mb-2">
-                                        <input class="form-check-input" type="checkbox" name="networks" id="networks" {% if report_options.networks %}checked{% endif %}>
-                                        <label class="form-check-label" for="networks">Networks</label>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-4">
-                                <button type="submit" class="btn btn-primary">Generate Report</button>
-                                <a href="{{ url_for('options') }}" class="btn btn-secondary">Configure Options</a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                {% if not connected %}
+                <a href="{{ url_for('connect') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plug me-2"></i>Mit vCenter verbinden
+                </a>
                 {% else %}
-                <div class="mb-4">
-                    <div class="connection-status disconnected">
-                        <i class="bi bi-plug"></i> Not connected to vCenter
-                    </div>
-                </div>
-                
-                <div class="alert alert-info">
-                    <h5 class="alert-heading">Connect to vCenter</h5>
-                    <p>Please connect to your vCenter server first to generate reports.</p>
-                    <a href="{{ url_for('connect') }}" class="btn btn-primary">Connect to vCenter</a>
-                </div>
+                <a href="{{ url_for('options') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-cogs me-2"></i>Berichtsoptionen konfigurieren
+                </a>
                 {% endif %}
-                
-                <div class="mt-4">
-                    <h5>About This Application</h5>
-                    <p>
-                        The VMware vSphere Reporter is a comprehensive reporting tool designed for IT administrators 
-                        and system operators to gain insights into their VMware infrastructure. This web-based version 
-                        provides a user-friendly interface to generate detailed reports on various aspects of your 
-                        vSphere environment.
-                    </p>
-                    <p>
-                        <strong>Key Features:</strong>
-                    </p>
-                    <ul>
-                        <li>VMware Tools status reporting</li>
-                        <li>VM snapshot management and age analysis</li>
-                        <li>Orphaned VMDK detection and reporting</li>
-                        <li>Infrastructure topology visualization</li>
-                        <li>Detailed VM hardware information</li>
-                        <li>Datastore utilization analysis</li>
-                        <li>Export reports in multiple formats (HTML, PDF, DOCX)</li>
-                    </ul>
+            </div>
+        </div>
+        
+        <!-- Hauptfunktionen -->
+        <h2 class="section-title">Hauptfunktionen</h2>
+        <div class="row mb-4">
+            <div class="col-md-4 text-center mb-4">
+                <div class="feature-icon">
+                    <i class="fas fa-server"></i>
                 </div>
+                <h4>VMware Tools Analyse</h4>
+                <p>
+                    Erkennen Sie veraltete VMware Tools Versionen und aktualisieren Sie Ihre VM-Umgebung.
+                </p>
+            </div>
+            
+            <div class="col-md-4 text-center mb-4">
+                <div class="feature-icon">
+                    <i class="fas fa-camera"></i>
+                </div>
+                <h4>Snapshot-Management</h4>
+                <p>
+                    Identifizieren Sie alte Snapshots, die Speicherplatz und Performance beeinträchtigen können.
+                </p>
+            </div>
+            
+            <div class="col-md-4 text-center mb-4">
+                <div class="feature-icon">
+                    <i class="fas fa-hdd"></i>
+                </div>
+                <h4>VMDK-Analyse</h4>
+                <p>
+                    Finden Sie verwaiste VMDK-Dateien und gewinnen Sie wertvollen Speicherplatz zurück.
+                </p>
+            </div>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col-md-4 text-center mb-4">
+                <div class="feature-icon">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <h4>Infrastruktur-Topologie</h4>
+                <p>
+                    Visualisieren Sie Ihre vSphere-Umgebung mit interaktiven Netzwerk-Diagrammen.
+                </p>
+            </div>
+            
+            <div class="col-md-4 text-center mb-4">
+                <div class="feature-icon">
+                    <i class="fas fa-file-export"></i>
+                </div>
+                <h4>Multi-Format Export</h4>
+                <p>
+                    Exportieren Sie Berichte in HTML, PDF oder DOCX zur einfachen Verteilung.
+                </p>
+            </div>
+            
+            <div class="col-md-4 text-center mb-4">
+                <div class="feature-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h4>Sicherheit</h4>
+                <p>
+                    Sichere Verbindung zum vCenter ohne Speicherung von Anmeldedaten.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Version 29 Highlights -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Neue Funktionen in Version 29.0</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex">
+                        <span class="text-primary me-3"><i class="fas fa-globe"></i></span>
+                        <div>
+                            <strong>Web-basierte Schnittstelle</strong>
+                            <p class="mb-0">Zugriff über jeden modernen Webbrowser ohne lokale Installation.</p>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex">
+                        <span class="text-primary me-3"><i class="fas fa-desktop"></i></span>
+                        <div>
+                            <strong>Responsives Design</strong>
+                            <p class="mb-0">Optimiert für Desktops, Tablets und mobile Geräte.</p>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex">
+                        <span class="text-primary me-3"><i class="fas fa-tachometer-alt"></i></span>
+                        <div>
+                            <strong>Verbesserte Performance</strong>
+                            <p class="mb-0">Schnellere Datenanalyse und Berichtserstellung für große Umgebungen.</p>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex">
+                        <span class="text-primary me-3"><i class="fas fa-chart-line"></i></span>
+                        <div>
+                            <strong>Erweiterte Visualisierungen</strong>
+                            <p class="mb-0">Interaktive Diagramme und Topologie-Ansichten für bessere Einblicke.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Schnellstart-Anleitung -->
+        <h2 class="section-title">Schnellstart-Anleitung</h2>
+        <div class="card mb-4">
+            <div class="card-body">
+                <ol class="mb-0">
+                    <li class="mb-3">
+                        <strong>Verbindung zum vCenter</strong>
+                        <p>Geben Sie Ihre vCenter-Serveradresse, Benutzernamen und Passwort ein.</p>
+                    </li>
+                    <li class="mb-3">
+                        <strong>Berichtsoptionen auswählen</strong>
+                        <p>Wählen Sie die gewünschten Berichte und Exportformate aus.</p>
+                    </li>
+                    <li class="mb-3">
+                        <strong>Bericht generieren</strong>
+                        <p>Starten Sie die Analyse und warten Sie auf den generierten Bericht.</p>
+                    </li>
+                    <li>
+                        <strong>Ergebnisse herunterladen</strong>
+                        <p>Laden Sie den fertigen Bericht herunter oder teilen Sie ihn direkt im Browser.</p>
+                    </li>
+                </ol>
             </div>
         </div>
     </div>
