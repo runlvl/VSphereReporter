@@ -1,494 +1,622 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-Data Collector Module for VMware vSphere Reporter Web Edition
-Collects and processes data from vSphere environments
+VMware vSphere Reporter - Web Edition v29.0
+Datensammler für vSphere-Umgebungsinformationen
 """
 
 import logging
 import humanize
-from datetime import datetime, timedelta
+from datetime import datetime
+
+import pyVmomi
 from pyVmomi import vim
 
-# Configure logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('vsphere_reporter')
 
 class DataCollector:
-    """Collector for vSphere environment data"""
+    """Hauptklasse für das Sammeln von Daten aus der vSphere-Umgebung"""
     
     def __init__(self, vsphere_client):
         """
-        Initialize the data collector
+        Initialisiert den Datensammler
         
         Args:
-            vsphere_client: Connected VSphereClient instance
+            vsphere_client: Verbundener VSphereClient
         """
         self.client = vsphere_client
-        self.logger = logging.getLogger(__name__)
+        self.content = vsphere_client.content if vsphere_client else None
     
-    def collect_vmware_tools_info(self):
+    def collect_vms(self):
         """
-        Collect VMware Tools information for all VMs
+        Sammelt Informationen über alle virtuellen Maschinen
         
         Returns:
-            list: List of VM information dictionaries, sorted by tools status and version
+            list: Liste von VM-Informationsdictionaries
         """
-        if not self.client.is_connected():
-            raise Exception("Not connected to vCenter Server")
+        logger.info("Sammle Informationen über virtuelle Maschinen...")
         
-        self.logger.info("Collecting VMware Tools information")
         vms = self.client.get_all_vms()
+        vm_info_list = []
         
-        result = []
         for vm in vms:
-            # Skip templates
-            if vm.config.template:
-                continue
-            
-            # Extract basic VM information
-            vm_info = {
-                'name': vm.name,
-                'power_state': vm.runtime.powerState,
-                'tools_version': vm.guest.toolsVersion if hasattr(vm.guest, 'toolsVersion') else 'N/A',
-                'tools_status': vm.guest.toolsStatus if hasattr(vm.guest, 'toolsStatus') else 'N/A',
-                'tools_running_status': vm.guest.toolsRunningStatus if hasattr(vm.guest, 'toolsRunningStatus') else 'N/A',
-            }
-            
-            # Convert version to numeric for sorting
-            version_parts = vm_info['tools_version'].split('.')
-            vm_info['version_numeric'] = int(''.join(version_parts)) if vm_info['tools_version'] != 'N/A' and version_parts[0].isdigit() else 0
-            
-            result.append(vm_info)
+            try:
+                vm_info = {
+                    'name': vm.name,
+                    'power_state': str(vm.runtime.powerState),
+                    'guest_full_name': vm.config.guestFullName if vm.config else 'Unbekannt',
+                    'cpus': vm.config.hardware.numCPU if vm.config and vm.config.hardware else 0,
+                    'memory_mb': vm.config.hardware.memoryMB if vm.config and vm.config.hardware else 0,
+                    'vmware_tools_status': self._get_tools_status(vm),
+                    'vmware_tools_version': self._get_tools_version(vm),
+                    'vmdks': self._get_vm_disks(vm),
+                    'ip_address': vm.guest.ipAddress if vm.guest else None,
+                    'annotation': vm.config.annotation if vm.config else None,
+                    'uuid': vm.config.uuid if vm.config else None,
+                    'instance_uuid': vm.config.instanceUuid if vm.config else None,
+                    'host': vm.runtime.host.name if vm.runtime and vm.runtime.host else None,
+                    'datastore': self._get_vm_datastores(vm),
+                    'create_date': self._get_vm_create_date(vm),
+                    'has_snapshots': len(self._get_vm_snapshots(vm)) > 0,
+                    'networks': self._get_vm_networks(vm)
+                }
+                vm_info_list.append(vm_info)
+            except Exception as e:
+                logger.error(f"Fehler beim Sammeln von Informationen für VM {vm.name}: {str(e)}")
         
-        # Sort by version (oldest first) and then by status
-        result.sort(key=lambda x: (x['version_numeric'], x['tools_status']))
-        
-        self.logger.info(f"Collected VMware Tools information for {len(result)} VMs")
-        return result
+        logger.info(f"{len(vm_info_list)} VMs erfolgreich gesammelt")
+        return vm_info_list
     
-    def collect_snapshot_info(self):
+    def collect_hosts(self):
         """
-        Collect snapshot information for all VMs
+        Sammelt Informationen über alle ESXi-Hosts
         
         Returns:
-            list: List of snapshot information dictionaries, sorted by age (oldest first)
+            list: Liste von Host-Informationsdictionaries
         """
-        if not self.client.is_connected():
-            raise Exception("Not connected to vCenter Server")
+        logger.info("Sammle Informationen über ESXi-Hosts...")
         
-        self.logger.info("Collecting snapshot information")
-        vms = self.client.get_all_vms()
+        hosts = self.client.get_all_hosts()
+        host_info_list = []
         
-        result = []
-        for vm in vms:
-            # Skip VMs without snapshots
-            if not vm.snapshot:
-                continue
-            
-            snapshot_list = []
-            self._get_snapshot_tree(vm, vm.snapshot.rootSnapshotList, snapshot_list)
-            
-            for snapshot in snapshot_list:
-                # Calculate age in days
-                age_days = (datetime.now() - snapshot['create_time']).days
+        for host in hosts:
+            try:
+                # Grundlegende Informationen sammeln
+                host_info = {
+                    'name': host.name,
+                    'connection_state': str(host.runtime.connectionState),
+                    'power_state': str(host.runtime.powerState),
+                    'maintenance_mode': host.runtime.inMaintenanceMode,
+                    'vendor': host.hardware.systemInfo.vendor if host.hardware and host.hardware.systemInfo else 'Unbekannt',
+                    'model': host.hardware.systemInfo.model if host.hardware and host.hardware.systemInfo else 'Unbekannt',
+                    'cpu_model': host.hardware.cpuPkg[0].description if host.hardware and host.hardware.cpuPkg else 'Unbekannt',
+                    'cpu_cores': host.hardware.cpuInfo.numCpuCores if host.hardware and host.hardware.cpuInfo else 0,
+                    'cpu_threads': host.hardware.cpuInfo.numCpuThreads if host.hardware and host.hardware.cpuInfo else 0,
+                    'memory_size': host.hardware.memorySize if host.hardware else 0,
+                    'product_name': host.config.product.name if host.config and host.config.product else 'Unbekannt',
+                    'version': host.config.product.version if host.config and host.config.product else 'Unbekannt',
+                    'build': host.config.product.build if host.config and host.config.product else 'Unbekannt',
+                    'uptime': self._format_uptime(host.runtime.bootTime) if host.runtime and host.runtime.bootTime else 'Unbekannt',
+                    'datastores': [ds.name for ds in host.datastore] if host.datastore else [],
+                    'networks': [network.name for network in host.network] if host.network else [],
+                    'cluster': host.parent.name if host.parent and isinstance(host.parent, vim.ClusterComputeResource) else None
+                }
                 
-                # Add VM information
-                snapshot['vm_name'] = vm.name
-                snapshot['age_days'] = age_days
-                snapshot['age_text'] = humanize.naturaldelta(timedelta(days=age_days))
+                # CPU- und Arbeitsspeicherauslastung berechnen
+                if host.summary and host.summary.quickStats:
+                    cpu_usage = host.summary.quickStats.overallCpuUsage
+                    memory_usage = host.summary.quickStats.overallMemoryUsage
+                    
+                    if host.hardware and host.hardware.cpuInfo:
+                        cpu_total = host.hardware.cpuInfo.hz * host.hardware.cpuInfo.numCpuCores / 1000000  # In MHz
+                        cpu_percent = (cpu_usage / cpu_total) * 100 if cpu_total > 0 else 0
+                        host_info['cpu_usage_mhz'] = cpu_usage
+                        host_info['cpu_total_mhz'] = cpu_total
+                        host_info['cpu_usage_percent'] = cpu_percent
+                    
+                    if host.hardware and host.hardware.memorySize:
+                        memory_total_mb = host.hardware.memorySize / (1024 * 1024)  # In MB
+                        memory_percent = (memory_usage / memory_total_mb) * 100 if memory_total_mb > 0 else 0
+                        host_info['memory_usage_mb'] = memory_usage
+                        host_info['memory_total_mb'] = memory_total_mb
+                        host_info['memory_usage_percent'] = memory_percent
                 
-                result.append(snapshot)
+                host_info_list.append(host_info)
+            except Exception as e:
+                logger.error(f"Fehler beim Sammeln von Informationen für Host {host.name}: {str(e)}")
         
-        # Sort by creation time (oldest first)
-        result.sort(key=lambda x: x['create_time'])
-        
-        self.logger.info(f"Collected information for {len(result)} snapshots")
-        return result
+        logger.info(f"{len(host_info_list)} ESXi-Hosts erfolgreich gesammelt")
+        return host_info_list
     
-    def _get_snapshot_tree(self, vm, snapshot_list, result):
+    def collect_datastores(self):
         """
-        Process the snapshot tree recursively
+        Sammelt Informationen über alle Datastores
+        
+        Returns:
+            list: Liste von Datastore-Informationsdictionaries
+        """
+        logger.info("Sammle Informationen über Datastores...")
+        
+        datastores = self.client.get_all_datastores()
+        datastore_info_list = []
+        
+        for ds in datastores:
+            try:
+                datastore_info = {
+                    'name': ds.name,
+                    'type': ds.summary.type if ds.summary else 'Unbekannt',
+                    'url': ds.summary.url if ds.summary else None,
+                    'capacity': ds.summary.capacity if ds.summary else 0,
+                    'free_space': ds.summary.freeSpace if ds.summary else 0,
+                    'uncommitted': ds.summary.uncommitted if ds.summary and hasattr(ds.summary, 'uncommitted') else 0,
+                    'accessible': ds.summary.accessible if ds.summary else False,
+                    'maintenance_mode': ds.summary.maintenanceMode if ds.summary and hasattr(ds.summary, 'maintenanceMode') else 'normal',
+                    'hosts': [host.name for host in ds.host] if ds.host else [],
+                    'vms': [vm.name for vm in ds.vm] if ds.vm else []
+                }
+                
+                # Prozentsätze berechnen
+                if datastore_info['capacity'] > 0:
+                    datastore_info['used_space'] = datastore_info['capacity'] - datastore_info['free_space']
+                    datastore_info['used_percent'] = (datastore_info['used_space'] / datastore_info['capacity']) * 100
+                    datastore_info['free_percent'] = (datastore_info['free_space'] / datastore_info['capacity']) * 100
+                    
+                    # Human-readable Größen
+                    datastore_info['capacity_human'] = humanize.naturalsize(datastore_info['capacity'], binary=True)
+                    datastore_info['free_space_human'] = humanize.naturalsize(datastore_info['free_space'], binary=True)
+                    datastore_info['used_space_human'] = humanize.naturalsize(datastore_info['used_space'], binary=True)
+                
+                datastore_info_list.append(datastore_info)
+            except Exception as e:
+                logger.error(f"Fehler beim Sammeln von Informationen für Datastore {ds.name}: {str(e)}")
+        
+        logger.info(f"{len(datastore_info_list)} Datastores erfolgreich gesammelt")
+        return datastore_info_list
+    
+    def collect_networks(self):
+        """
+        Sammelt Informationen über alle Netzwerke
+        
+        Returns:
+            list: Liste von Netzwerk-Informationsdictionaries
+        """
+        logger.info("Sammle Informationen über Netzwerke...")
+        
+        networks = self.client.get_all_networks()
+        network_info_list = []
+        
+        for network in networks:
+            try:
+                network_info = {
+                    'name': network.name,
+                    'accessible': network.summary.accessible if network.summary else False
+                }
+                
+                # Unterschiedliche Netzwerktypen behandeln
+                if isinstance(network, vim.Network):
+                    network_info['type'] = 'Standard Network'
+                    network_info['hosts'] = [host.name for host in network.host] if network.host else []
+                    network_info['vms'] = [vm.name for vm in network.vm] if network.vm else []
+                
+                elif isinstance(network, vim.DistributedVirtualPortgroup):
+                    network_info['type'] = 'Distributed Virtual Portgroup'
+                    network_info['key'] = network.key
+                    network_info['switch'] = network.config.distributedVirtualSwitch.name if network.config and network.config.distributedVirtualSwitch else None
+                    network_info['vlan'] = network.config.defaultPortConfig.vlan.vlanId if (
+                        network.config and 
+                        network.config.defaultPortConfig and 
+                        network.config.defaultPortConfig.vlan and
+                        hasattr(network.config.defaultPortConfig.vlan, 'vlanId')
+                    ) else None
+                    network_info['vms'] = [vm.name for vm in network.vm] if network.vm else []
+                
+                network_info_list.append(network_info)
+            except Exception as e:
+                logger.error(f"Fehler beim Sammeln von Informationen für Netzwerk {network.name}: {str(e)}")
+        
+        logger.info(f"{len(network_info_list)} Netzwerke erfolgreich gesammelt")
+        return network_info_list
+    
+    def collect_clusters(self):
+        """
+        Sammelt Informationen über alle Cluster
+        
+        Returns:
+            list: Liste von Cluster-Informationsdictionaries
+        """
+        logger.info("Sammle Informationen über Cluster...")
+        
+        clusters = self.client.get_all_clusters()
+        cluster_info_list = []
+        
+        for cluster in clusters:
+            try:
+                cluster_info = {
+                    'name': cluster.name,
+                    'num_hosts': len(cluster.host) if cluster.host else 0,
+                    'num_effective_hosts': cluster.summary.numEffectiveHosts if cluster.summary else 0,
+                    'total_cpu': cluster.summary.totalCpu if cluster.summary else 0,
+                    'total_memory': cluster.summary.totalMemory if cluster.summary else 0,
+                    'num_cores_per_cpu': cluster.summary.numCpuCores / cluster.summary.numCpuThreads if (
+                        cluster.summary and 
+                        cluster.summary.numCpuThreads and 
+                        cluster.summary.numCpuCores
+                    ) else 0,
+                    'drs_enabled': cluster.configuration.drsConfig.enabled if (
+                        cluster.configuration and 
+                        cluster.configuration.drsConfig
+                    ) else False,
+                    'drs_automation_level': str(cluster.configuration.drsConfig.defaultVmBehavior) if (
+                        cluster.configuration and 
+                        cluster.configuration.drsConfig
+                    ) else 'Unbekannt',
+                    'ha_enabled': cluster.configuration.dasConfig.enabled if (
+                        cluster.configuration and 
+                        cluster.configuration.dasConfig
+                    ) else False,
+                    'hosts': [host.name for host in cluster.host] if cluster.host else []
+                }
+                
+                # Ressourcennutzung berechnen
+                if cluster.summary:
+                    if cluster.summary.totalCpu and cluster.summary.effectiveCpu:
+                        cluster_info['cpu_usage_percent'] = (cluster.summary.effectiveCpu / cluster.summary.totalCpu) * 100
+                    
+                    if cluster.summary.totalMemory and cluster.summary.effectiveMemory:
+                        total_memory_mb = cluster.summary.totalMemory / (1024 * 1024)
+                        cluster_info['memory_usage_percent'] = (cluster.summary.effectiveMemory / total_memory_mb) * 100
+                
+                cluster_info_list.append(cluster_info)
+            except Exception as e:
+                logger.error(f"Fehler beim Sammeln von Informationen für Cluster {cluster.name}: {str(e)}")
+        
+        logger.info(f"{len(cluster_info_list)} Cluster erfolgreich gesammelt")
+        return cluster_info_list
+    
+    def collect_resource_pools(self):
+        """
+        Sammelt Informationen über alle Resource Pools
+        
+        Returns:
+            list: Liste von Resource Pool-Informationsdictionaries
+        """
+        logger.info("Sammle Informationen über Resource Pools...")
+        
+        resource_pools = self.client.get_all_resource_pools()
+        resource_pool_info_list = []
+        
+        for pool in resource_pools:
+            try:
+                resource_pool_info = {
+                    'name': pool.name,
+                    'cpu_limit': pool.config.cpuAllocation.limit if pool.config and pool.config.cpuAllocation else -1,
+                    'cpu_reservation': pool.config.cpuAllocation.reservation if pool.config and pool.config.cpuAllocation else 0,
+                    'cpu_expandable_reservation': pool.config.cpuAllocation.expandableReservation if pool.config and pool.config.cpuAllocation else True,
+                    'cpu_shares': pool.config.cpuAllocation.shares.shares if pool.config and pool.config.cpuAllocation and pool.config.cpuAllocation.shares else 0,
+                    'cpu_shares_level': str(pool.config.cpuAllocation.shares.level) if pool.config and pool.config.cpuAllocation and pool.config.cpuAllocation.shares else 'normal',
+                    'memory_limit': pool.config.memoryAllocation.limit if pool.config and pool.config.memoryAllocation else -1,
+                    'memory_reservation': pool.config.memoryAllocation.reservation if pool.config and pool.config.memoryAllocation else 0,
+                    'memory_expandable_reservation': pool.config.memoryAllocation.expandableReservation if pool.config and pool.config.memoryAllocation else True,
+                    'memory_shares': pool.config.memoryAllocation.shares.shares if pool.config and pool.config.memoryAllocation and pool.config.memoryAllocation.shares else 0,
+                    'memory_shares_level': str(pool.config.memoryAllocation.shares.level) if pool.config and pool.config.memoryAllocation and pool.config.memoryAllocation.shares else 'normal',
+                    'parent': pool.parent.name if pool.parent else None,
+                    'vms': [vm.name for vm in pool.vm] if pool.vm else []
+                }
+                
+                resource_pool_info_list.append(resource_pool_info)
+            except Exception as e:
+                logger.error(f"Fehler beim Sammeln von Informationen für Resource Pool {pool.name}: {str(e)}")
+        
+        logger.info(f"{len(resource_pool_info_list)} Resource Pools erfolgreich gesammelt")
+        return resource_pool_info_list
+    
+    def collect_vmware_tools_status(self):
+        """
+        Sammelt Informationen über den VMware Tools Status aller VMs
+        
+        Returns:
+            list: Liste von VMware Tools-Informationsdictionaries, sortiert nach Alter
+        """
+        logger.info("Sammle Informationen über VMware Tools-Status...")
+        
+        vms = self.client.get_all_vms()
+        vmware_tools_info_list = []
+        
+        for vm in vms:
+            try:
+                # Nur für eingeschaltete VMs relevant
+                if vm.runtime.powerState != vim.VirtualMachine.PowerState.poweredOn:
+                    continue
+                
+                tools_status = vm.guest.toolsStatus if vm.guest else 'toolsNotInstalled'
+                tools_version = vm.config.tools.toolsVersion if vm.config and vm.config.tools else 0
+                tools_version_status = vm.guest.toolsVersionStatus if vm.guest else None
+                
+                tools_info = {
+                    'vm_name': vm.name,
+                    'tools_status': str(tools_status) if tools_status else 'Unbekannt',
+                    'tools_running_status': str(vm.guest.toolsRunningStatus) if vm.guest and vm.guest.toolsRunningStatus else 'Unbekannt',
+                    'tools_version': tools_version,
+                    'tools_version_status': str(tools_version_status) if tools_version_status else 'Unbekannt',
+                    'guest_os': vm.config.guestFullName if vm.config else 'Unbekannt',
+                    'last_boot_time': vm.runtime.bootTime if vm.runtime else None,
+                    'host': vm.runtime.host.name if vm.runtime and vm.runtime.host else 'Unbekannt'
+                }
+                
+                # Status für Benutzer lesbar machen
+                if tools_status == 'toolsNotInstalled':
+                    tools_info['status_description'] = 'Nicht installiert'
+                    tools_info['status_severity'] = 'critical'
+                elif tools_status == 'toolsNotRunning':
+                    tools_info['status_description'] = 'Nicht aktiv'
+                    tools_info['status_severity'] = 'warning'
+                elif tools_status == 'toolsOld':
+                    tools_info['status_description'] = 'Veraltet'
+                    tools_info['status_severity'] = 'warning'
+                elif tools_status == 'toolsOk':
+                    tools_info['status_description'] = 'Aktuell'
+                    tools_info['status_severity'] = 'ok'
+                else:
+                    tools_info['status_description'] = 'Unbekannt'
+                    tools_info['status_severity'] = 'warning'
+                
+                vmware_tools_info_list.append(tools_info)
+            except Exception as e:
+                logger.error(f"Fehler beim Sammeln von VMware Tools-Informationen für VM {vm.name}: {str(e)}")
+        
+        # Nach letztem Neustart sortieren (älteste zuerst)
+        vmware_tools_info_list.sort(key=lambda x: x['last_boot_time'] if x['last_boot_time'] else datetime.now())
+        
+        logger.info(f"VMware Tools-Status für {len(vmware_tools_info_list)} VMs erfolgreich gesammelt")
+        return vmware_tools_info_list
+    
+    def collect_snapshots(self):
+        """
+        Sammelt Informationen über alle VM-Snapshots
+        
+        Returns:
+            list: Liste von Snapshot-Informationsdictionaries, sortiert nach Alter (älteste zuerst)
+        """
+        logger.info("Sammle Informationen über VM-Snapshots...")
+        
+        vms = self.client.get_all_vms()
+        snapshot_info_list = []
+        
+        for vm in vms:
+            try:
+                if not vm.snapshot:
+                    continue
+                
+                # Snapshot-Informationen rekursiv sammeln
+                snapshots = self._get_vm_snapshots(vm)
+                for snapshot in snapshots:
+                    snapshot_info_list.append(snapshot)
+            except Exception as e:
+                logger.error(f"Fehler beim Sammeln von Snapshot-Informationen für VM {vm.name}: {str(e)}")
+        
+        # Nach Erstellungsdatum sortieren (älteste zuerst)
+        snapshot_info_list.sort(key=lambda x: x['create_time'] if x['create_time'] else datetime.now())
+        
+        logger.info(f"{len(snapshot_info_list)} Snapshots erfolgreich gesammelt")
+        return snapshot_info_list
+    
+    def _format_uptime(self, boot_time):
+        """
+        Formatiert die Uptime eines Hosts
         
         Args:
-            vm: Virtual Machine object
-            snapshot_list: List of snapshot objects to process
-            result: List to store the processed snapshot information
-        """
-        for snapshot in snapshot_list:
-            # Extract snapshot information
-            snapshot_info = {
-                'name': snapshot.name,
-                'description': snapshot.description,
-                'create_time': snapshot.createTime,
-                'id': snapshot.id,
-                'state': snapshot.state,
-                'quiesced': snapshot.quiesced,
-                'size_mb': 0  # Will be filled later
-            }
+            boot_time: Der Zeitpunkt des letzten Bootens
             
-            # Get snapshot size if available
-            try:
-                snapshot_size = 0
-                for file in vm.layoutEx.file:
-                    if file.type == 'snapshotData' and file.key.startswith(f'snapshot-{snapshot.id}'):
-                        snapshot_size += file.size
-                snapshot_info['size_mb'] = snapshot_size / (1024 * 1024)
-            except Exception as e:
-                self.logger.warning(f"Failed to get snapshot size for {snapshot.name}: {str(e)}")
-            
-            result.append(snapshot_info)
-            
-            # Process child snapshots recursively
-            if hasattr(snapshot, 'childSnapshotList') and snapshot.childSnapshotList:
-                self._get_snapshot_tree(vm, snapshot.childSnapshotList, result)
-    
-    def collect_vm_hardware_info(self):
-        """
-        Collect hardware information for all VMs
-        
         Returns:
-            list: List of VM hardware information dictionaries
+            str: Formatierte Uptime (z.B. "10 Tage, 5 Stunden")
         """
-        if not self.client.is_connected():
-            raise Exception("Not connected to vCenter Server")
+        if not boot_time:
+            return "Unbekannt"
         
-        self.logger.info("Collecting VM hardware information")
-        vms = self.client.get_all_vms()
+        uptime_delta = datetime.now() - boot_time.replace(tzinfo=None)
+        days = uptime_delta.days
+        hours, remainder = divmod(uptime_delta.seconds, 3600)
+        minutes, _ = divmod(remainder, 60)
         
-        result = []
-        for vm in vms:
-            # Extract hardware information
-            vm_info = {
-                'name': vm.name,
-                'power_state': vm.runtime.powerState,
-                'cpu_count': vm.config.hardware.numCPU,
-                'memory_mb': vm.config.hardware.memoryMB,
-                'guest_os': vm.config.guestFullName,
-                'guest_os_id': vm.config.guestId,
-                'hardware_version': vm.config.version,
-                'template': vm.config.template,
-                'uuid': vm.config.uuid,
-                'instance_uuid': vm.config.instanceUuid,
-                'path': vm.config.files.vmPathName if hasattr(vm.config.files, 'vmPathName') else 'N/A',
-            }
+        if days > 0:
+            return f"{days} Tage, {hours} Stunden"
+        elif hours > 0:
+            return f"{hours} Stunden, {minutes} Minuten"
+        else:
+            return f"{minutes} Minuten"
+    
+    def _get_tools_status(self, vm):
+        """
+        Gibt den VMware Tools Status einer VM zurück
+        
+        Args:
+            vm: Das VM-Objekt
             
-            # Add network interfaces
-            vm_info['network_adapters'] = []
-            for device in vm.config.hardware.device:
-                if isinstance(device, vim.vm.device.VirtualEthernetCard):
-                    network_name = 'N/A'
-                    try:
-                        if hasattr(device.backing, 'network') and device.backing.network:
-                            network_name = device.backing.network.name
-                        elif hasattr(device.backing, 'port') and device.backing.port:
-                            network_name = device.backing.port.portgroupKey
-                    except Exception:
-                        pass
+        Returns:
+            str: Status der VMware Tools
+        """
+        if not vm.guest:
+            return "Unbekannt"
+        
+        tools_status = vm.guest.toolsStatus
+        if tools_status == "toolsNotInstalled":
+            return "Nicht installiert"
+        elif tools_status == "toolsNotRunning":
+            return "Nicht aktiv"
+        elif tools_status == "toolsOld":
+            return "Veraltet"
+        elif tools_status == "toolsOk":
+            return "Aktuell"
+        else:
+            return "Unbekannt"
+    
+    def _get_tools_version(self, vm):
+        """
+        Gibt die VMware Tools Version einer VM zurück
+        
+        Args:
+            vm: Das VM-Objekt
+            
+        Returns:
+            str: Version der VMware Tools
+        """
+        if not vm.config or not vm.config.tools:
+            return "Unbekannt"
+        
+        tools_version = vm.config.tools.toolsVersion
+        if not tools_version or tools_version == 0:
+            return "Nicht installiert"
+        else:
+            return str(tools_version)
+    
+    def _get_vm_disks(self, vm):
+        """
+        Gibt Informationen über die Festplatten einer VM zurück
+        
+        Args:
+            vm: Das VM-Objekt
+            
+        Returns:
+            list: Liste von Festplatteninformationen
+        """
+        if not vm.config or not vm.config.hardware or not vm.config.hardware.device:
+            return []
+        
+        disks = []
+        for device in vm.config.hardware.device:
+            if isinstance(device, vim.vm.device.VirtualDisk):
+                disk_info = {
+                    'label': device.deviceInfo.label,
+                    'summary': device.deviceInfo.summary,
+                    'capacity_bytes': device.capacityInBytes if hasattr(device, 'capacityInBytes') else device.capacityInKB * 1024,
+                    'thin_provisioned': device.backing.thinProvisioned if hasattr(device.backing, 'thinProvisioned') else False,
+                    'datastore': device.backing.datastore.name if device.backing and device.backing.datastore else "Unbekannt",
+                    'filename': device.backing.fileName if device.backing else "Unbekannt"
+                }
+                disks.append(disk_info)
+        
+        return disks
+    
+    def _get_vm_datastores(self, vm):
+        """
+        Gibt Informationen über die Datastores einer VM zurück
+        
+        Args:
+            vm: Das VM-Objekt
+            
+        Returns:
+            list: Liste von Datastore-Namen
+        """
+        if not vm.datastore:
+            return []
+        
+        return [ds.name for ds in vm.datastore]
+    
+    def _get_vm_create_date(self, vm):
+        """
+        Versucht, das Erstellungsdatum einer VM zu ermitteln
+        
+        Args:
+            vm: Das VM-Objekt
+            
+        Returns:
+            datetime: Erstellungsdatum der VM oder None
+        """
+        if not vm.config or not vm.config.createDate:
+            return None
+        
+        return vm.config.createDate
+    
+    def _get_vm_networks(self, vm):
+        """
+        Gibt Informationen über die Netzwerke einer VM zurück
+        
+        Args:
+            vm: Das VM-Objekt
+            
+        Returns:
+            list: Liste von Netzwerkinformationen
+        """
+        if not vm.config or not vm.config.hardware or not vm.config.hardware.device:
+            return []
+        
+        networks = []
+        for device in vm.config.hardware.device:
+            if isinstance(device, vim.vm.device.VirtualEthernetCard):
+                if hasattr(device.backing, 'network') and device.backing.network:
+                    network_name = device.backing.network.name
+                elif hasattr(device.backing, 'port') and device.backing.port:
+                    network_name = device.backing.port.portgroupKey
+                else:
+                    network_name = "Unbekannt"
+                
+                network_info = {
+                    'name': network_name,
+                    'mac_address': device.macAddress if hasattr(device, 'macAddress') else "Unbekannt",
+                    'connected': device.connectable.connected if device.connectable else False,
+                    'type': type(device).__name__
+                }
+                networks.append(network_info)
+        
+        return networks
+    
+    def _get_vm_snapshots(self, vm):
+        """
+        Gibt Informationen über die Snapshots einer VM zurück
+        
+        Args:
+            vm: Das VM-Objekt
+            
+        Returns:
+            list: Liste von Snapshot-Informationen
+        """
+        if not vm.snapshot:
+            return []
+        
+        snapshots = []
+        
+        def process_snapshot_tree(tree, parent_name=None):
+            for snapshot in tree:
+                # Größe des Snapshots berechnen (wenn verfügbar)
+                size_on_disk = 0
+                if hasattr(snapshot, 'layoutEx') and snapshot.layoutEx and snapshot.layoutEx.file:
+                    for file in snapshot.layoutEx.file:
+                        size_on_disk += file.size
+                
+                snapshot_info = {
+                    'vm_name': vm.name,
+                    'name': snapshot.name,
+                    'description': snapshot.description if hasattr(snapshot, 'description') else "",
+                    'create_time': snapshot.createTime if hasattr(snapshot, 'createTime') else None,
+                    'state': str(snapshot.state) if hasattr(snapshot, 'state') else "Unbekannt",
+                    'quiesced': snapshot.quiesced if hasattr(snapshot, 'quiesced') else False,
+                    'size_on_disk': size_on_disk,
+                    'parent': parent_name,
+                    'host': vm.runtime.host.name if vm.runtime and vm.runtime.host else "Unbekannt",
+                    'datastore': vm.datastore[0].name if vm.datastore else "Unbekannt"
+                }
+                
+                # Alter berechnen
+                if snapshot_info['create_time']:
+                    age_delta = datetime.now() - snapshot_info['create_time'].replace(tzinfo=None)
+                    snapshot_info['age_days'] = age_delta.days
                     
-                    vm_info['network_adapters'].append({
-                        'type': type(device).__name__,
-                        'mac_address': device.macAddress if hasattr(device, 'macAddress') else 'N/A',
-                        'network': network_name,
-                        'connected': device.connectable.connected if hasattr(device, 'connectable') else False,
-                    })
-            
-            # Add disks
-            vm_info['disks'] = []
-            for device in vm.config.hardware.device:
-                if isinstance(device, vim.vm.device.VirtualDisk):
-                    vm_info['disks'].append({
-                        'label': device.deviceInfo.label,
-                        'capacity_gb': device.capacityInKB / (1024 * 1024),
-                        'thin_provisioned': device.backing.thinProvisioned if hasattr(device.backing, 'thinProvisioned') else False,
-                        'path': device.backing.fileName if hasattr(device.backing, 'fileName') else 'N/A',
-                    })
-            
-            result.append(vm_info)
+                    # Warnungsstufe basierend auf Alter
+                    if age_delta.days > 30:
+                        snapshot_info['age_status'] = 'critical'
+                    elif age_delta.days > 14:
+                        snapshot_info['age_status'] = 'warning'
+                    else:
+                        snapshot_info['age_status'] = 'ok'
+                
+                snapshots.append(snapshot_info)
+                
+                # Kinder rekursiv verarbeiten
+                if snapshot.childSnapshotList:
+                    process_snapshot_tree(snapshot.childSnapshotList, snapshot.name)
         
-        self.logger.info(f"Collected hardware information for {len(result)} VMs")
-        return result
-    
-    def collect_datastore_info(self):
-        """
-        Collect information about datastores
+        # Snapshot-Baum rekursiv verarbeiten
+        if vm.snapshot.rootSnapshotList:
+            process_snapshot_tree(vm.snapshot.rootSnapshotList)
         
-        Returns:
-            list: List of datastore information dictionaries
-        """
-        if not self.client.is_connected():
-            raise Exception("Not connected to vCenter Server")
-        
-        self.logger.info("Collecting datastore information")
-        datastores = self.client.get_all_datastores()
-        
-        result = []
-        for ds in datastores:
-            # Calculate capacity and usage
-            capacity = ds.summary.capacity
-            free_space = ds.summary.freeSpace
-            used_space = capacity - free_space
-            used_percentage = (used_space / capacity * 100) if capacity > 0 else 0
-            
-            datastore_info = {
-                'name': ds.name,
-                'type': ds.summary.type,
-                'url': ds.summary.url,
-                'capacity': humanize.naturalsize(capacity),
-                'free_space': humanize.naturalsize(free_space),
-                'used_space': humanize.naturalsize(used_space),
-                'used_percentage': used_percentage,
-                'maintenance_mode': ds.summary.maintenanceMode,
-                'accessible': ds.summary.accessible,
-                'capacity_bytes': capacity,
-                'free_space_bytes': free_space,
-                'used_space_bytes': used_space,
-            }
-            
-            # Add hosts that can access this datastore
-            datastore_info['hosts'] = []
-            if hasattr(ds, 'host') and ds.host:
-                for host_mount in ds.host:
-                    datastore_info['hosts'].append({
-                        'name': host_mount.key.name,
-                        'state': host_mount.mountInfo.mounted,
-                        'path': host_mount.mountInfo.path,
-                    })
-            
-            result.append(datastore_info)
-        
-        # Sort by used percentage (highest first)
-        result.sort(key=lambda x: x['used_percentage'], reverse=True)
-        
-        self.logger.info(f"Collected information for {len(result)} datastores")
-        return result
-    
-    def collect_cluster_info(self):
-        """
-        Collect information about clusters
-        
-        Returns:
-            list: List of cluster information dictionaries
-        """
-        if not self.client.is_connected():
-            raise Exception("Not connected to vCenter Server")
-        
-        self.logger.info("Collecting cluster information")
-        clusters = self.client.get_all_clusters()
-        
-        result = []
-        for cluster in clusters:
-            # Extract cluster configuration
-            drs_config = {
-                'enabled': cluster.configuration.drsConfig.enabled,
-                'default_vm_behavior': str(cluster.configuration.drsConfig.defaultVmBehavior),
-                'automation_level': str(cluster.configuration.drsConfig.defaultVmBehavior),
-            }
-            
-            ha_config = {
-                'enabled': cluster.configuration.dasConfig.enabled,
-                'admission_control_enabled': cluster.configuration.dasConfig.admissionControlEnabled,
-                'host_monitoring': cluster.configuration.dasConfig.hostMonitoring,
-            }
-            
-            # Extract resources and status
-            total_cpu_mhz = 0
-            total_memory_mb = 0
-            if hasattr(cluster, 'summary') and hasattr(cluster.summary, 'totalCpu'):
-                total_cpu_mhz = cluster.summary.totalCpu
-                total_memory_mb = cluster.summary.totalMemory / (1024 * 1024)
-            
-            cluster_info = {
-                'name': cluster.name,
-                'num_hosts': len(cluster.host) if hasattr(cluster, 'host') else 0,
-                'num_effective_hosts': len(cluster.host) if hasattr(cluster, 'host') else 0,
-                'total_cpu_mhz': total_cpu_mhz,
-                'total_memory_mb': total_memory_mb,
-                'drs_config': drs_config,
-                'ha_config': ha_config,
-            }
-            
-            # Add hosts in this cluster
-            cluster_info['hosts'] = []
-            if hasattr(cluster, 'host') and cluster.host:
-                for host in cluster.host:
-                    cluster_info['hosts'].append({
-                        'name': host.name,
-                        'state': str(host.runtime.connectionState),
-                    })
-            
-            result.append(cluster_info)
-        
-        self.logger.info(f"Collected information for {len(result)} clusters")
-        return result
-    
-    def collect_host_info(self):
-        """
-        Collect information about ESXi hosts
-        
-        Returns:
-            list: List of host information dictionaries
-        """
-        if not self.client.is_connected():
-            raise Exception("Not connected to vCenter Server")
-        
-        self.logger.info("Collecting ESXi host information")
-        hosts = self.client.get_all_hosts()
-        
-        result = []
-        for host in hosts:
-            # Extract hardware information
-            hardware_info = {
-                'vendor': host.hardware.systemInfo.vendor,
-                'model': host.hardware.systemInfo.model,
-                'cpu_model': host.hardware.cpuPkg[0].description if host.hardware.cpuPkg else 'N/A',
-                'cpu_cores': host.hardware.cpuInfo.numCpuCores,
-                'cpu_threads': host.hardware.cpuInfo.numCpuThreads,
-                'memory_mb': host.hardware.memorySize / (1024 * 1024),
-            }
-            
-            # Extract software information
-            software_info = {
-                'version': host.config.product.version,
-                'build': host.config.product.build,
-                'full_name': host.config.product.fullName,
-            }
-            
-            # Calculate uptime
-            uptime_seconds = host.summary.quickStats.uptime if hasattr(host.summary.quickStats, 'uptime') else 0
-            uptime_text = humanize.naturaltime(datetime.now() - timedelta(seconds=uptime_seconds))
-            
-            host_info = {
-                'name': host.name,
-                'connection_state': str(host.runtime.connectionState),
-                'power_state': str(host.runtime.powerState),
-                'maintenance_mode': host.runtime.inMaintenanceMode,
-                'uptime_seconds': uptime_seconds,
-                'uptime_text': uptime_text,
-                'hardware': hardware_info,
-                'software': software_info,
-            }
-            
-            # Add VMs running on this host
-            host_info['vms'] = []
-            if hasattr(host, 'vm') and host.vm:
-                for vm in host.vm:
-                    host_info['vms'].append({
-                        'name': vm.name,
-                        'power_state': str(vm.runtime.powerState),
-                    })
-            
-            result.append(host_info)
-        
-        self.logger.info(f"Collected information for {len(result)} ESXi hosts")
-        return result
-    
-    def collect_resource_pool_info(self):
-        """
-        Collect information about resource pools
-        
-        Returns:
-            list: List of resource pool information dictionaries
-        """
-        if not self.client.is_connected():
-            raise Exception("Not connected to vCenter Server")
-        
-        self.logger.info("Collecting resource pool information")
-        resource_pools = self.client.get_all_resource_pools()
-        
-        result = []
-        for rp in resource_pools:
-            # Skip default or hidden resource pools
-            if rp.parent and isinstance(rp.parent, vim.ResourcePool):
-                if rp.name == 'Resources' and rp.parent.name == 'Resources':
-                    continue
-            
-            # Extract resource pool configuration
-            cpu_config = {
-                'reservation': rp.config.cpuAllocation.reservation,
-                'limit': rp.config.cpuAllocation.limit,
-                'expandable_reservation': rp.config.cpuAllocation.expandableReservation,
-                'shares': rp.config.cpuAllocation.shares.shares,
-                'shares_level': str(rp.config.cpuAllocation.shares.level),
-            }
-            
-            memory_config = {
-                'reservation': rp.config.memoryAllocation.reservation,
-                'limit': rp.config.memoryAllocation.limit,
-                'expandable_reservation': rp.config.memoryAllocation.expandableReservation,
-                'shares': rp.config.memoryAllocation.shares.shares,
-                'shares_level': str(rp.config.memoryAllocation.shares.level),
-            }
-            
-            # Get parent name
-            parent_name = 'N/A'
-            parent_type = 'N/A'
-            if rp.parent:
-                parent_name = rp.parent.name
-                parent_type = type(rp.parent).__name__
-            
-            resource_pool_info = {
-                'name': rp.name,
-                'parent_name': parent_name,
-                'parent_type': parent_type,
-                'cpu_config': cpu_config,
-                'memory_config': memory_config,
-            }
-            
-            # Add VMs in this resource pool
-            resource_pool_info['vms'] = []
-            if hasattr(rp, 'vm') and rp.vm:
-                for vm in rp.vm:
-                    resource_pool_info['vms'].append({
-                        'name': vm.name,
-                        'power_state': str(vm.runtime.powerState),
-                    })
-            
-            result.append(resource_pool_info)
-        
-        self.logger.info(f"Collected information for {len(result)} resource pools")
-        return result
-    
-    def collect_network_info(self):
-        """
-        Collect information about networks
-        
-        Returns:
-            list: List of network information dictionaries
-        """
-        if not self.client.is_connected():
-            raise Exception("Not connected to vCenter Server")
-        
-        self.logger.info("Collecting network information")
-        networks = self.client.get_all_networks()
-        
-        result = []
-        for network in networks:
-            # Determine network type
-            network_type = 'Standard Network'
-            if isinstance(network, vim.dvs.DistributedVirtualPortgroup):
-                network_type = 'Distributed Port Group'
-            
-            network_info = {
-                'name': network.name,
-                'type': network_type,
-                'host_count': len(network.host) if hasattr(network, 'host') else 0,
-                'vm_count': len(network.vm) if hasattr(network, 'vm') else 0,
-            }
-            
-            # Add additional information for distributed port groups
-            if isinstance(network, vim.dvs.DistributedVirtualPortgroup):
-                network_info['vlan_id'] = network.config.defaultPortConfig.vlan.vlanId if hasattr(network.config.defaultPortConfig, 'vlan') else 'N/A'
-                network_info['switch_name'] = network.config.distributedVirtualSwitch.name if hasattr(network.config, 'distributedVirtualSwitch') else 'N/A'
-            
-            # Add VMs connected to this network
-            network_info['vms'] = []
-            if hasattr(network, 'vm') and network.vm:
-                for vm in network.vm:
-                    network_info['vms'].append({
-                        'name': vm.name,
-                        'power_state': str(vm.runtime.powerState),
-                    })
-            
-            result.append(network_info)
-        
-        self.logger.info(f"Collected information for {len(result)} networks")
-        return result
+        return snapshots
