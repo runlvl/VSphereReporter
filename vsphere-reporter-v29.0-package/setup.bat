@@ -3,38 +3,66 @@ echo VMware vSphere Reporter v29.0 - Setup
 echo Copyright (c) 2025 Bechtle GmbH
 echo.
 
-echo Überprüfe Python-Installation...
-python --version > NUL 2>&1
+echo Pruefe Python-Installation...
+where python >nul 2>nul
 if %ERRORLEVEL% NEQ 0 (
-    echo Python wurde nicht gefunden. Bitte stellen Sie sicher, dass Python (Version 3.8 oder höher) installiert ist.
-    echo und dass es im PATH verfügbar ist.
-    echo.
-    echo Sie können Python von https://www.python.org/downloads/ herunterladen.
+    echo Python wurde nicht gefunden! Bitte installieren Sie Python 3.8 oder hoeher.
+    echo Besuchen Sie https://www.python.org/downloads/ zum Herunterladen.
     pause
     exit /b 1
 )
 
-echo Überprüfe Pip-Installation...
-python -m pip --version > NUL 2>&1
+python -c "import sys; print(sys.version)" | findstr /r "3\.[8-9]\.|3\.1[0-9]\." >nul
 if %ERRORLEVEL% NEQ 0 (
-    echo Pip wurde nicht gefunden. Bitte stellen Sie sicher, dass Pip installiert ist.
-    echo.
-    echo Sie können Pip mit 'python -m ensurepip' installieren.
+    echo Python 3.8 oder hoeher ist erforderlich!
+    echo Bitte installieren Sie eine neuere Python-Version.
     pause
     exit /b 1
 )
 
-echo Installiere benötigte Pakete...
-python -m pip install --upgrade pip
-python -m pip install --no-cache-dir flask flask-wtf pyVmomi python-docx reportlab humanize jinja2
+echo Python ist korrekt installiert.
+echo.
 
+echo Pruefe pip...
+python -m pip --version >nul 2>nul
 if %ERRORLEVEL% NEQ 0 (
-    echo Fehler bei der Installation der benötigten Pakete. Bitte überprüfen Sie die Fehlermeldungen.
+    echo pip wurde nicht gefunden. Installation von pip...
+    python -m ensurepip --upgrade
+    if %ERRORLEVEL% NEQ 0 (
+        echo Fehler bei der pip-Installation.
+        pause
+        exit /b 1
+    )
+)
+
+echo pip ist installiert.
+echo.
+
+echo Erstelle virtuelle Umgebung...
+if exist venv (
+    echo Bestehende virtuelle Umgebung gefunden.
+) else (
+    python -m venv venv
+    if %ERRORLEVEL% NEQ 0 (
+        echo Fehler beim Erstellen der virtuellen Umgebung.
+        pause
+        exit /b 1
+    )
+)
+
+echo Aktiviere virtuelle Umgebung...
+call venv\Scripts\activate.bat
+
+echo Installiere Abhaengigkeiten...
+pip install -r requirements.txt
+if %ERRORLEVEL% NEQ 0 (
+    echo Fehler beim Installieren der Abhaengigkeiten.
     pause
     exit /b 1
 )
 
 echo.
-echo Installation abgeschlossen. Sie können jetzt die Anwendung mit 'run.bat' starten.
+echo Setup abgeschlossen!
+echo Verwenden Sie run.bat, um die Anwendung zu starten.
+echo.
 pause
-exit /b 0
