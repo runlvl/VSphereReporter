@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}VMware vSphere Reporter Web - Connect{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h4>Connect to vCenter Server</h4>
+            </div>
+            <div class="card-body">
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endif %}
+                
+                <form action="{{ url_for('connect') }}" method="post">
+                    <div class="form-group mb-3">
+                        <label for="server" class="form-label">vCenter Server Address:</label>
+                        <input type="text" class="form-control" id="server" name="server" placeholder="vcenter.example.com" required>
+                        <small class="form-text text-muted">Enter the hostname or IP address of your vCenter server</small>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="username" class="form-label">Username:</label>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="administrator@vsphere.local" required>
+                        <small class="form-text text-muted">Enter your vCenter username</small>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="password" class="form-label">Password:</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <small class="form-text text-muted">Enter your vCenter password</small>
+                    </div>
+                    
+                    <div class="form-check mb-4">
+                        <input type="checkbox" class="form-check-input" id="ignore_ssl" name="ignore_ssl" checked>
+                        <label class="form-check-label" for="ignore_ssl">Ignore SSL certificate verification</label>
+                        <small class="form-text text-muted d-block">Enable this option if your vCenter uses a self-signed certificate</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Connect</button>
+                        <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+                
+                <div class="mt-3">
+                    <div class="alert alert-info">
+                        <h5 class="alert-heading">Note</h5>
+                        <p>This application requires read-only access to your vSphere environment to collect inventory information. No changes will be made to your infrastructure.</p>
+                        <p>The credentials you provide are used only for connecting to the vCenter server and are not stored persistently beyond your session.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

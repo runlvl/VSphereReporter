@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}VMware vSphere Reporter Web - Report Status{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h4>Report Generation Status</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success mb-4">
+                    <h5 class="alert-heading">Report Generated Successfully!</h5>
+                    <p>Your report has been successfully generated and is ready for download.</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5>Report Details</h5>
+                    <table class="table">
+                        <tr>
+                            <th>Report Type:</th>
+                            <td>
+                                {% if report_type == 'html' %}
+                                    HTML Report
+                                {% elif report_type == 'pdf' %}
+                                    PDF Report
+                                {% elif report_type == 'docx' %}
+                                    Word Document (DOCX)
+                                {% else %}
+                                    Unknown Format
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>File Size:</th>
+                            <td>{{ file_size }} MB</td>
+                        </tr>
+                        <tr>
+                            <th>Generation Time:</th>
+                            <td>{{ now.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="mb-4">
+                    <h5>Download Options</h5>
+                    <p>You can download your report using the button below.</p>
+                    <a href="{{ url_for('download_report') }}" class="btn btn-primary">
+                        <i class="bi bi-download"></i> Download Report
+                    </a>
+                </div>
+                
+                <div class="mt-4">
+                    <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
+                    <a href="{{ url_for('generate_report') }}" class="btn btn-outline-primary ms-2">Generate Another Report</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h4>What's Next?</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Report Analysis</h5>
+                        <p>After downloading your report, you might want to:</p>
+                        <ul>
+                            <li>Review VM configurations for optimization opportunities</li>
+                            <li>Check for old snapshots that should be consolidated</li>
+                            <li>Identify potentially orphaned VMDKs to reclaim storage</li>
+                            <li>Verify VMware Tools versions are up-to-date</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Additional Actions</h5>
+                        <p>Other actions you can take:</p>
+                        <ul>
+                            <li>Generate a report with different options</li>
+                            <li>Share the report with your team</li>
+                            <li>Schedule regular reports to track changes over time</li>
+                            <li>Use the report to plan infrastructure maintenance</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
