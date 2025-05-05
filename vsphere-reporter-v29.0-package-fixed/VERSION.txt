@@ -5,3 +5,4 @@ Enthält Bugfixes für:
 - Verwaiste VMDK-Dateien mit Null-Checks
 - Export-Funktionalität für HTML, PDF und DOCX
 - Demo-Modus Kompatibilität verbessert
+- Login-Seite mit verbesserter Demo-Modus-Option

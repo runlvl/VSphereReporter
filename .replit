@@ -312,7 +312,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd vsphere-reporter-v29.0-package && python app.py"
+args = "cd vsphere-reporter-v29.0-package-fixed && python app.py"
 waitForPort = 5000
 
 [[workflows.workflow]]
