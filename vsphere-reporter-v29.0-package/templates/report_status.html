@@ -1,158 +1,76 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VMware vSphere Reporter - Berichtsstatus</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-    <meta http-equiv="refresh" content="3;url={{ url_for('report_status') }}" {% if status.complete or status.error %}disabled{% endif %}>
-</head>
-<body>
-    <!-- Navigationsleiste -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="{{ url_for('static', filename='img/logo_bechtle.png') }}" alt="Bechtle Logo">
-                VMware vSphere Reporter
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Startseite</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('connect') }}">Verbinden</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('report_options') }}">Berichtsoptionen</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+{% extends 'base.html' %}
 
-    <!-- Hauptinhalt -->
-    <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <h2 class="mb-4"><i class="bi bi-hourglass-split me-2"></i>Berichtsverarbeitung</h2>
-                
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schließen"></button>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-                
-                <div class="card mb-4">
-                    <div class="card-body p-4">
-                        <h4 class="card-title mb-4">
-                            {% if status.complete %}
-                                <i class="bi bi-check-circle-fill text-success me-2"></i>Bericht abgeschlossen
-                            {% elif status.error %}
-                                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Fehler bei der Berichtserstellung
-                            {% else %}
-                                <i class="bi bi-arrow-repeat me-2"></i>Erstelle Bericht...
-                            {% endif %}
-                        </h4>
-                        
-                        <div class="progress mb-4">
-                            <div class="progress-bar {% if status.error %}bg-danger{% endif %}" 
-                                 role="progressbar" 
-                                 style="width: {{ status.progress }}%;" 
-                                 aria-valuenow="{{ status.progress }}" 
-                                 aria-valuemin="0" 
-                                 aria-valuemax="100">
-                                {{ status.progress }}%
-                            </div>
-                        </div>
-                        
-                        <p class="status-message lead">{{ status.message }}</p>
-                        
-                        {% if not status.complete and not status.error %}
-                            <div class="text-center my-4">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Wird geladen...</span>
-                                </div>
-                                <p class="mt-2 text-muted">Die Seite wird automatisch aktualisiert...</p>
-                            </div>
-                            
-                            <div class="alert alert-info">
-                                <i class="bi bi-info-circle me-2"></i>
-                                {% if status.stage == 'connecting' %}
-                                    Verbindung zum vCenter wird hergestellt...
-                                {% elif status.stage == 'collecting' %}
-                                    Daten werden aus der vSphere-Umgebung gesammelt. Dies kann je nach Größe der Umgebung einige Zeit dauern.
-                                {% elif status.stage == 'processing' %}
-                                    Daten werden verarbeitet und analysiert...
-                                {% elif status.stage == 'generating' %}
-                                    Bericht wird generiert...
-                                {% else %}
-                                    Bearbeitung läuft...
-                                {% endif %}
-                            </div>
-                        {% endif %}
-                        
-                        {% if status.complete %}
-                            <div class="alert alert-success">
-                                <i class="bi bi-check-circle me-2"></i>Der Bericht wurde erfolgreich erstellt. Sie werden in Kürze zur Berichtsansicht weitergeleitet.
-                            </div>
-                            <script>
-                                // Automatische Weiterleitung nach 2 Sekunden
-                                setTimeout(function() {
-                                    window.location.href = "{{ url_for('report_view') }}";
-                                }, 2000);
-                            </script>
-                        {% endif %}
-                        
-                        {% if status.error %}
-                            <div class="alert alert-danger">
-                                <i class="bi bi-exclamation-triangle me-2"></i>Bei der Berichtserstellung ist ein Fehler aufgetreten.
-                                <p class="mt-2 mb-0">Bitte überprüfen Sie Ihre Verbindungsdaten und die ausgewählten Optionen, und versuchen Sie es erneut.</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-                
-                <div class="text-center mt-4">
-                    {% if status.error %}
-                        <a href="{{ url_for('report_options') }}" class="btn btn-primary">
-                            <i class="bi bi-arrow-left me-2"></i>Zurück zu den Berichtsoptionen
-                        </a>
-                    {% endif %}
-                    
-                    <a href="{{ url_for('disconnect') }}" class="btn btn-outline-secondary">
-                        <i class="bi bi-power me-2"></i>Trennen
-                    </a>
-                </div>
-            </div>
-        </div>
+{% block title %}VMware vSphere Reporter - Berichtsstatus{% endblock %}
+
+{% block styles %}
+<style>
+    .progress-container {
+        margin: 20px 0;
+    }
+    
+    .status-message {
+        margin-bottom: 10px;
+        font-weight: bold;
+        font-size: 18px;
+    }
+    
+    .result-container {
+        margin-top: 30px;
+    }
+    
+    .download-btn {
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Berichtsgenerierung</h2>
     </div>
-
-    <!-- Footer -->
-    <footer class="footer mt-auto">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>VMware vSphere Reporter v29.0</h5>
-                    <p>Ein umfassendes Berichts- und Analyse-Tool für VMware vSphere-Umgebungen.</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p>© 2025 Bechtle GmbH. Alle Rechte vorbehalten.</p>
-                </div>
+    <div class="card-body">
+        <p>Verbunden mit: <strong>{{ session.server }}</strong> als <strong>{{ session.username }}</strong></p>
+        
+        <div class="progress-container">
+            <div class="status-message" id="status-message">{{ status.message }}</div>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: {{ status.progress }}%;" aria-valuenow="{{ status.progress }}" aria-valuemin="0" aria-valuemax="100">{{ status.progress }}%</div>
             </div>
         </div>
-    </footer>
+        
+        {% if status.complete %}
+        <div class="result-container">
+            <div class="alert alert-success">
+                <strong>Bericht erfolgreich erstellt!</strong> Sie können den Bericht jetzt herunterladen oder anzeigen.
+            </div>
+            
+            <a href="{{ url_for('download_report', filename=status.report_file) }}" class="btn btn-primary download-btn">
+                Bericht herunterladen ({{ status.report_file }})
+            </a>
+            
+            {% if status.report_file.endswith('.html') %}
+            <a href="{{ url_for('view_report', filename=status.report_file) }}" class="btn btn-secondary download-btn" target="_blank">
+                Bericht im Browser anzeigen
+            </a>
+            {% endif %}
+            
+            <a href="{{ url_for('report_options') }}" class="btn btn-outline-primary">Zurück zu den Berichtsoptionen</a>
+        </div>
+        {% else %}
+        <p>Bitte warten Sie, während der Bericht generiert wird. Diese Seite wird automatisch aktualisiert...</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+{% block scripts %}
+{% if not status.complete %}
+<script>
+    // Einfache automatische Aktualisierung der Seite, um den Fortschritt zu sehen
+    setTimeout(function() {
+        window.location.reload();
+    }, 2000);
+</script>
+{% endif %}
+{% endblock %}

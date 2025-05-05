@@ -1,155 +1,72 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VMware vSphere Reporter - Verbinden</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-</head>
-<body>
-    <!-- Navigationsleiste -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="{{ url_for('static', filename='img/logo_bechtle.png') }}" alt="Bechtle Logo">
-                VMware vSphere Reporter
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Startseite</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for('connect') }}">Verbinden</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+{% extends 'base.html' %}
 
-    <!-- Hauptinhalt -->
-    <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-6 col-md-8">
-                <h2 class="mb-4"><i class="bi bi-cloud-check me-2"></i>Mit vCenter verbinden</h2>
-                
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schließen"></button>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-                
-                <div class="card">
-                    <div class="card-body p-4">
-                        <form method="post" action="{{ url_for('connect') }}">
-                            <div class="mb-3">
-                                <label for="server" class="form-label">vCenter Server</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-server"></i></span>
-                                    <input type="text" class="form-control" id="server" name="server" placeholder="vcenter.example.com" required>
-                                </div>
-                                <div class="form-text">Hostname oder IP-Adresse Ihres vCenter-Servers</div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Benutzername</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                    <input type="text" class="form-control" id="username" name="username" placeholder="administrator@vsphere.local" required>
-                                </div>
-                                <div class="form-text">Benutzername mit Leserechten für das vCenter</div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Passwort</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-key"></i></span>
-                                    <input type="password" class="form-control" id="password" name="password" required>
-                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                </div>
-                                <div class="form-text">Passwort des vCenter-Benutzers</div>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="ignore_ssl" name="ignore_ssl">
-                                    <label class="form-check-label" for="ignore_ssl">
-                                        SSL-Zertifikatsprüfung deaktivieren
-                                    </label>
-                                </div>
-                                <div class="form-text">Aktivieren Sie diese Option, wenn Ihr vCenter ein selbstsigniertes Zertifikat verwendet.</div>
-                            </div>
-                            
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-plug me-2"></i>Verbinden
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                
-                {% if demo_mode %}
-                <div class="mt-4">
-                    <div class="alert alert-info" role="alert">
-                        <h5 class="alert-heading"><i class="bi bi-info-circle me-2"></i>Demo-Modus aktiv</h5>
-                        <p>Sie befinden sich im Demo-Modus. Es wird keine tatsächliche Verbindung zu einem vCenter hergestellt. Geben Sie beliebige Werte ein, um fortzufahren.</p>
-                    </div>
-                </div>
-                {% endif %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-6 offset-lg-3">
+        <div class="login-container">
+            <div class="login-logo">
+                <h2><i class="fas fa-server"></i> VMware vSphere Reporter</h2>
+                <p class="text-muted">Verbindung zu Ihrem vCenter Server herstellen</p>
             </div>
+            
+            <form method="post" id="connect-form">
+                <div class="form-group mb-3">
+                    <label for="host" class="form-label">vCenter Server</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-server"></i></span>
+                        <input type="text" class="form-control" id="host" name="host" placeholder="vcenter.beispiel.de" required>
+                    </div>
+                    <small class="text-muted">Hostname oder IP-Adresse des vCenter-Servers</small>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label for="username" class="form-label">Benutzername</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="administrator@vsphere.local" required>
+                    </div>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label for="password" class="form-label">Passwort</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                </div>
+                
+                <div class="form-check mb-4">
+                    <input type="checkbox" class="form-check-input" id="ignore_ssl" name="ignore_ssl">
+                    <label class="form-check-label" for="ignore_ssl">SSL-Zertifikat ignorieren</label>
+                    <small class="form-text text-muted d-block">
+                        Aktivieren Sie diese Option, wenn Ihr vCenter ein selbstsigniertes Zertifikat verwendet.
+                    </small>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary" id="submit-button">
+                        <i class="fas fa-sign-in-alt"></i> Verbinden
+                    </button>
+                    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Zurück
+                    </a>
+                </div>
+                
+                <div class="text-center mt-3 d-none" id="loading-indicator">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Lädt...</span>
+                    </div>
+                    <p class="mt-2">Verbindung wird hergestellt...</p>
+                </div>
+            </form>
+            
+            {% if demo_mode %}
+            <div class="alert alert-warning mt-4">
+                <i class="fas fa-info-circle"></i> <strong>Demo-Modus aktiv</strong>
+                <p class="mb-0">Es werden keine echten Verbindungen hergestellt. Geben Sie beliebige Zugangsdaten ein, um fortzufahren.</p>
+            </div>
+            {% endif %}
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer class="footer mt-auto">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>VMware vSphere Reporter v29.0</h5>
-                    <p>Ein umfassendes Berichts- und Analyse-Tool für VMware vSphere-Umgebungen.</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p>© 2025 Bechtle GmbH. Alle Rechte vorbehalten.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Passwort ein-/ausblenden
-            const togglePassword = document.getElementById('togglePassword');
-            const password = document.getElementById('password');
-            
-            togglePassword.addEventListener('click', function() {
-                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-                password.setAttribute('type', type);
-                
-                // Icon ändern
-                const icon = this.querySelector('i');
-                if (type === 'text') {
-                    icon.classList.remove('bi-eye');
-                    icon.classList.add('bi-eye-slash');
-                } else {
-                    icon.classList.remove('bi-eye-slash');
-                    icon.classList.add('bi-eye');
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+</div>
+{% endblock %}
