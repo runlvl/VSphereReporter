@@ -1,0 +1,356 @@
+/* VMware vSphere Reporter v29.0 - Web Edition
+ * Copyright (c) 2025 Bechtle GmbH
+ */
+
+:root {
+    --blue: #00355e;      /* Bechtle Dunkelblau */
+    --orange: #da6f1e;    /* Bechtle Orange */
+    --green: #23a96a;     /* Bechtle Grün */
+    --light-gray: #f3f3f3;
+    --dark-gray: #5a5a5a;
+}
+
+/* Allgemeine Stile */
+body {
+    font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navigationsleiste */
+.navbar {
+    background-color: var(--blue);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 0.7rem 1rem;
+}
+
+.navbar-brand img {
+    height: 30px;
+    margin-right: 10px;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link.active {
+    color: #fff;
+}
+
+/* Hero-Bereich */
+.hero-section {
+    background-color: var(--blue);
+    color: white;
+    padding: 4rem 0;
+    margin-bottom: 2rem;
+}
+
+.hero-section h1 {
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.hero-section .lead {
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+}
+
+.hero-section .btn-light {
+    font-weight: 500;
+    padding: 0.75rem 2rem;
+    border-radius: 50px;
+    font-size: 1.1rem;
+}
+
+/* Karten */
+.card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Feature-Icons */
+.feature-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.feature-icon i {
+    font-size: 1.2rem;
+    color: var(--blue);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--blue);
+    color: white;
+    padding: 2rem 0;
+    margin-top: auto;
+}
+
+.footer h5 {
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.footer p {
+    opacity: 0.9;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--blue);
+    border-color: var(--blue);
+}
+
+.btn-primary:hover {
+    background-color: #002a4a;
+    border-color: #002a4a;
+}
+
+.btn-success {
+    background-color: var(--green);
+    border-color: var(--green);
+}
+
+.btn-success:hover {
+    background-color: #1a8d58;
+    border-color: #1a8d58;
+}
+
+.btn-warning {
+    background-color: var(--orange);
+    border-color: var(--orange);
+    color: white;
+}
+
+.btn-warning:hover {
+    background-color: #c46319;
+    border-color: #c46319;
+    color: white;
+}
+
+/* Formulare */
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.form-text {
+    color: var(--dark-gray);
+}
+
+.input-group-text {
+    background-color: var(--light-gray);
+    border-color: #ced4da;
+}
+
+/* Fortschrittsanzeige */
+.progress {
+    height: 1rem;
+    border-radius: 50px;
+    background-color: var(--light-gray);
+}
+
+.progress-bar {
+    background-color: var(--blue);
+}
+
+/* Alerts */
+.alert-primary {
+    background-color: rgba(0, 53, 94, 0.1);
+    border-color: rgba(0, 53, 94, 0.2);
+    color: var(--blue);
+}
+
+.alert-success {
+    background-color: rgba(35, 169, 106, 0.1);
+    border-color: rgba(35, 169, 106, 0.2);
+    color: var(--green);
+}
+
+.alert-warning {
+    background-color: rgba(218, 111, 30, 0.1);
+    border-color: rgba(218, 111, 30, 0.2);
+    color: var(--orange);
+}
+
+/* Anpassungen für kleinere Bildschirme */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 3rem 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .card-header {
+        padding: 0.75rem 1rem;
+    }
+    
+    .card-body {
+        padding: 1.25rem;
+    }
+}
+
+/* Berichtsoptionen */
+.report-options label {
+    display: block;
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 15px;
+    position: relative;
+    padding-left: 50px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.report-options label:hover {
+    transform: scale(1.01);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.report-options label.active {
+    background-color: var(--blue);
+    color: white;
+}
+
+.report-options input[type="checkbox"] {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+}
+
+.report-options .option-description {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.report-options label.active .option-description {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Tooltip */
+.tooltip-inner {
+    background-color: var(--blue);
+    font-size: 0.85rem;
+    padding: 8px 15px;
+}
+
+.bs-tooltip-auto[x-placement^=top] .arrow::before, 
+.bs-tooltip-top .arrow::before {
+    border-top-color: var(--blue);
+}
+
+/* Status-Indikatoren */
+.status-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.status-green {
+    background-color: var(--green);
+}
+
+.status-yellow {
+    background-color: #ffc107;
+}
+
+.status-red {
+    background-color: #dc3545;
+}
+
+.status-gray {
+    background-color: #6c757d;
+}
+
+/* Dashboard-Kacheln */
+.dashboard-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    background-color: white;
+    padding: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.dashboard-tile:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-tile .tile-icon {
+    font-size: 2.5rem;
+    color: var(--blue);
+    margin-bottom: 1rem;
+}
+
+.dashboard-tile .tile-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.dashboard-tile .tile-count {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark-gray);
+}
+
+.dashboard-tile.warning .tile-icon,
+.dashboard-tile.warning .tile-count {
+    color: var(--orange);
+}
+
+.dashboard-tile.success .tile-icon,
+.dashboard-tile.success .tile-count {
+    color: var(--green);
+}

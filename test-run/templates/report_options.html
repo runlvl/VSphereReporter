@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}VMware vSphere Reporter - Berichtsoptionen{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Berichtsoptionen auswählen</h2>
+    </div>
+    <div class="card-body">
+        <p>Verbunden mit: <strong>{{ session.server }}</strong> als <strong>{{ session.username }}</strong></p>
+        
+        <form method="POST" action="{{ url_for('report_options') }}">
+            <h3>Datenoptionen</h3>
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" id="include_vmware_tools" name="include_vmware_tools" class="form-check-input" {% if options.include_vmware_tools %}checked{% endif %}>
+                    <label for="include_vmware_tools" class="form-check-label">VMware Tools-Versionen (sortiert nach ältesten zuerst)</label>
+                </div>
+                
+                <div class="form-check">
+                    <input type="checkbox" id="include_snapshots" name="include_snapshots" class="form-check-input" {% if options.include_snapshots %}checked{% endif %}>
+                    <label for="include_snapshots" class="form-check-label">Snapshot-Alter (sortiert nach ältesten zuerst)</label>
+                </div>
+                
+                <div class="form-check">
+                    <input type="checkbox" id="include_orphaned_vmdks" name="include_orphaned_vmdks" class="form-check-input" {% if options.include_orphaned_vmdks %}checked{% endif %}>
+                    <label for="include_orphaned_vmdks" class="form-check-label">Verwaiste VMDK-Dateien (mit Erläuterungen)</label>
+                </div>
+                
+                <div class="form-check">
+                    <input type="checkbox" id="include_vms" name="include_vms" class="form-check-input" {% if options.include_vms %}checked{% endif %}>
+                    <label for="include_vms" class="form-check-label">Virtuelle Maschinen und ihre Konfigurationen</label>
+                </div>
+                
+                <div class="form-check">
+                    <input type="checkbox" id="include_hosts" name="include_hosts" class="form-check-input" {% if options.include_hosts %}checked{% endif %}>
+                    <label for="include_hosts" class="form-check-label">ESXi-Hosts und ihre Eigenschaften</label>
+                </div>
+                
+                <div class="form-check">
+                    <input type="checkbox" id="include_datastores" name="include_datastores" class="form-check-input" {% if options.include_datastores %}checked{% endif %}>
+                    <label for="include_datastores" class="form-check-label">Datastores und ihre Kapazitäten</label>
+                </div>
+                
+                <div class="form-check">
+                    <input type="checkbox" id="include_networks" name="include_networks" class="form-check-input" {% if options.include_networks %}checked{% endif %}>
+                    <label for="include_networks" class="form-check-label">Netzwerkkonfigurationen</label>
+                </div>
+                
+                <div class="form-check">
+                    <input type="checkbox" id="include_clusters" name="include_clusters" class="form-check-input" {% if options.include_clusters %}checked{% endif %}>
+                    <label for="include_clusters" class="form-check-label">Cluster-Informationen</label>
+                </div>
+                
+                <div class="form-check">
+                    <input type="checkbox" id="include_topology" name="include_topology" class="form-check-input" {% if options.include_topology %}checked{% endif %}>
+                    <label for="include_topology" class="form-check-label">Infrastruktur-Topologie (interaktive Grafik)</label>
+                </div>
+            </div>
+            
+            <h3>Exportformat</h3>
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="radio" id="format_html" name="export_format" value="html" class="form-check-input" {% if options.export_format == 'html' %}checked{% endif %}>
+                    <label for="format_html" class="form-check-label">HTML (empfohlen, interaktiv)</label>
+                </div>
+                
+                <div class="form-check">
+                    <input type="radio" id="format_pdf" name="export_format" value="pdf" class="form-check-input" {% if options.export_format == 'pdf' %}checked{% endif %}>
+                    <label for="format_pdf" class="form-check-label">PDF (druckfreundlich)</label>
+                </div>
+                
+                <div class="form-check">
+                    <input type="radio" id="format_docx" name="export_format" value="docx" class="form-check-input" {% if options.export_format == 'docx' %}checked{% endif %}>
+                    <label for="format_docx" class="form-check-label">DOCX (Microsoft Word)</label>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Bericht erstellen</button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Zurück</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
