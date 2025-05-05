@@ -1,223 +1,326 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-DirectVMDKCollector Module for VMware vSphere Reporter Web Edition
-Specialized module for collecting and analyzing VMDK files
+VMware vSphere Reporter - Web Edition v29.0
+Spezialisierter Sammler für verwaiste VMDK-Dateien
+
+Verwendet einen verbesserten VM-zentrischen Ansatz zur Erkennung von VMDKs
 """
 
 import logging
 import re
 from pyVmomi import vim
 
-# Configure logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('vsphere_reporter')
 
 class DirectVMDKCollector:
-    """Collector for VMDK file information with enhanced orphaned VMDK detection"""
+    """Spezialisierte Klasse für das Sammeln von potenziell verwaisten VMDK-Dateien"""
     
     def __init__(self, vsphere_client):
         """
-        Initialize the VMDK collector
+        Initialisiert den Sammler mit einem verbundenen VSphereClient
         
         Args:
-            vsphere_client: Connected VSphereClient instance
+            vsphere_client: Ein verbundener VSphereClient
         """
         self.client = vsphere_client
-        self.logger = logging.getLogger(__name__)
-    
-    def collect_all_vmdks(self):
-        """
-        Collect information about all VMDK files in the environment
-        
-        Returns:
-            list: List of VMDK information dictionaries with improved status detection
-        """
-        if not self.client.is_connected():
-            raise Exception("Not connected to vCenter Server")
-        
-        self.logger.info("Collecting VMDK file information")
-        
-        # Step 1: Get all datastores
-        datastores = self.client.get_all_datastores()
-        
-        # Step 2: Get all virtual machines with their disk information
-        vms = self.client.get_all_vms()
-        
-        # Step 3: Create a mapping of known VM disks for faster lookup
-        vm_disks = self._get_vm_disk_map(vms)
-        
-        # Step 4: Collect all VMDKs from datastores
-        all_vmdks = []
-        for ds in datastores:
-            try:
-                # Skip datastores that are not accessible
-                if not ds.summary.accessible:
-                    self.logger.warning(f"Skipping inaccessible datastore: {ds.name}")
-                    continue
-                
-                # Browse datastore
-                datastore_browser = ds.browser
-                datastorepath = f"[{ds.name}]"
-                
-                # Search for VMDKs
-                search_spec = vim.HostDatastoreBrowserSearchSpec()
-                search_spec.matchPattern = ["*.vmdk"]
-                
-                # Execute search
-                task = datastore_browser.SearchDatastoreSubFolders_Task(datastorePath=datastorepath, searchSpec=search_spec)
-                self.client.wait_for_task(task)
-                
-                # Process search results
-                for result in task.info.result:
-                    for file_info in result.file:
-                        file_path = f"{result.folderPath}{file_info.path}"
-                        
-                        # Skip -flat, -delta, and -ctk files as they are helper files
-                        if re.search(r'-(flat|delta|ctk|rdm|rdmp)\.vmdk$', file_info.path):
-                            all_vmdks.append({
-                                'path': file_path,
-                                'datastore': ds.name,
-                                'filename': file_info.path,
-                                'size_kb': file_info.fileSize / 1024 if hasattr(file_info, 'fileSize') else 0,
-                                'status': 'HELPER',
-                                'is_template': False,
-                                'vm_name': None,
-                                'is_orphaned': False
-                            })
-                            continue
-                        
-                        # Check if this VMDK is attached to a VM
-                        vmdk_status = self._determine_vmdk_status(file_path, vm_disks)
-                        
-                        # Status will be one of: 'AKTIV', 'TEMPLATE', 'POTENTIALLY ORPHANED'
-                        all_vmdks.append({
-                            'path': file_path,
-                            'datastore': ds.name,
-                            'filename': file_info.path,
-                            'size_kb': file_info.fileSize / 1024 if hasattr(file_info, 'fileSize') else 0,
-                            'status': vmdk_status['status'],
-                            'is_template': vmdk_status['is_template'],
-                            'vm_name': vmdk_status['vm_name'],
-                            'is_orphaned': vmdk_status['status'] == 'POTENTIALLY ORPHANED'
-                        })
-            
-            except Exception as e:
-                self.logger.error(f"Error processing datastore {ds.name}: {str(e)}")
-        
-        # Sort by status (POTENTIALLY ORPHANED first) and then by size (largest first)
-        all_vmdks.sort(key=lambda x: (0 if x['status'] == 'POTENTIALLY ORPHANED' else 
-                                      1 if x['status'] == 'AKTIV' else 
-                                      2 if x['status'] == 'TEMPLATE' else 3, 
-                                      -x['size_kb']))
-        
-        self.logger.info(f"Collected information for {len(all_vmdks)} VMDK files")
-        return all_vmdks
+        self.content = vsphere_client.content if vsphere_client else None
+        self._all_vms = []                   # Liste aller VMs
+        self._known_vmdk_paths = set()       # Set aller bekannten VMDK-Pfade
+        self._datastore_browser_cache = {}   # Cache für DatastoreBrowser-Objekte
+        self._datastore_path_cache = {}      # Cache für Datastore-Pfade
     
     def collect_orphaned_vmdks(self):
         """
-        Collect information about potentially orphaned VMDK files
+        Sammelt potentiell verwaiste VMDK-Dateien
+        
+        Der Ansatz umfasst:
+        1. Sammeln aller bekannten VMDKs, die zu VMs gehören
+        2. Suchen nach allen VMDK-Dateien auf allen Datastores
+        3. Identifizieren von VMDKs, die nicht zu bekannten VMs gehören
         
         Returns:
-            list: List of potentially orphaned VMDK information dictionaries
+            list: Liste von Informationen über potentiell verwaiste VMDK-Dateien
         """
-        all_vmdks = self.collect_all_vmdks()
-        return [vmdk for vmdk in all_vmdks if vmdk['status'] == 'POTENTIALLY ORPHANED']
-    
-    def _get_vm_disk_map(self, vms):
-        """
-        Create a mapping of known VM disks for faster lookup
+        logger.info("Suche nach verwaisten VMDK-Dateien...")
         
-        Args:
-            vms: List of VirtualMachine objects
-            
-        Returns:
-            dict: Mapping of disk paths to VM information
-        """
-        disk_map = {}
+        # Schritt 1: Sammle alle VMs und ihre zugehörigen VMDKs
+        self._all_vms = self.client.get_all_vms()
+        self._collect_known_vmdks()
         
-        for vm in vms:
+        # Schritt 2 & 3: Durchsuche alle Datastores nach VMDKs und identifiziere verwaiste
+        datastores = self.client.get_all_datastores()
+        orphaned_vmdks = []
+        
+        for ds in datastores:
             try:
-                is_template = vm.config.template
+                # Skip-Logik für unzugängliche Datastores
+                if hasattr(ds, 'summary') and hasattr(ds.summary, 'accessible') and not ds.summary.accessible:
+                    logger.warning(f"Überspringe nicht zugänglichen Datastore: {ds.name}")
+                    continue
                 
-                # Get all disks for this VM
-                for device in vm.config.hardware.device:
-                    if isinstance(device, vim.vm.device.VirtualDisk):
-                        if hasattr(device.backing, 'fileName'):
-                            disk_path = device.backing.fileName
-                            
-                            # Store multiple versions of the path for more robust matching
-                            disk_map[disk_path] = {
-                                'vm_name': vm.name,
-                                'is_template': is_template
-                            }
-                            
-                            # Also store path without datastore prefix
-                            if '] ' in disk_path:
-                                simple_path = disk_path.split('] ', 1)[1]
-                                disk_map[simple_path] = {
-                                    'vm_name': vm.name,
-                                    'is_template': is_template
-                                }
-                            
-                            # Also store just the filename
-                            filename = disk_path.split('/')[-1]
-                            disk_map[filename] = {
-                                'vm_name': vm.name,
-                                'is_template': is_template
-                            }
-            
+                # VMDKs auf dem Datastore suchen
+                vmdks_on_datastore = self._search_vmdks_on_datastore(ds)
+                
+                # Verwaiste VMDKs identifizieren
+                for vmdk in vmdks_on_datastore:
+                    full_path = f"[{ds.name}] {vmdk['path']}"
+                    
+                    # Prüfen, ob die VMDK bereits einer VM zugeordnet ist
+                    if full_path not in self._known_vmdk_paths:
+                        # VMDK als potenziell verwaist markieren
+                        vmdk['datastore'] = ds.name
+                        vmdk['full_path'] = full_path
+                        vmdk['status'] = "POTENTIALLY ORPHANED"
+                        
+                        # Weitere Analyse, ob die VMDK wirklich verwaist ist
+                        vmdk['is_template'] = self._is_template_vmdk(vmdk['path'])
+                        vmdk['has_vmx_file'] = self._has_associated_vmx(ds, vmdk['path'])
+                        
+                        # Verschiedene VMDK-Typen erkennen
+                        if vmdk['is_template']:
+                            vmdk['status'] = "TEMPLATE VMDK"
+                        elif vmdk['has_vmx_file']:
+                            vmdk['status'] = "HAS VMX ASSOCIATION"
+                        elif self._is_in_templates_folder(vmdk['path']):
+                            vmdk['status'] = "IN TEMPLATES FOLDER"
+                        elif self._is_delta_disk(vmdk['path']):
+                            vmdk['status'] = "DELTA DISK (SNAPSHOT)"
+                        
+                        # Nur potenziell verwaiste VMDKs hinzufügen
+                        if vmdk['status'] == "POTENTIALLY ORPHANED":
+                            orphaned_vmdks.append(vmdk)
+                
             except Exception as e:
-                self.logger.warning(f"Error processing VM {vm.name}: {str(e)}")
+                logger.error(f"Fehler beim Durchsuchen des Datastores {ds.name}: {str(e)}")
         
-        return disk_map
+        logger.info(f"{len(orphaned_vmdks)} potenziell verwaiste VMDK-Dateien gefunden")
+        return orphaned_vmdks
     
-    def _determine_vmdk_status(self, vmdk_path, vm_disk_map):
+    def _collect_known_vmdks(self):
+        """Sammelt alle bekannten VMDK-Pfade von existierenden VMs"""
+        logger.debug("Sammle bekannte VMDK-Pfade von existierenden VMs...")
+        
+        self._known_vmdk_paths = set()
+        
+        for vm in self._all_vms:
+            try:
+                # VMDKs der VM sammeln
+                if vm.config and vm.config.hardware and vm.config.hardware.device:
+                    for device in vm.config.hardware.device:
+                        if isinstance(device, vim.vm.device.VirtualDisk):
+                            if hasattr(device.backing, 'fileName'):
+                                self._known_vmdk_paths.add(device.backing.fileName)
+                
+                # Snapshot-VMDKs sammeln
+                if vm.snapshot:
+                    self._collect_snapshot_vmdks(vm)
+                    
+            except Exception as e:
+                logger.error(f"Fehler beim Sammeln von VMDK-Pfaden für VM {vm.name}: {str(e)}")
+        
+        logger.debug(f"{len(self._known_vmdk_paths)} bekannte VMDK-Pfade gesammelt")
+    
+    def _collect_snapshot_vmdks(self, vm):
         """
-        Determine the status of a VMDK file
+        Sammelt die VMDK-Pfade von Snapshots einer VM
         
         Args:
-            vmdk_path: Path to the VMDK file
-            vm_disk_map: Mapping of known VM disks
+            vm: Virtual Machine-Objekt
+        """
+        def process_snapshot_tree(tree):
+            """Verarbeitet den Snapshot-Baum rekursiv"""
+            for snapshot in tree:
+                try:
+                    # Layout-Informationen auslesen, falls verfügbar
+                    if hasattr(snapshot, 'layoutEx') and snapshot.layoutEx and snapshot.layoutEx.disk:
+                        for disk in snapshot.layoutEx.disk:
+                            for chain in disk.chain:
+                                for file_key in chain.fileKey:
+                                    for file_info in snapshot.layoutEx.file:
+                                        if file_info.key == file_key and file_info.name.endswith('.vmdk'):
+                                            self._known_vmdk_paths.add(file_info.name)
+                    
+                    # Mit Snapshot-VM-Objekten
+                    snapshot_vm = snapshot.snapshot.vm if snapshot.snapshot and hasattr(snapshot.snapshot, 'vm') else None
+                    if snapshot_vm and snapshot_vm.config and snapshot_vm.config.hardware:
+                        for device in snapshot_vm.config.hardware.device:
+                            if isinstance(device, vim.vm.device.VirtualDisk) and hasattr(device.backing, 'fileName'):
+                                self._known_vmdk_paths.add(device.backing.fileName)
+                    
+                    # Rekursiv für Kind-Snapshots
+                    if snapshot.childSnapshotList:
+                        process_snapshot_tree(snapshot.childSnapshotList)
+                        
+                except Exception as e:
+                    logger.error(f"Fehler beim Verarbeiten von Snapshot für VM {vm.name}: {str(e)}")
+        
+        # Snapshot-Baum verarbeiten, falls vorhanden
+        if vm.snapshot and vm.snapshot.rootSnapshotList:
+            process_snapshot_tree(vm.snapshot.rootSnapshotList)
+    
+    def _search_vmdks_on_datastore(self, datastore):
+        """
+        Durchsucht einen Datastore nach VMDK-Dateien
+        
+        Args:
+            datastore: Datastore-Objekt
             
         Returns:
-            dict: Status information including status, is_template, and vm_name
+            list: Liste von VMDK-Informationsdictionaries
         """
-        result = {
-            'status': 'POTENTIALLY ORPHANED',
-            'is_template': False,
-            'vm_name': None
-        }
+        vmdks = []
+        search_stack = [('', '')]  # Tupel aus (Pfad, Elternpfad)
         
-        # Check if this exact path is in the map
-        if vmdk_path in vm_disk_map:
-            result['vm_name'] = vm_disk_map[vmdk_path]['vm_name']
-            result['is_template'] = vm_disk_map[vmdk_path]['is_template']
-            result['status'] = 'TEMPLATE' if result['is_template'] else 'AKTIV'
-            return result
+        while search_stack:
+            folder_path, parent_path = search_stack.pop()
+            ds_browser = self._get_datastore_browser(datastore)
+            search_spec = vim.host.DatastoreBrowser.SearchSpec(
+                details=vim.host.DatastoreBrowser.FileInfo.Details(fileType=True, fileSize=True, modification=True),
+                query=[vim.host.DatastoreBrowser.FolderQuery(), vim.host.DatastoreBrowser.VmDiskQuery()]
+            )
+            
+            task = ds_browser.SearchDatastoreSubFolders_Task(folderPath=folder_path, searchSpec=search_spec)
+            search_results = self.client.wait_for_task(task)
+            
+            for result in search_results:
+                for file_info in result.file:
+                    if isinstance(file_info, vim.host.DatastoreBrowser.VmDiskInfo) and file_info.path.endswith('.vmdk'):
+                        # Prüfen, ob es sich um eine Beschreibungsdatei oder eine Flat-Datei handelt
+                        if not file_info.path.endswith('-flat.vmdk') and not file_info.path.endswith('-delta.vmdk'):
+                            
+                            # Vollständigen Dateipfad innerhalb des Datastores konstruieren
+                            relative_path = result.folderPath
+                            if not relative_path.endswith('/'):
+                                relative_path += '/'
+                            
+                            file_path = relative_path + file_info.path
+                            
+                            # VMDK-Informationen sammeln
+                            vmdk_info = {
+                                'path': file_path,
+                                'file_name': file_info.path,
+                                'size_bytes': file_info.fileSize,
+                                'modification_time': file_info.modification,
+                                'parent_folder': parent_path
+                            }
+                            
+                            vmdks.append(vmdk_info)
+                    
+                    # Verzeichnisse zur weiteren Durchsuchung zur Stack hinzufügen
+                    elif isinstance(file_info, vim.host.DatastoreBrowser.FolderInfo):
+                        new_folder_path = result.folderPath
+                        if not new_folder_path.endswith('/'):
+                            new_folder_path += '/'
+                        new_folder_path += file_info.path
+                        
+                        search_stack.append((new_folder_path, result.folderPath))
         
-        # Check path without datastore prefix
-        if '] ' in vmdk_path:
-            simple_path = vmdk_path.split('] ', 1)[1]
-            if simple_path in vm_disk_map:
-                result['vm_name'] = vm_disk_map[simple_path]['vm_name']
-                result['is_template'] = vm_disk_map[simple_path]['is_template']
-                result['status'] = 'TEMPLATE' if result['is_template'] else 'AKTIV'
-                return result
+        return vmdks
+    
+    def _get_datastore_browser(self, datastore):
+        """
+        Holt den DatastoreBrowser für einen Datastore (mit Cache)
         
-        # Check just the filename
-        filename = vmdk_path.split('/')[-1]
-        if filename in vm_disk_map:
-            result['vm_name'] = vm_disk_map[filename]['vm_name']
-            result['is_template'] = vm_disk_map[filename]['is_template']
-            result['status'] = 'TEMPLATE' if result['is_template'] else 'AKTIV'
-            return result
+        Args:
+            datastore: Datastore-Objekt
+            
+        Returns:
+            vim.host.DatastoreBrowser: DatastoreBrowser-Objekt
+        """
+        if datastore.name not in self._datastore_browser_cache:
+            self._datastore_browser_cache[datastore.name] = datastore.browser
         
-        # Try case-insensitive matching for additional robustness
-        for path in vm_disk_map:
-            if vmdk_path.lower() == path.lower():
-                result['vm_name'] = vm_disk_map[path]['vm_name']
-                result['is_template'] = vm_disk_map[path]['is_template']
-                result['status'] = 'TEMPLATE' if result['is_template'] else 'AKTIV'
-                return result
+        return self._datastore_browser_cache[datastore.name]
+    
+    def _is_template_vmdk(self, path):
+        """
+        Prüft, ob eine VMDK-Datei zu einem Template gehört
         
-        # If we get here, the VMDK is potentially orphaned
-        return result
+        Args:
+            path: Pfad der VMDK-Datei
+            
+        Returns:
+            bool: True, wenn die VMDK zu einem Template gehört
+        """
+        # Wenn in einem Verzeichnis mit "template" oder "vorlage" im Namen
+        if 'template' in path.lower() or 'vorlage' in path.lower():
+            return True
+        
+        # Wenn das Verzeichnis einen der standardmäßigen Template-Pfade enthält
+        template_paths = ['/templates/', '/Template/', '/vorlagen/']
+        return any(template_path in path for template_path in template_paths)
+    
+    def _has_associated_vmx(self, datastore, vmdk_path):
+        """
+        Prüft, ob eine VMDK-Datei eine zugehörige VMX-Datei hat
+        
+        Args:
+            datastore: Datastore-Objekt
+            vmdk_path: Pfad der VMDK-Datei
+            
+        Returns:
+            bool: True, wenn eine zugehörige VMX-Datei existiert
+        """
+        try:
+            # Verzeichnispfad extrahieren
+            folder_path = vmdk_path.rsplit('/', 1)[0] if '/' in vmdk_path else ''
+            
+            # Basisname der VM extrahieren (VMDK ohne Erweiterung)
+            vmdk_file = vmdk_path.rsplit('/', 1)[1] if '/' in vmdk_path else vmdk_path
+            vm_base_name = re.sub(r'(_[0-9]+)?\.vmdk$', '', vmdk_file)
+            
+            # Nach VMX-Dateien im selben Verzeichnis suchen
+            ds_browser = self._get_datastore_browser(datastore)
+            search_spec = vim.host.DatastoreBrowser.SearchSpec(
+                details=vim.host.DatastoreBrowser.FileInfo.Details(fileType=True),
+                query=[vim.host.DatastoreBrowser.VmConfigQuery()]
+            )
+            
+            task = ds_browser.SearchDatastore_Task(datastorePath=f"[{datastore.name}] {folder_path}", searchSpec=search_spec)
+            search_result = self.client.wait_for_task(task)
+            
+            for file_info in search_result.file:
+                # Prüfen, ob die VMX dem Basisnamen der VMDK entspricht
+                if file_info.path.endswith('.vmx') and file_info.path.startswith(vm_base_name):
+                    return True
+            
+            return False
+            
+        except Exception as e:
+            logger.error(f"Fehler beim Suchen nach zugehöriger VMX-Datei für {vmdk_path}: {str(e)}")
+            return False
+    
+    def _is_in_templates_folder(self, path):
+        """
+        Prüft, ob sich eine VMDK-Datei in einem Templates-Verzeichnis befindet
+        
+        Args:
+            path: Pfad der VMDK-Datei
+            
+        Returns:
+            bool: True, wenn die VMDK in einem Templates-Verzeichnis liegt
+        """
+        template_indicators = ['template', 'vorlage', 'iso', 'images', 'installation']
+        path_lower = path.lower()
+        
+        return any(indicator in path_lower for indicator in template_indicators)
+    
+    def _is_delta_disk(self, path):
+        """
+        Prüft, ob eine VMDK-Datei eine Delta-Disk (Snapshot) ist
+        
+        Args:
+            path: Pfad der VMDK-Datei
+            
+        Returns:
+            bool: True, wenn die VMDK eine Delta-Disk ist
+        """
+        # Typische Merkmale von Delta-Disks
+        delta_patterns = [
+            r'-\d{6}\.vmdk$',  # z.B. VM-000001.vmdk (Snapshot-Format)
+            r'-delta\.vmdk$',   # Explizites Delta-Disk-Format
+            r'_\d+\.vmdk$'      # z.B. VM_1.vmdk (alternatives Snapshot-Format)
+        ]
+        
+        return any(re.search(pattern, path) for pattern in delta_patterns)
