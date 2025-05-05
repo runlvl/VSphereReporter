@@ -1,0 +1,35 @@
+CHANGELOG: VMware vSphere Reporter Version 29.1 (Bugfix-Release)
+====================================================
+
+Veröffentlichungsdatum: 5. Mai 2025
+
+Dieses Update behebt kritische Probleme in der Version 29.0:
+
+FEHLERBEHEBUNGEN:
+----------------
+1. [KRITISCH] VMware Tools Power-Status wird jetzt korrekt angezeigt
+   - Beseitigung des Anzeigeproblems beim VM-Power-Status 
+   - Power-Status wird jetzt korrekt als "Eingeschaltet" oder "Ausgeschaltet" dargestellt
+
+2. [KRITISCH] Robuste Verarbeitung von verwaisten VMDK-Dateien
+   - Hinzufügung von Null-Checks für verwaiste VMDK-Dateien
+   - Verbesserte Fehlerbehandlung bei fehlenden VMDK-Daten
+   - Detaillierte Protokollierung der VMDK-Datenverarbeitung
+
+3. [KRITISCH] Vollständige Export-Funktionalität
+   - Implementierung des HTML-Report-Exports mit Bechtle-Design
+   - Implementierung des PDF-Report-Exports mit ReportLab
+   - Implementierung des DOCX-Report-Exports mit python-docx
+   - Unterstützung für Single-Report- und All-Reports-Export
+
+VERBESSERUNGEN:
+--------------
+- Verbesserte Log-Meldungen für Benutzer-Aktivitäten
+- Einheitliche Fehlerbehandlung in allen Exportformaten
+- Verbesserte Verarbeitung von Unicode-Zeichen bei Snapshot-Namen
+
+HINWEISE ZUR INSTALLATION:
+------------------------
+- Benutzen Sie für Windows setup.bat zum Installieren der Abhängigkeiten und run.bat zum Starten der Anwendung
+- Benutzen Sie für Linux setup.sh zum Installieren der Abhängigkeiten und run.sh zum Starten der Anwendung
+- Die Anwendung ist nach dem Start über Ihren Browser unter der angezeigten URL erreichbar

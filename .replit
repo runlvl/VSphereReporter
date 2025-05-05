@@ -272,8 +272,8 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd release/downloads && python -m http.server 5555"
-waitForPort = 5555
+args = "cd release/downloads && python -m http.server 5000"
+waitForPort = 5000
 
 [[workflows.workflow]]
 name = "VSphereReporterV29Web"

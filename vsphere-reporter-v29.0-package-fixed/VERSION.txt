@@ -1,0 +1,6 @@
+VMware vSphere Reporter v29.0 - Fixed Edition
+Datum: 2025-05-05
+Enthält Bugfixes für:
+- VMware Tools Power-Status-Anzeige
+- Verwaiste VMDK-Dateien mit Null-Checks
+- Export-Funktionalität für HTML, PDF und DOCX

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-6 offset-lg-3">
+        <div class="login-container">
+            <div class="login-logo">
+                <h2><i class="fas fa-server"></i> VMware vSphere Reporter</h2>
+                <p class="text-muted">Verbindung zu Ihrem vCenter Server herstellen</p>
+            </div>
+            
+            <form method="post" id="connect-form">
+                <div class="form-group mb-3">
+                    <label for="host" class="form-label">vCenter Server</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-server"></i></span>
+                        <input type="text" class="form-control" id="host" name="host" placeholder="vcenter.beispiel.de" required>
+                    </div>
+                    <small class="text-muted">Hostname oder IP-Adresse des vCenter-Servers</small>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label for="username" class="form-label">Benutzername</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="administrator@vsphere.local" required>
+                    </div>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label for="password" class="form-label">Passwort</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                </div>
+                
+                <div class="form-check mb-4">
+                    <input type="checkbox" class="form-check-input" id="ignore_ssl" name="ignore_ssl">
+                    <label class="form-check-label" for="ignore_ssl">SSL-Zertifikat ignorieren</label>
+                    <small class="form-text text-muted d-block">
+                        Aktivieren Sie diese Option, wenn Ihr vCenter ein selbstsigniertes Zertifikat verwendet.
+                    </small>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary" id="submit-button">
+                        <i class="fas fa-sign-in-alt"></i> Verbinden
+                    </button>
+                    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Zurück
+                    </a>
+                </div>
+                
+                <div class="text-center mt-3 d-none" id="loading-indicator">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Lädt...</span>
+                    </div>
+                    <p class="mt-2">Verbindung wird hergestellt...</p>
+                </div>
+            </form>
+            
+            {% if demo_mode %}
+            <div class="alert alert-warning mt-4">
+                <i class="fas fa-info-circle"></i> <strong>Demo-Modus aktiv</strong>
+                <p class="mb-0">Es werden keine echten Verbindungen hergestellt. Geben Sie beliebige Zugangsdaten ein, um fortzufahren.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
