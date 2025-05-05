@@ -26,9 +26,8 @@ from wtforms.validators import DataRequired
 # Lokale Module importieren
 import demo_data
 from webapp.vsphere_client import VSphereClient
+# Direkt aus der Original-Datei importieren, um Kreisimporte zu vermeiden
 from webapp.report_generator_original import ReportGenerator
-# Falls Import-Konflikt mit dem __init__.py besteht, direkt aus der Moduldatei importieren
-# from webapp.report_generator_module import ReportGenerator
 from webapp.utils.error_handler import handle_vsphere_errors, VSphereReporterError
 
 # Logging-Konfiguration
