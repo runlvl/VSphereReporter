@@ -10,6 +10,15 @@ import logging
 import jinja2
 import datetime
 import humanize
+import sys
+
+# Stellen Sie sicher, dass core im Pythonpfad ist
+current_dir = os.path.dirname(os.path.abspath(__file__))
+core_dir = os.path.dirname(current_dir)
+if core_dir not in sys.path:
+    sys.path.append(core_dir)
+
+from topology_generator import TopologyGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -88,13 +97,24 @@ class HTMLExporter:
                 except Exception as e:
                     logger.warning(f"Could not load Bechtle logo: {str(e)}")
             
+            # Generiere die Topologieansicht
+            topology_chart = None
+            try:
+                topology_generator = TopologyGenerator()
+                topology_chart = topology_generator.create_topology_tree(self.data)
+                logger.info("Topology chart generated successfully")
+            except Exception as e:
+                logger.error(f"Error generating topology chart: {str(e)}")
+                topology_chart = "<div class='alert alert-warning'><p>Die Topologieübersicht konnte nicht generiert werden.</p></div>"
+            
             # Render the template with data
             html_content = template.render(
                 report_title="VMware vSphere Environment Report",
                 report_date=self.timestamp,
                 data=self.data,
                 sections=self._get_sections(),
-                bechtle_logo=logo_data
+                bechtle_logo=logo_data,
+                topology_chart=topology_chart
             )
             
             # Write the rendered HTML to file
@@ -116,12 +136,20 @@ class HTMLExporter:
         """
         sections = []
         
+        # Topologie-Übersicht (neu)
+        sections.append({
+            'id': 'topology',
+            'title': 'Infrastruktur-Topologie',
+            'description': 'Interaktive graphische Übersicht der vSphere-Infrastruktur.',
+            'priority': 1
+        })
+        
         # VMware Tools section (required)
         sections.append({
             'id': 'vmware_tools',
             'title': 'VMware Tools Versions',
             'description': 'VMware Tools versions for all virtual machines, ordered by oldest version first.',
-            'priority': 1
+            'priority': 2
         })
         
         # Snapshots section (required)
