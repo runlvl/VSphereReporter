@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1><i class="fas fa-hdd"></i> Verwaiste VMDK-Dateien</h1>
+
+<div class="content-section">
+    <p class="lead">Übersicht über verwaiste VMDK-Dateien in der vSphere-Umgebung.</p>
+    
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-info-circle"></i> Informationen zu verwaisten VMDKs</span>
+                        <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#vmdkInfoCollapse">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="collapse" id="vmdkInfoCollapse">
+                    <div class="card-body">
+                        <p>Verwaiste VMDK-Dateien sind virtuelle Festplatten, die nicht mit einer virtuellen Maschine verknüpft sind. 
+                        Sie belegen wertvollen Speicherplatz, werden aber nicht mehr verwendet.</p>
+                        
+                        <p><strong>Wie entstehen verwaiste VMDKs?</strong></p>
+                        <ul>
+                            <li>Fehlgeschlagene Snapshot-Löschvorgänge</li>
+                            <li>Unvollständige Storage vMotion-Vorgänge</li>
+                            <li>Unvollständige VM-Löschungen</li>
+                            <li>Manuelle Manipulation von VMDKs auf Filesystem-Ebene</li>
+                            <li>Fehlerhafte vCenter-Operationen</li>
+                        </ul>
+                        
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i> <strong>Wichtig:</strong> 
+                            Vergewissern Sie sich vor dem Löschen, dass eine VMDK wirklich verwaist ist. 
+                            Einige VMDKs können wichtige Daten enthalten oder zu Templates gehören, die nicht als VM angezeigt werden.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if orphaned_vmdks %}
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <i class="fas fa-chart-pie"></i> Übersicht
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% set total_size = 0 %}
+                        {% for vmdk in orphaned_vmdks %}
+                            {% set total_size = total_size + vmdk.size_bytes %}
+                        {% endfor %}
+                        
+                        {% set datastores = {} %}
+                        {% for vmdk in orphaned_vmdks %}
+                            {% if vmdk.datastore in datastores %}
+                                {% set _ = datastores.update({vmdk.datastore: datastores[vmdk.datastore] + 1}) %}
+                            {% else %}
+                                {% set _ = datastores.update({vmdk.datastore: 1}) %}
+                            {% endif %}
+                        {% endfor %}
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-0 bg-light h-100">
+                                <div class="card-body text-center">
+                                    <h3 class="text-primary">{{ orphaned_vmdks|length }}</h3>
+                                    <p class="mb-0">Verwaiste VMDKs insgesamt</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-0 bg-light h-100">
+                                <div class="card-body text-center">
+                                    <h3 class="text-primary total-size">{{ total_size }}</h3>
+                                    <p class="mb-0">Verschwendeter Speicherplatz</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-0 bg-light h-100">
+                                <div class="card-body text-center">
+                                    <h3 class="text-primary">{{ datastores|length }}</h3>
+                                    <p class="mb-0">Betroffene Datastores</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <canvas id="datastoreChart" height="250"></canvas>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Datastore</th>
+                                            <th>Anzahl verwaister VMDKs</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for datastore, count in datastores.items()|sort(reverse=True, attribute='1') %}
+                                        <tr>
+                                            <td>{{ datastore }}</td>
+                                            <td>{{ count }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table table-striped datatable">
+            <thead>
+                <tr>
+                    <th>Dateiname</th>
+                    <th>Datastore</th>
+                    <th>Pfad</th>
+                    <th>Größe</th>
+                    <th>Letzte Änderung</th>
+                    <th>Wahrscheinliche Ursache</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vmdk in orphaned_vmdks %}
+                <tr>
+                    <td>{{ vmdk.name }}</td>
+                    <td>{{ vmdk.datastore }}</td>
+                    <td class="text-truncate" style="max-width: 250px;" title="{{ vmdk.path }}">
+                        {{ vmdk.path }}
+                    </td>
+                    <td class="data-size">{{ vmdk.size_bytes }}</td>
+                    <td class="timestamp">{{ vmdk.modification_time }}</td>
+                    <td>{{ vmdk.explanation|default("Unbekannt") }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="mt-4">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Zurück zum Dashboard
+        </a>
+        <a href="{{ url_for('generate_report') }}" class="btn btn-primary">
+            <i class="fas fa-file-export"></i> Bericht erstellen
+        </a>
+    </div>
+    
+    {% else %}
+    <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i> Keine verwaisten VMDK-Dateien gefunden. Ihre Umgebung ist optimal!
+    </div>
+    
+    <div class="mt-4">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Zurück zum Dashboard
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+{% if demo_mode %}
+<div class="alert alert-warning mt-4">
+    <i class="fas fa-info-circle"></i> <strong>Demo-Modus:</strong> Die angezeigten Daten sind Beispieldaten und spiegeln keine echte vSphere-Umgebung wider.
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0"></script>
+<script>
+    $(document).ready(function() {
+        // DataTable Initialisierung
+        $('.datatable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/de-DE.json"
+            },
+            "pageLength": 25,
+            "order": [[3, "desc"]] // Sortiere nach Größe (Spalte 3) absteigend
+        });
+        
+        // Format der Zeitstempel
+        $('.timestamp').each(function() {
+            const timestamp = $(this).text();
+            if (timestamp && !timestamp.includes('Unbekannt')) {
+                const date = new Date(timestamp);
+                $(this).text(date.toLocaleDateString('de-DE') + ' ' + date.toLocaleTimeString('de-DE'));
+            }
+        });
+        
+        // Format der Größenangaben
+        $('.data-size').each(function() {
+            const bytes = parseInt($(this).text(), 10);
+            if (!isNaN(bytes)) {
+                if (bytes >= 1073741824) {
+                    $(this).text((bytes / 1073741824).toFixed(2) + ' GB');
+                } else if (bytes >= 1048576) {
+                    $(this).text((bytes / 1048576).toFixed(2) + ' MB');
+                } else if (bytes >= 1024) {
+                    $(this).text((bytes / 1024).toFixed(2) + ' KB');
+                } else {
+                    $(this).text(bytes + ' B');
+                }
+            }
+        });
+        
+        // Format der Gesamtgröße
+        $('.total-size').each(function() {
+            const bytes = parseInt($(this).text(), 10);
+            if (!isNaN(bytes)) {
+                const gigabytes = (bytes / 1073741824).toFixed(2);
+                $(this).text(gigabytes + ' GB');
+            }
+        });
+        
+        // Datastore-Verteilungs-Chart
+        if(document.getElementById('datastoreChart')) {
+            const datastoreCtx = document.getElementById('datastoreChart').getContext('2d');
+            
+            // Extrahiere Daten aus der Tabelle
+            const dataLabels = [];
+            const dataCounts = [];
+            const dataColors = [
+                '#00355e', '#0d4b78', '#1a6092', '#2776ac', '#348cc6', '#41a3e0', '#23a96a', '#da6f1e', '#e58941', '#f0a364'
+            ];
+            
+            $('table tr').each(function(index) {
+                if (index > 0) {  // Überspringe die Kopfzeile
+                    const columns = $(this).find('td');
+                    if (columns.length >= 2) {
+                        dataLabels.push(columns.eq(0).text());
+                        dataCounts.push(parseInt(columns.eq(1).text(), 10));
+                    }
+                }
+            });
+            
+            // Begrenze auf die Top 10 Datastores
+            if (dataLabels.length > 10) {
+                dataLabels.splice(10);
+                dataCounts.splice(10);
+            }
+            
+            new Chart(datastoreCtx, {
+                type: 'pie',
+                data: {
+                    labels: dataLabels,
+                    datasets: [{
+                        data: dataCounts,
+                        backgroundColor: dataColors.slice(0, dataCounts.length),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Verwaiste VMDKs pro Datastore',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+{% endblock %}

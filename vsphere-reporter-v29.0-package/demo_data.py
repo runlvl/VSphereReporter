@@ -2,359 +2,421 @@
 # -*- coding: utf-8 -*-
 
 """
-VMware vSphere Reporter - Demo-Daten
+VMware vSphere Reporter v29.0 - Web Edition
 Copyright (c) 2025 Bechtle GmbH
 
-Dieses Modul generiert Beispieldaten für den Demo-Modus.
+Modul zur Generierung von Demo-Daten für den vSphere Reporter.
+Erzeugt realistische Beispieldaten für die Verwendung im Demo-Modus.
 """
 
 import random
 import datetime
-import uuid
-import logging
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 
-def generate_demo_data() -> Dict[str, Any]:
+# Konstanten für die Demo-Daten
+VM_NAMES = [
+    "web-server-01", "web-server-02", "app-server-01", "app-server-02",
+    "db-server-01", "db-server-02", "file-server-01", "file-server-02",
+    "mail-server-01", "mail-server-02", "backup-server-01", "backup-server-02",
+    "dc-server-01", "dc-server-02", "gateway-01", "gateway-02",
+    "monitoring-01", "monitoring-02", "erp-server-01", "erp-server-02",
+    "test-vm-01", "test-vm-02", "dev-vm-01", "dev-vm-02", "prod-vm-01", "prod-vm-02"
+]
+
+HOST_NAMES = [
+    "esx01.example.com", "esx02.example.com", "esx03.example.com", "esx04.example.com",
+    "esx05.example.com", "esx06.example.com", "esx07.example.com", "esx08.example.com",
+]
+
+DATASTORE_NAMES = [
+    "datastore-ssd-01", "datastore-ssd-02", "datastore-hdd-01", "datastore-hdd-02",
+    "datastore-nas-01", "datastore-nas-02", "datastore-backup-01", "datastore-backup-02",
+]
+
+DATASTORE_TYPES = ["VMFS", "NFS", "vSAN", "vVOL"]
+
+NETWORK_NAMES = [
+    "VM Network", "Management Network", "Backup Network", "DMZ Network",
+    "Internal Network", "Production Network", "Test Network", "Development Network"
+]
+
+NETWORK_TYPES = ["VDS", "VSS", "NSX"]
+
+GUEST_FULL_NAMES = [
+    "Microsoft Windows Server 2022", "Microsoft Windows Server 2019", "Microsoft Windows Server 2016",
+    "Microsoft Windows 11 (64-bit)", "Microsoft Windows 10 (64-bit)",
+    "Red Hat Enterprise Linux 9 (64-bit)", "Red Hat Enterprise Linux 8 (64-bit)",
+    "Ubuntu Linux (64-bit)", "Debian GNU/Linux (64-bit)", "SUSE Linux Enterprise Server 15",
+    "CentOS Linux 9 (64-bit)", "Oracle Linux 9 (64-bit)", "Other Linux (64-bit)"
+]
+
+VMWARE_TOOLS_STATUSES = ["toolsOk", "toolsOld", "toolsNotRunning", "toolsNotInstalled"]
+VMWARE_TOOLS_VERSION_STATUSES = ["current", "outOfDate", "notInstalled"]
+POWER_STATES = ["poweredOn", "poweredOff"]
+CONNECTION_STATES = ["connected", "disconnected"]
+
+VMDK_FILE_TYPES = ["-flat.vmdk", "-000001.vmdk", "-ctk.vmdk", "-delta.vmdk"]
+
+SNAPSHOT_NAMES = [
+    "Pre-Update", "Post-Update", "Clean State", "Testing", "Backup",
+    "Before Changes", "After Changes", "Restore Point", "Migration Point",
+    "Configuration Change", "OS Patch", "Software Installation", "Security Update",
+    "Troubleshooting", "Maintenance"
+]
+
+SNAPSHOT_DESCRIPTIONS = [
+    "Snapshot vor dem Windows Update", "Snapshot nach dem Windows Update",
+    "Snapshot vor der Installation von Software", "Snapshot nach der Installation von Software",
+    "Snapshot vor der Konfigurationsänderung", "Snapshot nach der Konfigurationsänderung",
+    "Snapshot für Backup-Zwecke", "Snapshot für Wiederherstellungspunkt",
+    "Snapshot vor der Migration", "Snapshot für Testumgebung",
+    "Snapshot vor der Datenbankmigration", "Snapshot nach der Datenbankmigration",
+    "Saubere Installation", "", "Arbeitsstand gesichert", "Tägliches Backup",
+    "Wöchentliches Backup", "Monatliches Backup", "Quartalssicherung"
+]
+
+# Hilfsfunktionen für die Generierung von zufälligen Datums- und Zeitwerten
+def random_date(start: datetime.datetime, end: datetime.datetime) -> datetime.datetime:
     """
-    Generiert Beispieldaten für den Demo-Modus.
+    Generiert ein zufälliges Datum zwischen start und end.
+    
+    Args:
+        start: Startdatum
+        end: Enddatum
+        
+    Returns:
+        Ein zufälliges Datum zwischen start und end
+    """
+    delta = end - start
+    int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
+    random_second = random.randrange(int_delta)
+    return start + datetime.timedelta(seconds=random_second)
+
+def now() -> datetime.datetime:
+    """
+    Gibt das aktuelle Datum und die aktuelle Zeit zurück.
     
     Returns:
-        Dictionary mit Demo-Daten
+        Aktuelles Datum und aktuelle Zeit
     """
-    logging.info("Generiere Demo-Daten...")
-    
-    # Aktuelle Zeit für realistische Zeitstempel
-    now = datetime.datetime.now()
-    
-    # VMs generieren
-    vms = generate_vms(30)
-    
-    # Hosts generieren
-    hosts = generate_hosts(5)
-    
-    # Datastores generieren
-    datastores = generate_datastores(10)
-    
-    # Netzwerke generieren
-    networks = generate_networks(6)
-    
-    # VMware Tools generieren
-    vmware_tools = generate_vmware_tools(vms)
-    
-    # Snapshots generieren
-    snapshots = generate_snapshots(vms)
-    
-    # Verwaiste VMDKs generieren
-    orphaned_vmdks = generate_orphaned_vmdks(datastores)
-    
-    # Gesamtdaten zurückgeben
-    return {
-        'vms': vms,
-        'hosts': hosts,
-        'datastores': datastores,
-        'networks': networks,
-        'vmware_tools': vmware_tools,
-        'snapshots': snapshots,
-        'orphaned_vmdks': orphaned_vmdks
-    }
+    return datetime.datetime.now()
 
-def generate_vms(count: int) -> List[Dict[str, Any]]:
+def days_ago(days: int) -> datetime.datetime:
     """
-    Generiert eine Liste von virtuellen Maschinen für den Demo-Modus.
+    Berechnet ein Datum, das eine bestimmte Anzahl von Tagen in der Vergangenheit liegt.
+    
+    Args:
+        days: Anzahl der Tage
+        
+    Returns:
+        Datum vor der angegebenen Anzahl von Tagen
+    """
+    return now() - datetime.timedelta(days=days)
+
+# Funktionen zur Generierung von Demo-Daten
+def get_demo_vms(count: int = 20) -> List[Dict[str, Any]]:
+    """
+    Generiert Demo-Daten für virtuelle Maschinen.
     
     Args:
         count: Anzahl der zu generierenden VMs
         
     Returns:
-        Liste von VM-Daten
+        Eine Liste von VM-Dictionaries
     """
-    os_types = [
-        "Windows Server 2022", "Windows Server 2019", "Windows Server 2016",
-        "Ubuntu Server 22.04 LTS", "Ubuntu Server 20.04 LTS",
-        "SUSE Linux Enterprise Server 15", "SUSE Linux Enterprise Server 12",
-        "Red Hat Enterprise Linux 9", "Red Hat Enterprise Linux 8",
-        "CentOS 7", "Debian 11", "Debian 10"
-    ]
-    
-    power_states = ["poweredOn", "poweredOff", "suspended"]
-    power_weights = [0.8, 0.15, 0.05]  # 80% laufend, 15% ausgeschaltet, 5% pausiert
-    
     vms = []
-    for i in range(count):
-        vm_name = f"vm-{i+1:03d}"
+    for i in range(min(count, len(VM_NAMES))):
+        vm_name = VM_NAMES[i]
+        ip_address = f"192.168.1.{10 + i}" if random.random() > 0.2 else None
         
-        # VM-Namen nach Verwendungszweck benennen
-        if i < 5:
-            vm_name = f"db-server-{i+1:02d}"
-        elif i < 10:
-            vm_name = f"web-server-{i+1:02d}"
-        elif i < 15:
-            vm_name = f"app-server-{i+1:02d}"
-        elif i < 20:
-            vm_name = f"dc-server-{i+1:02d}"
-        elif i < 25:
-            vm_name = f"test-server-{i+1:02d}"
-        
-        # Zufällige Werte für jede VM
-        power_state = random.choices(power_states, weights=power_weights, k=1)[0]
         vm = {
-            'name': vm_name,
-            'uuid': str(uuid.uuid4()),
-            'power_state': power_state,
-            'guest_os': random.choice(os_types),
-            'num_cpu': random.choice([1, 2, 4, 8, 16]),
-            'memory_mb': random.choice([1024, 2048, 4096, 8192, 16384, 32768]),
-            'used_space': random.randint(10, 500) * 1024 * 1024 * 1024,  # in Bytes
-            'provisioned_space': random.randint(20, 1000) * 1024 * 1024 * 1024,  # in Bytes
-            'creation_date': (datetime.datetime.now() - datetime.timedelta(days=random.randint(30, 1000))).strftime("%Y-%m-%d %H:%M:%S"),
-            'host': f"esx-host-{random.randint(1, 5):02d}.lab.local",
-            'datastore': f"datastore-{random.randint(1, 10):02d}"
+            "name": vm_name,
+            "guest_full_name": random.choice(GUEST_FULL_NAMES),
+            "power_state": random.choices(POWER_STATES, weights=[0.8, 0.2])[0],
+            "cpu_count": random.choice([1, 2, 4, 8, 16]),
+            "memory_mb": random.choice([1024, 2048, 4096, 8192, 16384, 32768]),
+            "ip_address": ip_address,
+            "tools_status": random.choices(VMWARE_TOOLS_STATUSES, weights=[0.6, 0.2, 0.1, 0.1])[0],
+            "version_status": random.choices(VMWARE_TOOLS_VERSION_STATUSES, weights=[0.7, 0.2, 0.1])[0],
+            "version": f"12.0.0 build-1922552" if random.random() > 0.1 else None,
+            "datastores": random.sample(DATASTORE_NAMES, random.randint(1, 3)),
+            "host": random.choice(HOST_NAMES),
+            "networks": random.sample(NETWORK_NAMES, random.randint(1, 3)),
+            "created": random_date(days_ago(365*2), days_ago(30)).isoformat(),
+            "last_boot": random_date(days_ago(90), days_ago(1)).isoformat() if random.random() > 0.2 else None,
         }
         vms.append(vm)
     
     return vms
 
-def generate_hosts(count: int) -> List[Dict[str, Any]]:
+def get_demo_hosts(count: int = 8) -> List[Dict[str, Any]]:
     """
-    Generiert eine Liste von ESXi-Hosts für den Demo-Modus.
+    Generiert Demo-Daten für ESXi-Hosts.
     
     Args:
         count: Anzahl der zu generierenden Hosts
         
     Returns:
-        Liste von Host-Daten
+        Eine Liste von Host-Dictionaries
     """
-    esx_versions = ["7.0.3", "7.0.2", "7.0.1", "7.0.0", "6.7.0", "6.5.0"]
-    connection_states = ["connected", "disconnected", "notResponding"]
-    connection_weights = [0.9, 0.08, 0.02]  # 90% verbunden, 8% getrennt, 2% nicht ansprechbar
-    
     hosts = []
-    for i in range(count):
-        cpu_cores = random.choice([16, 24, 32, 48, 64])
-        memory_gb = random.choice([64, 128, 256, 384, 512])
+    for i in range(min(count, len(HOST_NAMES))):
+        host_name = HOST_NAMES[i]
         
         host = {
-            'name': f"esx-host-{i+1:02d}.lab.local",
-            'uuid': str(uuid.uuid4()),
-            'version': random.choice(esx_versions),
-            'connection_state': random.choices(connection_states, weights=connection_weights, k=1)[0],
-            'cpu_model': f"Intel(R) Xeon(R) Gold {random.choice(['5218', '6230', '6248', '6258R', '6348'])} CPU @ {random.choice(['2.30', '2.40', '2.50', '2.70'])}GHz",
-            'cpu_cores': cpu_cores,
-            'cpu_threads': cpu_cores * 2,
-            'memory_size': memory_gb * 1024 * 1024 * 1024,  # in Bytes
-            'in_maintenance_mode': random.choices([True, False], weights=[0.05, 0.95], k=1)[0],
-            'uptime': random.randint(1, 365) * 24 * 60 * 60  # in Sekunden
+            "name": host_name,
+            "connection_state": random.choices(CONNECTION_STATES, weights=[0.95, 0.05])[0],
+            "maintenance_mode": random.random() < 0.1,  # 10% Wahrscheinlichkeit für Wartungsmodus
+            "version": f"VMware ESXi {random.choice(['7.0.3', '7.0.2', '7.0.1', '7.0.0', '6.7.0', '6.5.0'])}-{random.randint(10000, 99999)}",
+            "cpu_cores": random.choice([16, 24, 32, 64]),
+            "memory_size": random.choice([137438953472, 274877906944, 549755813888, 1099511627776]),  # 128, 256, 512, 1024 GB
+            "datastores": random.sample(DATASTORE_NAMES, random.randint(2, len(DATASTORE_NAMES))),
+            "networks": random.sample(NETWORK_NAMES, random.randint(2, len(NETWORK_NAMES))),
+            "vm_count": random.randint(5, 20),
         }
         hosts.append(host)
     
     return hosts
 
-def generate_datastores(count: int) -> List[Dict[str, Any]]:
+def get_demo_datastores(count: int = 8) -> List[Dict[str, Any]]:
     """
-    Generiert eine Liste von Datastores für den Demo-Modus.
+    Generiert Demo-Daten für Datastores.
     
     Args:
         count: Anzahl der zu generierenden Datastores
         
     Returns:
-        Liste von Datastore-Daten
+        Eine Liste von Datastore-Dictionaries
     """
-    datastore_types = ["VMFS", "NFS", "vVOL", "vSAN"]
-    datastore_weights = [0.6, 0.2, 0.1, 0.1]  # 60% VMFS, 20% NFS, 10% vVOL, 10% vSAN
-    
     datastores = []
-    for i in range(count):
-        capacity_gb = random.randint(500, 10000)
-        free_space_percentage = random.uniform(0.05, 0.8)
+    for i in range(min(count, len(DATASTORE_NAMES))):
+        datastore_name = DATASTORE_NAMES[i]
+        
+        # Zufällige Kapazität je nach Typ (SSD größer als HDD)
+        if "ssd" in datastore_name.lower():
+            capacity = random.randint(5, 20) * 1099511627776  # 5-20 TB
+        else:
+            capacity = random.randint(1, 5) * 1099511627776  # 1-5 TB
+        
+        # Zufällige Belegung (50-90%)
+        free_space_ratio = random.uniform(0.1, 0.5)
+        free_space = int(capacity * free_space_ratio)
         
         datastore = {
-            'name': f"datastore-{i+1:02d}",
-            'uuid': str(uuid.uuid4()),
-            'type': random.choices(datastore_types, weights=datastore_weights, k=1)[0],
-            'capacity': capacity_gb * 1024 * 1024 * 1024,  # in Bytes
-            'free_space': int(capacity_gb * free_space_percentage * 1024 * 1024 * 1024),  # in Bytes
-            'accessible': random.choices([True, False], weights=[0.95, 0.05], k=1)[0],
-            'maintenance_mode': random.choices([None, "entering", "normal", "inMaintenance"], weights=[0.95, 0.02, 0.02, 0.01], k=1)[0]
+            "name": datastore_name,
+            "type": random.choice(DATASTORE_TYPES),
+            "capacity": capacity,
+            "free_space": free_space,
+            "hosts": random.sample(HOST_NAMES, random.randint(2, len(HOST_NAMES))),
+            "vm_count": random.randint(5, 15),
         }
         datastores.append(datastore)
     
     return datastores
 
-def generate_networks(count: int) -> List[Dict[str, Any]]:
+def get_demo_networks(count: int = 8) -> List[Dict[str, Any]]:
     """
-    Generiert eine Liste von Netzwerken für den Demo-Modus.
+    Generiert Demo-Daten für Netzwerke.
     
     Args:
         count: Anzahl der zu generierenden Netzwerke
         
     Returns:
-        Liste von Netzwerk-Daten
+        Eine Liste von Netzwerk-Dictionaries
     """
-    network_types = ["VirtualSwitch", "DistributedVirtualSwitch"]
-    
     networks = []
-    for i in range(count):
+    for i in range(min(count, len(NETWORK_NAMES))):
+        network_name = NETWORK_NAMES[i]
+        
+        # VLAN-ID, abhängig vom Netzwerktyp
+        vlan_id = None
+        if random.random() > 0.2:  # 80% Wahrscheinlichkeit für ein VLAN
+            vlan_id = random.randint(1, 4094)
+        
         network = {
-            'name': f"VLAN-{(i+1)*10}",
-            'uuid': str(uuid.uuid4()),
-            'type': random.choice(network_types),
-            'vlan_id': (i+1) * 10,
-            'host_count': random.randint(1, 5),
-            'vm_count': random.randint(0, 20)
+            "name": network_name,
+            "type": random.choice(NETWORK_TYPES),
+            "vlan_id": vlan_id,
+            "hosts": random.sample(HOST_NAMES, random.randint(2, len(HOST_NAMES))),
+            "vm_count": random.randint(3, 12),
         }
         networks.append(network)
     
     return networks
 
-def generate_vmware_tools(vms: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def get_demo_vmware_tools(count: int = 20) -> List[Dict[str, Any]]:
     """
-    Generiert VMware Tools-Informationen für den Demo-Modus.
+    Generiert Demo-Daten für VMware Tools Status.
     
     Args:
-        vms: Liste der VMs
+        count: Anzahl der zu generierenden VMs
         
     Returns:
-        Liste von VMware Tools-Daten
+        Eine Liste von VMware Tools Status-Dictionaries
     """
-    tools_versions = [
-        "12200", "12100", "12000", "11500", "11400", "11300", 
-        "11200", "11100", "11000", "10500", "10400", "10300"
-    ]
-    tools_status = [
-        "toolsOk", "toolsNotInstalled", "toolsOld", "toolsNotRunning"
-    ]
-    tools_weights = [0.7, 0.05, 0.2, 0.05]  # 70% OK, 5% nicht installiert, 20% veraltet, 5% nicht ausgeführt
+    # Generiere virtuelle Maschinen als Basis
+    vms = get_demo_vms(count)
     
-    vmware_tools = []
-    for i, vm in enumerate(vms):
-        # Bei einigen VMs die VMware Tools absichtlich veralten lassen oder fehlen lassen
-        adjusted_weights = tools_weights.copy()
-        if i % 7 == 0:  # Etwa jede 7. VM hat keine Tools
-            adjusted_weights = [0.05, 0.8, 0.1, 0.05]
-        elif i % 5 == 0:  # Etwa jede 5. VM hat veraltete Tools
-            adjusted_weights = [0.1, 0.05, 0.8, 0.05]
+    # Gewichte für die Status-Verteilung
+    tools_weights = {
+        "toolsOk": 0.6,
+        "toolsOld": 0.2,
+        "toolsNotRunning": 0.1,
+        "toolsNotInstalled": 0.1
+    }
+    
+    version_weights = {
+        "current": 0.7,
+        "outOfDate": 0.2,
+        "notInstalled": 0.1
+    }
+    
+    # Aktualisiere die VMware Tools-Status nach den Gewichten
+    for vm in vms:
+        vm["tools_status"] = random.choices(
+            list(tools_weights.keys()),
+            weights=list(tools_weights.values())
+        )[0]
         
-        tool = {
-            'vm_name': vm['name'],
-            'version': random.choice(tools_versions),
-            'status': random.choices(tools_status, weights=adjusted_weights, k=1)[0],
-            'upgrade_available': random.choices([True, False], weights=[0.3, 0.7], k=1)[0],
-            'last_update': (datetime.datetime.now() - datetime.timedelta(days=random.randint(30, 500))).strftime("%Y-%m-%d %H:%M:%S")
-        }
-        vmware_tools.append(tool)
+        vm["version_status"] = random.choices(
+            list(version_weights.keys()),
+            weights=list(version_weights.values())
+        )[0]
+        
+        # Version basierend auf Status
+        if vm["version_status"] == "current":
+            vm["version"] = "12.0.0 build-1922552"
+        elif vm["version_status"] == "outOfDate":
+            vm["version"] = random.choice(["11.3.5 build-1823152", "11.0.1 build-1743428", "10.3.25 build-1679270"])
+        else:
+            vm["version"] = None
     
-    # Sortiere nach Version (älteste zuerst)
-    vmware_tools.sort(key=lambda x: x['version'])
-    
-    return vmware_tools
+    return vms
 
-def generate_snapshots(vms: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def get_demo_snapshots(count: int = 15) -> List[Dict[str, Any]]:
     """
-    Generiert Snapshot-Informationen für den Demo-Modus.
+    Generiert Demo-Daten für Snapshots.
     
     Args:
-        vms: Liste der VMs
+        count: Anzahl der zu generierenden Snapshots
         
     Returns:
-        Liste von Snapshot-Daten
+        Eine Liste von Snapshot-Dictionaries
     """
-    # Nur 40% der VMs haben Snapshots
-    vms_with_snapshots = random.sample(vms, k=int(len(vms) * 0.4))
-    
     snapshots = []
-    for vm in vms_with_snapshots:
-        # 1-3 Snapshots pro VM
-        num_snapshots = random.randint(1, 3)
-        
-        for j in range(num_snapshots):
-            # Snapshots mit unterschiedlichem Alter erstellen
-            if j == 0:
-                # Älterer Snapshot (30-365 Tage)
-                days_old = random.randint(30, 365)
-            else:
-                # Neuerer Snapshot (1-29 Tage)
-                days_old = random.randint(1, 29)
-            
-            snapshot_date = datetime.datetime.now() - datetime.timedelta(days=days_old)
-            snapshot_size_gb = random.uniform(0.5, 50.0)
-            
-            snapshot = {
-                'vm_name': vm['name'],
-                'name': f"Snapshot-{j+1}" if j > 0 else "Vor Update",
-                'description': random.choice([
-                    "Vor System-Update", 
-                    "Vor Anwendungs-Installation",
-                    "Backup vor Konfigurationsänderung",
-                    "Testschnappschuss",
-                    "Vor Patch-Installation",
-                    "Sicherung vor Migration",
-                    ""
-                ]),
-                'creation_time': snapshot_date.strftime("%Y-%m-%d %H:%M:%S"),
-                'age_days': days_old,
-                'size_gb': snapshot_size_gb,
-                'size_bytes': int(snapshot_size_gb * 1024 * 1024 * 1024)
-            }
-            snapshots.append(snapshot)
     
-    # Sortiere nach Alter (älteste zuerst)
-    snapshots.sort(key=lambda x: x['age_days'], reverse=True)
+    # Wir wollen eine Mischung aus aktuellen, alten und sehr alten Snapshots
+    age_distribution = [
+        # (min_days, max_days, weight)
+        (1, 7, 0.3),      # aktuelle Snapshots (1-7 Tage)
+        (8, 30, 0.4),     # mittelalte Snapshots (8-30 Tage)
+        (31, 90, 0.2),    # alte Snapshots (31-90 Tage)
+        (91, 365, 0.1)    # sehr alte Snapshots (91-365 Tage)
+    ]
+    
+    # Snapshots dynamisch auf VMs verteilen
+    vms = get_demo_vms(count)
+    
+    for i in range(count):
+        # Wähle zufällig eine VM aus
+        vm = random.choice(vms)
+        
+        # Bestimme das Alter des Snapshots basierend auf der Verteilung
+        age_choice = random.choices(
+            age_distribution,
+            weights=[weight for _, _, weight in age_distribution]
+        )[0]
+        
+        min_days, max_days, _ = age_choice
+        create_time = random_date(days_ago(max_days), days_ago(min_days))
+        
+        # Berechne zufällige Größe (50MB - 50GB)
+        size_bytes = random.randint(50 * 1024 * 1024, 50 * 1024 * 1024 * 1024)
+        
+        snapshot = {
+            "name": random.choice(SNAPSHOT_NAMES),
+            "vm_name": vm["name"],
+            "create_time": create_time,
+            "size_bytes": size_bytes,
+            "description": random.choice(SNAPSHOT_DESCRIPTIONS),
+            "state": vm["power_state"],
+            "quiesced": random.random() < 0.3,  # 30% Wahrscheinlichkeit für "quiesced"
+        }
+        snapshots.append(snapshot)
+    
+    # Sortiere Snapshots nach Alter (älteste zuerst)
+    snapshots.sort(key=lambda x: x["create_time"])
     
     return snapshots
 
-def generate_orphaned_vmdks(datastores: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def get_demo_orphaned_vmdks(count: int = 12) -> List[Dict[str, Any]]:
     """
-    Generiert Informationen über verwaiste VMDK-Dateien für den Demo-Modus.
+    Generiert Demo-Daten für verwaiste VMDKs.
     
     Args:
-        datastores: Liste der Datastores
+        count: Anzahl der zu generierenden verwaisten VMDKs
         
     Returns:
-        Liste von verwaisten VMDK-Daten
+        Eine Liste von verwaisten VMDK-Dictionaries
     """
     orphaned_vmdks = []
     
-    # Für jeden Datastore 0-3 verwaiste VMDKs erstellen
-    for datastore in datastores:
-        num_orphaned = random.randint(0, 3)
-        
-        for i in range(num_orphaned):
-            # Zufällige Erstellungszeit (30-1000 Tage alt)
-            days_old = random.randint(30, 1000)
-            creation_date = datetime.datetime.now() - datetime.timedelta(days=days_old)
-            
-            # Zufällige Größe (1-50 GB)
-            size_gb = random.uniform(1.0, 50.0)
-            
-            # Verschiedene Pfadmuster
-            path_pattern = random.choice([
-                "{datastore}/orphaned_vm_{id}/orphaned_vm_{id}.vmdk",
-                "{datastore}/orphaned_{id}.vmdk",
-                "{datastore}/deleted_vms/vm_{id}/vm_{id}.vmdk",
-                "{datastore}/old_vm_{id}/old_vm_{id}.vmdk",
-                "{datastore}/backup_{id}/backup_{id}.vmdk"
-            ])
-            
-            path = path_pattern.format(datastore=datastore['name'], id=random.randint(100, 999))
-            
-            vmdk = {
-                'path': path,
-                'datastore': datastore['name'],
-                'size_gb': size_gb,
-                'size_bytes': int(size_gb * 1024 * 1024 * 1024),
-                'creation_date': creation_date.strftime("%Y-%m-%d %H:%M:%S"),
-                'age_days': days_old,
-                'thin_provisioned': random.choice([True, False]),
-                'verification': random.choice([
-                    "Keine zugehörige VM gefunden",
-                    "VM gelöscht, VMDK verblieben",
-                    "Datei nicht in VM-Konfiguration referenziert",
-                    "Verwaiste Snapshot-Datei"
-                ])
-            }
-            orphaned_vmdks.append(vmdk)
+    # Wir wollen eine Mischung aus verschiedenen VMDK-Typen und Erklärungen
+    explanations = [
+        "VMDK ist keiner VM zugeordnet",
+        "Verwaiste Snapshot-VMDK nach fehlgeschlagenem Snapshot-Löschvorgang",
+        "Festplattendatei ohne zugehörige VM-Konfiguration gefunden",
+        "Temporäre VMDK von abgebrochener Storage vMotion",
+        "Mögliches Überbleibsel nach unvollständiger VM-Löschung",
+        "VMDK ohne Zuordnung in der VM-Konfiguration"
+    ]
     
-    # Sortiere nach Größe (größte zuerst)
-    orphaned_vmdks.sort(key=lambda x: x['size_bytes'], reverse=True)
+    # Verteile verwaiste VMDKs auf verschiedene Datastores
+    for i in range(count):
+        datastore = random.choice(DATASTORE_NAMES)
+        
+        # Generiere zufälligen Dateinamen basierend auf VM-Namen
+        vm_name = random.choice(VM_NAMES)
+        file_type = random.choice(VMDK_FILE_TYPES)
+        name = f"{vm_name}{file_type}"
+        
+        # Zufälliger Pfad im Datastore
+        path = f"[{datastore}] vm_folder_{random.randint(1, 10)}/{vm_name}/{name}"
+        
+        # Berechne zufällige Größe (1GB - 500GB)
+        size_bytes = random.randint(1 * 1024 * 1024 * 1024, 500 * 1024 * 1024 * 1024)
+        
+        # Modifikationsdatum (bis zu 2 Jahre alt)
+        modification_time = random_date(days_ago(365*2), days_ago(1))
+        
+        orphaned_vmdk = {
+            "name": name,
+            "datastore": datastore,
+            "path": path,
+            "size_bytes": size_bytes,
+            "modification_time": modification_time,
+            "explanation": random.choice(explanations)
+        }
+        orphaned_vmdks.append(orphaned_vmdk)
     
     return orphaned_vmdks
+
+# Hauptfunktion, die alle Demo-Daten generiert
+def generate_all_demo_data() -> Dict[str, Any]:
+    """
+    Generiert alle Demo-Daten für den vSphere Reporter.
+    
+    Returns:
+        Ein Dictionary mit allen Demo-Daten
+    """
+    return {
+        "vms": get_demo_vms(),
+        "hosts": get_demo_hosts(),
+        "datastores": get_demo_datastores(),
+        "networks": get_demo_networks(),
+        "vmware_tools": get_demo_vmware_tools(),
+        "snapshots": get_demo_snapshots(),
+        "orphaned_vmdks": get_demo_orphaned_vmdks(),
+        "now": now(),
+        "demo_mode": True
+    }

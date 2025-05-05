@@ -4,14 +4,14 @@
 <h1><i class="fas fa-tools"></i> VMware Tools Status</h1>
 
 <div class="content-section">
-    <p class="lead">Übersicht über den VMware Tools-Status aller virtuellen Maschinen, sortiert nach Version (älteste zuerst).</p>
+    <p class="lead">Übersicht über den Status der VMware Tools auf allen virtuellen Maschinen.</p>
     
     <div class="row mb-3">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
-                        <span><i class="fas fa-info-circle"></i> Informationen</span>
+                        <span><i class="fas fa-info-circle"></i> Informationen zum VMware Tools Status</span>
                         <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#toolsInfoCollapse">
                             <i class="fas fa-chevron-down"></i>
                         </button>
@@ -19,78 +19,128 @@
                 </div>
                 <div class="collapse" id="toolsInfoCollapse">
                     <div class="card-body">
-                        <p>Der VMware Tools-Status zeigt an, ob die virtuellen Maschinen aktuelle VMware Tools installiert haben.</p>
+                        <p>VMware Tools ist ein Satz von Dienstprogrammen und Treibern, die die Leistung virtueller Maschinen verbessern und viele Funktionen 
+                        für die einfache Verwaltung von Gastbetriebssystemen bereitstellen.</p>
+                        
+                        <p><strong>Mögliche Status der VMware Tools:</strong></p>
                         <ul>
-                            <li><span class="badge bg-success">Aktuell</span> - Die neueste Version der VMware Tools ist installiert</li>
-                            <li><span class="badge bg-warning">Veraltet</span> - Es ist eine ältere Version der VMware Tools installiert</li>
+                            <li><span class="badge bg-success">OK</span> - VMware Tools sind installiert und auf dem neuesten Stand</li>
+                            <li><span class="badge bg-warning">Veraltet</span> - VMware Tools sind installiert, aber nicht auf dem neuesten Stand</li>
                             <li><span class="badge bg-danger">Nicht installiert</span> - VMware Tools sind nicht installiert</li>
-                            <li><span class="badge bg-secondary">Nicht ausgeführt</span> - VMware Tools sind installiert, werden aber nicht ausgeführt</li>
+                            <li><span class="badge bg-secondary">Wird nicht ausgeführt</span> - VMware Tools sind installiert, werden aber nicht ausgeführt</li>
                         </ul>
-                        <p>Für eine optimale Leistung und Funktionalität sollten alle VMs aktuelle VMware Tools verwenden.</p>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-lightbulb"></i> <strong>Tipp:</strong> Es wird empfohlen, VMware Tools stets auf dem neuesten Stand zu halten, 
+                            um von allen Funktionen und Sicherheitsverbesserungen zu profitieren.
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     
-    {% if tools_info %}
+    {% if vmware_tools %}
     <div class="table-responsive">
         <table class="table table-striped datatable">
             <thead>
                 <tr>
-                    <th>VM-Name</th>
-                    <th>Tools-Status</th>
+                    <th>Virtuelle Maschine</th>
+                    <th>Status</th>
                     <th>Version</th>
-                    <th>Version-Status</th>
-                    <th>Power-Status</th>
                     <th>Betriebssystem</th>
+                    <th>Power-Status</th>
+                    <th>Host</th>
                 </tr>
             </thead>
             <tbody>
-                {% for vm in tools_info %}
+                {% for vm in vmware_tools %}
                 <tr>
                     <td>{{ vm.name }}</td>
                     <td>
-                        {% if vm.tools_status == 'toolsOk' %}
-                        <span class="badge bg-success">In Ordnung</span>
-                        {% elif vm.tools_status == 'toolsOld' %}
-                        <span class="badge bg-warning">Veraltet</span>
-                        {% elif vm.tools_status == 'toolsNotInstalled' %}
-                        <span class="badge bg-danger">Nicht installiert</span>
-                        {% elif vm.tools_status == 'toolsNotRunning' %}
-                        <span class="badge bg-secondary">Nicht ausgeführt</span>
+                        {% if vm.tools_status == "toolsOk" %}
+                            <span class="badge bg-success">OK</span>
+                        {% elif vm.tools_status == "toolsOld" %}
+                            <span class="badge bg-warning">Veraltet</span>
+                        {% elif vm.tools_status == "toolsNotInstalled" %}
+                            <span class="badge bg-danger">Nicht installiert</span>
+                        {% elif vm.tools_status == "toolsNotRunning" %}
+                            <span class="badge bg-secondary">Wird nicht ausgeführt</span>
                         {% else %}
-                        <span class="badge bg-info">{{ vm.tools_status }}</span>
+                            <span class="badge bg-secondary">Unbekannt</span>
                         {% endif %}
                     </td>
-                    <td>{{ vm.version }}</td>
+                    <td>{{ vm.version|default("Nicht verfügbar") }}</td>
+                    <td>{{ vm.guest_full_name|default("Unbekannt") }}</td>
                     <td>
-                        {% if vm.version_status == 'current' %}
-                        <span class="badge bg-success">Aktuell</span>
-                        {% elif vm.version_status == 'outOfDate' %}
-                        <span class="badge bg-warning">Veraltet</span>
-                        {% elif vm.version_status == 'notInstalled' %}
-                        <span class="badge bg-danger">Nicht installiert</span>
+                        {% if vm.power_state == "poweredOn" %}
+                            <span class="text-success"><i class="fas fa-power-off"></i> An</span>
                         {% else %}
-                        <span class="badge bg-secondary">{{ vm.version_status }}</span>
+                            <span class="text-secondary"><i class="fas fa-power-off"></i> Aus</span>
                         {% endif %}
                     </td>
-                    <td>
-                        {% if vm.power_state == 'poweredOn' %}
-                        <span class="badge bg-success">Ein</span>
-                        {% elif vm.power_state == 'poweredOff' %}
-                        <span class="badge bg-secondary">Aus</span>
-                        {% elif vm.power_state == 'suspended' %}
-                        <span class="badge bg-warning">Ausgesetzt</span>
-                        {% else %}
-                        <span class="badge bg-info">{{ vm.power_state }}</span>
-                        {% endif %}
-                    </td>
-                    <td>{{ vm.guest_full_name }}</td>
+                    <td>{{ vm.host }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+    
+    <!-- Statistik-Kacheln -->
+    <div class="row mt-4">
+        {% set ok_count = vmware_tools|selectattr("tools_status", "eq", "toolsOk")|list|length %}
+        {% set old_count = vmware_tools|selectattr("tools_status", "eq", "toolsOld")|list|length %}
+        {% set not_installed_count = vmware_tools|selectattr("tools_status", "eq", "toolsNotInstalled")|list|length %}
+        {% set not_running_count = vmware_tools|selectattr("tools_status", "eq", "toolsNotRunning")|list|length %}
+        {% set total_count = vmware_tools|length %}
+        
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body bg-success text-white">
+                    <h3 class="card-title">{{ ok_count }}</h3>
+                    <p class="card-text">Aktuelle Version</p>
+                </div>
+                <div class="card-footer">
+                    {{ ((ok_count / total_count) * 100)|round(1) }}%
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body bg-warning">
+                    <h3 class="card-title">{{ old_count }}</h3>
+                    <p class="card-text">Veraltet</p>
+                </div>
+                <div class="card-footer">
+                    {{ ((old_count / total_count) * 100)|round(1) }}%
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body bg-danger text-white">
+                    <h3 class="card-title">{{ not_installed_count }}</h3>
+                    <p class="card-text">Nicht installiert</p>
+                </div>
+                <div class="card-footer">
+                    {{ ((not_installed_count / total_count) * 100)|round(1) }}%
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body bg-secondary text-white">
+                    <h3 class="card-title">{{ not_running_count }}</h3>
+                    <p class="card-text">Nicht ausgeführt</p>
+                </div>
+                <div class="card-footer">
+                    {{ ((not_running_count / total_count) * 100)|round(1) }}%
+                </div>
+            </div>
+        </div>
     </div>
     
     <div class="mt-4">
@@ -104,7 +154,7 @@
     
     {% else %}
     <div class="alert alert-info">
-        <i class="fas fa-info-circle"></i> Keine VMware Tools-Informationen verfügbar.
+        <i class="fas fa-info-circle"></i> Keine Daten für VMware Tools Status verfügbar.
     </div>
     
     <div class="mt-4">
@@ -132,8 +182,8 @@
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/de-DE.json"
             },
-            "order": [[ 2, "asc" ]], // Sortieren nach Version aufsteigend
-            "pageLength": 25
+            "pageLength": 25,
+            "order": [[1, "asc"]] // Sortiere nach Status (Spalte 1)
         });
     });
 </script>
