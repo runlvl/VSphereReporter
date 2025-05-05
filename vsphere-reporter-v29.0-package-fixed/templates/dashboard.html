@@ -1,0 +1,470 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | VMware vSphere Reporter v29.0{% endblock %}
+
+{% block extra_head %}
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h3">Dashboard</h1>
+            <button class="btn btn-outline-primary" id="printReport">
+                <i class="fas fa-print me-2"></i> Drucken
+            </button>
+        </div>
+        <p class="text-muted mb-4">
+            Willkommen beim VMware vSphere Reporter. Hier erhalten Sie einen schnellen Überblick über den Zustand Ihrer Infrastruktur.
+            {% if demo_mode %}
+            <span class="badge bg-warning text-dark">Demo-Modus aktiviert</span>
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+<!-- Status Overview Cards -->
+<div class="row mb-4">
+    <div class="col-md-6 col-xl-3 mb-4">
+        <div class="card border-0 shadow-sm dashboard-card h-100">
+            <div class="card-body text-center">
+                <a href="#" class="text-decoration-none text-reset">
+                    <div class="text-primary dashboard-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h5 class="card-title">ESXi-Hosts</h5>
+                    <h2 class="dashboard-value">{{ stats.hosts.active }}<span class="small text-muted">/{{ stats.hosts.total }}</span></h2>
+                    <p class="dashboard-label">aktive Hosts</p>
+                    {% if stats.hosts.maintenance > 0 %}
+                    <div class="mt-2 small text-warning">
+                        <i class="fas fa-wrench me-1"></i> {{ stats.hosts.maintenance }} Host(s) im Wartungsmodus
+                    </div>
+                    {% endif %}
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-xl-3 mb-4">
+        <div class="card border-0 shadow-sm dashboard-card h-100">
+            <div class="card-body text-center">
+                <a href="{{ url_for('vmware_tools') }}" class="text-decoration-none text-reset">
+                    <div class="text-success dashboard-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h5 class="card-title">Virtuelle Maschinen</h5>
+                    <h2 class="dashboard-value">{{ stats.vms.powered_on }}<span class="small text-muted">/{{ stats.vms.total }}</span></h2>
+                    <p class="dashboard-label">eingeschaltete VMs</p>
+                    <div class="mt-2 small text-muted">
+                        <i class="fas fa-power-off me-1"></i> {{ stats.vms.powered_off }} VMs ausgeschaltet
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-xl-3 mb-4">
+        <div class="card border-0 shadow-sm dashboard-card h-100">
+            <div class="card-body text-center">
+                <a href="{{ url_for('snapshots') }}" class="text-decoration-none text-reset">
+                    <div class="text-warning dashboard-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h5 class="card-title">Snapshots</h5>
+                    <h2 class="dashboard-value">{{ stats.snapshots.total }}</h2>
+                    <p class="dashboard-label">aktive Snapshots</p>
+                    <div class="mt-2 small text-danger">
+                        <i class="fas fa-exclamation-triangle me-1"></i> {{ stats.snapshots.old }} ältere Snapshots (>30 Tage)
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-xl-3 mb-4">
+        <div class="card border-0 shadow-sm dashboard-card h-100">
+            <div class="card-body text-center">
+                <a href="{{ url_for('orphaned_vmdks') }}" class="text-decoration-none text-reset">
+                    <div class="text-danger dashboard-icon">
+                        <i class="fas fa-hdd"></i>
+                    </div>
+                    <h5 class="card-title">Verwaiste VMDKs</h5>
+                    <h2 class="dashboard-value">{{ stats.storage.orphaned_vmdks }}</h2>
+                    <p class="dashboard-label">verwaiste Festplatten</p>
+                    <div class="mt-2 small text-muted">
+                        <i class="fas fa-database me-1"></i> {{ stats.storage.orphaned_space_gb }} GB belegt
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- VMware Tools Status -->
+<div class="row mb-4">
+    <div class="col-xl-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-tools me-2 text-primary"></i> VMware Tools Status
+                    </h5>
+                    <a href="{{ url_for('vmware_tools') }}" class="btn btn-sm btn-outline-primary">
+                        Details anzeigen
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-4 text-center mb-3 mb-md-0">
+                        <h3 class="tools-current mb-0">{{ stats.tools.current }}</h3>
+                        <p class="text-muted small">Aktuell</p>
+                    </div>
+                    <div class="col-md-4 text-center mb-3 mb-md-0">
+                        <h3 class="tools-upgradable mb-0">{{ stats.tools.update_needed }}</h3>
+                        <p class="text-muted small">Aktualisierung erforderlich</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h3 class="tools-notinstalled mb-0">{{ stats.tools.not_installed }}</h3>
+                        <p class="text-muted small">Nicht installiert</p>
+                    </div>
+                </div>
+                <div class="chart-container" style="position: relative; height:200px;">
+                    <canvas id="toolsStatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-camera me-2 text-primary"></i> Snapshot-Alter
+                    </h5>
+                    <a href="{{ url_for('snapshots') }}" class="btn btn-sm btn-outline-primary">
+                        Details anzeigen
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height:250px;">
+                    <canvas id="snapshotAgeChart"></canvas>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <div class="d-flex align-items-center">
+                            <span class="status-indicator" style="background-color: rgba(var(--bs-danger-rgb), 0.8);"></span>
+                            <span class="ms-2">Älter als 90 Tage</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <span class="status-indicator" style="background-color: rgba(var(--bs-warning-rgb), 0.8);"></span>
+                            <span class="ms-2">31-90 Tage</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- OS Distribution and Host Status -->
+<div class="row mb-4">
+    <div class="col-xl-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white p-4">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-laptop-code me-2 text-primary"></i> Betriebssystem-Verteilung
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height:250px;">
+                    <canvas id="osDistributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white p-4">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-power-off me-2 text-primary"></i> VM-Status
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height:250px;">
+                    <canvas id="vmStatusChart"></canvas>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <div class="d-flex align-items-center">
+                            <span class="status-indicator" style="background-color: rgba(var(--bs-success-rgb), 0.8);"></span>
+                            <span class="ms-2">Eingeschaltet</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <span class="status-indicator" style="background-color: rgba(var(--bs-secondary-rgb), 0.8);"></span>
+                            <span class="ms-2">Ausgeschaltet</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions & Warnings -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white p-4">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-exclamation-triangle me-2 text-primary"></i> Warnungen und Empfehlungen
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% if stats.snapshots.old > 0 %}
+                    <div class="col-md-6 mb-3">
+                        <div class="alert alert-warning">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5>Alte Snapshots gefunden</h5>
+                                    <p class="mb-1">{{ stats.snapshots.old }} Snapshot(s) sind älter als 30 Tage.</p>
+                                    <a href="{{ url_for('snapshots') }}" class="alert-link">Überprüfen Sie diese Snapshots</a> und löschen Sie die nicht mehr benötigten.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if stats.storage.orphaned_vmdks > 0 %}
+                    <div class="col-md-6 mb-3">
+                        <div class="alert alert-danger">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-hdd fa-2x me-3"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5>Verwaiste VMDKs entdeckt</h5>
+                                    <p class="mb-1">{{ stats.storage.orphaned_vmdks }} verwaiste VMDK-Dateien belegen {{ stats.storage.orphaned_space_gb }} GB Speicherplatz.</p>
+                                    <a href="{{ url_for('orphaned_vmdks') }}" class="alert-link">Überprüfen Sie diese Dateien</a> und löschen Sie die nicht mehr benötigten.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if stats.storage.low_space > 0 %}
+                    <div class="col-md-6 mb-3">
+                        <div class="alert alert-warning">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-database fa-2x me-3"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5>Datastores mit niedrigem Speicherplatz</h5>
+                                    <p class="mb-1">{{ stats.storage.low_space }} Datastore(s) haben weniger als 10% freien Speicherplatz.</p>
+                                    <span class="alert-link">Überprüfen Sie die Speichernutzung</span> und erweitern Sie bei Bedarf den Speicherplatz.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if stats.tools.update_needed > 0 or stats.tools.not_installed > 0 %}
+                    <div class="col-md-6 mb-3">
+                        <div class="alert alert-info">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-tools fa-2x me-3"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5>VMware Tools aktualisieren</h5>
+                                    <p class="mb-1">
+                                        {% if stats.tools.update_needed > 0 %}
+                                        {{ stats.tools.update_needed }} VM(s) benötigen ein VMware Tools-Update.
+                                        {% endif %}
+                                        {% if stats.tools.not_installed > 0 %}
+                                        {{ stats.tools.not_installed }} VM(s) haben keine VMware Tools installiert.
+                                        {% endif %}
+                                    </p>
+                                    <a href="{{ url_for('vmware_tools') }}" class="alert-link">VMware Tools Status anzeigen</a> und aktualisieren Sie auf die neueste Version.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Farben setzen
+    const bechtle_dark_blue = '#00355e';
+    const bechtle_orange = '#da6f1e';
+    const bechtle_green = '#23a96a';
+    const bechtle_light_gray = '#f3f3f3';
+    const bechtle_dark_gray = '#5a5a5a';
+    
+    // Tools Status Chart
+    const toolsStatusChartElement = document.getElementById('toolsStatusChart');
+    if (toolsStatusChartElement) {
+        const toolsStatusChart = new Chart(toolsStatusChartElement, {
+            type: 'doughnut',
+            data: {
+                labels: ['Aktuell', 'Update erforderlich', 'Nicht installiert'],
+                datasets: [{
+                    data: [
+                        {{ stats.tools.current }}, 
+                        {{ stats.tools.update_needed }}, 
+                        {{ stats.tools.not_installed }}
+                    ],
+                    backgroundColor: [
+                        bechtle_green,
+                        bechtle_orange,
+                        '#dc3545'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+    
+    // Snapshot Age Chart
+    const snapshotAgeChartElement = document.getElementById('snapshotAgeChart');
+    if (snapshotAgeChartElement) {
+        const snapshotAgeChart = new Chart(snapshotAgeChartElement, {
+            type: 'bar',
+            data: {
+                labels: {{ charts.snapshot_age.labels|tojson }},
+                datasets: [{
+                    label: 'Anzahl der Snapshots',
+                    data: {{ charts.snapshot_age.data|tojson }},
+                    backgroundColor: [
+                        'rgba(35, 169, 106, 0.8)',
+                        'rgba(35, 169, 106, 0.8)',
+                        'rgba(218, 111, 30, 0.8)', 
+                        'rgba(220, 53, 69, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(35, 169, 106, 1)',
+                        'rgba(35, 169, 106, 1)',
+                        'rgba(218, 111, 30, 1)', 
+                        'rgba(220, 53, 69, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+    
+    // OS Distribution Chart
+    const osDistributionChartElement = document.getElementById('osDistributionChart');
+    if (osDistributionChartElement) {
+        const osDistributionChart = new Chart(osDistributionChartElement, {
+            type: 'doughnut',
+            data: {
+                labels: {{ charts.os_distribution.labels|tojson }},
+                datasets: [{
+                    data: {{ charts.os_distribution.data|tojson }},
+                    backgroundColor: [
+                        bechtle_dark_blue,
+                        bechtle_green,
+                        bechtle_orange,
+                        '#dc3545',
+                        '#6c757d'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+    }
+    
+    // VM Status Chart
+    const vmStatusChartElement = document.getElementById('vmStatusChart');
+    if (vmStatusChartElement) {
+        const vmStatusChart = new Chart(vmStatusChartElement, {
+            type: 'doughnut',
+            data: {
+                labels: {{ charts.vm_status.labels|tojson }},
+                datasets: [{
+                    data: {{ charts.vm_status.data|tojson }},
+                    backgroundColor: [
+                        'rgba(35, 169, 106, 0.8)',
+                        'rgba(108, 117, 125, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(35, 169, 106, 1)',
+                        'rgba(108, 117, 125, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+    }
+    
+    // Druckfunktion
+    $('#printReport').on('click', function() {
+        window.print();
+    });
+</script>
+{% endblock %}

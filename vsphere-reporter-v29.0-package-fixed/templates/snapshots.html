@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}Snapshots | VMware vSphere Reporter v29.0{% endblock %}
+
+{% block extra_head %}
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h3">VM-Snapshots</h1>
+            <button class="btn btn-outline-primary" id="printReport">
+                <i class="fas fa-print me-2"></i> Drucken
+            </button>
+        </div>
+        <p class="text-muted mb-4">Dieser Bericht zeigt alle Snapshots in der vSphere-Umgebung, sortiert nach Alter (älteste zuerst).</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="status-icon-container bg-success-transparent mx-auto mb-3">
+                    <i class="fas fa-camera fa-2x text-success"></i>
+                </div>
+                <h5 class="card-title">Neue Snapshots</h5>
+                <h2 class="mb-0 age-recent">{{ snapshots|selectattr('age_category', 'equalto', 'recent')|list|length }}</h2>
+                <p class="text-muted small">0-7 Tage alt</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="status-icon-container bg-warning-transparent mx-auto mb-3">
+                    <i class="fas fa-hourglass-half fa-2x text-warning"></i>
+                </div>
+                <h5 class="card-title">Mittelalt</h5>
+                <h2 class="mb-0 age-warning">{{ snapshots|selectattr('age_category', 'equalto', 'warning')|list|length }}</h2>
+                <p class="text-muted small">8-30 Tage alt</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="status-icon-container bg-danger-transparent mx-auto mb-3">
+                    <i class="fas fa-exclamation-triangle fa-2x text-danger"></i>
+                </div>
+                <h5 class="card-title">Alt</h5>
+                <h2 class="mb-0 age-danger">{{ snapshots|selectattr('age_category', 'equalto', 'danger')|list|length }}</h2>
+                <p class="text-muted small">Älter als 30 Tage</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white p-4">
+        <h5 class="card-title mb-0">
+            <i class="fas fa-camera me-2 text-primary"></i> Snapshot-Übersicht
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="snapshotsTable" class="table table-striped table-hover nowrap w-100">
+                <thead>
+                    <tr>
+                        <th>VM-Name</th>
+                        <th>Snapshot-Name</th>
+                        <th>Beschreibung</th>
+                        <th>Erstellungsdatum</th>
+                        <th>Alter (Tage)</th>
+                        <th>Größe (GB)</th>
+                        <th>ESXi-Host</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for snapshot in snapshots %}
+                    <tr>
+                        <td>{{ snapshot.vm_name }}</td>
+                        <td>{{ snapshot.snapshot_name }}</td>
+                        <td>{{ snapshot.description }}</td>
+                        <td>{{ snapshot.date_created }}</td>
+                        <td>
+                            {% if snapshot.age_category == 'danger' %}
+                            <span class="status-badge status-error">
+                                <i class="fas fa-exclamation-triangle"></i> {{ snapshot.days_old }}
+                            </span>
+                            {% elif snapshot.age_category == 'warning' %}
+                            <span class="status-badge status-warning">
+                                <i class="fas fa-hourglass-half"></i> {{ snapshot.days_old }}
+                            </span>
+                            {% else %}
+                            <span class="status-badge status-ok">
+                                <i class="fas fa-check"></i> {{ snapshot.days_old }}
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td>{{ snapshot.size_gb }} GB</td>
+                        <td>{{ snapshot.esxi_host }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm mt-4">
+    <div class="card-header bg-white p-4">
+        <h5 class="card-title mb-0">
+            <i class="fas fa-info-circle me-2 text-primary"></i> Wissenswertes zu Snapshots
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h6><i class="fas fa-check-circle me-2 text-success"></i> Vorteile von Snapshots</h6>
+                <ul class="mb-4">
+                    <li>Schnelle Wiederherstellung eines früheren VM-Zustands</li>
+                    <li>Unterstützung für Updates und Änderungen mit Rollback-Option</li>
+                    <li>Temporäre Sicherheitskopien für Tests und Entwicklung</li>
+                </ul>
+                
+                <h6><i class="fas fa-exclamation-circle me-2 text-danger"></i> Risiken alter Snapshots</h6>
+                <ul>
+                    <li>Erhöhter Speicherplatzbedarf (Snapshots wachsen mit Änderungen)</li>
+                    <li>Leistungseinbußen bei VMs mit lang existierenden Snapshots</li>
+                    <li>Komplexe Wiederherstellung bei langen Snapshot-Ketten</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h6><i class="fas fa-lightbulb me-2 text-warning"></i> Best Practices</h6>
+                <ul class="mb-4">
+                    <li>Snapshots sollten in der Regel nicht länger als 72 Stunden bestehen</li>
+                    <li>Snapshots sind keine Backup-Lösung - verwenden Sie dedizierte Backup-Tools</li>
+                    <li>Besondere Vorsicht bei produktionskritischen Datenbank- oder Applikationsservern</li>
+                    <li>Snapshots regelmäßig überprüfen und nicht mehr benötigte löschen</li>
+                </ul>
+                
+                <h6><i class="fas fa-clock me-2 text-primary"></i> Kategorisierung</h6>
+                <ul>
+                    <li><span class="text-success">Neue Snapshots (0-7 Tage)</span>: Wahrscheinlich für laufende Arbeiten</li>
+                    <li><span class="text-warning">Mittelalt (8-30 Tage)</span>: Sollten überprüft und ggf. entfernt werden</li>
+                    <li><span class="text-danger">Alt (>30 Tage)</span>: Stellen ein potenzielles Risiko dar, prüfen und entfernen</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-info mt-4 mb-4">
+    <div class="d-flex">
+        <div class="flex-shrink-0">
+            <i class="fas fa-lightbulb fa-2x me-3"></i>
+        </div>
+        <div class="flex-grow-1">
+            <h5>Empfehlung</h5>
+            <p class="mb-0">Verwenden Sie Snapshots nur für kurzfristige Änderungen und Tests, nicht für langfristige Backups. Für eine langfristige Sicherung sollten dedizierte Backup-Lösungen eingesetzt werden.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- DataTables JS -->
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Initialisiere DataTable
+        $('#snapshotsTable').DataTable({
+            responsive: true,
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/de-DE.json'
+            },
+            order: [[4, 'desc']], // Sortiere nach Alter (Spalte 4) absteigend
+            columnDefs: [
+                { responsivePriority: 1, targets: 0 }, // VM-Name immer anzeigen
+                { responsivePriority: 2, targets: 4 }, // Alter immer anzeigen
+                { responsivePriority: 3, targets: 1 }  // Snapshot-Name wichtig
+            ]
+        });
+        
+        // Druckfunktion
+        $('#printReport').on('click', function() {
+            window.print();
+        });
+    });
+</script>
+{% endblock %}
