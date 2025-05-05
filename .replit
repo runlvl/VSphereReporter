@@ -84,6 +84,10 @@ args = "StaticDemo"
 task = "workflow.run"
 args = "StaticDemoV29"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "VSphereReporterV29Test"
+
 [[workflows.workflow]]
 name = "VSphereReporter"
 author = "agent"
@@ -297,6 +301,15 @@ author = "agent"
 task = "shell.exec"
 args = "cd vsphere-reporter-v29.0-package/static && python -m http.server 5009"
 waitForPort = 5009
+
+[[workflows.workflow]]
+name = "VSphereReporterV29Test"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd vsphere-reporter-v29.0-package && python app.py"
+waitForPort = 5000
 
 [deployment]
 run = ["sh", "-c", "pip install -r requirements.txt || pip install pyVmomi>=7.0.0 PyQt5>=5.15.0 reportlab>=3.6.0 python-docx>=0.8.11 jinja2>=3.0.0 humanize>=3.0.0 && python vsphere_reporter.py"]
