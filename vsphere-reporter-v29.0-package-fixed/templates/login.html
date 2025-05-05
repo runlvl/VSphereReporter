@@ -138,13 +138,14 @@
                             <i class="fas fa-sign-in-alt me-2"></i> Verbinden
                         </button>
                         
-                        {% if demo_mode %}
                         <div class="text-center mt-3">
-                            <a href="{{ url_for('demo_login') }}" class="btn btn-outline-secondary">
+                            <a href="{{ url_for('demo_login') }}" class="btn btn-info">
                                 <i class="fas fa-vr-cardboard me-2"></i> Demo-Modus verwenden
                             </a>
+                            <div class="text-muted small mt-2">
+                                Testen Sie die Anwendung ohne vCenter-Verbindung mit Beispieldaten
+                            </div>
                         </div>
-                        {% endif %}
                     </div>
                 </form>
             </div>
