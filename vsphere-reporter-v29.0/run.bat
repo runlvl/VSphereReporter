@@ -1,33 +1,45 @@
 @echo off
-echo Starting VMware vSphere Reporter Web Edition v29.0...
-echo.
-echo This command window will remain open while the application is running.
-echo Press Ctrl+C to stop the application.
+REM VMware vSphere Reporter v29.0 - Startskript für Windows
+REM Copyright (c) 2025 Bechtle GmbH
+
+echo ===================================================================
+echo       VMware vSphere Reporter v29.0 - Web Edition (Windows)
+echo ===================================================================
 echo.
 
-rem Check if Python is installed
-python --version >nul 2>&1
-if %ERRORLEVEL% NEQ 0 (
-    echo Error: Python is not installed or not in your PATH.
-    echo Please install Python 3.8 or higher and try again.
-    echo.
+REM Prüfe, ob die virtuelle Umgebung existiert
+if not exist venv (
+    echo FEHLER: Virtuelle Umgebung nicht gefunden.
+    echo Bitte führen Sie zuerst setup.bat aus.
     pause
     exit /b 1
 )
 
-rem Get the port number from environment or use default
-set PORT=5000
-if not "%VSPHERE_REPORTER_PORT%"=="" set PORT=%VSPHERE_REPORTER_PORT%
+REM Aktiviere virtuelle Umgebung
+echo Aktiviere virtuelle Umgebung...
+call venv\Scripts\activate.bat
 
-echo Opening your browser to http://localhost:%PORT% when the server is ready...
+REM Exportiere Debug-Modus, wenn angegeben
+if "%1"=="--debug" (
+    set VSPHERE_REPORTER_DEBUG=1
+    echo Debug-Modus aktiviert.
+) else if "%1"=="-d" (
+    set VSPHERE_REPORTER_DEBUG=1
+    echo Debug-Modus aktiviert.
+) else (
+    set VSPHERE_REPORTER_DEBUG=0
+)
+
+REM Exportiere Host und Port für die Flask-Anwendung
+set VSPHERE_REPORTER_HOST=0.0.0.0
+set VSPHERE_REPORTER_PORT=5000
+
+REM Starte die Anwendung
+echo Starte VMware vSphere Reporter v29.0...
+echo Sobald die Anwendung gestartet ist, können Sie sie unter folgender URL aufrufen:
+echo http://localhost:5000
+echo.
+echo Drücken Sie Strg+C, um die Anwendung zu beenden.
 echo.
 
-rem Open browser after a short delay
-start "" timeout /t 3 /nobreak > NUL && start http://localhost:%PORT%
-
-rem Start the application
-set PORT=%PORT%
 python app.py
-
-echo.
-echo Application stopped.
