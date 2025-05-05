@@ -1,0 +1,28 @@
+# VSphere Reporter v29.1 (Final Build, Fixed v8)
+
+Dieses Update enthält wichtige Fehlerbehebungen für die VSphere Reporter Webanwendung:
+
+## Behobene Fehler
+
+- **Import-Konflikt behoben**: Ein zirkulärer Import zwischen `report_generator/__init__.py` 
+  und `report_generator_original.py` wurde beseitigt, der zu einem 500 Internal Server Error führte
+- **Verbesserte Demo-Modus-Deaktivierung**: Die Anwendung verwendet nun korrekt echte 
+  vCenter-Daten, wenn der Demo-Modus deaktiviert ist
+- **Fehlerhandhabung verbessert**: Null-Checks wurden hinzugefügt, um Fehler zu vermeiden, 
+  wenn keine vCenter-Verbindung besteht
+- **Verbesserte Protokollierung**: Zusätzliche Protokollierung für bessere Diagnose 
+  und Fehlerbehebung
+
+## Betroffene Dateien
+
+- `app.py`: Import-Struktur und Demo-Modus-Prüfungen korrigiert
+- `webapp/report_generator/__init__.py`: Kreisimport behoben
+- Alle Export-Funktionen verwenden nun korrekt echte Daten
+
+## Installationshinweise
+
+1. Entpacken Sie die ZIP-Datei in ein leeres Verzeichnis
+2. Unter Windows führen Sie `setup.bat` aus, um Abhängigkeiten zu installieren
+3. Unter Linux führen Sie `setup.sh` aus
+4. Starten Sie die Anwendung mit `run.bat` (Windows) oder `run.sh` (Linux)
+5. Öffnen Sie einen Browser und navigieren Sie zu der angezeigten URL (normalerweise http://localhost:5000)
