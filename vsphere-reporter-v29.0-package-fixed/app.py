@@ -216,7 +216,8 @@ def login():
             flash(f'Unerwarteter Fehler: {str(e)}', 'danger')
             logger.error(f'Unerwarteter Fehler bei der Anmeldung: {str(e)}')
     
-    return render_template('login.html', form=form, demo_mode=app.config['DEMO_MODE'])
+    # Demo-Modus für die Anzeige auf True setzen, damit der Button immer angezeigt wird
+    return render_template('login.html', form=form, demo_mode=True)
 
 @app.route('/demo-login')
 def demo_login():
