@@ -30,17 +30,19 @@
     <div class="col-md-6 col-xl-3 mb-4">
         <div class="card border-0 shadow-sm dashboard-card h-100">
             <div class="card-body text-center">
-                <div class="text-primary dashboard-icon">
-                    <i class="fas fa-server"></i>
-                </div>
-                <h5 class="card-title">ESXi-Hosts</h5>
-                <h2 class="dashboard-value">{{ stats.hosts.active }}<span class="small text-muted">/{{ stats.hosts.total }}</span></h2>
-                <p class="dashboard-label">aktive Hosts</p>
-                {% if stats.hosts.maintenance > 0 %}
-                <div class="mt-2 small text-warning">
-                    <i class="fas fa-wrench me-1"></i> {{ stats.hosts.maintenance }} Host(s) im Wartungsmodus
-                </div>
-                {% endif %}
+                <a href="#" class="text-decoration-none text-reset">
+                    <div class="text-primary dashboard-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h5 class="card-title">ESXi-Hosts</h5>
+                    <h2 class="dashboard-value">{{ stats.hosts.active }}<span class="small text-muted">/{{ stats.hosts.total }}</span></h2>
+                    <p class="dashboard-label">aktive Hosts</p>
+                    {% if stats.hosts.maintenance > 0 %}
+                    <div class="mt-2 small text-warning">
+                        <i class="fas fa-wrench me-1"></i> {{ stats.hosts.maintenance }} Host(s) im Wartungsmodus
+                    </div>
+                    {% endif %}
+                </a>
             </div>
         </div>
     </div>
@@ -48,15 +50,17 @@
     <div class="col-md-6 col-xl-3 mb-4">
         <div class="card border-0 shadow-sm dashboard-card h-100">
             <div class="card-body text-center">
-                <div class="text-success dashboard-icon">
-                    <i class="fas fa-desktop"></i>
-                </div>
-                <h5 class="card-title">Virtuelle Maschinen</h5>
-                <h2 class="dashboard-value">{{ stats.vms.powered_on }}<span class="small text-muted">/{{ stats.vms.total }}</span></h2>
-                <p class="dashboard-label">eingeschaltete VMs</p>
-                <div class="mt-2 small text-muted">
-                    <i class="fas fa-power-off me-1"></i> {{ stats.vms.powered_off }} VMs ausgeschaltet
-                </div>
+                <a href="{{ url_for('vmware_tools') }}" class="text-decoration-none text-reset">
+                    <div class="text-success dashboard-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h5 class="card-title">Virtuelle Maschinen</h5>
+                    <h2 class="dashboard-value">{{ stats.vms.powered_on }}<span class="small text-muted">/{{ stats.vms.total }}</span></h2>
+                    <p class="dashboard-label">eingeschaltete VMs</p>
+                    <div class="mt-2 small text-muted">
+                        <i class="fas fa-power-off me-1"></i> {{ stats.vms.powered_off }} VMs ausgeschaltet
+                    </div>
+                </a>
             </div>
         </div>
     </div>
@@ -64,15 +68,17 @@
     <div class="col-md-6 col-xl-3 mb-4">
         <div class="card border-0 shadow-sm dashboard-card h-100">
             <div class="card-body text-center">
-                <div class="text-warning dashboard-icon">
-                    <i class="fas fa-camera"></i>
-                </div>
-                <h5 class="card-title">Snapshots</h5>
-                <h2 class="dashboard-value">{{ stats.snapshots.total }}</h2>
-                <p class="dashboard-label">aktive Snapshots</p>
-                <div class="mt-2 small text-danger">
-                    <i class="fas fa-exclamation-triangle me-1"></i> {{ stats.snapshots.old }} ältere Snapshots (>30 Tage)
-                </div>
+                <a href="{{ url_for('snapshots') }}" class="text-decoration-none text-reset">
+                    <div class="text-warning dashboard-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h5 class="card-title">Snapshots</h5>
+                    <h2 class="dashboard-value">{{ stats.snapshots.total }}</h2>
+                    <p class="dashboard-label">aktive Snapshots</p>
+                    <div class="mt-2 small text-danger">
+                        <i class="fas fa-exclamation-triangle me-1"></i> {{ stats.snapshots.old }} ältere Snapshots (>30 Tage)
+                    </div>
+                </a>
             </div>
         </div>
     </div>
@@ -80,15 +86,17 @@
     <div class="col-md-6 col-xl-3 mb-4">
         <div class="card border-0 shadow-sm dashboard-card h-100">
             <div class="card-body text-center">
-                <div class="text-danger dashboard-icon">
-                    <i class="fas fa-hdd"></i>
-                </div>
-                <h5 class="card-title">Verwaiste VMDKs</h5>
-                <h2 class="dashboard-value">{{ stats.storage.orphaned_vmdks }}</h2>
-                <p class="dashboard-label">verwaiste Festplatten</p>
-                <div class="mt-2 small text-muted">
-                    <i class="fas fa-database me-1"></i> {{ stats.storage.orphaned_space_gb }} GB belegt
-                </div>
+                <a href="{{ url_for('orphaned_vmdks') }}" class="text-decoration-none text-reset">
+                    <div class="text-danger dashboard-icon">
+                        <i class="fas fa-hdd"></i>
+                    </div>
+                    <h5 class="card-title">Verwaiste VMDKs</h5>
+                    <h2 class="dashboard-value">{{ stats.storage.orphaned_vmdks }}</h2>
+                    <p class="dashboard-label">verwaiste Festplatten</p>
+                    <div class="mt-2 small text-muted">
+                        <i class="fas fa-database me-1"></i> {{ stats.storage.orphaned_space_gb }} GB belegt
+                    </div>
+                </a>
             </div>
         </div>
     </div>

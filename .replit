@@ -277,8 +277,8 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd vsphere-reporter-v29.0-package && python app.py"
-waitForPort = 5009
+args = "cd vsphere-reporter-v29.0-package && python run.py"
+waitForPort = 5002
 
 [[workflows.workflow]]
 name = "StaticDemo"
