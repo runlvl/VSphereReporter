@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+
+<div class="row mt-4">
+    <!-- VM-Übersicht -->
+    <div class="col-md-3">
+        <div class="dashboard-tile tile-blue">
+            <i class="fas fa-server fa-2x mb-2"></i>
+            <div class="tile-value">{{ vm_count|default(0) }}</div>
+            <div class="tile-label">Virtuelle Maschinen</div>
+        </div>
+    </div>
+    
+    <!-- Host-Übersicht -->
+    <div class="col-md-3">
+        <div class="dashboard-tile tile-orange">
+            <i class="fas fa-microchip fa-2x mb-2"></i>
+            <div class="tile-value">{{ host_count|default(0) }}</div>
+            <div class="tile-label">ESXi Hosts</div>
+        </div>
+    </div>
+    
+    <!-- Datastore-Übersicht -->
+    <div class="col-md-3">
+        <div class="dashboard-tile tile-green">
+            <i class="fas fa-database fa-2x mb-2"></i>
+            <div class="tile-value">{{ datastore_count|default(0) }}</div>
+            <div class="tile-label">Datastores</div>
+        </div>
+    </div>
+    
+    <!-- Netzwerk-Übersicht -->
+    <div class="col-md-3">
+        <div class="dashboard-tile tile-gray">
+            <i class="fas fa-network-wired fa-2x mb-2"></i>
+            <div class="tile-value">{{ network_count|default(0) }}</div>
+            <div class="tile-label">Netzwerke</div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-server"></i> VM Status
+            </div>
+            <div class="card-body">
+                {% if vm_count %}
+                <div class="row">
+                    <div class="col-6">
+                        <div class="d-flex flex-column align-items-center">
+                            <div class="h1 mb-0 text-primary">{{ vm_on|default(0) }}</div>
+                            <div>Eingeschaltet</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex flex-column align-items-center">
+                            <div class="h1 mb-0 text-secondary">{{ vm_off|default(0) }}</div>
+                            <div>Ausgeschaltet</div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-info mb-0">
+                    <i class="fas fa-info-circle"></i> Keine VM-Daten verfügbar
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-microchip"></i> Host Status
+            </div>
+            <div class="card-body">
+                {% if host_count %}
+                <div class="row">
+                    <div class="col-6">
+                        <div class="d-flex flex-column align-items-center">
+                            <div class="h1 mb-0 text-primary">{{ host_connected|default(0) }}</div>
+                            <div>Verbunden</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex flex-column align-items-center">
+                            <div class="h1 mb-0 text-warning">{{ hosts_in_maintenance|default(0) }}</div>
+                            <div>Im Wartungsmodus</div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-info mb-0">
+                    <i class="fas fa-info-circle"></i> Keine Host-Daten verfügbar
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Speicherplatz-Übersicht -->
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-database"></i> Speichernutzung
+            </div>
+            <div class="card-body">
+                {% if total_storage_capacity %}
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        {% set percentage = (used_storage / total_storage_capacity * 100)|round %}
+                        
+                        <div class="progress" style="height: 25px;">
+                            {% if percentage <= 60 %}
+                                {% set bar_class = "bg-success" %}
+                            {% elif percentage <= 80 %}
+                                {% set bar_class = "bg-warning" %}
+                            {% else %}
+                                {% set bar_class = "bg-danger" %}
+                            {% endif %}
+                            
+                            <div class="progress-bar {{ bar_class }}" role="progressbar" 
+                                 style="width: {{ percentage }}%;" 
+                                 aria-valuenow="{{ percentage }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                {{ percentage }}%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-md-right">
+                        {% set free_space = total_storage_capacity - used_storage %}
+                        {% set total_tb = (total_storage_capacity / 1099511627776)|round(2) %}
+                        {% set used_tb = (used_storage / 1099511627776)|round(2) %}
+                        {% set free_tb = (free_space / 1099511627776)|round(2) %}
+                        
+                        <div class="small mb-1">Gesamt: {{ total_tb }} TB</div>
+                        <div class="small mb-1">Verwendet: {{ used_tb }} TB</div>
+                        <div class="small">Frei: {{ free_tb }} TB</div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-info mb-0">
+                    <i class="fas fa-info-circle"></i> Keine Speicherdaten verfügbar
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-tools"></i> VMware Tools
+            </div>
+            <div class="card-body">
+                <p>Prüfen Sie den VMware Tools-Status aller VMs.</p>
+                <a href="{{ url_for('vmware_tools') }}" class="btn btn-primary">
+                    <i class="fas fa-arrow-right"></i> Bericht anzeigen
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-camera"></i> Snapshots
+            </div>
+            <div class="card-body">
+                <p>Identifizieren Sie veraltete Snapshots, die bereinigt werden sollten.</p>
+                <a href="{{ url_for('snapshots') }}" class="btn btn-primary">
+                    <i class="fas fa-arrow-right"></i> Bericht anzeigen
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-hdd"></i> Verwaiste VMDKs
+            </div>
+            <div class="card-body">
+                <p>Finden Sie nicht zugewiesene VMDK-Dateien, die Speicherplatz belegen.</p>
+                <a href="{{ url_for('orphaned_vmdks') }}" class="btn btn-primary">
+                    <i class="fas fa-arrow-right"></i> Bericht anzeigen
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if demo_mode %}
+<div class="alert alert-warning mt-4">
+    <i class="fas fa-info-circle"></i> <strong>Demo-Modus:</strong> Die angezeigten Daten sind Beispieldaten und spiegeln keine echte vSphere-Umgebung wider.
+</div>
+{% endif %}
+
+{% endblock %}

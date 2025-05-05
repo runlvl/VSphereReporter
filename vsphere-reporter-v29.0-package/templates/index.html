@@ -1,174 +1,88 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VMware vSphere Reporter - Startseite</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-</head>
-<body>
-    <!-- Navigationsleiste -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="{{ url_for('static', filename='img/logo_bechtle.png') }}" alt="Bechtle Logo">
-                VMware vSphere Reporter
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/">Startseite</a>
-                    </li>
-                </ul>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 offset-lg-2">
+        <div class="content-section text-center">
+            <h1>Willkommen beim VMware vSphere Reporter</h1>
+            <p class="lead">Ein leistungsstarkes Tool zur Analyse und Berichterstellung für VMware vSphere-Umgebungen</p>
+            
+            <div class="mt-5">
+                {% if not session.get('connected') %}
+                <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-sign-in-alt"></i> Mit vCenter verbinden
+                </a>
+                {% else %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-tachometer-alt"></i> Zum Dashboard
+                </a>
+                {% endif %}
+                
+                <a href="{{ url_for('about') }}" class="btn btn-secondary btn-lg ms-2">
+                    <i class="fas fa-info-circle"></i> Über
+                </a>
             </div>
         </div>
-    </nav>
-
-    <!-- Hero-Bereich -->
-    <section class="hero-section text-center">
-        <div class="container">
-            <h1 class="display-4">VMware vSphere Reporter v29.0</h1>
-            <p class="lead">Ein umfassendes Tool zur Analyse und Berichterstellung für Ihre VMware vSphere-Umgebung</p>
-            <a href="{{ url_for('connect') }}" class="btn btn-light btn-lg">
-                <i class="bi bi-cloud-check me-2"></i>Mit vCenter verbinden
-            </a>
-            
-            {% if demo_mode %}
-            <div class="mt-4">
-                <span class="badge bg-warning text-dark p-2">
-                    <i class="bi bi-info-circle me-1"></i> Demo-Modus aktiv
-                </span>
-            </div>
-            {% endif %}
-        </div>
-    </section>
-
-    <!-- Hauptinhalt -->
-    <div class="container my-5">
-        <!-- Features -->
-        <h2 class="text-center mb-4">Hauptfunktionen</h2>
-        <div class="row g-4 mb-5">
+        
+        <div class="row mt-5">
             <div class="col-md-4">
                 <div class="card h-100">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="feature-icon me-3">
-                                <i class="bi bi-tools"></i>
-                            </div>
-                            <h5 class="card-title mb-0">VMware Tools-Analyse</h5>
-                        </div>
-                        <p class="card-text">Identifizieren Sie veraltete VMware Tools-Versionen, um Sicherheit und Kompatibilität in Ihrer Umgebung zu gewährleisten.</p>
+                    <div class="card-header">
+                        <i class="fas fa-tools"></i> VMware Tools Status
+                    </div>
+                    <div class="card-body">
+                        <p>Überwachen Sie den VMware Tools-Status aller virtuellen Maschinen in Ihrer Umgebung. Identifizieren Sie schnell veraltete oder fehlende VMware Tools.</p>
                     </div>
                 </div>
             </div>
             
             <div class="col-md-4">
                 <div class="card h-100">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="feature-icon me-3">
-                                <i class="bi bi-camera"></i>
-                            </div>
-                            <h5 class="card-title mb-0">Snapshot-Management</h5>
-                        </div>
-                        <p class="card-text">Erkennen Sie alte Snapshots, die Speicherplatz verschwenden und potenzielle Leistungsprobleme verursachen können.</p>
+                    <div class="card-header">
+                        <i class="fas fa-camera"></i> Snapshot-Management
+                    </div>
+                    <div class="card-body">
+                        <p>Erhalten Sie einen umfassenden Überblick über alle Snapshots in Ihrer Umgebung, sortiert nach Alter. Identifizieren Sie veraltete Snapshots, die bereinigt werden sollten.</p>
                     </div>
                 </div>
             </div>
             
             <div class="col-md-4">
                 <div class="card h-100">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="feature-icon me-3">
-                                <i class="bi bi-hdd"></i>
-                            </div>
-                            <h5 class="card-title mb-0">Verwaiste VMDK-Erkennung</h5>
-                        </div>
-                        <p class="card-text">Spüren Sie verwaiste VMDK-Dateien auf, die keiner VM zugewiesen sind und wertvollen Speicherplatz belegen.</p>
+                    <div class="card-header">
+                        <i class="fas fa-hdd"></i> Verwaiste VMDKs
                     </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="feature-icon me-3">
-                                <i class="bi bi-tv"></i>
-                            </div>
-                            <h5 class="card-title mb-0">Infrastruktur-Topologie</h5>
-                        </div>
-                        <p class="card-text">Visualisieren Sie die Beziehungen zwischen VMs, Hosts, Datastores und Netzwerken für ein besseres Verständnis Ihrer Umgebung.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="feature-icon me-3">
-                                <i class="bi bi-file-earmark-text"></i>
-                            </div>
-                            <h5 class="card-title mb-0">Flexible Exportformate</h5>
-                        </div>
-                        <p class="card-text">Exportieren Sie Berichte in HTML, PDF oder DOCX-Format für verschiedene Anwendungsfälle und Präsentationen.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="feature-icon me-3">
-                                <i class="bi bi-browser-chrome"></i>
-                            </div>
-                            <h5 class="card-title mb-0">Web-basierte Oberfläche</h5>
-                        </div>
-                        <p class="card-text">Zugriff von jedem modernen Webbrowser aus, ohne lokale Installation erforderlich.</p>
+                    <div class="card-body">
+                        <p>Finden Sie verwaiste VMDK-Dateien, die wertvollen Speicherplatz belegen. Unser verbesserter VM-zentrischer Sammlungsalgorithmus bietet präzise Ergebnisse.</p>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Call to Action -->
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="card bg-light border-0">
-                    <div class="card-body p-4 text-center">
-                        <h3 class="mb-3">Starten Sie jetzt Ihre erste Analyse</h3>
-                        <p class="mb-4">Verbinden Sie sich mit Ihrem vCenter-Server und entdecken Sie Optimierungspotenziale in Ihrer VMware-Umgebung.</p>
-                        <a href="{{ url_for('connect') }}" class="btn btn-primary btn-lg">
-                            <i class="bi bi-cloud-check me-2"></i>Mit vCenter verbinden
-                        </a>
-                    </div>
+        <div class="content-section mt-5">
+            <h2>Flexible Berichterstellung</h2>
+            <p>Generieren Sie benutzerdefinierte Berichte in verschiedenen Formaten:</p>
+            
+            <div class="row mt-4">
+                <div class="col-md-4 text-center">
+                    <i class="fas fa-file-code fa-3x mb-3" style="color: var(--bechtle-dark-blue);"></i>
+                    <h4>HTML</h4>
+                    <p>Interaktive Berichte mit Sortier- und Filterfunktionen.</p>
+                </div>
+                
+                <div class="col-md-4 text-center">
+                    <i class="fas fa-file-pdf fa-3x mb-3" style="color: var(--danger);"></i>
+                    <h4>PDF</h4>
+                    <p>Druckoptimierte Berichte für die formelle Dokumentation.</p>
+                </div>
+                
+                <div class="col-md-4 text-center">
+                    <i class="fas fa-file-word fa-3x mb-3" style="color: var(--info);"></i>
+                    <h4>DOCX</h4>
+                    <p>Microsoft Word-Dokumente für weitere Bearbeitung.</p>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer class="footer mt-auto">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>VMware vSphere Reporter v29.0</h5>
-                    <p>Ein umfassendes Berichts- und Analyse-Tool für VMware vSphere-Umgebungen.</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p>© 2025 Bechtle GmbH. Alle Rechte vorbehalten.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+</div>
+{% endblock %}

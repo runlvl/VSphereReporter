@@ -1,293 +1,269 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 """
-VMware vSphere Reporter - Web Edition v29.0
-vSphere Client für die Verbindung zum vCenter
+VMware vSphere Reporter - vSphere Client
+Copyright (c) 2025 Bechtle GmbH
+
+Modul für die Verbindung zu vCenter-Servern und Zugriff auf vSphere-Daten
 """
 
 import logging
+import os
 import ssl
-import socket
-import re
-from urllib.error import URLError
-from datetime import datetime
-import time
 
-from pyVim.connect import Disconnect, SmartConnect
-from pyVmomi import vim
-from pyVim.connect import Disconnect, SmartConnect
-from pyVmomi import vim
+# Im Demo-Modus benötigen wir keine VMware-Abhängigkeiten
+try:
+    from pyVim import connect
+    from pyVmomi import vim
+except ImportError:
+    # Demo-Modus
+    connect = None
+    vim = None
 
-logger = logging.getLogger('vsphere_reporter')
+from webapp.utils.error_handler import handle_vsphere_error, ConnectionError, AuthenticationError
 
 class VSphereClient:
-    """Klasse für die Verbindung und Interaktion mit vSphere/vCenter"""
+    """Client für die Verbindung zu vCenter-Servern und Zugriff auf vSphere-Daten"""
     
-    def __init__(self, host, username, password, ignore_ssl=False):
+    def __init__(self, host, user, password, ignore_ssl=False):
         """
-        Initialisiert den vSphere-Client
+        Initialisiere den vSphere-Client
         
         Args:
-            host: vCenter-Hostname oder IP-Adresse
-            username: Benutzername für die Authentifizierung
-            password: Passwort für die Authentifizierung
-            ignore_ssl: Wenn True, werden SSL-Zertifikatsfehler ignoriert
+            host: Hostname oder IP-Adresse des vCenter-Servers
+            user: Benutzername für die Anmeldung
+            password: Passwort für die Anmeldung
+            ignore_ssl: SSL-Zertifikat ignorieren (True/False)
         """
         self.host = host
-        self.username = username
+        self.user = user
         self.password = password
         self.ignore_ssl = ignore_ssl
-        self.si = None
+        self.service_instance = None
         self.content = None
         self.is_connected = False
-        self.connection_time = None
+        
+        # Prüfe, ob wir im Demo-Modus sind
+        self.demo_mode = os.environ.get('VSPHERE_REPORTER_DEMO', 'False').lower() == 'true'
+        if self.demo_mode:
+            logging.info("Demo-Modus aktiviert - keine tatsächliche Verbindung wird hergestellt")
     
+    @handle_vsphere_error
     def connect(self):
         """
-        Stellt eine Verbindung zum vCenter her
+        Stelle eine Verbindung zum vCenter-Server her
         
+        Returns:
+            Das Content-Objekt des vCenter-Servers
+            
         Raises:
             ConnectionError: Bei Verbindungsproblemen
             AuthenticationError: Bei Authentifizierungsproblemen
-            Exception: Bei anderen Fehlern
         """
-        logger.info(f"Verbindung zum vCenter {self.host} wird hergestellt...")
+        # Im Demo-Modus simulieren wir eine erfolgreiche Verbindung
+        if self.demo_mode:
+            logging.info(f"Demo-Modus: Simuliere Verbindung zu {self.host}")
+            self.is_connected = True
+            return {}
         
+        # Überprüfe, ob die VMware-Module verfügbar sind
+        if connect is None or vim is None:
+            raise ImportError("PyVmomi ist nicht installiert. Bitte installieren Sie PyVmomi oder verwenden "
+                             "Sie den Demo-Modus durch Setzen der Umgebungsvariable VSPHERE_REPORTER_DEMO=true")
+        
+        # Konfiguriere SSL-Kontext
+        ssl_context = None
+        if self.ignore_ssl:
+            ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+            ssl_context.verify_mode = ssl.CERT_NONE
+        
+        # Stelle Verbindung her
+        logging.info(f"Verbinde mit vCenter: {self.host}")
         try:
-            # SSL-Kontext konfigurieren
-            if self.ignore_ssl:
-                ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-                ssl_context.verify_mode = ssl.CERT_NONE
-                ssl_context.check_hostname = False
-            else:
-                ssl_context = ssl.create_default_context()
-            
-            # Verbindung herstellen
-            self.si = SmartConnect(
+            self.service_instance = connect.SmartConnect(
                 host=self.host,
-                user=self.username,
+                user=self.user,
                 pwd=self.password,
                 sslContext=ssl_context
             )
             
-            if not self.si:
-                raise ConnectionError("Verbindung zum vCenter konnte nicht hergestellt werden")
+            if not self.service_instance:
+                raise ConnectionError(f"Konnte keine Verbindung zu {self.host} herstellen")
             
-            self.content = self.si.RetrieveContent()
+            # Lade Content-Objekt
+            self.content = self.service_instance.RetrieveContent()
             self.is_connected = True
-            self.connection_time = datetime.now()
             
-            # vCenter-Version protokollieren
-            about = self.content.about
-            logger.info(f"Erfolgreich verbunden mit {about.fullName} (API Version: {about.apiVersion})")
+            logging.info(f"Verbindung zu {self.host} erfolgreich hergestellt")
+            return self.content
             
-            return True
-            
-        except vim.fault.InvalidLogin:
-            logger.error(f"Ungültige Anmeldedaten für {self.username}@{self.host}")
-            raise
-        except (socket.error, socket.timeout, socket.gaierror) as e:
-            logger.error(f"Netzwerkfehler beim Verbinden mit {self.host}: {str(e)}")
-            raise
-        except ssl.SSLError as e:
-            logger.error(f"SSL-Fehler beim Verbinden mit {self.host}: {str(e)}")
-            raise
         except Exception as e:
-            logger.error(f"Fehler beim Verbinden mit {self.host}: {str(e)}")
+            self.is_connected = False
+            self.service_instance = None
+            self.content = None
             raise
     
     def disconnect(self):
-        """Trennt die Verbindung zum vCenter"""
-        if self.si:
-            try:
-                Disconnect(self.si)
-                logger.info(f"Verbindung zum vCenter {self.host} getrennt")
-            except Exception as e:
-                logger.error(f"Fehler beim Trennen der Verbindung: {str(e)}")
-            finally:
-                self.si = None
-                self.content = None
-                self.is_connected = False
-                self.connection_time = None
-    
-    def wait_for_task(self, task):
-        """
-        Wartet auf den Abschluss einer vSphere-Aufgabe
+        """Trennt die Verbindung zum vCenter-Server"""
+        if self.demo_mode:
+            logging.info("Demo-Modus: Simuliere Trennung der Verbindung")
+            self.is_connected = False
+            return
         
-        Args:
-            task: Die vSphere-Aufgabe
-            
-        Returns:
-            Das Ergebnis der Aufgabe
-            
-        Raises:
-            Exception: Bei Fehlern während der Aufgabenausführung
-        """
-        task_info = task.info
-        while task_info.state not in [vim.TaskInfo.State.success, vim.TaskInfo.State.error]:
-            time.sleep(1)
-            task_info = task.info
-        
-        if task_info.state == vim.TaskInfo.State.error:
-            error = task_info.error
-            raise Exception(f"Fehler bei Aufgabe: {error.localizedMessage}")
-        
-        return task_info.result
+        if self.service_instance and self.is_connected:
+            connect.Disconnect(self.service_instance)
+            self.is_connected = False
+            self.service_instance = None
+            self.content = None
+            logging.info(f"Verbindung zu {self.host} getrennt")
     
     def get_all_vms(self):
         """
-        Holt alle virtuellen Maschinen im Inventar
+        Holt alle virtuellen Maschinen aus dem vCenter
         
         Returns:
-            list: Liste aller VMs
+            Liste von vim.VirtualMachine-Objekten
         """
-        logger.debug("Hole alle virtuellen Maschinen...")
+        if self.demo_mode:
+            logging.info("Demo-Modus: Simuliere Abruf von VMs")
+            return []
         
-        try:
-            vm_view = self.content.viewManager.CreateContainerView(
-                container=self.content.rootFolder, 
-                type=[vim.VirtualMachine], 
-                recursive=True
-            )
-            vms = vm_view.view
-            vm_view.Destroy()
-            
-            logger.debug(f"{len(vms)} virtuelle Maschinen gefunden")
-            return vms
-        except Exception as e:
-            logger.error(f"Fehler beim Abrufen der virtuellen Maschinen: {str(e)}")
-            raise
+        if not self.is_connected or not self.content:
+            raise ConnectionError("Keine Verbindung zum vCenter")
+        
+        container = self.content.viewManager.CreateContainerView(
+            container=self.content.rootFolder,
+            type=[vim.VirtualMachine],
+            recursive=True
+        )
+        
+        vms = container.view
+        container.Destroy()
+        
+        return vms
     
     def get_all_hosts(self):
         """
-        Holt alle ESXi-Hosts im Inventar
+        Holt alle ESXi-Hosts aus dem vCenter
         
         Returns:
-            list: Liste aller Hosts
+            Liste von vim.HostSystem-Objekten
         """
-        logger.debug("Hole alle ESXi-Hosts...")
+        if self.demo_mode:
+            logging.info("Demo-Modus: Simuliere Abruf von Hosts")
+            return []
         
-        try:
-            host_view = self.content.viewManager.CreateContainerView(
-                container=self.content.rootFolder,
-                type=[vim.HostSystem],
-                recursive=True
-            )
-            hosts = host_view.view
-            host_view.Destroy()
-            
-            logger.debug(f"{len(hosts)} ESXi-Hosts gefunden")
-            return hosts
-        except Exception as e:
-            logger.error(f"Fehler beim Abrufen der ESXi-Hosts: {str(e)}")
-            raise
+        if not self.is_connected or not self.content:
+            raise ConnectionError("Keine Verbindung zum vCenter")
+        
+        container = self.content.viewManager.CreateContainerView(
+            container=self.content.rootFolder,
+            type=[vim.HostSystem],
+            recursive=True
+        )
+        
+        hosts = container.view
+        container.Destroy()
+        
+        return hosts
     
     def get_all_datastores(self):
         """
-        Holt alle Datastores im Inventar
+        Holt alle Datastores aus dem vCenter
         
         Returns:
-            list: Liste aller Datastores
+            Liste von vim.Datastore-Objekten
         """
-        logger.debug("Hole alle Datastores...")
+        if self.demo_mode:
+            logging.info("Demo-Modus: Simuliere Abruf von Datastores")
+            return []
         
-        try:
-            datastore_view = self.content.viewManager.CreateContainerView(
-                container=self.content.rootFolder,
-                type=[vim.Datastore],
-                recursive=True
-            )
-            datastores = datastore_view.view
-            datastore_view.Destroy()
-            
-            logger.debug(f"{len(datastores)} Datastores gefunden")
-            return datastores
-        except Exception as e:
-            logger.error(f"Fehler beim Abrufen der Datastores: {str(e)}")
-            raise
+        if not self.is_connected or not self.content:
+            raise ConnectionError("Keine Verbindung zum vCenter")
+        
+        container = self.content.viewManager.CreateContainerView(
+            container=self.content.rootFolder,
+            type=[vim.Datastore],
+            recursive=True
+        )
+        
+        datastores = container.view
+        container.Destroy()
+        
+        return datastores
     
     def get_all_networks(self):
         """
-        Holt alle Netzwerke im Inventar
+        Holt alle Netzwerke aus dem vCenter
         
         Returns:
-            list: Liste aller Netzwerke
+            Liste von vim.Network-Objekten
         """
-        logger.debug("Hole alle Netzwerke...")
+        if self.demo_mode:
+            logging.info("Demo-Modus: Simuliere Abruf von Netzwerken")
+            return []
         
-        try:
-            network_view = self.content.viewManager.CreateContainerView(
-                container=self.content.rootFolder,
-                type=[vim.Network, vim.DistributedVirtualPortgroup],
-                recursive=True
-            )
-            networks = network_view.view
-            network_view.Destroy()
-            
-            logger.debug(f"{len(networks)} Netzwerke gefunden")
-            return networks
-        except Exception as e:
-            logger.error(f"Fehler beim Abrufen der Netzwerke: {str(e)}")
-            raise
+        if not self.is_connected or not self.content:
+            raise ConnectionError("Keine Verbindung zum vCenter")
+        
+        container = self.content.viewManager.CreateContainerView(
+            container=self.content.rootFolder,
+            type=[vim.Network],
+            recursive=True
+        )
+        
+        networks = container.view
+        container.Destroy()
+        
+        return networks
     
     def get_all_clusters(self):
         """
-        Holt alle Cluster im Inventar
+        Holt alle Cluster aus dem vCenter
         
         Returns:
-            list: Liste aller Cluster
+            Liste von vim.ClusterComputeResource-Objekten
         """
-        logger.debug("Hole alle Cluster...")
+        if self.demo_mode:
+            logging.info("Demo-Modus: Simuliere Abruf von Clustern")
+            return []
         
-        try:
-            cluster_view = self.content.viewManager.CreateContainerView(
-                container=self.content.rootFolder,
-                type=[vim.ClusterComputeResource],
-                recursive=True
-            )
-            clusters = cluster_view.view
-            cluster_view.Destroy()
-            
-            logger.debug(f"{len(clusters)} Cluster gefunden")
-            return clusters
-        except Exception as e:
-            logger.error(f"Fehler beim Abrufen der Cluster: {str(e)}")
-            raise
+        if not self.is_connected or not self.content:
+            raise ConnectionError("Keine Verbindung zum vCenter")
+        
+        container = self.content.viewManager.CreateContainerView(
+            container=self.content.rootFolder,
+            type=[vim.ClusterComputeResource],
+            recursive=True
+        )
+        
+        clusters = container.view
+        container.Destroy()
+        
+        return clusters
     
-    def get_all_resource_pools(self):
+    def get_all_datacenters(self):
         """
-        Holt alle Resource Pools im Inventar
+        Holt alle Datacenter aus dem vCenter
         
         Returns:
-            list: Liste aller Resource Pools
+            Liste von vim.Datacenter-Objekten
         """
-        logger.debug("Hole alle Resource Pools...")
+        if self.demo_mode:
+            logging.info("Demo-Modus: Simuliere Abruf von Datacentern")
+            return []
         
-        try:
-            rp_view = self.content.viewManager.CreateContainerView(
-                container=self.content.rootFolder,
-                type=[vim.ResourcePool],
-                recursive=True
-            )
-            resource_pools = rp_view.view
-            rp_view.Destroy()
-            
-            # Entferne die Standard-Resource-Pools, die automatisch für jeden Cluster und Host erstellt werden
-            filtered_pools = []
-            for pool in resource_pools:
-                # Prüfe, ob es sich um einen Standard-Pool handelt
-                is_default_pool = False
-                if pool.parent:
-                    if isinstance(pool.parent, vim.ClusterComputeResource) and pool.name == "Resources":
-                        is_default_pool = True
-                    elif isinstance(pool.parent, vim.ComputeResource) and pool.name == "Resources":
-                        is_default_pool = True
-                
-                if not is_default_pool:
-                    filtered_pools.append(pool)
-            
-            logger.debug(f"{len(filtered_pools)} Resource Pools gefunden (ohne Standard-Pools)")
-            return filtered_pools
-        except Exception as e:
-            logger.error(f"Fehler beim Abrufen der Resource Pools: {str(e)}")
-            raise
+        if not self.is_connected or not self.content:
+            raise ConnectionError("Keine Verbindung zum vCenter")
+        
+        container = self.content.viewManager.CreateContainerView(
+            container=self.content.rootFolder,
+            type=[vim.Datacenter],
+            recursive=True
+        )
+        
+        datacenters = container.view
+        container.Destroy()
+        
+        return datacenters

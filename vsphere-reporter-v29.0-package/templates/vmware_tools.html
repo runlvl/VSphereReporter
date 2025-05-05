@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1><i class="fas fa-tools"></i> VMware Tools Status</h1>
+
+<div class="content-section">
+    <p class="lead">Übersicht über den VMware Tools-Status aller virtuellen Maschinen, sortiert nach Version (älteste zuerst).</p>
+    
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-info-circle"></i> Informationen</span>
+                        <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#toolsInfoCollapse">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="collapse" id="toolsInfoCollapse">
+                    <div class="card-body">
+                        <p>Der VMware Tools-Status zeigt an, ob die virtuellen Maschinen aktuelle VMware Tools installiert haben.</p>
+                        <ul>
+                            <li><span class="badge bg-success">Aktuell</span> - Die neueste Version der VMware Tools ist installiert</li>
+                            <li><span class="badge bg-warning">Veraltet</span> - Es ist eine ältere Version der VMware Tools installiert</li>
+                            <li><span class="badge bg-danger">Nicht installiert</span> - VMware Tools sind nicht installiert</li>
+                            <li><span class="badge bg-secondary">Nicht ausgeführt</span> - VMware Tools sind installiert, werden aber nicht ausgeführt</li>
+                        </ul>
+                        <p>Für eine optimale Leistung und Funktionalität sollten alle VMs aktuelle VMware Tools verwenden.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if tools_info %}
+    <div class="table-responsive">
+        <table class="table table-striped datatable">
+            <thead>
+                <tr>
+                    <th>VM-Name</th>
+                    <th>Tools-Status</th>
+                    <th>Version</th>
+                    <th>Version-Status</th>
+                    <th>Power-Status</th>
+                    <th>Betriebssystem</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vm in tools_info %}
+                <tr>
+                    <td>{{ vm.name }}</td>
+                    <td>
+                        {% if vm.tools_status == 'toolsOk' %}
+                        <span class="badge bg-success">In Ordnung</span>
+                        {% elif vm.tools_status == 'toolsOld' %}
+                        <span class="badge bg-warning">Veraltet</span>
+                        {% elif vm.tools_status == 'toolsNotInstalled' %}
+                        <span class="badge bg-danger">Nicht installiert</span>
+                        {% elif vm.tools_status == 'toolsNotRunning' %}
+                        <span class="badge bg-secondary">Nicht ausgeführt</span>
+                        {% else %}
+                        <span class="badge bg-info">{{ vm.tools_status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ vm.version }}</td>
+                    <td>
+                        {% if vm.version_status == 'current' %}
+                        <span class="badge bg-success">Aktuell</span>
+                        {% elif vm.version_status == 'outOfDate' %}
+                        <span class="badge bg-warning">Veraltet</span>
+                        {% elif vm.version_status == 'notInstalled' %}
+                        <span class="badge bg-danger">Nicht installiert</span>
+                        {% else %}
+                        <span class="badge bg-secondary">{{ vm.version_status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if vm.power_state == 'poweredOn' %}
+                        <span class="badge bg-success">Ein</span>
+                        {% elif vm.power_state == 'poweredOff' %}
+                        <span class="badge bg-secondary">Aus</span>
+                        {% elif vm.power_state == 'suspended' %}
+                        <span class="badge bg-warning">Ausgesetzt</span>
+                        {% else %}
+                        <span class="badge bg-info">{{ vm.power_state }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ vm.guest_full_name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="mt-4">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Zurück zum Dashboard
+        </a>
+        <a href="{{ url_for('generate_report') }}" class="btn btn-primary">
+            <i class="fas fa-file-export"></i> Bericht erstellen
+        </a>
+    </div>
+    
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> Keine VMware Tools-Informationen verfügbar.
+    </div>
+    
+    <div class="mt-4">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Zurück zum Dashboard
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+{% if demo_mode %}
+<div class="alert alert-warning mt-4">
+    <i class="fas fa-info-circle"></i> <strong>Demo-Modus:</strong> Die angezeigten Daten sind Beispieldaten und spiegeln keine echte vSphere-Umgebung wider.
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.datatable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/de-DE.json"
+            },
+            "order": [[ 2, "asc" ]], // Sortieren nach Version aufsteigend
+            "pageLength": 25
+        });
+    });
+</script>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+{% endblock %}

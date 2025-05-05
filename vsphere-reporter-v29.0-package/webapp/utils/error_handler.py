@@ -1,102 +1,90 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 """
-VMware vSphere Reporter - Web Edition v29.0
-Fehlerbehandlung und -management
+VMware vSphere Reporter - Fehlerbehandlung
+Copyright (c) 2025 Bechtle GmbH
+
+Modul für die Fehlerbehandlung und benutzerdefinierte Ausnahmen
 """
 
 import logging
-import traceback
-import sys
 from functools import wraps
+import ssl
+import socket
 
-class VSphereReporterError(Exception):
-    """Basisklasse für alle VSphere Reporter-spezifischen Fehler"""
+# Im Demo-Modus benötigen wir keine VMware-Abhängigkeiten
+try:
+    import vim
+    from pyVmomi.vim import fault
+except ImportError:
+    # Dummy-Klassen für den Demo-Modus, wenn PyVmomi nicht installiert ist
+    class vim:
+        class fault:
+            HostConnectFault = Exception
+            InvalidLogin = Exception
+            NoPermission = Exception
+            NotAuthenticated = Exception
+            
+    class fault:
+        HostConnectFault = Exception
+        InvalidLogin = Exception
+        NoPermission = Exception
+        NotAuthenticated = Exception
+
+
+# Benutzerdefinierte Ausnahmen
+class VSphereError(Exception):
+    """Basisklasse für alle vSphere-bezogenen Ausnahmen"""
     pass
 
-class ConnectionError(VSphereReporterError):
-    """Fehler bei der Verbindung zum vCenter"""
+
+class ConnectionError(VSphereError):
+    """Ausnahme für Verbindungsfehler"""
     pass
 
-class AuthenticationError(VSphereReporterError):
-    """Fehler bei der Authentifizierung am vCenter"""
+
+class AuthenticationError(VSphereError):
+    """Ausnahme für Authentifizierungsfehler"""
     pass
 
-class VMDKError(VSphereReporterError):
-    """Fehler bei der VMDK-Verarbeitung"""
+
+class DataAccessError(VSphereError):
+    """Ausnahme für Datenzugriffsfehler"""
     pass
 
-class ReportGenerationError(VSphereReporterError):
-    """Fehler bei der Berichtsgenerierung"""
-    pass
 
-def handle_vsphere_error(logger=None):
+def handle_vsphere_error(func):
     """
-    Dekorator zur Behandlung von vSphere-spezifischen Fehlern
+    Decorator für die Fehlerbehandlung von vSphere-Funktionen
     
     Args:
-        logger: Optional, ein Logger-Objekt
+        func: Die zu dekorierenden Funktion
         
     Returns:
-        Dekorierte Funktion
+        Die dekorierte Funktion mit Fehlerbehandlung
     """
-    def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            except Exception as e:
-                # Hole den Stacktrace
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                stack_trace = traceback.format_exception(exc_type, exc_value, exc_traceback)
-                
-                # Extrahiere Klassenname und Modulname für bessere Fehlermeldungen
-                func_name = func.__name__
-                module_name = func.__module__
-                
-                # Erstelle Fehlermeldung
-                error_message = f"Fehler in {module_name}.{func_name}: {str(e)}"
-                
-                # Protokolliere den Fehler, wenn ein Logger übergeben wurde
-                if logger:
-                    logger.error(error_message)
-                    logger.error("".join(stack_trace))
-                
-                # Übersetze spezifische vSphere-Fehler in unsere eigenen Fehlerklassen
-                try:
-                    # pyVmomi-Fehler-Behandlung
-                    import pyVmomi
-                    from pyVmomi import vim
-                    
-                    if isinstance(e, vim.fault.InvalidLogin):
-                        raise AuthenticationError("Ungültige Anmeldedaten") from e
-                    elif isinstance(e, (vim.fault.HostConnectFault, vim.fault.NotAuthenticated)):
-                        raise ConnectionError(f"Verbindungsproblem: {str(e)}") from e
-                    # Füge weitere vSphere-spezifische Fehlerbehandlungen hinzu
-                except ImportError:
-                    # pyVmomi ist nicht verfügbar, ignoriere die spezifische Behandlung
-                    pass
-                
-                # Reiche den ursprünglichen Fehler weiter, wenn er nicht behandelt wurde
-                raise
-        
-        return wrapper
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except vim.fault.HostConnectFault as e:
+            logging.error(f"Verbindungsfehler zum Host: {str(e)}")
+            raise ConnectionError(f"Verbindungsfehler zum Host: {str(e)}")
+        except vim.fault.InvalidLogin as e:
+            logging.error(f"Ungültige Anmeldedaten: {str(e)}")
+            raise AuthenticationError(f"Ungültige Anmeldedaten: {str(e)}")
+        except (vim.fault.NoPermission, vim.fault.NotAuthenticated) as e:
+            logging.error(f"Unzureichende Berechtigungen: {str(e)}")
+            raise AuthenticationError(f"Unzureichende Berechtigungen: {str(e)}")
+        except ssl.SSLError as e:
+            logging.error(f"SSL-Fehler: {str(e)}")
+            raise ConnectionError(f"SSL-Fehler: {str(e)}")
+        except socket.error as e:
+            logging.error(f"Netzwerkfehler: {str(e)}")
+            raise ConnectionError(f"Netzwerkfehler: {str(e)}")
+        except Exception as e:
+            logging.error(f"Unerwarteter Fehler: {str(e)}", exc_info=True)
+            raise VSphereError(f"Unerwarteter Fehler: {str(e)}")
     
-    return decorator
-
-def format_exception(exception):
-    """
-    Formatiert eine Exception für die Anzeige
-    
-    Args:
-        exception: Die zu formatierende Exception
-        
-    Returns:
-        str: Formatierte Fehlermeldung
-    """
-    if isinstance(exception, VSphereReporterError):
-        # Für unsere eigenen Fehler zeigen wir nur die Meldung an
-        return str(exception)
-    else:
-        # Für andere Fehler zeigen wir den Typ und die Meldung an
-        return f"{type(exception).__name__}: {str(exception)}"
+    return wrapper
