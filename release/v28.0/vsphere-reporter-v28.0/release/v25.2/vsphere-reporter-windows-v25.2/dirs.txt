@@ -1,0 +1,13 @@
+.
+./core
+./core/exporters
+./core/exporters/__pycache__
+./core/__pycache__
+./gui
+./gui/__pycache__
+./utils
+./utils/__pycache__
+./templates
+./images
+./images/__pycache__
+./logs

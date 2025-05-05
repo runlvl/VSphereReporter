@@ -52,6 +52,10 @@ args = "VSphereReporterV26Demo"
 task = "workflow.run"
 args = "VSphereReporterV27Demo"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "VSphereReporterV28Demo"
+
 [[workflows.workflow]]
 name = "VSphereReporter"
 author = "agent"
@@ -194,6 +198,15 @@ task = "shell.exec"
 args = "cd release/v27.0/ && python -m http.server 5007"
 waitForPort = 5007
 
+[[workflows.workflow]]
+name = "VSphereReporterV28Demo"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd release/v28.0/ && python -m http.server 5008"
+waitForPort = 5008
+
 [deployment]
 run = ["sh", "-c", "pip install -r requirements.txt || pip install pyVmomi>=7.0.0 PyQt5>=5.15.0 reportlab>=3.6.0 python-docx>=0.8.11 jinja2>=3.0.0 humanize>=3.0.0 && python vsphere_reporter.py"]
 
@@ -210,9 +223,17 @@ localPort = 5002
 externalPort = 3001
 
 [[ports]]
+localPort = 5003
+externalPort = 4200
+
+[[ports]]
 localPort = 5005
 externalPort = 3002
 
 [[ports]]
 localPort = 5007
 externalPort = 3003
+
+[[ports]]
+localPort = 5008
+externalPort = 5000

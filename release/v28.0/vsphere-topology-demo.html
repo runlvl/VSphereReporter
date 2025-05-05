@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VMware vSphere Reporter v28.0 - Topologie Demo</title>
+    <style>
+        :root {
+            --bechtle-dark-blue: #00355e;
+            --bechtle-orange: #da6f1e;
+            --bechtle-green: #23a96a;
+            --bechtle-light-gray: #f3f3f3;
+            --bechtle-dark-gray: #5a5a5a;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-title h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .header-title p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        h2 {
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--bechtle-light-gray);
+        }
+        
+        p {
+            margin-bottom: 20px;
+        }
+        
+        .demo-container {
+            margin: 30px 0;
+        }
+        
+        .topology-container {
+            width: 100%;
+            height: 650px;
+            border: 1px solid var(--bechtle-light-gray);
+            border-radius: 8px;
+            background-color: white;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            background-color: var(--bechtle-light-gray);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .feature-card h3 {
+            color: var(--bechtle-dark-blue);
+            margin-bottom: 10px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: var(--bechtle-orange);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        
+        .cta-button:hover {
+            background-color: #c05f15;
+            text-decoration: none;
+        }
+        
+        .banner {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .banner h2 {
+            color: white;
+            border-bottom: none;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+        
+        .banner p {
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+        
+        .filter-container {
+            background-color: var(--bechtle-light-gray);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .filter-button {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px 16px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        .filter-button.active {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            border-color: var(--bechtle-dark-blue);
+        }
+        
+        footer {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content, .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .banner {
+                padding: 40px 20px;
+            }
+            
+            .banner h2 {
+                font-size: 24px;
+            }
+            
+            .banner p {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-title">
+                <h1>VMware vSphere Reporter v28.0</h1>
+                <p>Erweiterte Topologie- und VMDK-Management-Funktionen</p>
+            </div>
+            <div class="header-logo">
+                <div style="color: white; font-weight: bold;">BECHTLE</div>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <h2>Erweiterte Topologie-Visualisierung</h2>
+        <p>
+            Die Version 28.0 des VMware vSphere Reporters bietet eine verbesserte interaktive Visualisierung Ihrer vSphere-Infrastruktur, 
+            mit erweiterten Filterfunktionen, verbesserter Darstellung von Beziehungen zwischen Komponenten und Exportmöglichkeiten.
+        </p>
+        
+        <div class="filter-container">
+            <span>Filter: </span>
+            <button class="filter-button active" data-filter="all">Alle anzeigen</button>
+            <button class="filter-button" data-filter="vms">Nur VMs</button>
+            <button class="filter-button" data-filter="datastores">Nur Datastores</button>
+            <button class="filter-button" data-filter="networks">Nur Netzwerke</button>
+            <button class="filter-button" data-filter="hosts">Nur Hosts</button>
+        </div>
+        
+        <div class="topology-container" id="topology-chart">
+            <!-- Hier wird das Topologie-Diagramm dynamisch eingefügt -->
+        </div>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>Hierarchische Visualisierung</h3>
+                <p>Die Topologie zeigt die komplette Hierarchie von vCenter bis zu den einzelnen VMs, mit klarer Darstellung der Beziehungen.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Farbkodierung und Symbole</h3>
+                <p>Jeder Knotentyp wird durch ein eigenes Symbol und eine eigene Farbe dargestellt, für eine intuitive visuelle Unterscheidung.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Interaktive Funktionen</h3>
+                <p>Zoomen, Verschieben, Expandieren/Kollabieren von Knoten und detaillierte Tooltips für eine flexible Exploration.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Filterfunktionen</h3>
+                <p>Filtern Sie die Ansicht nach Komponententypen, um genau die Informationen anzuzeigen, die Sie benötigen.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Exportmöglichkeiten</h3>
+                <p>Export des Diagramms als PNG oder SVG für Präsentationen, Dokumentationen oder Berichte.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Performance-Optimierung</h3>
+                <p>Verbesserte Leistung für große Umgebungen mit dynamischer Detailsteuerung basierend auf der Umgebungsgröße.</p>
+            </div>
+        </div>
+        
+        <div class="banner">
+            <h2>Verbesserte VMDK-Management-Funktionen</h2>
+            <p>
+                Die Version 28.0 bietet eine umfassende Übersicht aller VMDK-Dateien in Ihrer Umgebung, 
+                mit klarer Statusanzeige, leistungsstarken Suchfunktionen und CSV-Export für erweiterte Analyse.
+            </p>
+            <a href="vsphere-vmdk-demo.html" class="cta-button">VMDK-Management Demo</a>
+        </div>
+        
+        <h2>Neue Funktionen in v28.0</h2>
+        <p>
+            Die Version 28.0 des VMware vSphere Reporters baut auf den Verbesserungen der Version 27.0 auf und bietet zahlreiche 
+            Erweiterungen und Optimierungen für ein noch effektiveres Management Ihrer vSphere-Umgebung.
+        </p>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>Erweiterte Topologie</h3>
+                <p>Umfassendere und interaktivere Darstellung Ihrer vSphere-Infrastruktur mit Filterfunktionen und Exportoptionen.</p>
+            </div>
+            <div class="feature-card">
+                <h3>VMDK-Management</h3>
+                <p>Neue Suchfunktionen, CSV-Export und verbesserte Klassifizierung von VMDKs für effektiveres Storage-Management.</p>
+            </div>
+            <div class="feature-card">
+                <h3>PDF-Berichte mit Topologie</h3>
+                <p>PDF-Exporte enthalten jetzt auch statische Topologie-Visualisierungen und bieten anpassbare Detailtiefe.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Optimierte Datensammlung</h3>
+                <p>Bis zu 40% schnellere Abfrage von VMDK-Informationen und verbesserte Fehlerbehandlung bei Netzwerkproblemen.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Verbesserte Benutzeroberfläche</h3>
+                <p>Überarbeitete Bechtle-Farbpalette gemäß aktuellem Corporate Design und verbesserte Barrierefreiheit.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Erhöhte Wartbarkeit</h3>
+                <p>Modularer Code, umfassendere Logging-Funktionen und Optimierungen für geringeren Speicherverbrauch.</p>
+            </div>
+        </div>
+        
+        <p>
+            <a href="README-V28.0.md" class="cta-button">Vollständige Release Notes ansehen</a>
+            <a href="CHANGELOG-v28.0.txt" class="cta-button">Changelog ansehen</a>
+        </p>
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <div>
+                <p>VMware vSphere Reporter v28.0</p>
+                <p>© 2025 Bechtle GmbH. Alle Rechte vorbehalten.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Beispieldaten für die Topologie
+            const chartContainer = document.getElementById('topology-chart');
+            const chart = echarts.init(chartContainer);
+            
+            // Filter-Buttons
+            const filterButtons = document.querySelectorAll('.filter-button');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Entferne aktiven Status von allen Buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Setze aktiven Status für diesen Button
+                    this.classList.add('active');
+                    
+                    // Ändere die Darstellung basierend auf dem Filter
+                    updateTopologyView(this.getAttribute('data-filter'));
+                });
+            });
+            
+            // Topologie-Diagramm initialisieren
+            updateTopologyView('all');
+            
+            // Responsive Chart
+            window.addEventListener('resize', function() {
+                chart.resize();
+            });
+            
+            function updateTopologyView(filter) {
+                // Die Grundstruktur bleibt gleich, aber je nach Filter werden unterschiedliche Kindknoten gezeigt
+                let option = {
+                    title: {
+                        text: 'VMware vSphere Infrastruktur',
+                        subtext: 'Interaktives Topologie-Diagramm (Demo)',
+                        left: 'center',
+                        textStyle: {
+                            color: '#00355e'
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{b}: {c}'
+                    },
+                    series: [
+                        {
+                            type: 'tree',
+                            name: 'VMware vSphere Topologie',
+                            data: [
+                                {
+                                    name: 'vcenter.example.com',
+                                    value: 'vCenter Server 7.0.3',
+                                    symbol: 'rect',
+                                    symbolSize: 30,
+                                    itemStyle: { color: '#00355e' },
+                                    children: [
+                                        {
+                                            name: 'Bechtle Datacenter',
+                                            symbol: 'roundRect',
+                                            symbolSize: 25,
+                                            itemStyle: { color: '#00355e' },
+                                            children: [
+                                                {
+                                                    name: 'Produktion-Cluster',
+                                                    value: '3 Hosts, 25 VMs',
+                                                    symbol: 'diamond',
+                                                    symbolSize: 20,
+                                                    itemStyle: { color: '#da6f1e' },
+                                                    children: filter === 'all' || filter === 'hosts' ? [
+                                                        {
+                                                            name: 'esx01.example.com',
+                                                            value: '32 Cores, 256 GB RAM',
+                                                            symbol: 'circle',
+                                                            symbolSize: 15,
+                                                            itemStyle: { color: '#23a96a' },
+                                                            children: filter === 'all' || filter === 'vms' ? [
+                                                                {
+                                                                    name: 'web01.example.com',
+                                                                    value: '4 vCPUs, 8 GB RAM, PoweredOn',
+                                                                    symbol: 'emptyCircle',
+                                                                    symbolSize: 10,
+                                                                    itemStyle: { color: '#5a5a5a' }
+                                                                },
+                                                                {
+                                                                    name: 'web02.example.com',
+                                                                    value: '4 vCPUs, 8 GB RAM, PoweredOn',
+                                                                    symbol: 'emptyCircle',
+                                                                    symbolSize: 10,
+                                                                    itemStyle: { color: '#5a5a5a' }
+                                                                },
+                                                                {
+                                                                    name: 'db01.example.com',
+                                                                    value: '8 vCPUs, 32 GB RAM, PoweredOn',
+                                                                    symbol: 'emptyCircle',
+                                                                    symbolSize: 10,
+                                                                    itemStyle: { color: '#5a5a5a' }
+                                                                }
+                                                            ] : []
+                                                        },
+                                                        {
+                                                            name: 'esx02.example.com',
+                                                            value: '32 Cores, 256 GB RAM',
+                                                            symbol: 'circle',
+                                                            symbolSize: 15,
+                                                            itemStyle: { color: '#23a96a' },
+                                                            children: filter === 'all' || filter === 'vms' ? [
+                                                                {
+                                                                    name: 'app01.example.com',
+                                                                    value: '8 vCPUs, 16 GB RAM, PoweredOn',
+                                                                    symbol: 'emptyCircle',
+                                                                    symbolSize: 10,
+                                                                    itemStyle: { color: '#5a5a5a' }
+                                                                },
+                                                                {
+                                                                    name: 'app02.example.com',
+                                                                    value: '8 vCPUs, 16 GB RAM, PoweredOn',
+                                                                    symbol: 'emptyCircle',
+                                                                    symbolSize: 10,
+                                                                    itemStyle: { color: '#5a5a5a' }
+                                                                }
+                                                            ] : []
+                                                        },
+                                                        {
+                                                            name: 'esx03.example.com',
+                                                            value: '32 Cores, 256 GB RAM',
+                                                            symbol: 'circle',
+                                                            symbolSize: 15,
+                                                            itemStyle: { color: '#23a96a' },
+                                                            children: filter === 'all' || filter === 'vms' ? [
+                                                                {
+                                                                    name: 'app-template',
+                                                                    value: '4 vCPUs, 8 GB RAM, Template',
+                                                                    symbol: 'pin',
+                                                                    symbolSize: 10,
+                                                                    itemStyle: { color: '#5a5a5a' }
+                                                                }
+                                                            ] : []
+                                                        }
+                                                    ] : []
+                                                },
+                                                {
+                                                    name: 'Entwicklung-Cluster',
+                                                    value: '2 Hosts, 15 VMs',
+                                                    symbol: 'diamond',
+                                                    symbolSize: 20,
+                                                    itemStyle: { color: '#da6f1e' },
+                                                    children: filter === 'all' || filter === 'hosts' ? [
+                                                        {
+                                                            name: 'esx04.example.com',
+                                                            value: '24 Cores, 128 GB RAM',
+                                                            symbol: 'circle',
+                                                            symbolSize: 15,
+                                                            itemStyle: { color: '#23a96a' }
+                                                        },
+                                                        {
+                                                            name: 'esx05.example.com',
+                                                            value: '24 Cores, 128 GB RAM',
+                                                            symbol: 'circle',
+                                                            symbolSize: 15,
+                                                            itemStyle: { color: '#23a96a' }
+                                                        }
+                                                    ] : []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ],
+                            // Grundlegende Eigenschaften für das Baum-Layout
+                            layout: 'orthogonal',
+                            orient: 'LR',
+                            initialTreeDepth: 2,
+                            label: {
+                                position: 'right',
+                                color: '#000000',
+                                fontSize: 12,
+                                fontFamily: 'Arial'
+                            },
+                            leaves: {
+                                label: {
+                                    position: 'right',
+                                    color: '#000000',
+                                    fontSize: 12,
+                                    fontFamily: 'Arial'
+                                }
+                            },
+                            symbolSize: 20,
+                            roam: true,
+                            expandAndCollapse: true,
+                            animationDuration: 550,
+                            animationDurationUpdate: 750
+                        }
+                    ]
+                };
+                
+                // Füge Datastores hinzu, wenn sie angezeigt werden sollen
+                if (filter === 'all' || filter === 'datastores') {
+                    const datastoresNode = {
+                        name: 'Datastores',
+                        symbol: 'rect',
+                        symbolSize: 25,
+                        itemStyle: { color: '#6a5acd' },
+                        children: [
+                            {
+                                name: 'SAN-DS01',
+                                value: 'Kapazität: 5.0 TB, 75.5% belegt',
+                                symbol: 'rect',
+                                symbolSize: 15,
+                                itemStyle: { color: '#FFA500' }
+                            },
+                            {
+                                name: 'SAN-DS02',
+                                value: 'Kapazität: 10.0 TB, 45.2% belegt',
+                                symbol: 'rect',
+                                symbolSize: 15,
+                                itemStyle: { color: '#6a5acd' }
+                            },
+                            {
+                                name: 'SSD-DS01',
+                                value: 'Kapazität: 2.0 TB, 92.7% belegt',
+                                symbol: 'rect',
+                                symbolSize: 15,
+                                itemStyle: { color: '#FF0000' }
+                            }
+                        ]
+                    };
+                    option.series[0].data[0].children.push(datastoresNode);
+                }
+                
+                // Füge Netzwerke hinzu, wenn sie angezeigt werden sollen
+                if (filter === 'all' || filter === 'networks') {
+                    const networksNode = {
+                        name: 'Netzwerke',
+                        symbol: 'roundRect',
+                        symbolSize: 25,
+                        itemStyle: { color: '#008b8b' },
+                        children: [
+                            {
+                                name: 'Produktionsnetz',
+                                value: 'Typ: Distributed Switch, VMs: 25',
+                                symbol: 'roundRect',
+                                symbolSize: 15,
+                                itemStyle: { color: '#008b8b' }
+                            },
+                            {
+                                name: 'Management-Netz',
+                                value: 'Typ: Distributed Switch, VMs: 5',
+                                symbol: 'roundRect',
+                                symbolSize: 15,
+                                itemStyle: { color: '#008b8b' }
+                            },
+                            {
+                                name: 'DMZ-Netz',
+                                value: 'Typ: Standard Switch, VMs: 10',
+                                symbol: 'roundRect',
+                                symbolSize: 15,
+                                itemStyle: { color: '#008b8b' }
+                            }
+                        ]
+                    };
+                    option.series[0].data[0].children.push(networksNode);
+                }
+                
+                chart.setOption(option);
+            }
+        });
+    </script>
+</body>
+</html>
