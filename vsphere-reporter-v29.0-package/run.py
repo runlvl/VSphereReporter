@@ -2,138 +2,177 @@
 # -*- coding: utf-8 -*-
 
 """
-VMware vSphere Reporter v29.0 - Web Edition
-Copyright (c) 2025 Bechtle GmbH
+VMware vSphere Reporter v29.0 - Starter-Skript
 
-Start-Skript für den webbasierten VMware vSphere Reporter.
-Dieses Skript sucht nach einem verfügbaren Port und startet dann die Flask-Anwendung.
+Dieses Skript startet die VMware vSphere Reporter Web-Anwendung
+und findet automatisch einen verfügbaren Port, falls der
+Standardport 5000 nicht verfügbar ist.
+
+Copyright (c) 2025 Bechtle GmbH
 """
 
 import os
 import sys
 import socket
 import logging
-import subprocess
 import webbrowser
 from time import sleep
+from datetime import datetime
 
-# Logging konfigurieren
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
+# Logging-Konfiguration
+log_format = "%(asctime)s - %(levelname)s - %(message)s"
+logging.basicConfig(level=logging.INFO, format=log_format,
+                   datefmt="%Y-%m-%d %H:%M:%S")
 logger = logging.getLogger(__name__)
 
-# Standardport
+# Konstanten
 DEFAULT_PORT = 5000
-# Maximale Anzahl von Ports, die überprüft werden sollen
-MAX_PORT_CHECK = 20
+MAX_PORT = 5100  # Wir suchen bis Port 5100
+DEMO_ENV_VAR = "VSPHERE_REPORTER_DEMO"
+DEBUG_ENV_VAR = "VSPHERE_REPORTER_DEBUG"
 
 def is_port_available(port):
     """
-    Überprüft, ob ein bestimmter Port verfügbar ist.
+    Prüft, ob ein bestimmter Port verfügbar ist.
     
     Args:
-        port: Die zu überprüfende Portnummer
+        port (int): Der zu prüfende Port
         
     Returns:
-        True, wenn der Port verfügbar ist, andernfalls False
+        bool: True, wenn der Port verfügbar ist, sonst False
     """
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(2)
-        result = sock.connect_ex(('127.0.0.1', port))
-        sock.close()
-        return result != 0
-    except Exception as e:
-        logger.warning(f"Fehler bei der Überprüfung des Ports {port}: {str(e)}")
-        return False
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        try:
+            s.bind(('0.0.0.0', port))
+            return True
+        except OSError:
+            return False
 
-def find_available_port(start_port=DEFAULT_PORT, max_attempts=MAX_PORT_CHECK):
+def find_available_port(start_port=DEFAULT_PORT, max_port=MAX_PORT):
     """
-    Sucht nach einem verfügbaren Port, beginnend bei start_port.
+    Findet einen verfügbaren Port im angegebenen Bereich.
     
     Args:
-        start_port: Der Port, bei dem die Suche beginnen soll
-        max_attempts: Die maximale Anzahl von Ports, die überprüft werden sollen
+        start_port (int): Der erste zu prüfende Port
+        max_port (int): Der letzte zu prüfende Port
         
     Returns:
-        Eine verfügbare Portnummer oder None, wenn kein Port gefunden wurde
+        int: Einen verfügbaren Port oder None, wenn keiner gefunden wurde
     """
-    for port in range(start_port, start_port + max_attempts):
+    for port in range(start_port, max_port + 1):
         if is_port_available(port):
             return port
     return None
 
-def start_app(port):
+def open_browser(port):
     """
-    Startet die Flask-Anwendung auf dem angegebenen Port.
+    Öffnet den Standard-Webbrowser mit der Anwendungs-URL.
     
     Args:
-        port: Die Portnummer, auf der die Anwendung gestartet werden soll
+        port (int): Der Port, auf dem die Anwendung läuft
     """
-    # Umgebungsvariablen für Flask setzen
-    env = os.environ.copy()
-    
-    # Demo-Modus aktivieren, wenn die Umgebungsvariable gesetzt ist
-    if os.environ.get('VSPHERE_REPORTER_DEMO', 'False').lower() == 'true':
-        logger.info("Demo-Modus aktiviert - Es werden keine echten vCenter-Verbindungen hergestellt")
-    
-    logger.info(f"Starte vSphere Reporter auf Port {port}...")
-    
-    # Die Anwendung mit Python starten
+    url = f"http://localhost:{port}"
     try:
-        # Den Pfad zur app.py-Datei bestimmen
-        app_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'app.py')
-        
-        # Die Flask-Anwendung starten
-        # Der Port wird über die Kommandozeile übergeben
-        process = subprocess.Popen([
-            sys.executable, 
-            app_path,
-            "--port",
-            str(port)
-        ], env=env)
-        
-        # Kurz warten, um sicherzustellen, dass die Anwendung gestartet wurde
+        # Warte einen Moment, bis der Server gestartet ist
         sleep(2)
-        
-        # Die URL im Standardbrowser öffnen
-        webbrowser.open(f"http://127.0.0.1:{port}")
-        
-        # Auf den Prozess warten
-        process.wait()
+        webbrowser.open(url)
+        logger.info(f"Browser geöffnet mit URL: {url}")
     except Exception as e:
-        logger.error(f"Fehler beim Starten der Anwendung: {str(e)}")
-        sys.exit(1)
+        logger.warning(f"Konnte Browser nicht automatisch öffnen: {e}")
+        logger.info(f"Sie können die Anwendung unter {url} aufrufen")
+
+def setup_demo_mode():
+    """
+    Setzt Umgebungsvariablen für den Demo-Modus, falls gewünscht.
+    
+    Returns:
+        bool: True, wenn der Demo-Modus aktiviert wurde
+    """
+    # Lesen der Eingabe vom Benutzer
+    if len(sys.argv) > 1 and sys.argv[1].lower() in ('--demo', '-d'):
+        os.environ[DEMO_ENV_VAR] = 'True'
+        logger.info("Demo-Modus aktiviert")
+        return True
+    
+    # Oder aus der Umgebungsvariable
+    demo_mode = os.environ.get(DEMO_ENV_VAR, 'False').lower() in ('true', '1', 't')
+    if demo_mode:
+        logger.info("Demo-Modus aktiviert (über Umgebungsvariable)")
+    
+    return demo_mode
+
+def setup_debug_mode():
+    """
+    Setzt Umgebungsvariablen für den Debug-Modus, falls gewünscht.
+    
+    Returns:
+        bool: True, wenn der Debug-Modus aktiviert wurde
+    """
+    # Lesen der Eingabe vom Benutzer
+    if len(sys.argv) > 1 and sys.argv[1].lower() in ('--debug', '-v'):
+        os.environ[DEBUG_ENV_VAR] = 'True'
+        logging.getLogger().setLevel(logging.DEBUG)
+        logger.debug("Debug-Modus aktiviert")
+        return True
+    
+    # Oder aus der Umgebungsvariable
+    debug_mode = os.environ.get(DEBUG_ENV_VAR, 'False').lower() in ('true', '1', 't')
+    if debug_mode:
+        logging.getLogger().setLevel(logging.DEBUG)
+        logger.debug("Debug-Modus aktiviert (über Umgebungsvariable)")
+    
+    return debug_mode
 
 def main():
-    """Hauptfunktion"""
-    logger.info("VMware vSphere Reporter v29.0 - Web Edition wird gestartet")
+    """
+    Hauptfunktion zum Starten der Anwendung
     
-    # Demo-Modus aktivieren, wenn die Umgebungsvariable nicht gesetzt ist
-    if os.environ.get('VSPHERE_REPORTER_DEMO') is None:
-        os.environ['VSPHERE_REPORTER_DEMO'] = 'True'
-        logger.info("Demo-Modus aktiviert - Es werden keine echten vCenter-Verbindungen hergestellt")
-    
+    Returns:
+        int: Exit-Code (0 bei Erfolg, 1 bei Fehler)
+    """
     print("Starte vSphere Reporter...")
     
-    # Verfügbaren Port suchen
+    # Demo- und Debug-Modi einrichten
+    demo_mode = setup_demo_mode()
+    debug_mode = setup_debug_mode()
+    
+    # Verfügbaren Port finden
     print("Suche nach verfügbarem Port...")
     port = find_available_port()
     
-    if port is None:
-        logger.error(f"Konnte keinen verfügbaren Port im Bereich {DEFAULT_PORT}-{DEFAULT_PORT+MAX_PORT_CHECK-1} finden.")
-        print(f"Konnte keinen verfügbaren Port im Bereich {DEFAULT_PORT}-{DEFAULT_PORT+MAX_PORT_CHECK-1} finden.")
-        print("Bitte stellen Sie sicher, dass mindestens ein Port in diesem Bereich verfügbar ist.")
-        sys.exit(1)
+    if not port:
+        logger.error("Konnte keinen verfügbaren Port finden.")
+        return 1
     
     print(f"Verfügbarer Port gefunden: {port}")
     logger.info(f"Verwende Port {port} für den Web-Server")
     
-    # Anwendung starten
-    start_app(port)
+    # Import der Flask-App muss nach dem Setzen der Umgebungsvariablen erfolgen
+    logger.info(f"Starte vSphere Reporter auf Port {port}...")
+    
+    try:
+        from app import app
+        
+        # Browser öffnen (nicht im Debug-Modus)
+        if not debug_mode:
+            # In einem Thread starten, damit der Server nicht blockiert wird
+            from threading import Thread
+            browser_thread = Thread(target=open_browser, args=(port,))
+            browser_thread.daemon = True
+            browser_thread.start()
+        
+        # Starte Flask-App
+        app.run(host='0.0.0.0', port=port, debug=debug_mode)
+        return 0
+    
+    except ImportError as e:
+        logger.error(f"Fehler beim Importieren der Anwendung: {e}")
+        logger.error("Stellen Sie sicher, dass alle Abhängigkeiten installiert sind.")
+        return 1
+    
+    except Exception as e:
+        logger.error(f"Fehler beim Starten der Anwendung: {e}")
+        return 1
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
