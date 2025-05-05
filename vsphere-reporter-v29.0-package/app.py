@@ -161,9 +161,16 @@ def orphaned_vmdks():
     try:
         if app.config['DEMO_MODE']:
             vmdk_data = demo_data.generate_orphaned_vmdks_data(15)
+            logger.info(f"Generierte {len(vmdk_data)} verwaiste VMDKs für Demo-Modus")
         else:
             # In einer Produktionsumgebung würden wir hier echte Daten abrufen
             vmdk_data = vsphere_client.get_orphaned_vmdks()
+            logger.info(f"Abgerufene {len(vmdk_data)} verwaiste VMDKs vom vCenter")
+        
+        # Stelle sicher, dass vmdk_data nicht None ist
+        if vmdk_data is None:
+            vmdk_data = []
+            logger.warning("Keine verwaisten VMDK-Daten gefunden, verwende leere Liste")
         
         return render_template('orphaned_vmdks.html', 
                             orphaned_vmdks=vmdk_data,
@@ -280,19 +287,23 @@ def export(format):
         )
         
         # Basierend auf dem Format exportieren
+        # Für alle Formate die gleichen Daten
+        data = {'vmware_tools': vmware_tools, 'snapshots': snapshots, 'orphaned_vmdks': orphaned_vmdks}
+        
+        # Generiere Dateinamen mit Zeitstempel
+        filename = f"vsphere_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.{format}"
+        
+        # Basierend auf dem Format exportieren
         if format == 'html':
-            data = {'vmware_tools': vmware_tools, 'snapshots': snapshots, 'orphaned_vmdks': orphaned_vmdks}
-            report_file = generator.generate_html_report(f"vsphere_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html", data)
+            report_file = generator.generate_html_report(filename, data)
             return send_file(report_file, as_attachment=True)
             
         elif format == 'pdf':
-            data = {'vmware_tools': vmware_tools, 'snapshots': snapshots, 'orphaned_vmdks': orphaned_vmdks}
-            report_file = generator.generate_pdf_report(f"vsphere_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf", data)
+            report_file = generator.generate_pdf_report(filename, data)
             return send_file(report_file, as_attachment=True)
             
         elif format == 'docx':
-            data = {'vmware_tools': vmware_tools, 'snapshots': snapshots, 'orphaned_vmdks': orphaned_vmdks}
-            report_file = generator.generate_docx_report(f"vsphere_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.docx", data)
+            report_file = generator.generate_docx_report(filename, data)
             return send_file(report_file, as_attachment=True)
     
     except Exception as e:
@@ -354,8 +365,12 @@ def export_single(report_type, format):
         if format == 'html':
             report_file = generator.generate_html_report(filename, data)
             return send_file(report_file, as_attachment=True)
-        
-        # Weitere Exportfunktionen hier implementieren...
+        elif format == 'pdf':
+            report_file = generator.generate_pdf_report(filename, data)
+            return send_file(report_file, as_attachment=True)
+        elif format == 'docx':
+            report_file = generator.generate_docx_report(filename, data)
+            return send_file(report_file, as_attachment=True)
         
     except Exception as e:
         flash(f'Fehler beim Exportieren: {str(e)}', 'danger')

@@ -146,9 +146,13 @@
                             <span class="status-badge">
                                 <i class="fas fa-power-off"></i> Ausgeschaltet
                             </span>
-                            {% else %}
+                            {% elif vm.power_state == 'suspended' %}
                             <span class="status-badge status-warning">
-                                <i class="fas fa-hourglass-half"></i> {{ vm.power_state }}
+                                <i class="fas fa-pause-circle"></i> Pausiert
+                            </span>
+                            {% else %}
+                            <span class="status-badge">
+                                <i class="fas fa-power-off"></i> {{ vm.power_state }}
                             </span>
                             {% endif %}
                         </td>
