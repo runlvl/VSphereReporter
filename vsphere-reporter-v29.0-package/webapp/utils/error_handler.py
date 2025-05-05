@@ -2,161 +2,146 @@
 # -*- coding: utf-8 -*-
 
 """
-VMware vSphere Reporter v29.0 - Web Edition
-Copyright (c) 2025 Bechtle GmbH
+VMware vSphere Reporter v29.0 - Error Handler
 
-Fehlerbehandlungsmodul für den vSphere Reporter.
+Dieses Modul stellt Funktionen für die einheitliche Fehlerbehandlung bereit,
+insbesondere für Fehler, die bei der Verbindung mit vSphere auftreten können.
+
+Copyright (c) 2025 Bechtle GmbH
 """
 
 import logging
+import functools
 import ssl
 import socket
-from functools import wraps
-from typing import Any, Callable, Dict, Optional, Type, TypeVar, cast
+from datetime import datetime
 
-# Versuche, die vSphere-API zu importieren
+# pyVmomi Imports
 try:
-    import pyVmomi
     from pyVmomi import vim
+    from pyVmomi import vmodl
 except ImportError:
-    vim = type('vim', (), {})  # Erstelle ein Dummy-Objekt, wenn die Bibliothek nicht verfügbar ist
+    # Fallback für Demo-Modus oder wenn pyVmomi nicht installiert ist
+    vim = type('vim', (), {'fault': type('fault', (), {})})
+    vmodl = type('vmodl', (), {'fault': type('fault', (), {})})
 
 logger = logging.getLogger(__name__)
 
-# Benutzerdefinierte Ausnahmen
-class VSphereError(Exception):
-    """Basisklasse für alle vSphere-bezogenen Fehler."""
-    
-    def __init__(self, message: str):
-        self.message = message
-        super().__init__(self.message)
+class VSphereReporterError(Exception):
+    """Basisklasse für alle VSphere Reporter-spezifischen Fehler"""
+    pass
 
-class ConnectionError(VSphereError):
-    """Fehler bei der Verbindung zum vCenter-Server."""
-    
-    def __init__(self, server: str, message: str):
-        self.server = server
-        full_message = f"Verbindungsfehler zum Server {server}: {message}"
-        super().__init__(full_message)
+class VSphereConnectionError(VSphereReporterError):
+    """Fehler bei der Verbindung zum vCenter"""
+    pass
 
-class AuthenticationError(VSphereError):
-    """Fehler bei der Authentifizierung am vCenter-Server."""
-    
-    def __init__(self, server: str, username: str, message: str):
-        self.server = server
-        self.username = username
-        full_message = f"Authentifizierungsfehler für Benutzer {username} am Server {server}: {message}"
-        super().__init__(full_message)
+class VSphereAuthenticationError(VSphereReporterError):
+    """Fehler bei der Authentifizierung am vCenter"""
+    pass
 
-class PermissionError(VSphereError):
-    """Fehlende Berechtigungen für eine Operation."""
-    
-    def __init__(self, operation: str, message: str):
-        self.operation = operation
-        full_message = f"Berechtigungsfehler bei Operation '{operation}': {message}"
-        super().__init__(full_message)
+class VSpherePermissionError(VSphereReporterError):
+    """Fehler bei fehlenden Berechtigungen"""
+    pass
 
-class OperationError(VSphereError):
-    """Fehler bei der Ausführung einer Operation."""
-    
-    def __init__(self, operation: str, message: str):
-        self.operation = operation
-        full_message = f"Fehler bei Operation '{operation}': {message}"
-        super().__init__(full_message)
+class VSphereNetworkError(VSphereReporterError):
+    """Netzwerkfehler bei der Kommunikation mit dem vCenter"""
+    pass
 
-F = TypeVar('F', bound=Callable[..., Any])
+class VSphereTimeoutError(VSphereReporterError):
+    """Timeout bei der Kommunikation mit dem vCenter"""
+    pass
 
-def handle_vsphere_error(func: F) -> F:
+class VSphereDataCollectionError(VSphereReporterError):
+    """Fehler bei der Datensammlung"""
+    pass
+
+class VSphereReportGenerationError(VSphereReporterError):
+    """Fehler bei der Berichtsgenerierung"""
+    pass
+
+def log_error(error, level=logging.ERROR):
     """
-    Dekorator zur Behandlung von vSphere-spezifischen Fehlern.
+    Protokolliert einen Fehler mit zusätzlichen Kontextinformationen
     
-    Fängt verschiedene Ausnahmen ab und wandelt sie in spezifische VSphereError-Unterklassen um.
+    Args:
+        error: Der aufgetretene Fehler
+        level: Log-Level (default: ERROR)
     """
-    @wraps(func)
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    error_type = type(error).__name__
+    error_message = str(error)
+    
+    logger.log(level, f"[{timestamp}] {error_type}: {error_message}")
+
+def handle_vsphere_errors(func):
+    """
+    Decorator für die einheitliche Fehlerbehandlung von vSphere-Operationen
+    
+    Args:
+        func: Die zu dekorierende Funktion
+        
+    Returns:
+        Die dekorierte Funktion mit Fehlerbehandlung
+    """
+    @functools.wraps(func)
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except vim.fault.HostConnectFault as e:
-            # Allgemeiner Verbindungsfehler zum Host
-            logger.error(f"Verbindungsfehler zum Host: {str(e)}")
-            self = args[0] if args else None
-            server = getattr(self, 'host', 'Unbekannter Server')
-            raise ConnectionError(server, str(e))
         except vim.fault.InvalidLogin as e:
-            # Ungültige Anmeldedaten
-            logger.error(f"Ungültige Anmeldedaten: {str(e)}")
-            self = args[0] if args else None
-            server = getattr(self, 'host', 'Unbekannter Server')
-            username = getattr(self, 'username', 'Unbekannter Benutzer')
-            raise AuthenticationError(server, username, str(e))
+            log_error(e)
+            raise VSphereAuthenticationError(f"Ungültige Anmeldedaten: {str(e)}")
         except vim.fault.NoPermission as e:
-            # Fehlende Berechtigungen
-            logger.error(f"Fehlende Berechtigungen: {str(e)}")
-            operation = func.__name__
-            raise PermissionError(operation, str(e))
+            log_error(e)
+            raise VSpherePermissionError(f"Keine ausreichenden Berechtigungen: {str(e)}")
+        except vim.fault.NotAuthenticated as e:
+            log_error(e)
+            raise VSphereAuthenticationError(f"Nicht authentifiziert: {str(e)}")
+        except vim.fault.HostConnectFault as e:
+            log_error(e)
+            raise VSphereConnectionError(f"Verbindungsfehler zum Host: {str(e)}")
+        except vmodl.fault.NotSupported as e:
+            log_error(e)
+            raise VSphereReporterError(f"Operation wird nicht unterstützt: {str(e)}")
         except ssl.SSLError as e:
-            # SSL-Fehler
-            logger.error(f"SSL-Fehler: {str(e)}")
-            self = args[0] if args else None
-            server = getattr(self, 'host', 'Unbekannter Server')
-            raise ConnectionError(server, f"SSL-Fehler: {str(e)}")
-        except (socket.error, socket.timeout) as e:
-            # Netzwerkfehler
-            logger.error(f"Netzwerkfehler: {str(e)}")
-            self = args[0] if args else None
-            server = getattr(self, 'host', 'Unbekannter Server')
-            raise ConnectionError(server, f"Netzwerkfehler: {str(e)}")
+            log_error(e)
+            raise VSphereConnectionError(f"SSL-Fehler: {str(e)}. Aktivieren Sie die Option 'SSL-Zertifikatsvalidierung ignorieren'.")
+        except socket.timeout as e:
+            log_error(e)
+            raise VSphereTimeoutError(f"Zeitüberschreitung bei der Verbindung: {str(e)}")
+        except socket.error as e:
+            log_error(e)
+            raise VSphereNetworkError(f"Netzwerkfehler: {str(e)}")
         except Exception as e:
-            # Sonstige Fehler
-            logger.exception(f"Unerwarteter Fehler: {str(e)}")
-            operation = func.__name__
-            raise OperationError(operation, str(e))
+            log_error(e)
+            raise VSphereReporterError(f"Unerwarteter Fehler: {str(e)}")
     
-    return cast(F, wrapper)
+    return wrapper
 
-def format_exception(e: Exception) -> Dict[str, Any]:
+def format_vsphere_error(error):
     """
-    Formatiert eine Ausnahme als Dictionary für die Verwendung in Fehlerantworten.
+    Formatiert einen vSphere-Fehler in eine benutzerfreundliche Nachricht
     
     Args:
-        e: Die zu formatierende Ausnahme
+        error: Der aufgetretene Fehler
         
     Returns:
-        Ein Dictionary mit Fehlerinformationen
+        str: Eine benutzerfreundliche Fehlermeldung
     """
-    error_info = {
-        'type': e.__class__.__name__,
-        'message': str(e),
-        'details': {}
-    }
-    
-    if isinstance(e, ConnectionError):
-        error_info['details']['server'] = e.server
-    elif isinstance(e, AuthenticationError):
-        error_info['details']['server'] = e.server
-        error_info['details']['username'] = e.username
-    elif isinstance(e, PermissionError):
-        error_info['details']['operation'] = e.operation
-    elif isinstance(e, OperationError):
-        error_info['details']['operation'] = e.operation
-    
-    return error_info
-
-def log_exception(e: Exception, logger: logging.Logger) -> None:
-    """
-    Protokolliert eine Ausnahme mit dem angegebenen Logger.
-    
-    Args:
-        e: Die zu protokollierende Ausnahme
-        logger: Der zu verwendende Logger
-    """
-    if isinstance(e, ConnectionError):
-        logger.error(f"Verbindungsfehler: {str(e)}")
-    elif isinstance(e, AuthenticationError):
-        logger.error(f"Authentifizierungsfehler: {str(e)}")
-    elif isinstance(e, PermissionError):
-        logger.error(f"Berechtigungsfehler: {str(e)}")
-    elif isinstance(e, OperationError):
-        logger.error(f"Operationsfehler: {str(e)}")
+    if isinstance(error, VSphereAuthenticationError):
+        return f"Authentifizierungsfehler: {str(error)}"
+    elif isinstance(error, VSpherePermissionError):
+        return f"Berechtigungsfehler: {str(error)}"
+    elif isinstance(error, VSphereConnectionError):
+        return f"Verbindungsfehler: {str(error)}"
+    elif isinstance(error, VSphereTimeoutError):
+        return f"Zeitüberschreitung: {str(error)}"
+    elif isinstance(error, VSphereNetworkError):
+        return f"Netzwerkfehler: {str(error)}"
+    elif isinstance(error, VSphereDataCollectionError):
+        return f"Fehler bei der Datensammlung: {str(error)}"
+    elif isinstance(error, VSphereReportGenerationError):
+        return f"Fehler bei der Berichtsgenerierung: {str(error)}"
+    elif isinstance(error, VSphereReporterError):
+        return f"vSphere Reporter Fehler: {str(error)}"
     else:
-        logger.exception(f"Unbehandelter Fehler: {str(e)}")
+        return f"Unerwarteter Fehler: {str(error)}"
