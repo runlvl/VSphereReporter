@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Seite nicht gefunden</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container-fluid d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+        <div class="text-center">
+            <h1 class="display-1 text-primary"><i class="bi bi-exclamation-triangle-fill"></i></h1>
+            <h1 class="display-4">404</h1>
+            <h2 class="mb-4">Seite nicht gefunden</h2>
+            <p class="lead">Die von Ihnen angeforderte Seite existiert nicht.</p>
+            <div class="mt-4">
+                <a href="{{ url_for('dashboard') if session.get('logged_in', False) else url_for('index') }}" class="btn btn-primary">
+                    <i class="bi bi-house-fill me-2"></i>Zurück zur Startseite
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
