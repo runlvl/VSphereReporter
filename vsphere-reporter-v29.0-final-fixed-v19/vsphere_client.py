@@ -563,7 +563,21 @@ class VSphereClient:
         Returns:
             int: Dateigröße in KB, 0 wenn nicht ermittelbar
         """
-        # Verschiedene Attribute prüfen, die die Größe enthalten könnten
+        # Demo-Modus behandeln: Bei Demo-Daten verwenden wir spezifischere Größen
+        if self.demo_mode:
+            # Nutze konsistente Größen für Demo-VMDKs basierend auf dem Pfad
+            # Wir nehmen deterministische Werte basierend auf dem Namen
+            import hashlib
+            name_hash = int(hashlib.md5(vmdk_path.encode()).hexdigest(), 16) % 100
+            
+            # Generiere eine "realistische" Größe zwischen 20GB und 500GB
+            size_gb = 20 + (name_hash * 4.8)
+            size_kb = int(size_gb * 1024 * 1024)
+            
+            self.logger.debug(f"Demo-Modus: VMDK Größe für {vmdk_path}: {size_kb} KB ({size_gb} GB)")
+            return size_kb
+            
+        # Echte Umgebung: Verschiedene Attribute prüfen, die die Größe enthalten könnten
         size_attrs = ['fileSize', 'capacity', 'capacityInKB', 'size', 'length']
         
         for attr in size_attrs:
@@ -592,8 +606,9 @@ class VSphereClient:
             self.logger.debug(f"Fehler bei der Größenschätzung für {vmdk_path}: {str(e)}")
         
         # Standardwert zurückgeben, wenn keine Größe ermittelt werden konnte
-        self.logger.debug(f"Keine Größeninformation für VMDK {vmdk_path} gefunden, verwende Standardwert 10240 KB (10 MB)")
-        return 10240  # 10 MB als sinnvoller Standardwert
+        # Realistischeren Standardwert verwenden (40 GB statt 10 MB)
+        self.logger.debug(f"Keine Größeninformation für VMDK {vmdk_path} gefunden, verwende Standardwert 40960000 KB (40 GB)")
+        return 40960000  # 40 GB als realistischerer Standardwert für VMDKs
     
     def _get_vmdk_modification_time(self, file_info, vmdk_path):
         """
@@ -606,7 +621,30 @@ class VSphereClient:
         Returns:
             str: Änderungsdatum als String, aktuelles Datum wenn nicht ermittelbar
         """
-        # Verschiedene Attribute prüfen, die das Datum enthalten könnten
+        # Demo-Modus: Generiere realistische, aber konsistente Datumsangaben
+        if self.demo_mode:
+            # Nutze konsistente Datumsangaben für Demo-VMDKs basierend auf dem Pfad
+            from datetime import datetime, timedelta
+            import hashlib
+            
+            # Hash des Pfads verwenden für Konsistenz
+            name_hash = int(hashlib.md5(vmdk_path.encode()).hexdigest(), 16) % 365
+            
+            # Datum zwischen 1-365 Tagen in der Vergangenheit
+            days_back = name_hash + 1
+            
+            # Für verwaiste VMDKs noch ältere Daten (1-2 Jahre) verwenden, damit sie als Problem erkennbar sind
+            if "orphaned" in vmdk_path.lower() or "old_vm" in vmdk_path.lower():
+                days_back = days_back + 365
+            
+            # Erzeuge das Datum
+            date_value = datetime.now() - timedelta(days=days_back)
+            date_str = date_value.strftime("%Y-%m-%d %H:%M:%S")
+            
+            self.logger.debug(f"Demo-Modus: VMDK Änderungsdatum für {vmdk_path}: {date_str} ({days_back} Tage alt)")
+            return date_str
+            
+        # Echtdaten: Verschiedene Attribute prüfen, die das Datum enthalten könnten
         date_attrs = ['modification', 'lastModified', 'createTime', 'changeTime', 'modificationTime']
         
         for attr in date_attrs:
@@ -620,10 +658,12 @@ class VSphereClient:
             except Exception as e:
                 self.logger.debug(f"Fehler beim Lesen des Datums (Attribut {attr}) für {vmdk_path}: {str(e)}")
         
-        # Wenn kein Datum gefunden wurde, aktuelles Datum als letzter Ausweg
+        # Wenn kein Datum gefunden wurde: Realistische Fallback-Strategie
         from datetime import datetime
-        fallback_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.logger.debug(f"Kein Änderungsdatum für VMDK {vmdk_path} gefunden, verwende aktuelles Datum als Fallback")
+        
+        # Standard-Fallback-Wert: 90 Tage alte VMDK (besser als das aktuelle Datum)
+        fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+        self.logger.debug(f"Kein Änderungsdatum für VMDK {vmdk_path} gefunden, verwende Fallback-Datum (90 Tage alt)")
         return fallback_date
         
     def _is_template_or_snapshot_vmdk(self, path):
