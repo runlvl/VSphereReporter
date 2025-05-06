@@ -1,0 +1,25 @@
+## VMware vSphere Reporter v29.1 Final Fixed v13 - Changelog
+
+Datum: 2025-05-06
+
+### Behobene Probleme
+- Navigation zeigt jetzt wieder grafische Elemente und Icons
+- Farbkodierung für VMware Tools Status funktioniert korrekt
+- Farbkodierung für Snapshot-Alter funktioniert korrekt
+- Verbesserte Darstellung von verwaisten VMDK-Dateien mit Farbkennzeichnung nach Größe
+
+### Technische Änderungen
+- Überarbeitung des Bootstrap-Layouts in der Navigation mit korrekten CSS-Klassen
+- Einsatz von Bootstrap Icons in der Navigation für bessere Benutzerführung
+- Verbesserung der CSS-Klassen für die farbliche Hervorhebung von kritischen Daten
+- Korrektur der Demo-Datenerzeugung für verwaiste VMDKs
+- Implementierung eines stabileren Klassifizierungssystems für die Datendarstellung
+
+### Weitere Verbesserungen
+- Optimierte Ansicht für Tablets und Mobilgeräte
+- Verbesserte visuelle Hierarchie in der Benutzeroberfläche
+- Konsistentere Darstellung in allen Ansichten
+
+### Technische Hinweise
+- Alle 3 Hauptdarstellungsfehler behoben
+- Import-Warnungen können ignoriert werden, sie haben keine Auswirkung auf die Funktionalität
