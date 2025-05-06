@@ -1,0 +1,120 @@
+Um verwaiste VMDK-Dateien (virtuelle Festplatten, die keiner virtuellen Maschine mehr zugeordnet sind) in einer vSphere-Umgebung mit einem selbstgeschriebenen Reporting-Tool zu identifizieren, ist eine systematische und zuverlässige Logik erforderlich. Hier ist ein Ansatz, der sowohl zielführend als auch robust ist:
+
+1. Grundlegende Logik
+Die Kernidee besteht darin, alle VMDK-Dateien im Speicher (Datastore) mit den VMDKs zu vergleichen, die aktiv von virtuellen Maschinen (VMs) verwendet werden. VMDKs, die nicht mit einer VM verknüpft sind, gelten als verwaist. Zusätzlich müssen einige Sonderfälle (wie Snapshots oder Templates) berücksichtigt werden, um False Positives zu vermeiden.
+
+2. Empfohlene Schritte und Logik
+a) Datensammlung
+Verbinden mit vCenter/ESXi: Nutze die vSphere API (z. B. VMware SDK für Python pyvmomi) oder PowerCLI, um eine Verbindung zum vCenter oder ESXi-Host herzustellen.
+Liste aller VMs erstellen: Sammle alle registrierten VMs inklusive ihrer Konfiguration (.vmx-Dateien und zugeordnete VMDKs).
+Liste aller VMDKs im Datastore: Durchsuche alle Datastores und sammle alle .vmdk-Dateien (z. B. mit DatastoreBrowser-API oder Get-Datastore in PowerCLI). Achte darauf, nur "flat" VMDKs oder Deskriptor-VMDKs zu berücksichtigen, keine -delta.vmdk (Snapshot-Dateien) direkt.
+Snapshots und Templates einbeziehen: Sammle Informationen über Snapshots (.vmsn, -delta.vmdk) und VM-Templates, da diese ebenfalls VMDKs referenzieren können.
+b) Vergleichslogik
+Erstelle eine Liste der verwendeten VMDKs:
+Iteriere über alle VMs und extrahiere die VMDK-Pfade aus der VM-Konfiguration (z. B. virtualDisk in der .vmx oder VirtualMachine.config.hardware.device).
+Berücksichtige Snapshots: Prüfe die Snapshot-Konfigurationen, um referenzierte VMDKs (z. B. -delta.vmdk) einzubeziehen.
+Berücksichtige Templates: Templates sind oft nicht als aktive VMs registriert, referenzieren aber VMDKs.
+Vergleiche mit Datastore-Inhalten:
+Erstelle eine Liste aller VMDKs im Datastore (z. B. [vmfs]/path/to/disk.vmdk).
+Entferne alle VMDKs aus der Liste, die in der Liste der verwendeten VMDKs (aus VMs, Snapshots, Templates) enthalten sind.
+Die verbleibenden VMDKs sind potenziell verwaist.
+c) Filterung und Validierung
+Ignoriere bestimmte Dateien:
+VMDKs, die Teil von vSphere-spezifischen Dateien sind (z. B. vSAN-Metadaten, vSphere Replication).
+Kleine Deskriptor-VMDKs ohne zugehörige -flat.vmdk (oft nur Metadaten).
+Prüfe Dateigröße und Alter:
+Verwaiste VMDKs sind oft älter oder haben eine ungewöhnliche Größe. Implementiere Filter, um z. B. VMDKs zu ignorieren, die kürzlich modifiziert wurden (könnten temporäre Dateien sein).
+Manuelle Validierung (optional):
+Logge potenzielle verwaiste VMDKs mit Metadaten (Pfad, Größe, letzte Änderung) und biete eine Möglichkeit zur manuellen Überprüfung, bevor sie gelöscht werden.
+d) Fehlerbehandlung und Robustheit
+Mehrere Datastores: Stelle sicher, dass das Skript alle Datastores in der Umgebung abdeckt.
+Berechtigungen: Überprüfe, ob das Skript ausreichende Lesezugriffe auf Datastores und VM-Konfigurationen hat.
+Parallelisierung: Bei großen Umgebungen kann die Datensammlung parallelisiert werden, um die Laufzeit zu reduzieren.
+Logging: Protokolliere alle Schritte und Funde, um Nachvollziehbarkeit zu gewährleisten.
+3. Technische Umsetzung (Beispiel in Python mit pyvmomi)
+python
+
+Kopieren
+from pyVim.connect import SmartConnect, Disconnect
+from pyVmomi import vim
+import ssl
+
+def get_all_vms(service_instance):
+    """Sammelt alle VMs und ihre VMDKs."""
+    vm_list = []
+    container = service_instance.content.viewManager.CreateContainerView(
+        service_instance.content.rootFolder, [vim.VirtualMachine], True)
+    for vm in container.view:
+        vmdks = []
+        for device in vm.config.hardware.device:
+            if isinstance(device, vim.vm.device.VirtualDisk):
+                vmdks.append(device.backing.fileName)
+        vm_list.append({"name": vm.name, "vmdks": vmdks})
+    return vm_list
+
+def get_all_vmdks_in_datastore(service_instance):
+    """Sammelt alle VMDKs aus allen Datastores."""
+    vmdk_list = []
+    for ds in service_instance.content.rootFolder.childEntity[0].datastore:
+        browser = ds.browser
+        search_spec = vim.host.DatastoreBrowser.SearchSpec()
+        search_spec.matchPattern = ["*.vmdk"]
+        task = browser.SearchDatastoreSubFolders_Task(ds.info.name, search_spec)
+        while task.info.state == vim.TaskInfo.State.running:
+            pass
+        for result in task.info.result:
+            for file in result.file:
+                if not file.path.endswith("-flat.vmdk") and not file.path.endswith("-delta.vmdk"):
+                    vmdk_list.append(f"[{ds.info.name}] {result.folderPath}{file.path}")
+    return vmdk_list
+
+def find_orphaned_vmdks():
+    """Vergleicht VMDKs und findet Verwaiste."""
+    context = ssl._create_unverified_context()
+    si = SmartConnect(host="vcenter-host", user="user", pwd="password", sslContext=context)
+    
+    used_vmdks = set()
+    for vm in get_all_vms(si):
+        used_vmdks.update(vm["vmdks"])
+    
+    all_vmdks = set(get_all_vmdks_in_datastore(si))
+    orphaned_vmdks = all_vmdks - used_vmdks
+    
+    for vmdk in orphaned_vmdks:
+        print(f"Verwaiste VMDK: {vmdk}")
+    
+    Disconnect(si)
+
+if __name__ == "__main__":
+    find_orphaned_vmdks()
+4. Alternative mit PowerCLI
+Falls PowerCLI bevorzugt wird, kann ein ähnlicher Ansatz verwendet werden:
+
+powershell
+
+Kopieren
+Connect-VIServer -Server "vcenter-host" -User "user" -Password "password"
+
+$vms = Get-VM
+$usedVmdks = @()
+foreach ($vm in $vms) {
+    $usedVmdks += $vm | Get-HardDisk | Select-Object -ExpandProperty Filename
+}
+
+$allVmdks = Get-Datastore | Get-VMDK | Where-Object { $_.Name -like "*.vmdk" -and $_.Name -notlike "*-flat.vmdk" -and $_.Name -notlike "*-delta.vmdk" } | Select-Object -ExpandProperty FullName
+$orphanedVmdks = $allVmdks | Where-Object { $_ -notin $usedVmdks }
+
+$orphanedVmdks | ForEach-Object { Write-Output "Verwaiste VMDK: $_" }
+
+Disconnect-VIServer -Confirm:$false
+5. Best Practices für Zuverlässigkeit
+Regelmäßige Ausführung: Plane das Skript als regelmäßigen Task, um verwaiste Dateien frühzeitig zu erkennen.
+Berücksichtige vSphere-Features: Stelle sicher, dass Features wie vSAN, vSphere Replication oder DRS die Ergebnisse nicht verfälschen.
+Sicherheitskopien: Bevor VMDKs gelöscht werden, erstelle eine Sicherung oder verschiebe sie in einen Quarantäne-Ordner.
+Testumgebung: Teste das Skript in einer nicht-produktiven Umgebung, um unerwartete Löschungen zu vermeiden.
+6. Zusätzliche Überlegungen
+Performance: Bei großen Umgebungen mit vielen VMs/Datastores kann die Laufzeit lang sein. Optimiere durch Zwischenspeicherung oder Filterung irrelevanter Datastores.
+False Positives vermeiden: VMDKs von unregistrierten VMs (z. B. nach einem Crash) oder Drittanbieter-Tools (z. B. Backup-Software) können fälschlicherweise als verwaist erkannt werden. Implementiere zusätzliche Prüfungen, z. B. nach .vmx-Dateien im gleichen Ordner.
+Reporting: Erstelle ein detailliertes Log oder eine CSV-Datei mit Funden (Pfad, Größe, letzte Änderung), um die Nachverfolgung zu erleichtern.
+Fazit
+Die zuverlässigste Methode besteht darin, alle VMDKs im Datastore mit den VMDKs zu vergleichen, die von VMs, Snapshots und Templates verwendet werden, und dabei Sonderfälle wie -delta.vmdk oder Metadaten-Dateien zu berücksichtigen. Die Verwendung der vSphere API (via pyvmomi oder PowerCLI) ist robust und flexibel. Validierungsschritte und Logging sind entscheidend, um Fehler zu vermeiden. Teste das Skript gründlich, bevor es in der Produktion eingesetzt wird.
