@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-VMware vSphere Reporter v19 - Starter-Skript
+VMware vSphere Reporter v19.0 - Produktionsversion
 
 Dieses Skript startet den Web-Server und öffnet ggf. einen Browser.
+© 2025 Bechtle GmbH - Alle Rechte vorbehalten
 """
 
 import os
