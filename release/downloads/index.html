@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VMware vSphere Reporter - Downloads</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <style>
         :root {
             --bechtle-dark-blue: #00355e;
@@ -13,238 +14,227 @@
             --bechtle-light-gray: #f3f3f3;
             --bechtle-dark-gray: #5a5a5a;
         }
-        
         body {
             background-color: var(--bechtle-light-gray);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             color: var(--bechtle-dark-gray);
         }
-        
-        .navbar {
-            background-color: var(--bechtle-dark-blue);
-        }
-        
         .header {
             background-color: var(--bechtle-dark-blue);
             color: white;
             padding: 2rem 0;
             margin-bottom: 2rem;
         }
-        
         .card {
             border: none;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             margin-bottom: 1.5rem;
         }
-        
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        
         .card-header {
             background-color: var(--bechtle-dark-blue);
             color: white;
-            font-weight: bold;
         }
-        
+        .btn-primary {
+            background-color: var(--bechtle-dark-blue);
+            border-color: var(--bechtle-dark-blue);
+        }
+        .btn-primary:hover {
+            background-color: #00294a;
+            border-color: #00294a;
+        }
         .footer {
             background-color: var(--bechtle-dark-blue);
             color: white;
-            padding: 1.5rem 0;
+            padding: 2rem 0;
             margin-top: 2rem;
         }
-        
-        .btn-primary {
+        .version-badge {
             background-color: var(--bechtle-orange);
-            border-color: var(--bechtle-orange);
+            color: white;
         }
-        
-        .btn-primary:hover {
-            background-color: #c05e10;
-            border-color: #c05e10;
-        }
-        
-        .btn-success {
+        .latest-badge {
             background-color: var(--bechtle-green);
-            border-color: var(--bechtle-green);
-        }
-        
-        .btn-success:hover {
-            background-color: #1e8e59;
-            border-color: #1e8e59;
-        }
-        
-        .card-danger .card-header {
-            background-color: #dc3545;
-        }
-        
-        .card-primary .card-header {
-            background-color: #0d6efd;
-        }
-        
-        .card-info .card-header {
-            background-color: #0dcaf0;
+            color: white;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="header">
         <div class="container">
-            <a class="navbar-brand" href="#">VMware vSphere Reporter</a>
-        </div>
-    </nav>
-
-    <header class="header text-center">
-        <div class="container">
-            <h1>VMware vSphere Reporter</h1>
-            <p class="lead">Download-Portal für VMware vSphere Reporter Tools</p>
-        </div>
-    </header>
-
-    <main class="container">
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="alert alert-info">
-                    <h4 class="alert-heading">Information zur Version v29.0</h4>
-                    <p>Während der Entwicklung der Version v29.0 wurden verschiedene Debugging-Versionen erstellt, um spezifische Probleme zu beheben. Wählen Sie bitte die Version entsprechend Ihres Anwendungsfalls aus.</p>
+            <div class="row align-items-center">
+                <div class="col-md-2 text-center text-md-start">
+                    <img src="logo_white.png" alt="Logo" height="50">
+                </div>
+                <div class="col-md-10">
+                    <h1>VMware vSphere Reporter</h1>
+                    <p class="mb-0">Download-Portal für aktuelle und ältere Versionen</p>
                 </div>
             </div>
         </div>
-        
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <div class="card card-info">
-                    <div class="card-header bg-info text-dark">NEU: VMware vSphere Reporter v29.0 (Build 18)</div>
-                    <div class="card-body">
-                        <h5 class="card-title">MAXIMALE DIAGNOSE - Zeigt rohe API-Daten an</h5>
-                        <p class="card-text">Diese grundlegende Diagnoseversion ist entwickelt, um technische Probleme in der Anwendung zu umgehen. Sie bietet:</p>
-                        <ul class="mb-2">
-                            <li>Direkter Zugriff auf <strong>unverarbeitete API-Daten</strong> ohne Fehleranfällige Verarbeitung</li>
-                            <li>Geradliniger, vereinfachter Login-Prozess</li>
-                            <li>Detaillierte Fehlerprotokolle für jeden API-Aufruf</li>
-                            <li>Umgeht bekannte Probleme in Build 16/17</li>
-                        </ul>
-                        <div class="alert alert-info">
-                            <strong>Empfohlen für Fehlerfälle!</strong> Diese Version sollte auch dann funktionieren, wenn die anderen Versionen komplett fehlschlagen. Ideal für Grundlagendiagnose.
-                        </div>
-                        <ul class="list-group mb-3">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Veröffentlicht am
-                                <span class="badge bg-primary rounded-pill">06.05.2025</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Version
-                                <span class="badge bg-info rounded-pill">v29.0 Build 18</span>
-                            </li>
-                        </ul>
-                        <a href="vsphere-reporter-v29.0-web-final-fixed-v18.zip" class="btn btn-info text-white">Herunterladen</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <div class="card card-primary">
-                    <div class="card-header">VMware vSphere Reporter v29.0 (Build 17)</div>
-                    <div class="card-body">
-                        <h5 class="card-title">ALTERNATIVE Implementierung für VMDK-Erkennung</h5>
-                        <p class="card-text">Diese Version verwendet einen <strong>völlig anderen Ansatz</strong> zur Erkennung von VMDK-Dateien. Sie sammelt zuerst alle registrierten VMDKs direkt von VM-Konfigurationen und durchsucht dann alle Datastores separat mit einer SubFolder-Suche. Dadurch sollten mehr VMDKs gefunden werden.</p>
-                        <div class="alert alert-info">
-                            <strong>Empfohlen für Problemlösung!</strong> Diese Version verwendet eine andere API (SearchDatastoreSubFolders_Task) für eine umfassendere Suche in allen Unterverzeichnissen.
-                        </div>
-                        <ul class="list-group mb-3">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Veröffentlicht am
-                                <span class="badge bg-primary rounded-pill">06.05.2025</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Version
-                                <span class="badge bg-primary rounded-pill">v29.0 Build 17</span>
-                            </li>
-                        </ul>
-                        <a href="vsphere-reporter-v29.0-web-final-fixed-v17.zip" class="btn btn-primary">Herunterladen</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    </div>
 
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <div class="card card-danger">
-                    <div class="card-header">VMware vSphere Reporter v29.0 (Build 16)</div>
-                    <div class="card-body">
-                        <h5 class="card-title">EXTREME Debug-Version für VMDK-Probleme</h5>
-                        <p class="card-text">Diese spezielle Version enthält ein <strong>sehr ausführliches Logging</strong> auf DEBUG-Level und speichert Stack-Traces für alle auftretenden Fehler. Verwenden Sie diese Version, wenn mit der Debug-Version v15 keine VMDKs angezeigt werden, um die Fehlerursache zu identifizieren.</p>
-                        <div class="alert alert-danger">
-                            <strong>Nur für Troubleshooting!</strong> Diese Version erzeugt sehr große Log-Dateien und sollte nur zur Fehlerdiagnose verwendet werden.
-                        </div>
-                        <ul class="list-group mb-3">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Veröffentlicht am
-                                <span class="badge bg-primary rounded-pill">06.05.2025</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Version
-                                <span class="badge bg-danger rounded-pill">v29.0 Build 16</span>
-                            </li>
-                        </ul>
-                        <a href="vsphere-reporter-v29.0-web-final-fixed-v16.zip" class="btn btn-danger">Herunterladen</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+    <div class="container">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-lg-8">
                 <div class="card">
-                    <div class="card-header">VMware vSphere Reporter v29.0 (Build 15)</div>
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-download me-2"></i>Verfügbare Downloads</h5>
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title">Debug-Version für VMDK-Untersuchung</h5>
-                        <p class="card-text">Diese Version listet <strong>alle</strong> VMDK-Dateien ohne Filterung auf. Dadurch können Sie alle vorhandenen VMDKs in Ihrem Datastore für die Fehlersuche analysieren.</p>
-                        <ul class="list-group mb-3">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Veröffentlicht am
-                                <span class="badge bg-primary rounded-pill">06.05.2025</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Version
-                                <span class="badge bg-success rounded-pill">v29.0 Build 15</span>
-                            </li>
-                        </ul>
-                        <a href="vsphere-reporter-v29.0-web-final-fixed-v15.zip" class="btn btn-primary">Herunterladen</a>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Version</th>
+                                        <th>Datum</th>
+                                        <th>Plattform</th>
+                                        <th>Beschreibung</th>
+                                        <th>Download</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <span class="badge latest-badge">v19.0</span>
+                                        </td>
+                                        <td>06.05.2025</td>
+                                        <td>Web (Windows/Linux)</td>
+                                        <td>Verbesserte Benutzeroberfläche mit robuster VMDK-Erkennung</td>
+                                        <td>
+                                            <a href="v19/vsphere-reporter-v29.0-web-final-fixed-v19.zip" class="btn btn-sm btn-primary">
+                                                <i class="bi bi-download me-1"></i>ZIP
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span class="badge version-badge">v18.0</span>
+                                        </td>
+                                        <td>01.05.2025</td>
+                                        <td>Web (Windows/Linux)</td>
+                                        <td>Verbesserte VMDK-Erkennung mit Diagnose-Funktionen</td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-primary">
+                                                <i class="bi bi-download me-1"></i>ZIP
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span class="badge version-badge">v17.0</span>
+                                        </td>
+                                        <td>25.04.2025</td>
+                                        <td>Web (Windows/Linux)</td>
+                                        <td>Alternatives Verfahren für VMDK-Erkennung mit SearchDatastoreSubFolders_Task</td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-primary">
+                                                <i class="bi bi-download me-1"></i>ZIP
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span class="badge version-badge">v16.0</span>
+                                        </td>
+                                        <td>20.04.2025</td>
+                                        <td>Web (Windows/Linux)</td>
+                                        <td>Verbesserte Fehlertoleranz und Stabilität</td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-primary">
+                                                <i class="bi bi-download me-1"></i>ZIP
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">VMware vSphere Reporter v29.0 (Build 14)</div>
-                    <div class="card-body">
-                        <h5 class="card-title">Verbesserte Bootstrap-Tabellen</h5>
-                        <p class="card-text">Diese Version enthält Verbesserungen bei der Farbkodierung von Tabellen mit Bootstrap-Klassen und einen verbesserten Algorithmus zur Erkennung verwaister VMDK-Dateien.</p>
-                        <ul class="list-group mb-3">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Veröffentlicht am
-                                <span class="badge bg-primary rounded-pill">05.05.2025</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Version
-                                <span class="badge bg-success rounded-pill">v29.0 Build 14</span>
-                            </li>
-                        </ul>
-                        <a href="vsphere-reporter-v29.0-web-final-fixed-v14.zip" class="btn btn-primary">Herunterladen</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
 
-    <footer class="footer text-center">
-        <div class="container">
-            <p>&copy; 2025 VMware vSphere Reporter</p>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-card-list me-2"></i>Änderungsprotokoll</h5>
+                    </div>
+                    <div class="card-body">
+                        <h5>Version 19.0 (06.05.2025)</h5>
+                        <p>Diese Version baut auf dem erfolgreichen Ansatz von v18 auf und bietet eine verbesserte Benutzeroberfläche mit robuster VMDK-Erkennung.</p>
+                        
+                        <h6>Neue Funktionen:</h6>
+                        <ul>
+                            <li>Vollständig überarbeitete Weboberfläche mit Bootstrap 5</li>
+                            <li>Responsives Design für Desktop und mobile Geräte</li>
+                            <li>Verbesserte Darstellung von VMware Tools Status</li>
+                            <li>Erweiterte Snapshot-Altersanalyse mit Farbkodierung</li>
+                            <li>Zuverlässigere Erkennung verwaister VMDK-Dateien</li>
+                        </ul>
+                        
+                        <a href="CHANGELOG-v19.txt" class="btn btn-outline-primary">
+                            <i class="bi bi-file-text me-1"></i>Vollständiges Änderungsprotokoll
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Installationshinweise</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6>Systemvoraussetzungen</h6>
+                        <ul>
+                            <li>Python 3.8 oder höher</li>
+                            <li>Internetverbindung für die Installation der Abhängigkeiten</li>
+                            <li>Zugriff auf einen VMware vCenter-Server (nicht erforderlich für Demo-Modus)</li>
+                        </ul>
+
+                        <h6>Installation unter Windows</h6>
+                        <ol>
+                            <li>Entpacken Sie das ZIP-Archiv</li>
+                            <li>Führen Sie <code>setup.bat</code> aus</li>
+                            <li>Starten Sie die Anwendung mit <code>run.bat</code></li>
+                        </ol>
+
+                        <h6>Installation unter Linux</h6>
+                        <ol>
+                            <li>Entpacken Sie das ZIP-Archiv</li>
+                            <li>Führen Sie <code>chmod +x setup.sh run.sh</code> aus</li>
+                            <li>Führen Sie <code>./setup.sh</code> aus</li>
+                            <li>Starten Sie die Anwendung mit <code>./run.sh</code></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-question-circle me-2"></i>Hilfe & Support</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Bei Fragen oder Problemen stehen Ihnen folgende Ressourcen zur Verfügung:</p>
+                        <ul>
+                            <li>Dokumentation im <code>README.md</code> der jeweiligen Version</li>
+                            <li>Fehlerprotokolle im Verzeichnis <code>logs</code></li>
+                            <li>Kontakt zum Bechtle-Support</li>
+                        </ul>
+                        <p>Bitte geben Sie bei Support-Anfragen immer die Versionsnummer und die vollständigen Fehlerprotokolle an.</p>
+                    </div>
+                </div>
+            </div>
         </div>
-    </footer>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <img src="logo_white.png" alt="Logo" height="40">
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="mb-0">© 2025 VMware vSphere Reporter | Alle Rechte vorbehalten</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
