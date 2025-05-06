@@ -5,41 +5,28 @@ setlocal enabledelayedexpansion
 echo VMware vSphere Reporter v19.1 - Setup wird ausgefuehrt...
 echo =====================================================================
 
-:: Fortschrittsbalken-Funktionen
-:drawProgressBar
-set /a filled=%1
-set /a total=%2
+:: Fortschrittsbalken-Funktion
+:DisplayProgress
+set step=%1
+set total=%2
+set progress=0
+set /a progress=(%step%*100)/%total%
+set /a numChars=%progress%/5
+
 set bar=
-set /a empty=total-filled
+for /L %%i in (1,1,%numChars%) do set bar=!bar!#
+for /L %%i in (%numChars%,1,20) do set bar=!bar!-
 
-:: Fortschritts-Prozentsatz berechnen
-set /a percent=(filled*100)/total
+echo [!bar!] %progress%%%
+goto :eof
 
-:: Fortschrittsbalken anzeigen mit Prozentsatz
-call :printBar %filled% %total% %percent%
-exit /b
+echo.
+echo Fortschrittsanzeige:
+echo [--------------------] 0%%
 
-:printBar
-set /a barSize=50
-set /a filledSize=(%1*barSize)/%2
-set /a emptySize=barSize-filledSize
-
-set progressBar=[
-for /l %%i in (1,1,%filledSize%) do set progressBar=!progressBar!#
-for /l %%i in (1,1,%emptySize%) do set progressBar=!progressBar!-
-set progressBar=!progressBar!] !3!%%
-
-echo !progressBar!
-exit /b
-
-:: Anfangswerte setzen
-set totalSteps=7
-set currentStep=0
-
-:: Pruefen, ob Python installiert ist
-set /a currentStep+=1
-echo [Schritt !currentStep!/%totalSteps%] Pruefe Python-Installation...
-call :drawProgressBar !currentStep! %totalSteps%
+:: Schritt 1: Python-Installation pruefen
+call :DisplayProgress 1 7
+echo [Schritt 1/7] Pruefe Python-Installation...
 
 python --version > nul 2>&1
 if %errorlevel% neq 0 (
@@ -49,10 +36,11 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-:: Ueberpruefen, ob pip installiert ist
-set /a currentStep+=1
-echo [Schritt !currentStep!/%totalSteps%] Pruefe pip-Installation...
-call :drawProgressBar !currentStep! %totalSteps%
+echo [OK] Python ist installiert.
+
+:: Schritt 2: Pip-Installation pruefen
+call :DisplayProgress 2 7
+echo [Schritt 2/7] Pruefe pip-Installation...
 
 python -m pip --version > nul 2>&1
 if %errorlevel% neq 0 (
@@ -65,10 +53,11 @@ if %errorlevel% neq 0 (
     )
 )
 
-:: Virtuelle Umgebung automatisch erstellen (ohne Abfrage)
-set /a currentStep+=1
-echo [Schritt !currentStep!/%totalSteps%] Erstelle virtuelle Python-Umgebung...
-call :drawProgressBar !currentStep! %totalSteps%
+echo [OK] Pip ist installiert.
+
+:: Schritt 3: Virtuelle Umgebung erstellen
+call :DisplayProgress 3 7
+echo [Schritt 3/7] Erstelle virtuelle Python-Umgebung...
 
 python -m venv venv > nul 2>&1
 if %errorlevel% neq 0 (
@@ -77,40 +66,46 @@ if %errorlevel% neq 0 (
     :: Virtuelle Umgebung aktivieren
     if exist "venv\Scripts\activate.bat" (
         call venv\Scripts\activate.bat > nul 2>&1
+        echo [OK] Virtuelle Umgebung erstellt und aktiviert.
     )
 )
 
-:: Upgrade pip
-set /a currentStep+=1
-echo [Schritt !currentStep!/%totalSteps%] Aktualisiere pip...
-call :drawProgressBar !currentStep! %totalSteps%
+:: Schritt 4: Pip aktualisieren
+call :DisplayProgress 4 7
+echo [Schritt 4/7] Aktualisiere pip...
 
 python -m pip install --upgrade pip --quiet --disable-pip-version-check
+echo [OK] Pip aktualisiert.
 
-:: Installiere Abhaengigkeiten (in Gruppen fuer besseren Fortschrittsbalken)
-set /a currentStep+=1
-echo [Schritt !currentStep!/%totalSteps%] Installiere pyVmomi und Flask...
-call :drawProgressBar !currentStep! %totalSteps%
+:: Schritt 5: PyVmomi und Flask installieren
+call :DisplayProgress 5 7
+echo [Schritt 5/7] Installiere pyVmomi und Flask...
 
 python -m pip install --quiet --disable-pip-version-check pyVmomi>=7.0.0 Flask>=2.0.0 Flask-WTF>=1.0.0
+echo [OK] pyVmomi und Flask installiert.
 
-set /a currentStep+=1
-echo [Schritt !currentStep!/%totalSteps%] Installiere reportlab und python-docx...
-call :drawProgressBar !currentStep! %totalSteps%
+:: Schritt 6: Reportlab und python-docx installieren
+call :DisplayProgress 6 7
+echo [Schritt 6/7] Installiere reportlab und python-docx...
 
 python -m pip install --quiet --disable-pip-version-check reportlab>=3.6.0 python-docx>=0.8.11
+echo [OK] reportlab und python-docx installiert.
 
-set /a currentStep+=1
-echo [Schritt !currentStep!/%totalSteps%] Installiere Jinja2 und humanize...
-call :drawProgressBar !currentStep! %totalSteps%
+:: Schritt 7: Jinja2 und humanize installieren
+call :DisplayProgress 7 7
+echo [Schritt 7/7] Installiere Jinja2 und humanize...
 
 python -m pip install --quiet --disable-pip-version-check Jinja2>=3.0.0 humanize>=3.0.0
+echo [OK] Jinja2 und humanize installiert.
 
 if %errorlevel% neq 0 (
     echo [FEHLER] Abhaengigkeiten konnten nicht installiert werden.
     pause
     exit /b 1
 )
+
+echo [####################] 100%%
+echo [Installation abgeschlossen] Alle Abhaengigkeiten wurden erfolgreich installiert.
 
 :: Erstelle die optimierte run.bat-Datei (direkt mit app.py, nicht run.py)
 echo @echo off> run.bat

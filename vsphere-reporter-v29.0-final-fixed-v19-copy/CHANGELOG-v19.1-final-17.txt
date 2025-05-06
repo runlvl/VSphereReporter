@@ -7,3 +7,4 @@ VMware vSphere Reporter v19.1 - Update 16
 - Verbesserte Darstellung der Installationsschritte
 - Bessere Fehlerbehandlung bei VMDK-Metadaten
 - Windows-Codierungsproblem in setup.bat behoben (Umlaute entfernt)
+- Verbesserte Fortschrittsanzeige in setup.bat mit ASCII-Balken
