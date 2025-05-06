@@ -1,0 +1,123 @@
+:root {
+    --bechtle-dark-blue: #00355e;
+    --bechtle-orange: #da6f1e;
+    --bechtle-green: #23a96a;
+    --bechtle-light-gray: #f3f3f3;
+    --bechtle-dark-gray: #5a5a5a;
+}
+
+/* Bootstrap Überschreibungen */
+.bg-primary {
+    background-color: var(--bechtle-dark-blue) !important;
+}
+
+.bg-success {
+    background-color: var(--bechtle-green) !important;
+}
+
+.text-primary {
+    color: var(--bechtle-dark-blue) !important;
+}
+
+.text-success {
+    color: var(--bechtle-green) !important;
+}
+
+.btn-primary {
+    background-color: var(--bechtle-orange);
+    border-color: var(--bechtle-orange);
+}
+
+.btn-primary:hover, 
+.btn-primary:active, 
+.btn-primary:focus {
+    background-color: #c05e10 !important;
+    border-color: #c05e10 !important;
+}
+
+.btn-success {
+    background-color: var(--bechtle-green);
+    border-color: var(--bechtle-green);
+}
+
+.btn-success:hover, 
+.btn-success:active, 
+.btn-success:focus {
+    background-color: #1e8e59 !important;
+    border-color: #1e8e59 !important;
+}
+
+/* Layout Anpassungen */
+body {
+    background-color: var(--bechtle-light-gray);
+    color: var(--bechtle-dark-gray);
+}
+
+.navbar-brand {
+    font-weight: 600;
+}
+
+.sidebar {
+    background-color: #f8f9fa;
+    border-right: 1px solid #dee2e6;
+    position: fixed;
+    top: 56px;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: var(--bechtle-dark-gray);
+    padding: 0.75rem 1rem;
+}
+
+.sidebar .nav-link:hover {
+    color: var(--bechtle-dark-blue);
+}
+
+.sidebar .nav-link.active {
+    color: var(--bechtle-orange);
+}
+
+.sidebar-heading {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: #6c757d;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+}
+
+/* Tabellen und Cards */
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 53, 94, 0.05);
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: var(--bechtle-dark-blue);
+    color: white;
+    font-weight: 500;
+    border-bottom: none;
+}
+
+/* Für die Rohdaten-Anzeige */
+pre {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 300px;
+    overflow-y: auto;
+}
