@@ -198,14 +198,18 @@ def orphaned_vmdks():
     raw_data = vsphere_client.collect_all_vmdk_files()
     
     # Verarbeite die Daten je nach Demo-Modus oder Echtdaten
+    # Stellen sicher, dass wir auch bei Echtzeitdaten die richtige Struktur bekommen
     if isinstance(raw_data, dict):
-        if 'demo' in raw_data:
-            # Demo-Daten mit direktem "orphaned_vmdks" Schlüssel
-            orphaned_vmdks = raw_data.get('orphaned_vmdks', [])
-        else:
-            # Standardformat mit "orphaned_vmdks" Schlüssel
-            orphaned_vmdks = raw_data.get('orphaned_vmdks', [])
+        # Raw_data ist ein Dictionary, wir extrahieren orphaned_vmdks
+        orphaned_vmdks = raw_data.get('orphaned_vmdks', [])
+        app.logger.info(f"Anzahl gefundener verwaister VMDKs: {len(orphaned_vmdks)}")
+        
+        # Debug-Log der ersten VMDK falls vorhanden
+        if orphaned_vmdks and len(orphaned_vmdks) > 0:
+            app.logger.info(f"Beispiel-VMDK: {orphaned_vmdks[0]}")
     else:
+        # Fallback für unerwartete Datentypen
+        app.logger.warning(f"Unerwarteter Datentyp für VMDK-Daten: {type(raw_data)}")
         orphaned_vmdks = []
     
     return render_template(
