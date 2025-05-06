@@ -5,236 +5,202 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VMware vSphere Reporter - Downloads</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <style>
         :root {
-            --bechtle-dark-blue: #00355e;
+            --bechtle-blue: #00355e;
             --bechtle-orange: #da6f1e;
             --bechtle-green: #23a96a;
             --bechtle-light-gray: #f3f3f3;
             --bechtle-dark-gray: #5a5a5a;
         }
         body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bechtle-light-gray);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            color: var(--bechtle-dark-gray);
         }
-        .header {
-            background-color: var(--bechtle-dark-blue);
-            color: white;
-            padding: 2rem 0;
-            margin-bottom: 2rem;
+        .navbar {
+            background-color: var(--bechtle-blue) !important;
         }
-        .card {
-            border: none;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            margin-bottom: 1.5rem;
+        .bg-primary {
+            background-color: var(--bechtle-blue) !important;
         }
-        .card-header {
-            background-color: var(--bechtle-dark-blue);
-            color: white;
+        .bg-success {
+            background-color: var(--bechtle-green) !important;
+        }
+        .bg-warning {
+            background-color: var(--bechtle-orange) !important;
+        }
+        .text-primary {
+            color: var(--bechtle-blue) !important;
         }
         .btn-primary {
-            background-color: var(--bechtle-dark-blue);
-            border-color: var(--bechtle-dark-blue);
+            background-color: var(--bechtle-blue);
+            border-color: var(--bechtle-blue);
         }
-        .btn-primary:hover {
-            background-color: #00294a;
-            border-color: #00294a;
+        .btn-success {
+            background-color: var(--bechtle-green);
+            border-color: var(--bechtle-green);
+        }
+        .btn-warning {
+            background-color: var(--bechtle-orange);
+            border-color: var(--bechtle-orange);
+            color: white;
+        }
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: var(--bechtle-blue);
+            color: white;
+            font-weight: bold;
         }
         .footer {
-            background-color: var(--bechtle-dark-blue);
+            background-color: var(--bechtle-blue);
             color: white;
-            padding: 2rem 0;
-            margin-top: 2rem;
+            padding: 20px 0;
+            margin-top: 50px;
         }
         .version-badge {
-            background-color: var(--bechtle-orange);
-            color: white;
+            font-size: 14px;
         }
-        .latest-badge {
-            background-color: var(--bechtle-green);
-            color: white;
+        .header-logo {
+            height: 30px;
+            width: auto;
         }
     </style>
 </head>
 <body>
-    <div class="header">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-2 text-center text-md-start">
-                    <img src="logo_white.png" alt="Logo" height="50">
-                </div>
-                <div class="col-md-10">
-                    <h1>VMware vSphere Reporter</h1>
-                    <p class="mb-0">Download-Portal für aktuelle und ältere Versionen</p>
+            <a class="navbar-brand" href="#">
+                <img src="logo_white.png" alt="Bechtle Logo" class="header-logo me-2">
+                VMware vSphere Reporter
+            </a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <h4>Download-Bereich</h4>
+                    <p>Hier finden Sie alle verfügbaren Versionen des VMware vSphere Reporters. Wählen Sie die für Ihre Umgebung passende Version.</p>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="container">
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="bi bi-download me-2"></i>Verfügbare Downloads</h5>
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>VMware vSphere Reporter v19.0</span>
+                        <span class="badge bg-success version-badge">Aktuell</span>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Version</th>
-                                        <th>Datum</th>
-                                        <th>Plattform</th>
-                                        <th>Beschreibung</th>
-                                        <th>Download</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <span class="badge latest-badge">v19.0</span>
-                                        </td>
-                                        <td>06.05.2025</td>
-                                        <td>Web (Windows/Linux)</td>
-                                        <td>Verbesserte Benutzeroberfläche mit robuster VMDK-Erkennung</td>
-                                        <td>
-                                            <a href="v19/vsphere-reporter-v29.0-web-final-fixed-v19.zip" class="btn btn-sm btn-primary">
-                                                <i class="bi bi-download me-1"></i>ZIP
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <span class="badge version-badge">v18.0</span>
-                                        </td>
-                                        <td>01.05.2025</td>
-                                        <td>Web (Windows/Linux)</td>
-                                        <td>Verbesserte VMDK-Erkennung mit Diagnose-Funktionen</td>
-                                        <td>
-                                            <a href="#" class="btn btn-sm btn-primary">
-                                                <i class="bi bi-download me-1"></i>ZIP
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <span class="badge version-badge">v17.0</span>
-                                        </td>
-                                        <td>25.04.2025</td>
-                                        <td>Web (Windows/Linux)</td>
-                                        <td>Alternatives Verfahren für VMDK-Erkennung mit SearchDatastoreSubFolders_Task</td>
-                                        <td>
-                                            <a href="#" class="btn btn-sm btn-primary">
-                                                <i class="bi bi-download me-1"></i>ZIP
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <span class="badge version-badge">v16.0</span>
-                                        </td>
-                                        <td>20.04.2025</td>
-                                        <td>Web (Windows/Linux)</td>
-                                        <td>Verbesserte Fehlertoleranz und Stabilität</td>
-                                        <td>
-                                            <a href="#" class="btn btn-sm btn-primary">
-                                                <i class="bi bi-download me-1"></i>ZIP
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <h5 class="card-title">Version 19.0 (FIXED)</h5>
+                        <p class="card-text">Verbesserte Version mit korrigierter Datenverarbeitung und behobenem Logo.</p>
+                        <p><strong>Funktionen:</strong></p>
+                        <ul>
+                            <li>Korrigierte Datenverarbeitung für VMware Tools, Snapshots und VMDKs</li>
+                            <li>Benutzerfreundliche Weboberfläche mit Bootstrap 5</li>
+                            <li>Optimierte Erkennung verwaister VMDKs</li>
+                            <li>Verbesserte Darstellung des Logos</li>
+                        </ul>
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="v19/fixed/vsphere-reporter-v29.0-web-final-fixed-v19-fixed.zip" class="btn btn-primary">Download (.zip)</a>
+                            <a href="v19/fixed/CHANGELOG-v19-fixed.txt" class="btn btn-outline-secondary">Änderungsprotokoll</a>
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="bi bi-card-list me-2"></i>Änderungsprotokoll</h5>
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>VMware vSphere Reporter v19.0</span>
+                        <span class="badge bg-warning version-badge">Veraltet</span>
                     </div>
                     <div class="card-body">
-                        <h5>Version 19.0 (06.05.2025)</h5>
-                        <p>Diese Version baut auf dem erfolgreichen Ansatz von v18 auf und bietet eine verbesserte Benutzeroberfläche mit robuster VMDK-Erkennung.</p>
-                        
-                        <h6>Neue Funktionen:</h6>
+                        <h5 class="card-title">Version 19.0 (Original)</h5>
+                        <p class="card-text">Ursprüngliche Version mit Bootstrap 5 und überarbeiteter Benutzeroberfläche.</p>
+                        <p><strong>Funktionen:</strong></p>
                         <ul>
-                            <li>Vollständig überarbeitete Weboberfläche mit Bootstrap 5</li>
-                            <li>Responsives Design für Desktop und mobile Geräte</li>
-                            <li>Verbesserte Darstellung von VMware Tools Status</li>
-                            <li>Erweiterte Snapshot-Altersanalyse mit Farbkodierung</li>
-                            <li>Zuverlässigere Erkennung verwaister VMDK-Dateien</li>
+                            <li>Grundlegende VMware Tools-Statuserkennung</li>
+                            <li>Snapshot-Altersberichte</li>
+                            <li>VMDK-Analysefunktionen</li>
+                            <li>Erweiterte Fehlerbehandlung</li>
                         </ul>
-                        
-                        <a href="CHANGELOG-v19.txt" class="btn btn-outline-primary">
-                            <i class="bi bi-file-text me-1"></i>Vollständiges Änderungsprotokoll
-                        </a>
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="v19/vsphere-reporter-v29.0-web-final-fixed-v19.zip" class="btn btn-outline-primary">Download (.zip)</a>
+                            <a href="#" class="btn btn-outline-secondary disabled">Änderungsprotokoll</a>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col-lg-4">
+        <div class="row mt-4">
+            <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Installationshinweise</h5>
-                    </div>
+                    <div class="card-header">Systemanforderungen</div>
                     <div class="card-body">
-                        <h6>Systemvoraussetzungen</h6>
-                        <ul>
-                            <li>Python 3.8 oder höher</li>
-                            <li>Internetverbindung für die Installation der Abhängigkeiten</li>
-                            <li>Zugriff auf einen VMware vCenter-Server (nicht erforderlich für Demo-Modus)</li>
-                        </ul>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Mindestanforderungen</h5>
+                                <ul>
+                                    <li>Python 3.8 oder höher</li>
+                                    <li>2 GB RAM</li>
+                                    <li>500 MB freier Festplattenspeicher</li>
+                                    <li>Netzwerkverbindung zum vCenter Server</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Unterstützte Betriebssysteme</h5>
+                                <ul>
+                                    <li>Windows 10/11</li>
+                                    <li>Windows Server 2019/2022</li>
+                                    <li>OpenSUSE Tumbleweed</li>
+                                    <li>Andere Linux-Distributionen (mit Python 3.8+)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                        <h6>Installation unter Windows</h6>
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">Installationsanleitung</div>
+                    <div class="card-body">
+                        <h5>Windows-Installation</h5>
                         <ol>
-                            <li>Entpacken Sie das ZIP-Archiv</li>
-                            <li>Führen Sie <code>setup.bat</code> aus</li>
+                            <li>Laden Sie die ZIP-Datei herunter und entpacken Sie sie</li>
+                            <li>Führen Sie <code>setup.bat</code> aus, um alle Abhängigkeiten zu installieren</li>
                             <li>Starten Sie die Anwendung mit <code>run.bat</code></li>
+                            <li>Öffnen Sie in Ihrem Browser: <code>http://localhost:5000</code></li>
                         </ol>
 
-                        <h6>Installation unter Linux</h6>
+                        <h5>Linux-Installation</h5>
                         <ol>
-                            <li>Entpacken Sie das ZIP-Archiv</li>
-                            <li>Führen Sie <code>chmod +x setup.sh run.sh</code> aus</li>
-                            <li>Führen Sie <code>./setup.sh</code> aus</li>
-                            <li>Starten Sie die Anwendung mit <code>./run.sh</code></li>
+                            <li>Laden Sie die ZIP-Datei herunter und entpacken Sie sie</li>
+                            <li>Führen Sie <code>chmod +x setup.sh</code> aus, um die Skripte ausführbar zu machen</li>
+                            <li>Führen Sie <code>./setup.sh</code> aus, um alle Abhängigkeiten zu installieren</li>
+                            <li>Starten Sie die Anwendung mit <code>python run.py</code></li>
+                            <li>Öffnen Sie in Ihrem Browser: <code>http://localhost:5000</code></li>
                         </ol>
                     </div>
                 </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="bi bi-question-circle me-2"></i>Hilfe & Support</h5>
-                    </div>
-                    <div class="card-body">
-                        <p>Bei Fragen oder Problemen stehen Ihnen folgende Ressourcen zur Verfügung:</p>
-                        <ul>
-                            <li>Dokumentation im <code>README.md</code> der jeweiligen Version</li>
-                            <li>Fehlerprotokolle im Verzeichnis <code>logs</code></li>
-                            <li>Kontakt zum Bechtle-Support</li>
-                        </ul>
-                        <p>Bitte geben Sie bei Support-Anfragen immer die Versionsnummer und die vollständigen Fehlerprotokolle an.</p>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 
-    <div class="footer">
+    <footer class="footer text-center">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-start">
-                    <img src="logo_white.png" alt="Logo" height="40">
-                </div>
-                <div class="col-md-6 text-center text-md-end">
-                    <p class="mb-0">© 2025 VMware vSphere Reporter | Alle Rechte vorbehalten</p>
-                </div>
-            </div>
+            <p>© 2025 VMware vSphere Reporter | Ein Tool zur Analyse und Überwachung von VMware vSphere-Umgebungen</p>
         </div>
-    </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
