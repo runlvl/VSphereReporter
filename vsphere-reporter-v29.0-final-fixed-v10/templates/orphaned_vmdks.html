@@ -28,11 +28,11 @@
         </thead>
         <tbody>
             {% for vmdk in orphaned_vmdks_data %}
-            <tr>
+            <tr class="vmdk-orphaned">
                 <td data-name="{{ vmdk.name }}">{{ vmdk.name }}</td>
                 <td data-datastore="{{ vmdk.datastore }}">{{ vmdk.datastore }}</td>
                 <td data-size="{{ vmdk.size_bytes|default(0) }}">{{ vmdk.size_human|default('Unbekannt') }}</td>
-                <td data-action="{{ vmdk.recommended_action|default('') }}">{{ vmdk.recommended_action|default('Manuelle Überprüfung erforderlich') }}</td>
+                <td data-action="{{ vmdk.recommended_action|default('') }}" class="vmdk-action">{{ vmdk.recommended_action|default('Manuelle Überprüfung erforderlich') }}</td>
             </tr>
             {% endfor %}
         </tbody>

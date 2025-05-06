@@ -11,6 +11,7 @@ Copyright (c) 2025 Bechtle GmbH
 import logging
 import datetime
 import ssl
+import os
 from pyVim import connect
 from pyVmomi import vim, vmodl
 
@@ -443,14 +444,39 @@ class VSphereClient:
         """
         if not self.content:
             raise VSphereConnectionError("Nicht mit vCenter verbunden")
+            
+        # For demo mode, return demo data
+        if hasattr(self, 'demo_mode') and self.demo_mode:
+            import demo_data
+            return demo_data.get_orphaned_vmdks_data()
         
         orphaned_vmdks = []
         
-        container = self.content.viewManager.CreateContainerView(
+        # First get all VMs and their disk files to optimize performance
+        vm_container = self.content.viewManager.CreateContainerView(
+            self.content.rootFolder, [vim.VirtualMachine], True
+        )
+        
+        # Create a dictionary to track all VMDKs currently in use
+        used_vmdks = {}
+        for vm in vm_container.view:
+            try:
+                if vm.config and vm.config.hardware and vm.config.hardware.device:
+                    for device in vm.config.hardware.device:
+                        if isinstance(device, vim.vm.device.VirtualDisk):
+                            if hasattr(device.backing, 'fileName'):
+                                used_vmdks[device.backing.fileName] = vm.name
+            except Exception as e:
+                logger.warning(f"Error checking VM disks for {vm.name}: {str(e)}")
+        
+        vm_container.Destroy()
+        
+        # Now check each datastore for VMDKs
+        datastore_container = self.content.viewManager.CreateContainerView(
             self.content.rootFolder, [vim.Datastore], True
         )
         
-        for datastore in container.view:
+        for datastore in datastore_container.view:
             try:
                 browser = datastore.browser
                 search_spec = vim.HostDatastoreBrowserSearchSpec()
@@ -458,6 +484,7 @@ class VSphereClient:
                 search_spec.details = vim.host.DatastoreBrowser.FileInfo.Details()
                 search_spec.details.fileSize = True
                 search_spec.details.fileType = True
+                search_spec.details.modification = True
                 
                 # Get all VMDKs
                 task = browser.SearchDatastore_Task(
@@ -476,22 +503,53 @@ class VSphereClient:
                             "-flat.vmdk" not in file_info.path and 
                             "-delta.vmdk" not in file_info.path and 
                             "-rdm.vmdk" not in file_info.path and 
-                            "-ctk.vmdk" not in file_info.path and
-                            self._is_potentially_orphaned(datastore, file_info.path)):
+                            "-ctk.vmdk" not in file_info.path):
                             
-                            # Get file path and size
+                            # Get full path
                             full_path = f"[{datastore.name}] {file_info.path}"
-                            size_bytes = file_info.fileSize if hasattr(file_info, 'fileSize') else 0
                             
-                            orphaned_vmdks.append({
-                                'name': file_info.path,
-                                'datastore': datastore.name,
-                                'path': full_path,
-                                'size_bytes': size_bytes,
-                                'recommended_action': "Manual inspection required"
-                            })
+                            # Check if this VMDK is being used by any VM
+                            if full_path not in used_vmdks:
+                                # It might be orphaned, but do additional checks
+                                
+                                # Check if there's a corresponding .vmx file in same directory
+                                vmdk_dir = os.path.dirname(file_info.path)
+                                vmx_search_spec = vim.HostDatastoreBrowserSearchSpec()
+                                vmx_search_spec.matchPattern = ["*.vmx"]
+                                
+                                vmx_task = browser.SearchDatastore_Task(
+                                    datastorePath=f"[{datastore.name}] {vmdk_dir}", 
+                                    searchSpec=vmx_search_spec
+                                )
+                                
+                                # Wait for VMX search to complete
+                                while vmx_task.info.state not in [vim.TaskInfo.State.success, vim.TaskInfo.State.error]:
+                                    continue
+                                
+                                # If there's a VMX file in the same directory, it's likely a template or unregistered VM
+                                if (vmx_task.info.state == vim.TaskInfo.State.success and 
+                                    vmx_task.info.result and 
+                                    vmx_task.info.result.file):
+                                    # Not truly orphaned - likely a template or unregistered VM
+                                    continue
+                                
+                                # Get file size
+                                size_bytes = file_info.fileSize if hasattr(file_info, 'fileSize') else 0
+                                
+                                # Get modification time
+                                mod_time = file_info.modification if hasattr(file_info, 'modification') else None
+                                
+                                # This is truly an orphaned VMDK
+                                orphaned_vmdks.append({
+                                    'name': file_info.path,
+                                    'datastore': datastore.name,
+                                    'path': full_path,
+                                    'size_bytes': size_bytes,
+                                    'modification_time': mod_time,
+                                    'recommended_action': "Manual inspection required before removal"
+                                })
             except Exception as e:
                 logger.warning(f"Error checking for orphaned VMDKs on datastore {datastore.name}: {str(e)}")
         
-        container.Destroy()
+        datastore_container.Destroy()
         return orphaned_vmdks
