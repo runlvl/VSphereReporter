@@ -1,0 +1,29 @@
+VMware vSphere Reporter v29.1 Final Fixed (v11) - Changelog
+====================================================
+
+In dieser Version wurden alle bekannten Probleme der vorherigen Version behoben:
+
+1. BEHOBEN: Demo-Modus Login-Problem - Der Login-Button im Demo-Modus funktioniert jetzt korrekt
+
+2. BEHOBEN: Schwerwiegender Datetime-Fehler in Snapshot-Berichten
+   - Problembehebung für "can't subtract offset-naive and offset-aware datetimes" Fehler
+   - Verbesserte Zeitzonen-Handhabung in der ganzen Anwendung
+   - Snapshot-Alter wird nun korrekt berechnet und angezeigt
+
+3. STARK VERBESSERT: Erkennung verwaister VMDKs durch komplett neuen Algorithmus
+   - Wesentlich genauere und zuverlässigere Detektion von verwaisten VMDKs
+   - Überprüfung von VMDKs auf zugehörige VMs und VMX-Dateien
+   - Berücksichtigung von Templates und anderen speziellen VM-Typen
+
+4. NEU: Verbesserte visuelle Darstellung für alle Berichte
+   - Farbcodierte Hervorhebung für VMware Tools Status (Grün/Orange/Rot)
+   - Farbcodierte Hervorhebung für Snapshot-Alter (Grün für aktuell, Orange für alt, Rot für sehr alt)
+   - Farbcodierte Hervorhebung für verwaiste VMDKs und empfohlene Maßnahmen
+   - Alle Farben entsprechen dem Bechtle Corporate Design
+
+5. Weitere Verbesserungen:
+   - Allgemeine Optimierungen und Codeverbesserungen
+   - Verbesserte Fehlerbehandlung und Logging
+   - Bereinigung von Python-Bibliotheken-Abhängigkeiten
+
+Diese Version ist die finale Version für die Bechtle-Auslieferung.
