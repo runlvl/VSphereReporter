@@ -73,6 +73,14 @@
             background-color: #1e8e59;
             border-color: #1e8e59;
         }
+        
+        .card-danger .card-header {
+            background-color: #dc3545;
+        }
+        
+        .card-primary .card-header {
+            background-color: #0d6efd;
+        }
     </style>
 </head>
 <body>
@@ -95,6 +103,58 @@
                 <div class="alert alert-info">
                     <h4 class="alert-heading">Information zur Version v29.0</h4>
                     <p>Während der Entwicklung der Version v29.0 wurden verschiedene Debugging-Versionen erstellt, um spezifische Probleme zu beheben. Wählen Sie bitte die Version entsprechend Ihres Anwendungsfalls aus.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">NEU: VMware vSphere Reporter v29.0 (Build 17)</div>
+                    <div class="card-body">
+                        <h5 class="card-title">ALTERNATIVE Implementierung für VMDK-Erkennung</h5>
+                        <p class="card-text">Diese Version verwendet einen <strong>völlig anderen Ansatz</strong> zur Erkennung von VMDK-Dateien. Sie sammelt zuerst alle registrierten VMDKs direkt von VM-Konfigurationen und durchsucht dann alle Datastores separat mit einer SubFolder-Suche. Dadurch sollten mehr VMDKs gefunden werden.</p>
+                        <div class="alert alert-info">
+                            <strong>Empfohlen für Problemlösung!</strong> Diese Version verwendet eine andere API (SearchDatastoreSubFolders_Task) für eine umfassendere Suche in allen Unterverzeichnissen.
+                        </div>
+                        <ul class="list-group mb-3">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Veröffentlicht am
+                                <span class="badge bg-primary rounded-pill">06.05.2025</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Version
+                                <span class="badge bg-primary rounded-pill">v29.0 Build 17</span>
+                            </li>
+                        </ul>
+                        <a href="vsphere-reporter-v29.0-web-final-fixed-v17.zip" class="btn btn-primary">Herunterladen</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card card-danger">
+                    <div class="card-header">VMware vSphere Reporter v29.0 (Build 16)</div>
+                    <div class="card-body">
+                        <h5 class="card-title">EXTREME Debug-Version für VMDK-Probleme</h5>
+                        <p class="card-text">Diese spezielle Version enthält ein <strong>sehr ausführliches Logging</strong> auf DEBUG-Level und speichert Stack-Traces für alle auftretenden Fehler. Verwenden Sie diese Version, wenn mit der Debug-Version v15 keine VMDKs angezeigt werden, um die Fehlerursache zu identifizieren.</p>
+                        <div class="alert alert-danger">
+                            <strong>Nur für Troubleshooting!</strong> Diese Version erzeugt sehr große Log-Dateien und sollte nur zur Fehlerdiagnose verwendet werden.
+                        </div>
+                        <ul class="list-group mb-3">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Veröffentlicht am
+                                <span class="badge bg-primary rounded-pill">06.05.2025</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Version
+                                <span class="badge bg-danger rounded-pill">v29.0 Build 16</span>
+                            </li>
+                        </ul>
+                        <a href="vsphere-reporter-v29.0-web-final-fixed-v16.zip" class="btn btn-danger">Herunterladen</a>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}VMware Tools - VMware vSphere Reporter{% endblock %}
+
+{% block content %}
+<h1 class="my-4">VMware Tools Status</h1>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <input type="text" id="vmware-tools-filter" class="form-control table-filter" placeholder="Suche..." data-target="vmware-tools-table">
+    </div>
+    <div>
+        <span class="badge bg-success">Up-to-date: {{ vmware_tools_data|selectattr('status', 'eq', 'Up-to-date')|list|length }}</span>
+        <span class="badge bg-warning">Outdated: {{ vmware_tools_data|selectattr('status', 'eq', 'Outdated')|list|length }}</span>
+        <span class="badge bg-danger">Not installed: {{ vmware_tools_data|selectattr('status', 'eq', 'Not installed')|list|length }}</span>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered sortable" id="vmware-tools-table">
+        <thead>
+            <tr class="table-dark">
+                <th data-sort="name">VM Name</th>
+                <th data-sort="status">Status</th>
+                <th data-sort="version">Version</th>
+                <th data-sort="os">Betriebssystem</th>
+                <th data-sort="power">Power State</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vm in vmware_tools_data %}
+            {% set row_class = "" %}
+            {% if vm.status == 'Outdated' %}
+                {% set row_class = "table-warning" %}
+            {% elif vm.status == 'Up-to-date' %}
+                {% set row_class = "table-success" %}
+            {% elif vm.status == 'Not installed' %}
+                {% set row_class = "table-danger" %}
+            {% endif %}
+            <tr class="{{ row_class }}">
+                <td data-name="{{ vm.vm_name }}">{{ vm.vm_name }}</td>
+                <td data-status="{{ vm.status }}">
+                    {{ vm.status }}
+                </td>
+                <td data-version="{{ vm.version }}">{{ vm.version }}</td>
+                <td data-os="{{ vm.os }}">{{ vm.os }}</td>
+                <td data-power="{{ vm.power_state }}">
+                    {% if vm.power_state == 'poweredOn' %}
+                    <span class="badge bg-success">Powered On</span>
+                    {% elif vm.power_state == 'poweredOff' %}
+                    <span class="badge bg-secondary">Powered Off</span>
+                    {% elif vm.power_state == 'suspended' %}
+                    <span class="badge bg-warning">Suspended</span>
+                    {% else %}
+                    <span class="badge bg-secondary">{{ vm.power_state }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">Hinweise zu VMware Tools</div>
+    <div class="card-body">
+        <p>VMware Tools sollten stets auf dem neuesten Stand sein, um optimale Leistung und Funktionalität zu gewährleisten.</p>
+        <ul>
+            <li><strong class="tools-updated">Up-to-date:</strong> VMware Tools sind auf dem neuesten Stand.</li>
+            <li><strong class="tools-outdated">Outdated:</strong> VMware Tools sind veraltet und sollten aktualisiert werden.</li>
+            <li><strong class="tools-missing">Not installed:</strong> VMware Tools sind nicht installiert und sollten installiert werden.</li>
+        </ul>
+        <p>Veraltete oder fehlende VMware Tools können zu:</p>
+        <ul>
+            <li>Eingeschränkter Performance</li>
+            <li>Fehlenden Funktionen (z.B. automatisches Herunterfahren)</li>
+            <li>Ungenauer Ressourcenüberwachung</li>
+            <li>Eingeschränkter Snapshot-Funktionalität</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
