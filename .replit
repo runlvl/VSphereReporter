@@ -90,10 +90,6 @@ args = "VSphereReporterV29Test"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "DownloadsUpdated"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "VSphereReporterV29Fixed"
 
 [[workflows.workflow.tasks]]
@@ -107,6 +103,10 @@ args = "VSphereReporterV10Test"
 [[workflows.workflow.tasks]]
 task = "workflow.run"
 args = "VSphereReporterV19"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "DownloadsV19"
 
 [[workflows.workflow]]
 name = "VSphereReporter"
@@ -332,15 +332,6 @@ args = "cd vsphere-reporter-v29.0-package-fixed && python app.py --port 5002"
 waitForPort = 5002
 
 [[workflows.workflow]]
-name = "DownloadsUpdated"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd release/downloads && python -m http.server 5010"
-waitForPort = 5010
-
-[[workflows.workflow]]
 name = "VSphereReporterV29Fixed"
 author = "agent"
 
@@ -375,6 +366,15 @@ author = "agent"
 task = "shell.exec"
 args = "cd vsphere-reporter-v29.0-final-fixed-v19 && python run.py --port 5003"
 waitForPort = 5003
+
+[[workflows.workflow]]
+name = "DownloadsV19"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd release/downloads && python -m http.server 5010"
+waitForPort = 5010
 
 [deployment]
 run = ["sh", "-c", "pip install -r requirements.txt || pip install pyVmomi>=7.0.0 PyQt5>=5.15.0 reportlab>=3.6.0 python-docx>=0.8.11 jinja2>=3.0.0 humanize>=3.0.0 && python vsphere_reporter.py"]
