@@ -1,0 +1,29 @@
+# VMware vSphere Reporter v19.0 (Fixed) - Änderungsprotokoll
+
+## Fehlerbehebungen
+
+### Datenverarbeitung
+- Behoben: Problem mit fehlenden Daten (VMware Tools, Snapshots, verwaiste VMDKs)
+- Verbesserte Datenverarbeitung im Demo-Modus für alle Berichte
+- Korrigiert: Interpretation von Demo-Daten im richtigen Format
+
+### Benutzeroberfläche
+- Behoben: Verzerrtes Bechtle-Logo in der Navigation
+- Verbesserte CSS-Eigenschaften für die korrekte Darstellung des Logos (Proportionen werden beibehalten)
+
+### Weitere Änderungen
+- Robustere Fehlerbehandlung in der Datenverarbeitung
+- Klare Unterscheidung zwischen Demo- und Live-Daten
+- Verbesserte Protokollierung für einfachere Fehlerdiagnose
+
+## Installationshinweise
+1. Laden Sie das ZIP-Archiv herunter
+2. Entpacken Sie die Dateien in ein beliebiges Verzeichnis
+3. Linux: Führen Sie `setup.sh` aus, dann `run.py`
+4. Windows: Führen Sie `setup.bat` aus, dann `run.bat`
+5. Öffnen Sie in Ihrem Browser: http://localhost:5000
+
+## Hinweise
+- Alle installierten Abhängigkeiten werden in einem virtuellen Python-Environment gespeichert
+- Benötigt Python 3.8 oder höher
+- Getestet unter Windows 10/11 und OpenSUSE Tumbleweed
