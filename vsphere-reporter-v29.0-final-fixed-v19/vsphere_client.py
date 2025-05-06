@@ -513,7 +513,15 @@ class VSphereClient:
                         vmdk['status'] = 'template_or_snapshot'
                     else:
                         vmdk['status'] = 'orphaned'
-                        self.raw_data['orphaned_vmdks'].append(vmdk)
+                        # Stelle sicher, dass size_kb und modification_time immer vorhanden sind,
+                        # auch wenn sie None sein könnten
+                        orphaned_vmdk = {
+                            'path': vmdk.get('path'),
+                            'size_kb': vmdk.get('size_kb'),
+                            'modification_time': vmdk.get('modification_time'),
+                            'status': 'orphaned'
+                        }
+                        self.raw_data['orphaned_vmdks'].append(orphaned_vmdk)
                 except Exception as e:
                     self.log_error(f"Fehler beim Identifizieren des Status für VMDK {vmdk.get('path', 'Unbekannt')}", e)
             
