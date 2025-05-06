@@ -120,6 +120,10 @@ args = "VSphereReporterV19_1_Final"
 task = "workflow.run"
 args = "VSphereReporterV19_1_Direct"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "DownloadPackage"
+
 [[workflows.workflow]]
 name = "VSphereReporter"
 author = "agent"
@@ -415,6 +419,15 @@ task = "shell.exec"
 args = "cd vsphere-reporter-v29.0-final-fixed-v19 && python app.py"
 waitForPort = 5003
 
+[[workflows.workflow]]
+name = "DownloadPackage"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd release && mkdir -p downloads-web && cp downloads/vsphere-reporter-v29.0-web-final-fixed-v19.1-final-18-clean.zip downloads-web/ && cd downloads-web && python -m http.server 5030"
+waitForPort = 5030
+
 [deployment]
 run = ["sh", "-c", "pip install -r requirements.txt || pip install pyVmomi>=7.0.0 PyQt5>=5.15.0 reportlab>=3.6.0 python-docx>=0.8.11 jinja2>=3.0.0 humanize>=3.0.0 && python vsphere_reporter.py"]
 
@@ -469,6 +482,10 @@ externalPort = 8081
 [[ports]]
 localPort = 5015
 externalPort = 8099
+
+[[ports]]
+localPort = 5030
+externalPort = 9000
 
 [[ports]]
 localPort = 5555

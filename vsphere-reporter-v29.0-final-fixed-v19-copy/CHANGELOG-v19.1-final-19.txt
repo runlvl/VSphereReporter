@@ -9,3 +9,4 @@ VMware vSphere Reporter v19.1 - Update 16
 - Windows-Codierungsproblem in setup.bat behoben (Umlaute entfernt)
 - Verbesserte Fortschrittsanzeige in setup.bat mit ASCII-Balken
 - Fortschrittsbalken durch einfachere, zuverlässigere Fortschrittsanzeige ersetzt
+- Problem mit run.bat behoben (falsche Fehlerumleitung korrigiert)
