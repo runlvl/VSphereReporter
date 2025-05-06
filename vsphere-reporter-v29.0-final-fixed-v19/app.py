@@ -1,9 +1,10 @@
 """
-VMware vSphere Reporter v19.0 - Produktionsversion
+VMware vSphere Reporter v19.1 - Produktionsversion
 Verbesserte Benutzeroberfläche mit robuster VMDK-Erkennung und optimierter Performance
 
 Diese Version basiert auf dem erfolgreichen Ansatz aus v18, wurde jedoch mit einer
 verbesserten Präsentation, Fehlerbehandlung und optimierter Metadatenextraktion ausgestattet.
+Zusätzlich enthält Version 19.1 erweiterte Metadaten-Fallbacks und unterdrückt Flask-Warnungen.
 
 © 2025 Bechtle GmbH - Alle Rechte vorbehalten
 """
@@ -21,7 +22,7 @@ from vsphere_client import VSphereClient
 # Konfiguration
 DEBUG_MODE = os.environ.get('VSPHERE_REPORTER_DEBUG', 'False').lower() in ['true', '1', 't']
 PORT = int(os.environ.get('VSPHERE_REPORTER_PORT', 5000))
-VERSION = '19.0'
+VERSION = '19.1'
 APP_NAME = 'VMware vSphere Reporter'
 
 # Logging konfigurieren

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-VMware vSphere Reporter v19.0 - Produktionsversion
+VMware vSphere Reporter v19.1 - Produktionsversion
 
 Dieses Skript startet den Web-Server und öffnet ggf. einen Browser.
 © 2025 Bechtle GmbH - Alle Rechte vorbehalten
@@ -12,12 +12,14 @@ import logging
 import argparse
 import socket
 import webbrowser
+import warnings
+import io
 from threading import Timer
 from datetime import datetime
 
 # Konfiguration
 DEFAULT_PORT = 5000
-VERSION = '19.0'
+VERSION = '19.1'
 APP_NAME = 'VMware vSphere Reporter'
 DEBUG_ENV_VAR = 'VSPHERE_REPORTER_DEBUG'
 
@@ -26,16 +28,18 @@ log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logs')
 os.makedirs(log_dir, exist_ok=True)
 log_file = os.path.join(log_dir, f'vsphere_reporter_run_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log')
 
-logger = logging.getLogger('vsphere_reporter_run')
-logger.setLevel(logging.INFO)
+# Konfiguriere Logging global
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(log_file),
+        logging.StreamHandler()
+    ]
+)
 
-file_handler = logging.FileHandler(log_file)
-file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-logger.addHandler(file_handler)
-
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-logger.addHandler(console_handler)
+# Standard-Logger
+APP_LOGGER = logging.getLogger('vsphere_reporter_run')
 
 def is_port_in_use(port):
     """Prüft, ob ein Port bereits verwendet wird"""
@@ -56,7 +60,7 @@ def find_available_port(start_port=DEFAULT_PORT, max_attempts=10):
 def open_browser(port):
     """Öffnet den Browser mit der App-URL"""
     url = f"http://localhost:{port}"
-    logger.info(f"Browser geöffnet mit URL: {url}")
+    logging.info(f"Browser geöffnet mit URL: {url}")
     webbrowser.open(url)
 
 def main():
@@ -78,31 +82,73 @@ def main():
     # Setze Debug-Umgebungsvariable
     if args.debug:
         os.environ[DEBUG_ENV_VAR] = 'True'
-        logger.info("Debug-Modus aktiviert")
+        logging.info("Debug-Modus aktiviert")
     
     # Setze Port-Umgebungsvariable
     os.environ['VSPHERE_REPORTER_PORT'] = str(port)
-    logger.info(f"Verwende Port {port} für den Web-Server")
+    print(f"Verwende Port {port} für den Web-Server")
     
     try:
         # Importiere die App erst jetzt, um die Umgebungsvariablen zu berücksichtigen
-        logger.info(f"Starte {APP_NAME} auf Port {port}...")
+        logging.info(f"Starte {APP_NAME} auf Port {port}...")
         
         # Öffne den Browser nach kurzer Verzögerung
         if not args.no_browser:
             Timer(1.5, lambda: open_browser(port)).start()
         
-        # Starte die Flask-App
-        from app import app
-        app.run(host='0.0.0.0', port=port, debug=args.debug)
+        # Radikale Unterdrückung aller Flask/Werkzeug-Warnungen und Entwicklungsserver-Meldungen
+        
+        # 1. Stelle Logging für Flask/Werkzeug ein, um alle unwichtigen Meldungen zu unterdrücken
+        for logger_name in ['werkzeug', 'flask', 'flask.app']:
+            logger = logging.getLogger(logger_name)
+            logger.setLevel(logging.ERROR)  # Nur Fehler anzeigen
+            
+        # 2. Unterdrücke Standardausgabe während des Imports von Flask
+        original_stdout = sys.stdout
+        sys.stdout = io.StringIO()  # Leite Standardausgabe um
+        
+        # 3. Unterdrücke alle Warnungen
+        warnings.filterwarnings('ignore')
+        
+        # 4. Setze Umgebungsvariablen, die Flask veranlassen, Startmeldungen zu unterdrücken
+        os.environ['WERKZEUG_RUN_MAIN'] = 'true'
+        
+        # Setze WERKZEUG_SERVER_FD auf einen leeren Wert, um Fehler zu vermeiden
+        if 'WERKZEUG_SERVER_FD' in os.environ:
+            del os.environ['WERKZEUG_SERVER_FD']
+        
+        # 5. Stelle Standardausgabe wieder her
+        sys.stdout = original_stdout
+        
+        # Verwende einen einfachen Ansatz: Starte app.py als Subprocess
+        logging.info(f"Flask-App wird im Produktionsmodus auf Port {port} gestartet...")
+        
+        # Erstelle Umgebungsvariablen für den Unterprozess
+        env = os.environ.copy()
+        env['FLASK_APP'] = 'app.py'
+        env['FLASK_ENV'] = 'production'
+        env['FLASK_RUN_PORT'] = str(port)
+        env['FLASK_RUN_HOST'] = '0.0.0.0'
+        env['PYTHONWARNINGS'] = 'ignore'
+        
+        import subprocess
+        
+        try:
+            # Führe app.py direkt aus
+            python_executable = sys.executable
+            subprocess.check_call([python_executable, 'app.py'], env=env)
+        except subprocess.SubprocessError as e:
+            logging.error(f"Fehler beim Ausführen von app.py: {str(e)}")
+            print(f"Fehler: {str(e)}")
+            sys.exit(1)
     except ImportError as e:
-        logger.error(f"Fehler beim Importieren der Anwendung: {str(e)}")
-        logger.error("Stellen Sie sicher, dass alle Abhängigkeiten installiert sind.")
+        logging.error(f"Fehler beim Importieren der Anwendung: {str(e)}")
+        logging.error("Stellen Sie sicher, dass alle Abhängigkeiten installiert sind.")
         print(f"Fehler: {str(e)}")
         print("Stellen Sie sicher, dass alle Abhängigkeiten installiert sind.")
         sys.exit(1)
     except Exception as e:
-        logger.error(f"Fehler beim Starten der Anwendung: {str(e)}")
+        logging.error(f"Fehler beim Starten der Anwendung: {str(e)}")
         print(f"Fehler: {str(e)}")
         sys.exit(1)
 
