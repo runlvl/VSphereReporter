@@ -515,6 +515,9 @@ class VSphereClient:
             # 3. Identifiziere verwaiste VMDKs
             registered_paths = set(self.raw_data['registered_vmdk_paths'])
             
+            # Liste für verwaiste VMDKs leeren, falls vorherige Daten vorhanden sind
+            self.raw_data['orphaned_vmdks'] = []
+            
             for vmdk in self.raw_data['all_vmdk_paths']:
                 try:
                     vmdk_path = vmdk['path']
@@ -544,9 +547,18 @@ class VSphereClient:
                 except Exception as e:
                     self.log_error(f"Fehler beim Identifizieren des Status für VMDK {vmdk.get('path', 'Unbekannt')}", e)
             
+            # Zusätzliches Logging für bessere Diagnose
+            self.logger.info(f"Insgesamt {len(self.raw_data['orphaned_vmdks'])} verwaiste VMDKs identifiziert")
+            
             # Erfolgreichen Abschluss markieren
             self.collection_status['orphaned_vmdks'] = True
-            return self.raw_data
+            
+            # Wichtig: Gib ein Dictionary mit direkt 'orphaned_vmdks' zurück, nicht nur raw_data
+            # Das ist das fehlende Stück für die korrekte Datenstruktur
+            return {
+                'orphaned_vmdks': self.raw_data['orphaned_vmdks'],
+                'raw_data': self.raw_data
+            }
             
         except Exception as e:
             self.log_error("Fehler beim Sammeln der VMDK-Dateien", e)

@@ -203,8 +203,20 @@ def orphaned_vmdks():
         # Importiere demo_data nur wenn benötigt
         import demo_data
         demo_result = demo_data.get_demo_data()
-        orphaned_vmdks = demo_result['orphaned_vmdks']
+        
+        # Demo-Daten direkt aus dem Demo-Ergebnis extrahieren
+        orphaned_vmdks = demo_result.get('orphaned_vmdks', [])
+        
+        # Stellen Sie sicher, dass orphaned_vmdks eine Liste ist und die richtigen Schlüssel hat
+        if not isinstance(orphaned_vmdks, list):
+            app.logger.warning(f"Unerwarteter Typ für Demo-VMDK-Daten: {type(orphaned_vmdks)}")
+            orphaned_vmdks = []
+            
         app.logger.info(f"Demo-Daten geladen: {len(orphaned_vmdks)} verwaiste VMDKs")
+        
+        # Debug-Logging für Demo-Daten
+        for i, vmdk in enumerate(orphaned_vmdks[:2]):
+            app.logger.info(f"Demo VMDK {i+1}: {vmdk.get('path', 'Kein Pfad')} - Größe: {vmdk.get('size_kb', 0)/1024/1024:.2f} GB")
     else:
         # Sammle Echtdaten
         raw_data = vsphere_client.collect_all_vmdk_files()
@@ -227,7 +239,7 @@ def orphaned_vmdks():
     if orphaned_vmdks:
         app.logger.info(f"Anzeige von {len(orphaned_vmdks)} verwaisten VMDKs")
         for i, vmdk in enumerate(orphaned_vmdks[:2]):  # Zeige nur erste 2 Einträge zur Vermeidung zu großer Logs
-            app.logger.info(f"VMDK {i+1}: {vmdk['path']} - {vmdk.get('size_kb', 0)/1024/1024:.2f} GB - {vmdk.get('modification_time', 'Unbekannt')}")
+            app.logger.info(f"VMDK {i+1}: {vmdk.get('path', 'Unbekannt')} - {vmdk.get('size_kb', 0)/1024/1024:.2f} GB - {vmdk.get('modification_time', 'Unbekannt')}")
     else:
         app.logger.info("Keine verwaisten VMDKs gefunden oder im Dataset")
     
