@@ -58,10 +58,6 @@ args = "VSphereReporterV28Demo"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "DownloadsDemo"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "VSphereReporterV29Demo"
 
 [[workflows.workflow.tasks]]
@@ -276,15 +272,6 @@ args = "cd release/v28.0/ && python -m http.server 5008"
 waitForPort = 5008
 
 [[workflows.workflow]]
-name = "DownloadsDemo"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd release/downloads && python -m http.server 5000"
-waitForPort = 5000
-
-[[workflows.workflow]]
 name = "VSphereReporterV29Demo"
 author = "agent"
 
@@ -478,6 +465,10 @@ externalPort = 5173
 [[ports]]
 localPort = 5011
 externalPort = 8081
+
+[[ports]]
+localPort = 5015
+externalPort = 8099
 
 [[ports]]
 localPort = 5555
