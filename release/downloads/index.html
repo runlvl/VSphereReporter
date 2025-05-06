@@ -81,6 +81,10 @@
         .card-primary .card-header {
             background-color: #0d6efd;
         }
+        
+        .card-info .card-header {
+            background-color: #0dcaf0;
+        }
     </style>
 </head>
 <body>
@@ -109,8 +113,40 @@
         
         <div class="row mb-4">
             <div class="col-md-12">
+                <div class="card card-info">
+                    <div class="card-header bg-info text-dark">NEU: VMware vSphere Reporter v29.0 (Build 18)</div>
+                    <div class="card-body">
+                        <h5 class="card-title">MAXIMALE DIAGNOSE - Zeigt rohe API-Daten an</h5>
+                        <p class="card-text">Diese grundlegende Diagnoseversion ist entwickelt, um technische Probleme in der Anwendung zu umgehen. Sie bietet:</p>
+                        <ul class="mb-2">
+                            <li>Direkter Zugriff auf <strong>unverarbeitete API-Daten</strong> ohne Fehleranfällige Verarbeitung</li>
+                            <li>Geradliniger, vereinfachter Login-Prozess</li>
+                            <li>Detaillierte Fehlerprotokolle für jeden API-Aufruf</li>
+                            <li>Umgeht bekannte Probleme in Build 16/17</li>
+                        </ul>
+                        <div class="alert alert-info">
+                            <strong>Empfohlen für Fehlerfälle!</strong> Diese Version sollte auch dann funktionieren, wenn die anderen Versionen komplett fehlschlagen. Ideal für Grundlagendiagnose.
+                        </div>
+                        <ul class="list-group mb-3">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Veröffentlicht am
+                                <span class="badge bg-primary rounded-pill">06.05.2025</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Version
+                                <span class="badge bg-info rounded-pill">v29.0 Build 18</span>
+                            </li>
+                        </ul>
+                        <a href="vsphere-reporter-v29.0-web-final-fixed-v18.zip" class="btn btn-info text-white">Herunterladen</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col-md-12">
                 <div class="card card-primary">
-                    <div class="card-header">NEU: VMware vSphere Reporter v29.0 (Build 17)</div>
+                    <div class="card-header">VMware vSphere Reporter v29.0 (Build 17)</div>
                     <div class="card-body">
                         <h5 class="card-title">ALTERNATIVE Implementierung für VMDK-Erkennung</h5>
                         <p class="card-text">Diese Version verwendet einen <strong>völlig anderen Ansatz</strong> zur Erkennung von VMDK-Dateien. Sie sammelt zuerst alle registrierten VMDKs direkt von VM-Konfigurationen und durchsucht dann alle Datastores separat mit einer SubFolder-Suche. Dadurch sollten mehr VMDKs gefunden werden.</p>
