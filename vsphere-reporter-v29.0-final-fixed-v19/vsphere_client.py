@@ -362,10 +362,12 @@ class VSphereClient:
                 from demo_data import get_demo_data
                 self.collection_status['orphaned_vmdks'] = True
                 demo_data = get_demo_data()
+                # Daten direkt in das raw_data-Attribut setzen
+                self.raw_data = demo_data.get('raw_data', {})
+                # Objekte für orphaned_vmdks direkt zurückgeben
                 return {
-                    "demo": True, 
-                    "raw_data": demo_data,
-                    "data": demo_data.get('orphaned_vmdks', [])
+                    "demo": True,
+                    "orphaned_vmdks": demo_data.get('orphaned_vmdks', [])
                 }
             
             # Initialisiere die Rohdatenstruktur
