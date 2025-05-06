@@ -196,8 +196,8 @@ def orphaned_vmdks():
     # Verarbeite die Daten je nach Demo-Modus oder Echtdaten
     if isinstance(raw_data, dict):
         if 'demo' in raw_data:
-            # Demo-Daten mit "data" Schlüssel
-            orphaned_vmdks = raw_data.get('data', {}).get('orphaned_vmdks', [])
+            # Demo-Daten mit direktem "orphaned_vmdks" Schlüssel
+            orphaned_vmdks = raw_data.get('orphaned_vmdks', [])
         else:
             # Standardformat mit "orphaned_vmdks" Schlüssel
             orphaned_vmdks = raw_data.get('orphaned_vmdks', [])
@@ -277,7 +277,11 @@ def collect_vmdk_data():
     try:
         raw_data = vsphere_client.collect_all_vmdk_files()
         if raw_data and isinstance(raw_data, dict):
-            orphaned_count = len(raw_data.get('orphaned_vmdks', []))
+            # Überprüfe, ob es sich um Demo-Daten handelt
+            if 'demo' in raw_data:
+                orphaned_count = len(raw_data.get('orphaned_vmdks', []))
+            else:
+                orphaned_count = len(raw_data.get('orphaned_vmdks', []))
             return jsonify({'success': True, 'count': orphaned_count})
         else:
             return jsonify({'success': False, 'error': 'Ungültige Daten'}), 500

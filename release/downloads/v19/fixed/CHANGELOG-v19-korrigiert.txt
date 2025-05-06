@@ -1,0 +1,19 @@
+# VMware vSphere Reporter v19.0 - Korrigierte Version
+
+## Übersicht der Korrekturen
+* Behoben: Error 500 bei Anzeige von verwaisten VMDKs im Demo-Modus
+* Behoben: Echtmodus zeigte nur Demo-Daten an
+* Behoben: Fehlende Datenstrukturen für korrekte VMDK-Erkennung und -Verarbeitung
+
+## Technische Details
+* Verbesserte Struktur für die Demo-Daten in vsphere_client.py
+* Der Demo-Modus gibt nun korrekte Daten zurück (insbesondere für verwaiste VMDKs)
+* Korrektur in app.py für die VMDK-Datenverarbeitung
+* Datailfixes in der API für die Datensammlung
+
+## Installation
+Einfach das ZIP-Archiv herunterladen und entpacken. Dann:
+* Windows: setup.bat ausführen, dann mit run.bat starten
+* Linux: setup.sh ausführen (chmod +x setup.sh), dann mit run.sh starten
+
+Der Reporter ist dann über den Browser unter http://localhost:5000 erreichbar.
