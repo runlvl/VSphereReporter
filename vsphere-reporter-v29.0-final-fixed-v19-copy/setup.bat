@@ -130,7 +130,7 @@ echo set FLASK_RUN_HOST=0.0.0.0>> run.bat
 echo set FLASK_RUN_PORT=5000>> run.bat
 echo.>> run.bat
 echo :: Virtuelle Umgebung aktivieren, falls vorhanden>> run.bat
-echo if exist "venv\Scripts\activate.bat" call venv\Scripts\activate.bat ^> nul 2^>^&1>> run.bat
+echo if exist "venv\Scripts\activate.bat" call venv\Scripts\activate.bat ^> nul 2^> nul>> run.bat
 echo.>> run.bat
 echo :: Warte kurz, damit die Umgebungsvariablen korrekt gesetzt werden>> run.bat
 echo timeout /t 1 /nobreak ^>nul>> run.bat
