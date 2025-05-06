@@ -12,21 +12,54 @@
 <body {% if session.get('demo_mode', False) %}data-demo-mode="true"{% endif %}>
     {% block header %}
     {% if session.get('authenticated', False) %}
-    <nav class="navbar navbar-expand-lg">
-        <div class="navbar-container">
-            <div class="navbar-brand">
-                <img src="{{ url_for('static', filename='logo_white.png') }}" alt="Bechtle Logo">
-                <h1>VMware vSphere Reporter</h1>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('dashboard') }}">
+                <img src="{{ url_for('static', filename='logo_white.png') }}" alt="Bechtle Logo" class="me-3">
+                <span>VMware vSphere Reporter</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == url_for('dashboard') %}active{% endif %}" href="{{ url_for('dashboard') }}">
+                            <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == url_for('report_options') %}active{% endif %}" href="{{ url_for('report_options') }}">
+                            <i class="bi bi-file-earmark-text me-1"></i> Bericht erstellen
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == url_for('view_vmware_tools') %}active{% endif %}" href="{{ url_for('view_vmware_tools') }}">
+                            <i class="bi bi-tools me-1"></i> VMware Tools
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == url_for('view_snapshots') %}active{% endif %}" href="{{ url_for('view_snapshots') }}">
+                            <i class="bi bi-camera me-1"></i> Snapshots
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == url_for('view_orphaned_vmdks') %}active{% endif %}" href="{{ url_for('view_orphaned_vmdks') }}">
+                            <i class="bi bi-hdd me-1"></i> Verwaiste VMDKs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == url_for('about') %}active{% endif %}" href="{{ url_for('about') }}">
+                            <i class="bi bi-info-circle me-1"></i> Über
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">
+                            <i class="bi bi-box-arrow-right me-1"></i> Logout
+                        </a>
+                    </li>
+                </ul>
             </div>
-            <ul class="navbar-nav">
-                <li><a href="{{ url_for('dashboard') }}" {% if request.path == url_for('dashboard') %}class="active"{% endif %}>Dashboard</a></li>
-                <li><a href="{{ url_for('report_options') }}" {% if request.path == url_for('report_options') %}class="active"{% endif %}>Bericht erstellen</a></li>
-                <li><a href="{{ url_for('view_vmware_tools') }}" {% if request.path == url_for('view_vmware_tools') %}class="active"{% endif %}>VMware Tools</a></li>
-                <li><a href="{{ url_for('view_snapshots') }}" {% if request.path == url_for('view_snapshots') %}class="active"{% endif %}>Snapshots</a></li>
-                <li><a href="{{ url_for('view_orphaned_vmdks') }}" {% if request.path == url_for('view_orphaned_vmdks') %}class="active"{% endif %}>Verwaiste VMDKs</a></li>
-                <li><a href="{{ url_for('about') }}" {% if request.path == url_for('about') %}class="active"{% endif %}>Über</a></li>
-                <li><a href="{{ url_for('logout') }}">Logout</a></li>
-            </ul>
         </div>
     </nav>
     {% endif %}

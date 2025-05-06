@@ -32,10 +32,10 @@
         </thead>
         <tbody>
             {% for snapshot in snapshots_data %}
-            <tr>
+            <tr class="{% if snapshot.age_days|default(0) > 90 %}snapshot-age-critical{% elif snapshot.age_days|default(0) > 30 %}snapshot-age-warning{% else %}snapshot-age-normal{% endif %}">
                 <td data-vm="{{ snapshot.vm_name }}">{{ snapshot.vm_name }}</td>
                 <td data-name="{{ snapshot.name }}">{{ snapshot.name }}</td>
-                <td data-age="{{ snapshot.age_days|default(0) }}" class="{% if snapshot.age_days|default(0) > 90 %}snapshot-very-old{% elif snapshot.age_days|default(0) > 30 %}snapshot-old{% endif %}">
+                <td data-age="{{ snapshot.age_days|default(0) }}">
                     {{ snapshot.age_human|default('Unbekannt') }}
                 </td>
                 <td data-size="{{ snapshot.size_mb|default(0) }}">
