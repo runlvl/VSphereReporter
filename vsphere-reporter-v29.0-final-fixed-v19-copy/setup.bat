@@ -1,32 +1,22 @@
 @echo off
 :: VMware vSphere Reporter v19.1 - Optimiertes Setup-Skript fuer Windows
-setlocal enabledelayedexpansion
+setlocal
 
 echo VMware vSphere Reporter v19.1 - Setup wird ausgefuehrt...
 echo =====================================================================
 
-:: Fortschrittsbalken-Funktion
-:DisplayProgress
-set step=%1
-set total=%2
-set progress=0
-set /a progress=(%step%*100)/%total%
-set /a numChars=%progress%/5
+:: Alternative Fortschrittsanzeige
+set total_steps=7
+set current=0
 
-set bar=
-for /L %%i in (1,1,%numChars%) do set bar=!bar!#
-for /L %%i in (%numChars%,1,20) do set bar=!bar!-
-
-echo [!bar!] %progress%%%
-goto :eof
-
+echo Fortschrittsanzeige: (0%% abgeschlossen)
 echo.
-echo Fortschrittsanzeige:
-echo [--------------------] 0%%
 
 :: Schritt 1: Python-Installation pruefen
-call :DisplayProgress 1 7
-echo [Schritt 1/7] Pruefe Python-Installation...
+set /a current+=1
+set /a percent=(current*100)/total_steps
+echo **** Schritt %current%/%total_steps% (%percent%%% abgeschlossen) ****
+echo [Schritt %current%/%total_steps%] Pruefe Python-Installation...
 
 python --version > nul 2>&1
 if %errorlevel% neq 0 (
@@ -37,10 +27,13 @@ if %errorlevel% neq 0 (
 )
 
 echo [OK] Python ist installiert.
+echo.
 
 :: Schritt 2: Pip-Installation pruefen
-call :DisplayProgress 2 7
-echo [Schritt 2/7] Pruefe pip-Installation...
+set /a current+=1
+set /a percent=(current*100)/total_steps
+echo **** Schritt %current%/%total_steps% (%percent%%% abgeschlossen) ****
+echo [Schritt %current%/%total_steps%] Pruefe pip-Installation...
 
 python -m pip --version > nul 2>&1
 if %errorlevel% neq 0 (
@@ -54,10 +47,13 @@ if %errorlevel% neq 0 (
 )
 
 echo [OK] Pip ist installiert.
+echo.
 
 :: Schritt 3: Virtuelle Umgebung erstellen
-call :DisplayProgress 3 7
-echo [Schritt 3/7] Erstelle virtuelle Python-Umgebung...
+set /a current+=1
+set /a percent=(current*100)/total_steps
+echo **** Schritt %current%/%total_steps% (%percent%%% abgeschlossen) ****
+echo [Schritt %current%/%total_steps%] Erstelle virtuelle Python-Umgebung...
 
 python -m venv venv > nul 2>&1
 if %errorlevel% neq 0 (
@@ -69,34 +65,47 @@ if %errorlevel% neq 0 (
         echo [OK] Virtuelle Umgebung erstellt und aktiviert.
     )
 )
+echo.
 
 :: Schritt 4: Pip aktualisieren
-call :DisplayProgress 4 7
-echo [Schritt 4/7] Aktualisiere pip...
+set /a current+=1
+set /a percent=(current*100)/total_steps
+echo **** Schritt %current%/%total_steps% (%percent%%% abgeschlossen) ****
+echo [Schritt %current%/%total_steps%] Aktualisiere pip...
 
 python -m pip install --upgrade pip --quiet --disable-pip-version-check
 echo [OK] Pip aktualisiert.
+echo.
 
 :: Schritt 5: PyVmomi und Flask installieren
-call :DisplayProgress 5 7
-echo [Schritt 5/7] Installiere pyVmomi und Flask...
+set /a current+=1
+set /a percent=(current*100)/total_steps
+echo **** Schritt %current%/%total_steps% (%percent%%% abgeschlossen) ****
+echo [Schritt %current%/%total_steps%] Installiere pyVmomi und Flask...
 
 python -m pip install --quiet --disable-pip-version-check pyVmomi>=7.0.0 Flask>=2.0.0 Flask-WTF>=1.0.0
 echo [OK] pyVmomi und Flask installiert.
+echo.
 
 :: Schritt 6: Reportlab und python-docx installieren
-call :DisplayProgress 6 7
-echo [Schritt 6/7] Installiere reportlab und python-docx...
+set /a current+=1
+set /a percent=(current*100)/total_steps
+echo **** Schritt %current%/%total_steps% (%percent%%% abgeschlossen) ****
+echo [Schritt %current%/%total_steps%] Installiere reportlab und python-docx...
 
 python -m pip install --quiet --disable-pip-version-check reportlab>=3.6.0 python-docx>=0.8.11
 echo [OK] reportlab und python-docx installiert.
+echo.
 
 :: Schritt 7: Jinja2 und humanize installieren
-call :DisplayProgress 7 7
-echo [Schritt 7/7] Installiere Jinja2 und humanize...
+set /a current+=1
+set /a percent=(current*100)/total_steps
+echo **** Schritt %current%/%total_steps% (%percent%%% abgeschlossen) ****
+echo [Schritt %current%/%total_steps%] Installiere Jinja2 und humanize...
 
 python -m pip install --quiet --disable-pip-version-check Jinja2>=3.0.0 humanize>=3.0.0
 echo [OK] Jinja2 und humanize installiert.
+echo.
 
 if %errorlevel% neq 0 (
     echo [FEHLER] Abhaengigkeiten konnten nicht installiert werden.
@@ -104,7 +113,7 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-echo [####################] 100%%
+echo **** Installation abgeschlossen (100%% abgeschlossen) ****
 echo [Installation abgeschlossen] Alle Abhaengigkeiten wurden erfolgreich installiert.
 
 :: Erstelle die optimierte run.bat-Datei (direkt mit app.py, nicht run.py)
