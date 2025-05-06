@@ -5,11 +5,14 @@ Diese Version enthält wichtige Verbesserungen und Fehlerbehebungen:
 
 1. BEHOBEN: Fehler 500 bei der Anzeige von verwaisten VMDKs durch korrekte Behandlung der Datenstruktur im Demo-Modus
 2. BEHOBEN: Problem, dass im Echtmodus Demo-Daten angezeigt wurden, durch explizite Deaktivierung des Demo-Modus bei echter Verbindung
-3. BEHOBEN: Fehlende Anzeige von Größe und Änderungsdatum bei verwaisten VMDKs in Echtdaten
+3. BEHOBEN: Fehlende Anzeige von Größe und Änderungsdatum bei verwaisten VMDKs in Echtdaten durch robustere Metadatenextraktion
 4. NEU: Methode `set_demo_mode()` zur besseren Kontrolle des Demo-Modus
-5. VERBESSERT: Verbessertes Logging für bessere Diagnose von Problemen bei Metadaten von VMDK-Dateien
-6. VERBESSERT: Konsistente Fehlerbehandlung in allen Modi (Demo und Echtdaten)
-7. VERBESSERT: Detaillierte Debug-Ausgaben für VMDK-Metadaten zur einfacheren Fehlersuche
+5. VERBESSERT: Optimiertes Setup-Skript (setup.bat) ohne Abfragen, mit automatischem Start der Anwendung
+6. VERBESSERT: "Developer Version"-Meldung in run.bat entfernt
+7. VERBESSERT: Robustere Extraktion von VMDK-Metadaten mit Fallback-Mechanismen für fehlende Größen und Datumsangaben
+8. VERBESSERT: Verbessertes Logging für bessere Diagnose von Problemen bei Metadaten von VMDK-Dateien
+9. VERBESSERT: Konsistente Fehlerbehandlung in allen Modi (Demo und Echtdaten)
+10. VERBESSERT: Detaillierte Debug-Ausgaben für VMDK-Metadaten zur einfacheren Fehlersuche
 
 Technische Details:
 ------------------

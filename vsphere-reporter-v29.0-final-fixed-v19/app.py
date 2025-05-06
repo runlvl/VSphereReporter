@@ -1,9 +1,11 @@
 """
-VMware vSphere Reporter v19.0
-Verbesserte Benutzeroberfläche mit robuster VMDK-Erkennung
+VMware vSphere Reporter v19.0 - Produktionsversion
+Verbesserte Benutzeroberfläche mit robuster VMDK-Erkennung und optimierter Performance
 
 Diese Version basiert auf dem erfolgreichen Ansatz aus v18, wurde jedoch mit einer
-verbesserten Präsentation und Fehlerbehandlung ausgestattet.
+verbesserten Präsentation, Fehlerbehandlung und optimierter Metadatenextraktion ausgestattet.
+
+© 2025 Bechtle GmbH - Alle Rechte vorbehalten
 """
 
 import os

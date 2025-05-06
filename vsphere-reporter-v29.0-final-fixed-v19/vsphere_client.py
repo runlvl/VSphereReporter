@@ -484,27 +484,52 @@ class VSphereClient:
                                     # Erstelle den vollständigen Pfad für die VMDK
                                     vmdk_path = f"{folder_path}{file_path}"
                                     
-                                    # Sammle alle verfügbaren Metadaten (einige können NULL sein)
+                                    # Verbesserte Extraktion der Metadaten mit erweiterten Prüfungen
                                     # Die Debug-Ausgaben helfen uns, die Metadaten besser zu verstehen
-                                    file_size = file_info.fileSize if hasattr(file_info, 'fileSize') else None
-                                    modification_time = file_info.modification if hasattr(file_info, 'modification') else None
                                     
-                                    # Debug-Ausgaben für bessere Fehlerdiagnose
-                                    if file_size is not None:
-                                        self.logger.debug(f"VMDK Größe für {vmdk_path}: {file_size} KB")
-                                    else:
-                                        self.logger.debug(f"Keine Größeninformation für VMDK {vmdk_path}")
+                                    # Größe extrahieren und protokollieren
+                                    file_size = None
+                                    try:
+                                        if hasattr(file_info, 'fileSize'):
+                                            file_size = file_info.fileSize
+                                            self.logger.debug(f"VMDK Größe für {vmdk_path}: {file_size} KB")
+                                        else:
+                                            # Fallback: Versuche, Größe über das `capacity`-Attribut zu ermitteln
+                                            if hasattr(file_info, 'capacity'):
+                                                file_size = file_info.capacity
+                                                self.logger.debug(f"VMDK Größe (aus capacity) für {vmdk_path}: {file_size} KB")
+                                            else:
+                                                self.logger.debug(f"Keine Größeninformation für VMDK {vmdk_path}")
+                                    except Exception as e:
+                                        self.logger.debug(f"Fehler beim Lesen der Größe für {vmdk_path}: {str(e)}")
+                                        # Setze Default-Wert, falls Extraktion fehlschlägt
+                                        file_size = 0
                                     
-                                    if modification_time is not None:
-                                        self.logger.debug(f"VMDK Änderungsdatum für {vmdk_path}: {modification_time}")
-                                    else:
-                                        self.logger.debug(f"Kein Änderungsdatum für VMDK {vmdk_path}")
+                                    # Änderungsdatum extrahieren und protokollieren
+                                    modification_time = None
+                                    try:
+                                        if hasattr(file_info, 'modification'):
+                                            modification_time = file_info.modification
+                                            self.logger.debug(f"VMDK Änderungsdatum für {vmdk_path}: {modification_time}")
+                                        else:
+                                            # Fallback: Versuche, Datum über das `lastModified`-Attribut zu ermitteln
+                                            if hasattr(file_info, 'lastModified'):
+                                                modification_time = file_info.lastModified
+                                                self.logger.debug(f"VMDK Änderungsdatum (aus lastModified) für {vmdk_path}: {modification_time}")
+                                            else:
+                                                self.logger.debug(f"Kein Änderungsdatum für VMDK {vmdk_path}")
+                                    except Exception as e:
+                                        self.logger.debug(f"Fehler beim Lesen des Änderungsdatums für {vmdk_path}: {str(e)}")
                                     
+                                    # Setze die Daten mit Fallback auf Default-Werte
                                     vmdk_data = {
                                         'path': vmdk_path,
-                                        'size_kb': file_size,
-                                        'modification_time': str(modification_time) if modification_time is not None else None
+                                        'size_kb': file_size if file_size is not None else 0,
+                                        'modification_time': str(modification_time) if modification_time is not None else "Unbekannt"
                                     }
+                                    
+                                    # Erweiterte Debug-Ausgabe der finalen VMDK-Daten
+                                    self.logger.debug(f"Finale VMDK-Daten für {vmdk_path}: Größe={vmdk_data['size_kb']} KB, Datum={vmdk_data['modification_time']}")
                                     
                                     self.raw_data['all_vmdk_paths'].append(vmdk_data)
                                 except Exception as e:
@@ -528,14 +553,20 @@ class VSphereClient:
                         vmdk['status'] = 'template_or_snapshot'
                     else:
                         vmdk['status'] = 'orphaned'
-                        # Stelle sicher, dass size_kb und modification_time immer vorhanden sind,
-                        # auch wenn sie None sein könnten
+                        # Stelle sicher, dass size_kb und modification_time immer vorhanden sind
+                        # und einen gültigen Wert haben (nicht None)
                         orphaned_vmdk = {
                             'path': vmdk.get('path'),
-                            'size_kb': vmdk.get('size_kb'),
-                            'modification_time': vmdk.get('modification_time'),
+                            'size_kb': vmdk.get('size_kb', 0),  # Fallback auf 0, wenn nicht vorhanden
+                            'modification_time': vmdk.get('modification_time', "Unbekannt"),  # Fallback auf Text, wenn nicht vorhanden
                             'status': 'orphaned'
                         }
+                        
+                        # Zusätzliche Debug-Ausgabe
+                        self.logger.debug(f"Verwaiste VMDK gefunden: {orphaned_vmdk['path']}")
+                        self.logger.debug(f"  - Größe: {orphaned_vmdk['size_kb']} KB")
+                        self.logger.debug(f"  - Änderungsdatum: {orphaned_vmdk['modification_time']}")
+                        
                         self.raw_data['orphaned_vmdks'].append(orphaned_vmdk)
                 except Exception as e:
                     self.log_error(f"Fehler beim Identifizieren des Status für VMDK {vmdk.get('path', 'Unbekannt')}", e)
