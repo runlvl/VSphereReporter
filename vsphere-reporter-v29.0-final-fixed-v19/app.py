@@ -70,6 +70,10 @@ def login():
         
         logger.info(f"Verbindungsversuch zu {server} als {username}")
         
+        # Demo-Modus ausschalten, da wir eine echte Verbindung herstellen
+        vsphere_client.set_demo_mode(False)
+        session['demo_mode'] = False
+        
         # Verbindung zum vCenter herstellen
         success = vsphere_client.connect_to_server(
             host=server,
