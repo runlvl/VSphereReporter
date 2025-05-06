@@ -1,4 +1,4 @@
-# VMware vSphere Reporter v19.0
+# VMware vSphere Reporter v19.1
 
 Ein umfassendes Tool zur Berichterstellung und Überwachung von VMware vSphere-Umgebungen.
 
@@ -6,7 +6,7 @@ Ein umfassendes Tool zur Berichterstellung und Überwachung von VMware vSphere-U
 
 Der VMware vSphere Reporter ist ein leistungsstarkes Tool für Systemadministratoren, um wichtige Informationen aus ihrer VMware vSphere-Umgebung zu sammeln und zu analysieren. Die Anwendung bietet Berichte zu VMware Tools-Status, VM-Snapshots und verwaisten VMDK-Dateien.
 
-Version 19.0 bietet eine verbesserte Benutzeroberfläche mit robuster VMDK-Erkennung, basierend auf dem erfolgreichen Ansatz von Version 18.
+Version 19.1 behebt Startprobleme und verbessert die robuste VMDK-Erkennung, basierend auf dem erfolgreichen Ansatz von Version 19.0.
 
 ## Funktionen
 
@@ -57,6 +57,16 @@ Falls Probleme beim Start der Anwendung auftreten:
 2. Stellen Sie sicher, dass alle erforderlichen Abhängigkeiten installiert sind, indem Sie das Setup-Skript erneut ausführen
 3. Überprüfen Sie die Protokolldateien im Verzeichnis `logs` für detaillierte Fehlerinformationen
 4. Bei Netzwerkproblemen stellen Sie sicher, dass Ihre Firewall die Kommunikation auf dem verwendeten Port zulässt
+5. Sollte die Anwendung nicht mit `run.bat`/`run.sh` starten, können Sie sie alternativ direkt mit `python app.py` starten
+
+## Versionshinweise v19.1
+
+- Behebung des WERKZEUG_SERVER_FD-Fehlers beim Starten der Anwendung
+- Vereinfachte Startskripte run.bat und run.sh durch direkten Aufruf von app.py
+- Verbesserte Metadaten-Extraktion für VMDK-Dateien mit mehreren Fallback-Mechanismen
+- Garantierte Anzeige von Größen- und Änderungsdatum-Informationen für alle VMDKs
+- Umfassende Fehlerbehandlung für stabile Datenerfassung
+- Erweiterte Debug-Funktionen für Problemdiagnose
 
 ## Versionshinweise v19.0
 

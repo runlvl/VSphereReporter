@@ -6,19 +6,19 @@ Diese Version enthält wichtige Verbesserungen und Fehlerbehebungen gegenüber v
 1. BEHOBEN: Fehler 500 bei der Anzeige von verwaisten VMDKs durch korrekte Behandlung der Datenstruktur im Demo-Modus
 2. BEHOBEN: Problem, dass im Echtmodus Demo-Daten angezeigt wurden, durch explizite Deaktivierung des Demo-Modus bei echter Verbindung
 3. BEHOBEN: Fehlende Anzeige von Größe und Änderungsdatum bei verwaisten VMDKs in Echtdaten durch robustere Metadatenextraktion
-4. BEHOBEN: WERKZEUG_SERVER_FD-Fehler beim Starten über run.py durch verbesserte Umgebungsvariablen-Behandlung
+4. BEHOBEN: WERKZEUG_SERVER_FD-Fehler beim Starten durch verbesserte Startskripte (run.bat und run.sh)
 5. NEU: Methode `set_demo_mode()` zur besseren Kontrolle des Demo-Modus
 6. VERBESSERT: Optimiertes Setup-Skript (setup.bat) ohne Abfragen, mit automatischem Start der Anwendung
-7. VERBESSERT: "Developer Version"-Meldung in run.bat entfernt durch umfassende Flask-Unterdrückung
+7. VERBESSERT: "Developer Version"-Meldung entfernt durch umfassende Flask-Unterdrückung
 8. VERBESSERT: Robustere Extraktion von VMDK-Metadaten mit Fallback-Mechanismen für fehlende Größen und Datumsangaben
 9. VERBESSERT: Verbessertes Logging für bessere Diagnose von Problemen bei Metadaten von VMDK-Dateien
 10. VERBESSERT: Konsistente Fehlerbehandlung in allen Modi (Demo und Echtdaten)
 11. VERBESSERT: Detaillierte Debug-Ausgaben für VMDK-Metadaten zur einfacheren Fehlersuche
-12. VERBESSERT: Standardisierte Logging-Konfiguration in run.py zur Vermeidung von Startproblemen
+12. VERBESSERT: Standardisierte Logging-Konfiguration zur Vermeidung von Startproblemen
 13. NEU: Dedizierte Hilfsmethoden für VMDK-Metadatenextraktion (_get_vmdk_file_size und _get_vmdk_modification_time)
 14. NEU: Mehrere Fallback-Mechanismen für robuste Größen- und Datumswerte (z.B. Schätzung aus Dateinamen)
 15. NEU: Standardwerte garantieren keine NULL-Werte mehr bei VMDK-Metadaten
-16. NEU: Alternativer Startmechanismus in run.py zur Umgehung von Flask-Entwicklungsserver-Problemen
+16. NEU: Vereinfachte Startskripte run.bat und run.sh, die direkt app.py verwenden
 
 Technische Details:
 ------------------
