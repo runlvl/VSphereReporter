@@ -1,19 +1,19 @@
 @echo off
+:: VMware vSphere Reporter v19.1 - Schnellstart
 echo Starte VMware vSphere Reporter...
 set PYTHONWARNINGS=ignore
 set FLASK_ENV=production
-set WERKZEUG_SERVER_FD=
 set FLASK_APP=app.py
 set FLASK_RUN_HOST=0.0.0.0
 set FLASK_RUN_PORT=5000
 
-REM Warte kurz, damit die Umgebungsvariablen korrekt gesetzt werden
-timeout /t 1 /nobreak >nul
+:: Virtuelle Umgebung aktivieren, falls vorhanden
+if exist "venv\Scripts\activate.bat" call venv\Scripts\activate.bat > nul 2> nul
 
-REM Starte Browser
+:: Browser starten
 start http://localhost:5000
 
-REM Starte die Anwendung direkt, ohne run.py zu verwenden
+:: App direkt starten
 python app.py
 
 pause
