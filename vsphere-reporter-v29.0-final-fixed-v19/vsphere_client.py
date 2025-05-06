@@ -485,10 +485,25 @@ class VSphereClient:
                                     vmdk_path = f"{folder_path}{file_path}"
                                     
                                     # Sammle alle verfügbaren Metadaten (einige können NULL sein)
+                                    # Die Debug-Ausgaben helfen uns, die Metadaten besser zu verstehen
+                                    file_size = file_info.fileSize if hasattr(file_info, 'fileSize') else None
+                                    modification_time = file_info.modification if hasattr(file_info, 'modification') else None
+                                    
+                                    # Debug-Ausgaben für bessere Fehlerdiagnose
+                                    if file_size is not None:
+                                        self.logger.debug(f"VMDK Größe für {vmdk_path}: {file_size} KB")
+                                    else:
+                                        self.logger.debug(f"Keine Größeninformation für VMDK {vmdk_path}")
+                                    
+                                    if modification_time is not None:
+                                        self.logger.debug(f"VMDK Änderungsdatum für {vmdk_path}: {modification_time}")
+                                    else:
+                                        self.logger.debug(f"Kein Änderungsdatum für VMDK {vmdk_path}")
+                                    
                                     vmdk_data = {
                                         'path': vmdk_path,
-                                        'size_kb': file_info.fileSize if hasattr(file_info, 'fileSize') else None,
-                                        'modification_time': str(file_info.modification) if hasattr(file_info, 'modification') else None
+                                        'size_kb': file_size,
+                                        'modification_time': str(modification_time) if modification_time is not None else None
                                     }
                                     
                                     self.raw_data['all_vmdk_paths'].append(vmdk_data)

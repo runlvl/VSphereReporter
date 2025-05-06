@@ -7,8 +7,9 @@ Diese Version enthält wichtige Verbesserungen und Fehlerbehebungen:
 2. BEHOBEN: Problem, dass im Echtmodus Demo-Daten angezeigt wurden, durch explizite Deaktivierung des Demo-Modus bei echter Verbindung
 3. BEHOBEN: Fehlende Anzeige von Größe und Änderungsdatum bei verwaisten VMDKs in Echtdaten
 4. NEU: Methode `set_demo_mode()` zur besseren Kontrolle des Demo-Modus
-5. VERBESSERT: Verbessertes Logging für bessere Diagnose von Problemen
+5. VERBESSERT: Verbessertes Logging für bessere Diagnose von Problemen bei Metadaten von VMDK-Dateien
 6. VERBESSERT: Konsistente Fehlerbehandlung in allen Modi (Demo und Echtdaten)
+7. VERBESSERT: Detaillierte Debug-Ausgaben für VMDK-Metadaten zur einfacheren Fehlersuche
 
 Technische Details:
 ------------------
