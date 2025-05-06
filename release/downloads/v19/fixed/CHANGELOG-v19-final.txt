@@ -4,6 +4,7 @@
 * Behoben: Error 500 bei Anzeige von verwaisten VMDKs im Demo-Modus
 * Behoben: Echtmodus zeigte nur Demo-Daten an (beim Login wird jetzt der Demo-Modus explizit deaktiviert)
 * Behoben: Fehlende Datenstrukturen für korrekte VMDK-Erkennung und -Verarbeitung
+* Neu: set_demo_mode Methode im VSphereClient hinzugefügt für bessere Kontrolle
 
 ## Technische Details
 * Verbesserte Struktur für die Demo-Daten in vsphere_client.py
@@ -11,6 +12,7 @@
 * Korrektur in app.py für die VMDK-Datenverarbeitung
 * Demo-Modus wird beim Login explizit deaktiviert, um sicherzustellen, dass Echtdaten angezeigt werden
 * Verbesserung der Demo-Modus Flag-Behandlung in der Session
+* Neue Schnittstelle zum expliziten Setzen des Demo-Modus über VSphereClient.set_demo_mode()
 
 ## Installation
 Einfach das ZIP-Archiv herunterladen und entpacken. Dann:

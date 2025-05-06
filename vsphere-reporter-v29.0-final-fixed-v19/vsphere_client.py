@@ -38,6 +38,15 @@ class VSphereClient:
             'snapshots': False,
             'orphaned_vmdks': False
         }
+        
+    def set_demo_mode(self, mode):
+        """Setzt den Demo-Modus
+        
+        Args:
+            mode (bool): True für Demo-Modus, False für Echtmodus
+        """
+        self.demo_mode = mode
+        self.logger.info(f"Demo-Modus {'aktiviert' if mode else 'deaktiviert'}")
 
     def log_error(self, error_msg, exception=None):
         """Protokolliere einen Fehler mit Stacktrace"""
