@@ -1,0 +1,8 @@
+VMware vSphere Reporter v19.1 - Update 15
+
+ÄNDERUNGEN:
+- Problem mit fehlenden VMDKs im Demo-Modus behoben
+- Verbesserte Demo-Modus-Erkennung in der VMDK-Anzeige
+- Fortschrittsbalken zur setup.bat hinzugefügt
+- Verbesserte Darstellung der Installationsschritte
+- Bessere Fehlerbehandlung bei VMDK-Metadaten
