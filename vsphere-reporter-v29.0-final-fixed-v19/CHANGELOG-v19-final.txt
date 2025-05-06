@@ -1,0 +1,25 @@
+CHANGELOG - VMware vSphere Reporter v29.0 (Fixed Version v19 Final)
+=================================================================
+
+Diese Version enthält wichtige Verbesserungen und Fehlerbehebungen:
+
+1. BEHOBEN: Fehler 500 bei der Anzeige von verwaisten VMDKs durch korrekte Behandlung der Datenstruktur im Demo-Modus
+2. BEHOBEN: Problem, dass im Echtmodus Demo-Daten angezeigt wurden, durch explizite Deaktivierung des Demo-Modus bei echter Verbindung
+3. BEHOBEN: Fehlende Anzeige von Größe und Änderungsdatum bei verwaisten VMDKs in Echtdaten
+4. NEU: Methode `set_demo_mode()` zur besseren Kontrolle des Demo-Modus
+5. VERBESSERT: Verbessertes Logging für bessere Diagnose von Problemen
+6. VERBESSERT: Konsistente Fehlerbehandlung in allen Modi (Demo und Echtdaten)
+
+Technische Details:
+------------------
+- Die verwaisten VMDK-Datenstrukturen werden jetzt einheitlich behandelt, sowohl im Demo-Modus als auch bei Echtdaten
+- Felder 'size_kb' und 'modification_time' werden explizit zugewiesen, auch wenn sie null sein können
+- Verbesserte Fehlerbehandlung durch detailliertere Logging-Informationen
+- Das Demo-Flag wird jetzt korrekt gesetzt/zurückgesetzt bei Wechsel zwischen Demo- und Echtmodus
+
+Installation:
+------------
+1. Entpacken Sie die ZIP-Datei in einen Ordner Ihrer Wahl
+2. Führen Sie setup.bat (Windows) oder setup.sh (Linux) aus, um die Abhängigkeiten zu installieren
+3. Starten Sie die Anwendung mit run.bat (Windows) oder run.sh (Linux)
+4. Öffnen Sie einen Browser und navigieren Sie zu http://localhost:5000
