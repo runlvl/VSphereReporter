@@ -145,10 +145,13 @@ def vmware_tools():
         return redirect(url_for('index'))
     
     # Sammle Daten, wenn noch nicht vorhanden
-    if not vsphere_client.collection_status['vmware_tools']:
-        vmware_tools_data = vsphere_client.collect_vmware_tools_status()
+    result = vsphere_client.collect_vmware_tools_status()
+    
+    # Verarbeite die Daten je nach Demo-Modus oder Echtdaten
+    if isinstance(result, dict) and 'demo' in result:
+        vmware_tools_data = result.get('data', [])
     else:
-        vmware_tools_data = vsphere_client.collect_vmware_tools_status()
+        vmware_tools_data = result
     
     return render_template(
         'vmware_tools.html',
@@ -164,11 +167,14 @@ def snapshots():
         flash('Bitte loggen Sie sich ein.', 'warning')
         return redirect(url_for('index'))
     
-    # Sammle Daten, wenn noch nicht vorhanden
-    if not vsphere_client.collection_status['snapshots']:
-        snapshots_data = vsphere_client.collect_snapshot_info()
+    # Sammle Daten
+    result = vsphere_client.collect_snapshot_info()
+    
+    # Verarbeite die Daten je nach Demo-Modus oder Echtdaten
+    if isinstance(result, dict) and 'demo' in result:
+        snapshots_data = result.get('data', [])
     else:
-        snapshots_data = vsphere_client.collect_snapshot_info()
+        snapshots_data = result
     
     return render_template(
         'snapshots.html',
@@ -184,19 +190,19 @@ def orphaned_vmdks():
         flash('Bitte loggen Sie sich ein.', 'warning')
         return redirect(url_for('index'))
     
-    # Sammle Daten, wenn noch nicht vorhanden
-    if not vsphere_client.collection_status['orphaned_vmdks']:
-        raw_data = vsphere_client.collect_all_vmdk_files()
-        if raw_data and isinstance(raw_data, dict):
-            orphaned_vmdks = raw_data.get('orphaned_vmdks', [])
+    # Sammle Daten
+    raw_data = vsphere_client.collect_all_vmdk_files()
+    
+    # Verarbeite die Daten je nach Demo-Modus oder Echtdaten
+    if isinstance(raw_data, dict):
+        if 'demo' in raw_data:
+            # Demo-Daten mit "data" Schlüssel
+            orphaned_vmdks = raw_data.get('data', {}).get('orphaned_vmdks', [])
         else:
-            orphaned_vmdks = []
+            # Standardformat mit "orphaned_vmdks" Schlüssel
+            orphaned_vmdks = raw_data.get('orphaned_vmdks', [])
     else:
-        raw_data = vsphere_client.collect_all_vmdk_files()
-        if raw_data and isinstance(raw_data, dict):
-            orphaned_vmdks = raw_data.get('orphaned_vmdks', [])
-        else:
-            orphaned_vmdks = []
+        orphaned_vmdks = []
     
     return render_template(
         'orphaned_vmdks.html',
