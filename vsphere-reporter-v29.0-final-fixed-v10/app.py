@@ -81,9 +81,7 @@ def index():
 def login():
     error = None
     if request.method == 'POST':
-        demo_mode = 'demo_mode' in request.form
-        
-        if demo_mode:
+        if 'demo_mode' in request.form:
             session['authenticated'] = True
             session['demo_mode'] = True
             session['vsphere_host'] = 'demo.vcenter.local'

@@ -130,14 +130,19 @@ class ReportGenerator:
         ))
         
         # Sort snapshots by age (oldest first)
+        now = datetime.datetime.now()
         for snapshot in data['snapshots']:
             creation_time = snapshot.get('creation_time')
             if creation_time:
-                age_seconds = (datetime.datetime.now() - creation_time).total_seconds()
+                # Make sure both datetimes are naive (no timezone info)
+                if hasattr(creation_time, 'tzinfo') and creation_time.tzinfo is not None:
+                    creation_time = creation_time.replace(tzinfo=None)
+                    
+                age_seconds = (now - creation_time).total_seconds()
                 snapshot['age_days'] = age_seconds / (24 * 60 * 60)
                 snapshot['age_human'] = self._format_timespan(age_seconds)
         
-        data['snapshots'].sort(key=lambda x: x.get('creation_time', datetime.datetime.now()))
+        data['snapshots'].sort(key=lambda x: x.get('creation_time', now))
         
         # Sort orphaned VMDKs by size (largest first)
         for vmdk in data['orphaned_vmdks']:
