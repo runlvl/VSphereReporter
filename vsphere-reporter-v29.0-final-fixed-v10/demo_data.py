@@ -202,20 +202,29 @@ def get_orphaned_vmdks_data():
     
     orphaned_vmdks = []
     
-    # Generate a set of orphaned VMDKs
-    for i in range(1, 9):  # 8 orphaned VMDKs (matching the count from get_orphaned_vmdks_count)
+    # Generiere mehr verwaiste VMDKs für die Demo
+    for i in range(1, 15):  # 14 verwaiste VMDKs für bessere Sichtbarkeit
         prefix = random.choice(vm_prefixes)
         vm_name = f"{prefix}-{random.randint(1, 30):02d}"
         datastore = random.choice(datastores)
         
-        # Generate a realistic VMDK path
-        vmdk_name = f"{vm_name}/{vm_name}.vmdk"
+        # Erzeuge verschiedene Arten von VMDK-Pfaden für mehr Realismus
+        vmdk_types = [
+            f"{vm_name}/{vm_name}.vmdk",                    # Standard VM Disk
+            f"{vm_name}/{vm_name}_1.vmdk",                  # Zusätzliche Disk
+            f"{vm_name}/snapshot-{random.randint(100000, 999999)}.vmdk",  # Snapshot
+            f"orphaned_disks/{vm_name}_{random.randint(1, 5)}.vmdk",      # Offensichtlich verwaist
+            f"_old_vms/{vm_name}.vmdk",                     # Alte VMs
+            f"templates/clone_{vm_name}.vmdk"               # Fehlgeschlagene Klone
+        ]
+        
+        vmdk_name = random.choice(vmdk_types)
         path = f"[{datastore}] {vmdk_name}"
         
-        # Size between 1GB and 400GB
-        size_bytes = random.randint(1, 400) * 1024 * 1024 * 1024
+        # Größe zwischen 1GB und 800GB
+        size_bytes = random.randint(1, 800) * 1024 * 1024 * 1024
         
-        # Recommended action
+        # Empfohlene Aktionen mit unterschiedlicher Wahrscheinlichkeit
         actions = [
             "Manuelle Überprüfung erforderlich",
             "Sichern und löschen",
@@ -224,12 +233,17 @@ def get_orphaned_vmdks_data():
             "In Storage vMotion einbeziehen"
         ]
         
+        # Gewichtete Auswahl der Aktion
+        action_weights = [0.5, 0.2, 0.1, 0.15, 0.05]  # Höhere Wahrscheinlichkeit für manuelle Überprüfung
+        recommended_action = random.choices(actions, weights=action_weights, k=1)[0]
+        
         orphaned_vmdks.append({
             'name': vmdk_name,
             'datastore': datastore,
             'path': path,
             'size_bytes': size_bytes,
-            'recommended_action': random.choice(actions)
+            'size_human': f"{size_bytes / (1024**3):.2f} GB",  # Menschenlesbare Größe
+            'recommended_action': recommended_action
         })
     
     return orphaned_vmdks
