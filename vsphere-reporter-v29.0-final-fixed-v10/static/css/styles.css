@@ -1,12 +1,14 @@
-/* VMware vSphere Reporter - v29.1 Final Fixed v12 */
+/* VMware vSphere Reporter - v29.1 Final Fixed v13 */
 
 :root {
+    /* Base color palette */
     --dark-blue: #00355e;
     --orange: #da6f1e;
     --green: #23a96a;
     --light-gray: #f3f3f3;
     --dark-gray: #5a5a5a;
     
+    /* Status indicators */
     --tools-ok: #d4edda;
     --tools-warning: #fff3cd;
     --tools-danger: #f8d7da;
@@ -24,28 +26,59 @@ body {
     background-color: var(--light-gray);
 }
 
-/* Navbar styles */
+/* Navbar styles - updated for better visibility */
 .navbar {
     background-color: var(--dark-blue);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 0.8rem 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
 }
 
 .navbar-brand img {
     max-height: 40px;
+    margin-right: 0.8rem;
+}
+
+.navbar-brand span {
+    color: white;
+    font-weight: 500;
+    font-size: 1.3rem;
 }
 
 .navbar-dark .navbar-brand,
 .navbar-dark .navbar-nav .nav-link {
     color: #ffffff;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s ease;
 }
 
 .navbar-dark .navbar-nav .nav-link:hover {
     color: var(--orange);
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
 }
 
 .navbar-dark .navbar-nav .nav-link.active {
-    color: var(--orange);
+    color: white;
+    background-color: var(--orange);
+    border-radius: 4px;
     font-weight: 500;
+}
+
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Make sure nav icons align properly */
+.nav-link i {
+    width: 20px;
+    text-align: center;
+    margin-right: 5px;
 }
 
 /* Content container */
@@ -288,6 +321,19 @@ body {
 }
 
 .snapshot-age-critical {
+    background-color: var(--snapshot-old);
+}
+
+/* VMDK Size */
+.vmdk-size-normal {
+    background-color: var(--snapshot-normal);
+}
+
+.vmdk-size-warning {
+    background-color: var(--snapshot-warning);
+}
+
+.vmdk-size-critical {
     background-color: var(--snapshot-old);
 }
 

@@ -29,9 +29,9 @@
         </thead>
         <tbody>
             {% for vm in vmware_tools_data %}
-            <tr>
+            <tr class="{% if vm.status == 'Outdated' %}tools-status-warning{% elif vm.status == 'Up-to-date' %}tools-status-ok{% elif vm.status == 'Not installed' %}tools-status-critical{% endif %}">
                 <td data-name="{{ vm.vm_name }}">{{ vm.vm_name }}</td>
-                <td data-status="{{ vm.status }}" class="{% if vm.status == 'Outdated' %}tools-outdated{% elif vm.status == 'Up-to-date' %}tools-updated{% elif vm.status == 'Not installed' %}tools-missing{% endif %}">
+                <td data-status="{{ vm.status }}">
                     {{ vm.status }}
                 </td>
                 <td data-version="{{ vm.version }}">{{ vm.version }}</td>

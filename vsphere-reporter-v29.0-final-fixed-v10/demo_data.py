@@ -197,53 +197,104 @@ def get_orphaned_vmdks_data():
     Returns:
         list: List of dictionaries with orphaned VMDK information
     """
-    datastores = ['datastore1', 'datastore2', 'datastore3', 'SAN01', 'SAN02', 'NAS01']
-    vm_prefixes = ['web', 'db', 'app', 'ad', 'file', 'print', 'mail', 'backup', 'test', 'dev']
-    
-    orphaned_vmdks = []
-    
-    # Generiere mehr verwaiste VMDKs für die Demo
-    for i in range(1, 15):  # 14 verwaiste VMDKs für bessere Sichtbarkeit
-        prefix = random.choice(vm_prefixes)
-        vm_name = f"{prefix}-{random.randint(1, 30):02d}"
-        datastore = random.choice(datastores)
-        
-        # Erzeuge verschiedene Arten von VMDK-Pfaden für mehr Realismus
-        vmdk_types = [
-            f"{vm_name}/{vm_name}.vmdk",                    # Standard VM Disk
-            f"{vm_name}/{vm_name}_1.vmdk",                  # Zusätzliche Disk
-            f"{vm_name}/snapshot-{random.randint(100000, 999999)}.vmdk",  # Snapshot
-            f"orphaned_disks/{vm_name}_{random.randint(1, 5)}.vmdk",      # Offensichtlich verwaist
-            f"_old_vms/{vm_name}.vmdk",                     # Alte VMs
-            f"templates/clone_{vm_name}.vmdk"               # Fehlgeschlagene Klone
-        ]
-        
-        vmdk_name = random.choice(vmdk_types)
-        path = f"[{datastore}] {vmdk_name}"
-        
-        # Größe zwischen 1GB und 800GB
-        size_bytes = random.randint(1, 800) * 1024 * 1024 * 1024
-        
-        # Empfohlene Aktionen mit unterschiedlicher Wahrscheinlichkeit
-        actions = [
-            "Manuelle Überprüfung erforderlich",
-            "Sichern und löschen",
-            "Zu VM zuordnen",
-            "Löschen nach Überprüfung",
-            "In Storage vMotion einbeziehen"
-        ]
-        
-        # Gewichtete Auswahl der Aktion
-        action_weights = [0.5, 0.2, 0.1, 0.15, 0.05]  # Höhere Wahrscheinlichkeit für manuelle Überprüfung
-        recommended_action = random.choices(actions, weights=action_weights, k=1)[0]
-        
-        orphaned_vmdks.append({
-            'name': vmdk_name,
-            'datastore': datastore,
-            'path': path,
-            'size_bytes': size_bytes,
-            'size_human': f"{size_bytes / (1024**3):.2f} GB",  # Menschenlesbare Größe
-            'recommended_action': recommended_action
-        })
+    # Definierte Liste von verwaisten VMDKs für konsistente Ergebnisse im Demo-Modus
+    orphaned_vmdks = [
+        {
+            'name': 'old_web/web-server12.vmdk',
+            'datastore': 'datastore1',
+            'path': '[datastore1] old_web/web-server12.vmdk',
+            'size_bytes': 42949672960,  # 40 GB
+            'size_human': '40.00 GB',
+            'recommended_action': 'Manuelle Überprüfung erforderlich'
+        },
+        {
+            'name': 'web-03/web-03_1.vmdk',
+            'datastore': 'SAN01',
+            'path': '[SAN01] web-03/web-03_1.vmdk',
+            'size_bytes': 107374182400,  # 100 GB
+            'size_human': '100.00 GB',
+            'recommended_action': 'Sichern und löschen'
+        },
+        {
+            'name': 'db-15/snapshot-123456.vmdk',
+            'datastore': 'datastore3',
+            'path': '[datastore3] db-15/snapshot-123456.vmdk',
+            'size_bytes': 21474836480,  # 20 GB
+            'size_human': '20.00 GB',
+            'recommended_action': 'Löschen nach Überprüfung'
+        },
+        {
+            'name': 'orphaned_disks/app-07_1.vmdk',
+            'datastore': 'SAN02',
+            'path': '[SAN02] orphaned_disks/app-07_1.vmdk',
+            'size_bytes': 85899345920,  # 80 GB
+            'size_human': '80.00 GB',
+            'recommended_action': 'Sichern und löschen'
+        },
+        {
+            'name': '_old_vms/mail-01.vmdk',
+            'datastore': 'NAS01',
+            'path': '[NAS01] _old_vms/mail-01.vmdk',
+            'size_bytes': 214748364800,  # 200 GB
+            'size_human': '200.00 GB',
+            'recommended_action': 'Manuelle Überprüfung erforderlich'
+        },
+        {
+            'name': 'templates/clone_test-25.vmdk',
+            'datastore': 'datastore2',
+            'path': '[datastore2] templates/clone_test-25.vmdk',
+            'size_bytes': 10737418240,  # 10 GB
+            'size_human': '10.00 GB',
+            'recommended_action': 'Zu VM zuordnen'
+        },
+        {
+            'name': 'backup-05/backup-05.vmdk',
+            'datastore': 'datastore1',
+            'path': '[datastore1] backup-05/backup-05.vmdk',
+            'size_bytes': 322122547200,  # 300 GB
+            'size_human': '300.00 GB',
+            'recommended_action': 'Löschen nach Überprüfung'
+        },
+        {
+            'name': 'print-02/print-02_data.vmdk',
+            'datastore': 'SAN01',
+            'path': '[SAN01] print-02/print-02_data.vmdk',
+            'size_bytes': 53687091200,  # 50 GB
+            'size_human': '50.00 GB',
+            'recommended_action': 'In Storage vMotion einbeziehen'
+        },
+        {
+            'name': 'dev-11/dev-11_archive.vmdk',
+            'datastore': 'NAS01',
+            'path': '[NAS01] dev-11/dev-11_archive.vmdk',
+            'size_bytes': 161061273600,  # 150 GB
+            'size_human': '150.00 GB',
+            'recommended_action': 'Manuelle Überprüfung erforderlich'
+        },
+        {
+            'name': 'file-08/file-08_temp.vmdk',
+            'datastore': 'datastore3',
+            'path': '[datastore3] file-08/file-08_temp.vmdk',
+            'size_bytes': 16106127360,  # 15 GB
+            'size_human': '15.00 GB',
+            'recommended_action': 'Löschen nach Überprüfung'
+        },
+        {
+            'name': 'ad-01/old_snapshot_ad-01.vmdk',
+            'datastore': 'SAN02',
+            'path': '[SAN02] ad-01/old_snapshot_ad-01.vmdk',
+            'size_bytes': 5368709120,  # 5 GB
+            'size_human': '5.00 GB',
+            'recommended_action': 'Löschen nach Überprüfung'
+        },
+        {
+            'name': 'orphaned_disks/unknown_system.vmdk',
+            'datastore': 'datastore2',
+            'path': '[datastore2] orphaned_disks/unknown_system.vmdk',
+            'size_bytes': 32212254720,  # 30 GB
+            'size_human': '30.00 GB',
+            'recommended_action': 'Manuelle Überprüfung erforderlich'
+        }
+    ]
     
     return orphaned_vmdks
