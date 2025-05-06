@@ -124,6 +124,14 @@ args = "VSphereReporterV19_1_Direct"
 task = "workflow.run"
 args = "DownloadPackage"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "DownloadsV19Direct"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "DownloadsRoot"
+
 [[workflows.workflow]]
 name = "VSphereReporter"
 author = "agent"
@@ -427,6 +435,24 @@ author = "agent"
 task = "shell.exec"
 args = "cd release && mkdir -p downloads-web && cp downloads/vsphere-reporter-v29.0-web-final-fixed-v19.1-final-18-clean.zip downloads-web/ && cd downloads-web && python -m http.server 5030"
 waitForPort = 5030
+
+[[workflows.workflow]]
+name = "DownloadsV19Direct"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd release/downloads && python -m http.server 5000"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "DownloadsRoot"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd . && python -m http.server 5050"
+waitForPort = 5050
 
 [deployment]
 run = ["sh", "-c", "pip install -r requirements.txt || pip install pyVmomi>=7.0.0 PyQt5>=5.15.0 reportlab>=3.6.0 python-docx>=0.8.11 jinja2>=3.0.0 humanize>=3.0.0 && python vsphere_reporter.py"]
