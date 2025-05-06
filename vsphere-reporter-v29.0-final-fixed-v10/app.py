@@ -301,7 +301,14 @@ def view_snapshots():
         for snapshot in snapshots_data:
             creation_time = snapshot.get('creation_time')
             if creation_time:
-                age_seconds = (datetime.datetime.now() - creation_time).total_seconds()
+                # Ensure both datetimes are timezone-aware or naive to avoid comparison errors
+                if creation_time.tzinfo:
+                    now = datetime.datetime.now(creation_time.tzinfo)
+                else:
+                    now = datetime.datetime.now()
+                
+                age_seconds = (now - creation_time).total_seconds()
+                snapshot['age_days'] = age_seconds / (60 * 60 * 24)  # Convert to days
                 snapshot['age_human'] = humanize.naturaldelta(datetime.timedelta(seconds=age_seconds))
         
         # Sort by age (oldest first)

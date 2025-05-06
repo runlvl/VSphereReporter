@@ -4,243 +4,215 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VMware vSphere Reporter - Downloads</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
         :root {
-            --blue: #00355e;      /* Bechtle Dunkelblau */
-            --orange: #da6f1e;    /* Bechtle Orange */
-            --green: #23a96a;     /* Bechtle Grün */
+            --dark-blue: #00355e;
+            --orange: #da6f1e;
+            --green: #23a96a;
             --light-gray: #f3f3f3;
             --dark-gray: #5a5a5a;
         }
         
         body {
-            font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
             line-height: 1.6;
-            color: #333;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
         }
         
-        header {
-            background-color: var(--blue);
+        .navbar {
+            background-color: var(--dark-blue);
             color: white;
-            padding: 1.5rem 2rem;
-            text-align: center;
+            padding: 1rem 0;
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+        .navbar-brand img {
+            height: 40px;
+            margin-right: 10px;
         }
         
-        h1, h2, h3 {
-            color: var(--blue);
+        .header {
+            background-color: var(--dark-blue);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
         }
         
-        .downloads {
-            margin-top: 2rem;
+        .header h1 {
+            font-weight: 600;
         }
         
         .download-card {
-            background-color: white;
+            border: none;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             margin-bottom: 1.5rem;
-            overflow: hidden;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.3s ease;
         }
         
         .download-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
         }
         
-        .download-header {
-            background-color: var(--blue);
+        .card-header {
+            background-color: var(--dark-blue);
             color: white;
-            padding: 1rem 1.5rem;
-            font-weight: bold;
-            font-size: 1.1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            font-weight: 600;
+            border-top-left-radius: 8px !important;
+            border-top-right-radius: 8px !important;
         }
         
-        .version-tag {
-            background-color: var(--orange);
+        .btn-primary {
+            background-color: var(--dark-blue);
+            border-color: var(--dark-blue);
+        }
+        
+        .btn-primary:hover {
+            background-color: #002847;
+            border-color: #002847;
+        }
+        
+        .footer {
+            background-color: var(--dark-blue);
             color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-        }
-        
-        .latest-tag {
-            background-color: var(--green);
-        }
-        
-        .download-body {
-            padding: 1.5rem;
-        }
-        
-        .download-description {
-            margin-bottom: 1rem;
-        }
-        
-        .download-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-            color: var(--dark-gray);
-            margin-bottom: 1rem;
-        }
-        
-        .download-button {
-            display: inline-block;
-            padding: 0.5rem 1.5rem;
-            background-color: var(--blue);
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: 500;
-            transition: background-color 0.2s;
-        }
-        
-        .download-button:hover {
-            background-color: #00244c;
-        }
-        
-        .download-button i {
-            margin-right: 0.5rem;
-        }
-        
-        footer {
-            background-color: var(--blue);
-            color: white;
-            padding: 1.5rem;
-            text-align: center;
+            padding: 1.5rem 0;
             margin-top: 3rem;
+        }
+        
+        .badge-new {
+            background-color: var(--green);
+            color: white;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .changelog {
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>VMware vSphere Reporter</h1>
-        <p>Download-Bereich für verschiedene Versionen</p>
+    <header class="header">
+        <div class="container text-center">
+            <img src="logo_white.png" alt="Bechtle Logo" height="50">
+            <h1>VMware vSphere Reporter</h1>
+            <p class="lead">Download-Portal für alle Versionen</p>
+        </div>
     </header>
-    
+
     <div class="container">
-        <h2>Verfügbare Downloads</h2>
-        <p>Hier finden Sie alle Versionen des VMware vSphere Reporters zum Download.</p>
+        <div class="alert alert-success">
+            <strong>Update verfügbar!</strong> Version 29.1 Final Fixed v11 ist jetzt mit Verbesserungen bei der Benutzeroberfläche und Fehlerbehebungen verfügbar.
+        </div>
         
-        <div class="downloads">
-            <div class="download-card">
-                <div class="download-header">
-                    <span>VMware vSphere Reporter v29.1 - Web Edition (Final Fixed v11)</span>
-                    <span class="version-tag latest-tag">Neueste Version</span>
-                </div>
-                <div class="download-body">
-                    <div class="download-description">
-                        <p>Finale Version mit allen Fehlerbehebungen und visuellen Verbesserungen. Unterstützt alle Plattformen über einen modernen Webbrowser.</p>
-                        <ul>
-                            <li>Optimierte Erkennung verwaister VMDKs mit neuem Algorithmus</li>
-                            <li>Verbesserte farbliche Hervorhebung für alle Reporttypen</li>
-                            <li>Behoben: Demo-Modus Login-Problem</li>
-                            <li>Behoben: Datetime-Fehler in Snapshot-Berichten</li>
-                        </ul>
+        <h2 class="mb-4">Version 29 - Web Edition</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card download-card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>v29.1 Final Fixed v11</span>
+                        <span class="badge badge-new">NEU</span>
                     </div>
-                    <div class="download-meta">
-                        <span>Größe: 101 KB</span>
-                        <span>Datum: 06.05.2025</span>
-                        <span>Plattform: Windows/Linux</span>
+                    <div class="card-body">
+                        <p>Die neueste Version mit verbesserter Benutzeroberfläche und Fehlerbehebungen.</p>
+                        <div class="changelog mb-3">
+                            <strong>Änderungen in v11:</strong>
+                            <ul>
+                                <li>Stärkere visuelle Hervorhebung für Status-Indikatoren</li>
+                                <li>Tabellenspalten sind jetzt sortierbar</li>
+                                <li>Zeitzonenproblem bei Snapshots behoben</li>
+                                <li>Demo-Modus-Button funktioniert jetzt korrekt</li>
+                                <li>Aktualisierte Entwicklerinformationen</li>
+                            </ul>
+                        </div>
+                        <a href="../vsphere-reporter-v29.0-web-final-fixed-v11.zip" class="btn btn-primary">Download ZIP (Web Version)</a>
                     </div>
-                    <a href="vsphere-reporter-v29.0-web-final-fixed-v11.zip" class="download-button">
-                        <i>⬇️</i> Herunterladen
-                    </a>
-                </div>
-            </div>
-            
-            <div class="download-card">
-                <div class="download-header">
-                    <span>VMware vSphere Reporter v29.0 - Web Edition</span>
-                    <span class="version-tag">Ältere Version</span>
-                </div>
-                <div class="download-body">
-                    <div class="download-description">
-                        <p>Ursprüngliche v29.0 Version mit vollständig webbasierter Oberfläche. Unterstützt alle Plattformen über einen modernen Webbrowser.</p>
-                        <ul>
-                            <li>Vollständig webbasierte Benutzeroberfläche</li>
-                            <li>Verbesserter VMDK-Erkennungsalgorithmus</li>
-                            <li>Demo-Modus für einfaches Testen</li>
-                            <li>Bechtle Corporate Design</li>
-                        </ul>
+                    <div class="card-footer text-muted">
+                        Veröffentlicht: 6. Mai 2025
                     </div>
-                    <div class="download-meta">
-                        <span>Größe: 50 KB</span>
-                        <span>Datum: 05.05.2025</span>
-                        <span>Plattform: Windows/Linux</span>
-                    </div>
-                    <a href="vsphere-reporter-v29.0-web.zip" class="download-button">
-                        <i>⬇️</i> Herunterladen
-                    </a>
                 </div>
             </div>
             
-            <div class="download-card">
-                <div class="download-header">
-                    <span>VMware vSphere Reporter v28.0 - Windows</span>
-                    <span class="version-tag">Ältere Version</span>
+            <div class="col-md-6">
+                <div class="card download-card">
+                    <div class="card-header">v29.1 Final Fixed v10</div>
+                    <div class="card-body">
+                        <p>Verbesserte Web-Anwendung mit Benutzeroberfläche im Bechtle-Design.</p>
+                        <div class="changelog mb-3">
+                            <strong>Änderungen in v10:</strong>
+                            <ul>
+                                <li>Verbesserte Benutzeroberfläche</li>
+                                <li>Optimierte Berichtsdarstellung</li>
+                                <li>Verbesserte Dashboard-Anzeige</li>
+                                <li>Neue Exportoptionen</li>
+                            </ul>
+                        </div>
+                        <a href="../vsphere-reporter-v29.0-web-final-fixed-v10.zip" class="btn btn-outline-primary">Download ZIP (Web Version)</a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Veröffentlicht: 30. April 2025
+                    </div>
                 </div>
-                <div class="download-body">
-                    <div class="download-description">
-                        <p>Windows-Version mit grafischer Benutzeroberfläche (PyQt5).</p>
-                        <ul>
-                            <li>Verbesserte Benutzeroberfläche für Windows</li>
-                            <li>Optimierte Berichtsexporte</li>
-                            <li>Verbesserte Fehlerbehandlung</li>
-                        </ul>
+            </div>
+        </div>
+        
+        <h2 class="my-4">Ältere Versionen</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card download-card">
+                    <div class="card-header">v24.3 Final (Linux)</div>
+                    <div class="card-body">
+                        <p>Stabile Desktop-Version für Linux-Systeme.</p>
+                        <a href="../vsphere-reporter-linux-v24.3-final.tar.gz" class="btn btn-outline-secondary">Download TAR.GZ</a>
                     </div>
-                    <div class="download-meta">
-                        <span>Größe: 1.3 MB</span>
-                        <span>Datum: 01.03.2025</span>
-                        <span>Plattform: Windows</span>
+                    <div class="card-footer text-muted">
+                        Veröffentlicht: 15. März 2025
                     </div>
-                    <a href="vsphere-reporter-windows-v28.0.zip" class="download-button">
-                        <i>⬇️</i> Herunterladen
-                    </a>
                 </div>
             </div>
             
-            <div class="download-card">
-                <div class="download-header">
-                    <span>VMware vSphere Reporter v28.0 - Linux</span>
-                    <span class="version-tag">Ältere Version</span>
+            <div class="col-md-4">
+                <div class="card download-card">
+                    <div class="card-header">v24.3 Final (Windows)</div>
+                    <div class="card-body">
+                        <p>Stabile Desktop-Version für Windows-Systeme.</p>
+                        <a href="../vsphere-reporter-windows-v24.3-final.zip" class="btn btn-outline-secondary">Download ZIP</a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Veröffentlicht: 15. März 2025
+                    </div>
                 </div>
-                <div class="download-body">
-                    <div class="download-description">
-                        <p>Linux-Version mit grafischer Benutzeroberfläche (Tkinter).</p>
-                        <ul>
-                            <li>Optimiert für OpenSuse Tumbleweed</li>
-                            <li>Verbesserte Berichtsexporte</li>
-                            <li>Verbesserte Fehlerbehandlung</li>
-                        </ul>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card download-card">
+                    <div class="card-header">Debug-Tool v24</div>
+                    <div class="card-body">
+                        <p>Spezielles Debug-Tool für erweiterte Diagnose.</p>
+                        <a href="../vsphere-reporter-debug-tool-v24.zip" class="btn btn-outline-secondary">Download ZIP</a>
                     </div>
-                    <div class="download-meta">
-                        <span>Größe: 1.1 MB</span>
-                        <span>Datum: 01.03.2025</span>
-                        <span>Plattform: Linux</span>
+                    <div class="card-footer text-muted">
+                        Veröffentlicht: 10. März 2025
                     </div>
-                    <a href="vsphere-reporter-linux-v28.0.tar.gz" class="download-button">
-                        <i>⬇️</i> Herunterladen
-                    </a>
                 </div>
             </div>
         </div>
     </div>
     
-    <footer>
-        <p>Copyright &copy; 2025 Bechtle GmbH. Alle Rechte vorbehalten.</p>
+    <footer class="footer">
+        <div class="container text-center">
+            <p>VMware vSphere Reporter &copy; 2025 Bechtle Austria GmbH</p>
+            <p class="mb-0">Entwickelt von Ing. Johann Kiss, Bechtle Austria GmbH</p>
+        </div>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
