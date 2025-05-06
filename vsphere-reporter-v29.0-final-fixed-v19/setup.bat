@@ -3,8 +3,44 @@
 setlocal enabledelayedexpansion
 
 echo VMware vSphere Reporter v19.1 - Setup wird ausgefuehrt...
+echo =====================================================================
+
+:: Fortschrittsbalken-Funktionen
+:drawProgressBar
+set /a filled=%1
+set /a total=%2
+set bar=
+set /a empty=total-filled
+
+:: Fortschritts-Prozentsatz berechnen
+set /a percent=(filled*100)/total
+
+:: Fortschrittsbalken anzeigen mit Prozentsatz
+call :printBar %filled% %total% %percent%
+exit /b
+
+:printBar
+set /a barSize=50
+set /a filledSize=(%1*barSize)/%2
+set /a emptySize=barSize-filledSize
+
+set progressBar=[
+for /l %%i in (1,1,%filledSize%) do set progressBar=!progressBar!#
+for /l %%i in (1,1,%emptySize%) do set progressBar=!progressBar!-
+set progressBar=!progressBar!] !3!%%
+
+echo !progressBar!
+exit /b
+
+:: Anfangswerte setzen
+set totalSteps=7
+set currentStep=0
 
 :: Pruefen, ob Python installiert ist
+set /a currentStep+=1
+echo [Schritt !currentStep!/%totalSteps%] Pruefe Python-Installation...
+call :drawProgressBar !currentStep! %totalSteps%
+
 python --version > nul 2>&1
 if %errorlevel% neq 0 (
     echo [FEHLER] Python ist nicht installiert oder nicht im PATH.
@@ -14,6 +50,10 @@ if %errorlevel% neq 0 (
 )
 
 :: Ueberpruefen, ob pip installiert ist
+set /a currentStep+=1
+echo [Schritt !currentStep!/%totalSteps%] Pruefe pip-Installation...
+call :drawProgressBar !currentStep! %totalSteps%
+
 python -m pip --version > nul 2>&1
 if %errorlevel% neq 0 (
     echo [INFO] Installiere pip...
@@ -26,7 +66,10 @@ if %errorlevel% neq 0 (
 )
 
 :: Virtuelle Umgebung automatisch erstellen (ohne Abfrage)
-echo [INFO] Erstelle virtuelle Python-Umgebung...
+set /a currentStep+=1
+echo [Schritt !currentStep!/%totalSteps%] Erstelle virtuelle Python-Umgebung...
+call :drawProgressBar !currentStep! %totalSteps%
+
 python -m venv venv > nul 2>&1
 if %errorlevel% neq 0 (
     echo [WARNUNG] Virtuelle Umgebung konnte nicht erstellt werden. Fahre mit System-Python fort.
@@ -37,18 +80,31 @@ if %errorlevel% neq 0 (
     )
 )
 
-echo [INFO] Installiere Abhaengigkeiten...
+:: Upgrade pip
+set /a currentStep+=1
+echo [Schritt !currentStep!/%totalSteps%] Aktualisiere pip...
+call :drawProgressBar !currentStep! %totalSteps%
 
-:: Abhaengigkeiten installieren mit optimierter Performance
 python -m pip install --upgrade pip --quiet --disable-pip-version-check
-python -m pip install --quiet --disable-pip-version-check ^
-    pyVmomi>=7.0.0 ^
-    Flask>=2.0.0 ^
-    Flask-WTF>=1.0.0 ^
-    reportlab>=3.6.0 ^
-    python-docx>=0.8.11 ^
-    Jinja2>=3.0.0 ^
-    humanize>=3.0.0
+
+:: Installiere Abhaengigkeiten (in Gruppen für besseren Fortschrittsbalken)
+set /a currentStep+=1
+echo [Schritt !currentStep!/%totalSteps%] Installiere pyVmomi und Flask...
+call :drawProgressBar !currentStep! %totalSteps%
+
+python -m pip install --quiet --disable-pip-version-check pyVmomi>=7.0.0 Flask>=2.0.0 Flask-WTF>=1.0.0
+
+set /a currentStep+=1
+echo [Schritt !currentStep!/%totalSteps%] Installiere reportlab und python-docx...
+call :drawProgressBar !currentStep! %totalSteps%
+
+python -m pip install --quiet --disable-pip-version-check reportlab>=3.6.0 python-docx>=0.8.11
+
+set /a currentStep+=1
+echo [Schritt !currentStep!/%totalSteps%] Installiere Jinja2 und humanize...
+call :drawProgressBar !currentStep! %totalSteps%
+
+python -m pip install --quiet --disable-pip-version-check Jinja2>=3.0.0 humanize>=3.0.0
 
 if %errorlevel% neq 0 (
     echo [FEHLER] Abhaengigkeiten konnten nicht installiert werden.
