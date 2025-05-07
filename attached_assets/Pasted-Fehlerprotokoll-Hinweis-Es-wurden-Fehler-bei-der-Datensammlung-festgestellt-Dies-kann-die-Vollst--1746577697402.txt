@@ -1,0 +1,883 @@
+Fehlerprotokoll
+Hinweis: Es wurden Fehler bei der Datensammlung festgestellt. Dies kann die Vollständigkeit der Berichte beeinträchtigen.
+Fehlerprotokoll anzeigen (466 Einträge)
+[2025-05-07 02:22:43] Fehler beim Verarbeiten der VMDK-Datei in [Local_labesx01] rbnpingu01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] stvdev/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-ctx-wem/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] geo04Kubuntu/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] labdemoveeam01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] labdemoveeam01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] labdemoveeam01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-ctx-w11-003/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-ctx-w11-003/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-ctx-w11-003/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-ctx-w11-003/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-msa-tf01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] labdemoveeam02/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] labdemoveeam02/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-rds-w01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] stvcsp/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] stvcsp/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] stvcsp/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-w11-base/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] msr-win11/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] palazmigrate/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-hrz-cs01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] F5_LAB_UDF_B/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] F5_LAB_UDF_B/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] F5_LAB_UDF_B/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] stvpvs/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] stvpvs/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] stvpvs/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] stvpvs/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] stvpvs/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] dal-iva-uwm01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] palcdc01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] VPX/NSVPX-ESX/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-inf-dc01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] labdemoveeamVTL/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] labdemoveeamVTL/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-inf-fs01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-inf-fs01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-rds-wa01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] stvelm/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] stvelm/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] dmkmgmt01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-ctx-w11-001/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-ctx-w11-001/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-ctx-w11-001/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-ctx-w11-001/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] lblaunch02/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] lblaunch01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] thmtest/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] thmtest/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] labccus01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] labccus01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] labccus01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] Windows 11 - Capture-baseDisk-kZIxF-datastore-8015/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-hrz-m00/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-hrz-m00/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-hrz-m00/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-hrz-m00/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-hrz-m00/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] rnhWin11/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] rnhWin11/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] rnhWin11/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] rnhWin11/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] rnhWin11/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] rnhWin11/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] rnhWin11/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] rnhWin11/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] rnhWin11/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] rnhWin11/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] rnhWin11/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] rnhWin11/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] rnhWin11/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-inf-adm/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-ctx-sf01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] stvload/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] Windows 11-baseDisk-8FHDr-datastore-8015/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] dmkucspe01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] dmkucspe01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] geo03WinServ/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-hrz-es01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] msr-ctx01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-rds-gw01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] csbveeam01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] csbveeam01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-ctx-w11-c01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-ctx-w11-c01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] stvfact/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] stvfact/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-ctx-ddc01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] palctx03/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] palctx03/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] stvccc/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] mpa-inf-sql01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] labAzureAgent/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] geo05TestVPX_01/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:44] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] stvsql/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:45] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] BIG-IP-Next-CentralManager/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
+                                      ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'timedelta' where it is not associated with a value
+[2025-05-07 02:22:45] Fehler beim Verarbeiten der VMDK-Datei in [Unity_Datastore_1] BIGIP-17.1.1.3-0.0.5-vmware/
+Exception: cannot access local variable 'timedelta' where it is not associated with a value
+Stacktrace: Traceback (most recent call last):
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 493, in collect_all_vmdk_files
+    modification_time = self._get_vmdk_modification_time(file_info, vmdk_path)
+  File "C:\Users\Administrator\Downloads\vsphere-reporter-v29.0-web-final-fixed-v19.1-final-22\vsphere_client.py", line 677, in _get_vmdk_modification_time
+    fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")
