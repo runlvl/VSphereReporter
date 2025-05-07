@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}VMware vSphere Reporter - VMware Tools{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">
+        <i class="bi bi-tools me-2"></i>VMware Tools Status
+    </h2>
+    <div>
+        <button class="btn btn-sm btn-outline-primary refresh-btn" data-url="{{ url_for('collect_vmware_tools_data') }}">
+            <i class="bi bi-arrow-clockwise me-1"></i>Daten aktualisieren
+        </button>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="alert alert-info">
+            <h5 class="alert-heading"><i class="bi bi-info-circle-fill me-2"></i>Über VMware Tools</h5>
+            <p class="mb-0">
+                VMware Tools ist ein Satz von Dienstprogrammen und Treibern, die die Leistung virtueller Maschinen verbessern und viele Funktionen für die tägliche Verwaltung und den Betrieb ermöglichen. Es ist wichtig, VMware Tools auf dem neuesten Stand zu halten, um die beste Leistung und Kompatibilität zu gewährleisten.
+            </p>
+        </div>
+    </div>
+</div>
+
+{% if vmware_tools_data %}
+<div class="card mb-4">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="bi bi-list me-2"></i>VMware Tools Status
+            </h5>
+            <span class="badge bg-primary">{{ vmware_tools_data|length }} VMs</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover" id="toolsTable">
+                <thead>
+                    <tr>
+                        <th>VM-Name</th>
+                        <th>Betriebssystem</th>
+                        <th>Tools-Version</th>
+                        <th>Status</th>
+                        <th>Laufzeitstatus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vm in vmware_tools_data %}
+                    <tr>
+                        <td>{{ vm.name }}</td>
+                        <td>{{ vm.os }}</td>
+                        <td>{{ vm.tools_version }}</td>
+                        <td>
+                            <span class="badge bg-{{ vm.status_class }}">{{ vm.status_text }}</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-{{ vm.running_class }}">{{ vm.running_text }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="text-center py-5">
+            <i class="bi bi-exclamation-circle text-warning" style="font-size: 3rem;"></i>
+            <h4 class="mt-3">Keine VMware Tools Daten verfügbar</h4>
+            <p class="text-muted">
+                Klicken Sie auf "Daten aktualisieren", um Informationen über den VMware Tools Status zu sammeln.
+            </p>
+            <button class="btn btn-primary refresh-btn" data-url="{{ url_for('collect_vmware_tools_data') }}">
+                <i class="bi bi-arrow-clockwise me-1"></i>Daten aktualisieren
+            </button>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="bi bi-info-circle me-2"></i>VMware Tools Empfehlungen
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card bg-light h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-check-circle me-2 text-success"></i>Aktuelle Version</h5>
+                        <p class="card-text">
+                            Virtuellen Maschinen mit aktuellen VMware Tools bieten die beste Leistung und Kompatibilität mit dem Host.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-light h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-exclamation-triangle me-2 text-warning"></i>Update verfügbar</h5>
+                        <p class="card-text">
+                            VMs mit veralteten VMware Tools sollten bei nächster Gelegenheit aktualisiert werden, um von neuen Funktionen und Korrekturen zu profitieren.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-light h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-x-circle me-2 text-danger"></i>Nicht installiert</h5>
+                        <p class="card-text">
+                            VMs ohne VMware Tools können eingeschränkte Funktionalität haben. Die Installation wird dringend empfohlen.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Aktualisierung der Daten
+        const refreshButtons = document.querySelectorAll('.refresh-btn');
+        
+        refreshButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                
+                // Spinner anzeigen
+                const originalHTML = this.innerHTML;
+                this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Wird aktualisiert...';
+                this.disabled = true;
+                
+                // Daten aktualisieren
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Fehler beim Aktualisieren der Daten.');
+                        this.innerHTML = originalHTML;
+                        this.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Fehler beim Aktualisieren der Daten.');
+                    this.innerHTML = originalHTML;
+                    this.disabled = false;
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

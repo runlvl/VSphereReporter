@@ -479,8 +479,8 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd DirectDownload && python -m http.server 5000"
-waitForPort = 5000
+args = "cd DirectDownload && python -m http.server 5075"
+waitForPort = 5075
 
 [[workflows.workflow]]
 name = "DirectDownload2"
