@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VMware vSphere Reporter - Downloads</title>
+    <title>Bechtle vSphere Reporter - Downloads</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
@@ -67,6 +67,19 @@
             height: 30px;
             width: auto;
         }
+        .new-badge {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background-color: var(--bechtle-orange);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            transform: rotate(15deg);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
@@ -74,7 +87,7 @@
         <div class="container">
             <a class="navbar-brand" href="#">
                 <img src="logo_white.png" alt="Bechtle Logo" class="header-logo me-2">
-                VMware vSphere Reporter
+                Bechtle vSphere Reporter
             </a>
         </div>
     </nav>
@@ -84,31 +97,32 @@
             <div class="col-12">
                 <div class="alert alert-info">
                     <h4>Download-Bereich</h4>
-                    <p>Hier finden Sie alle verfügbaren Versionen des VMware vSphere Reporters. Wählen Sie die für Ihre Umgebung passende Version.</p>
+                    <p>Hier finden Sie alle verfügbaren Versionen des Bechtle vSphere Reporters. Wählen Sie die für Ihre Umgebung passende Version.</p>
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6 position-relative">
+                <span class="new-badge">NEU!</span>
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <span>VMware vSphere Reporter v19.0</span>
-                        <span class="badge bg-success version-badge">Aktuell</span>
+                        <span>Bechtle vSphere Reporter v0.1</span>
+                        <span class="badge bg-success version-badge">Empfohlen</span>
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">Version 19.0 (FIXED)</h5>
-                        <p class="card-text">Verbesserte Version mit korrigierter Datenverarbeitung und behobenem Logo.</p>
-                        <p><strong>Funktionen:</strong></p>
+                        <h5 class="card-title">Version 0.1 (Mai 2025)</h5>
+                        <p class="card-text">Neue Version mit Bechtle Branding und verbesserter VMDK-Erkennung.</p>
+                        <p><strong>Neue Funktionen:</strong></p>
                         <ul>
-                            <li>Korrigierte Datenverarbeitung für VMware Tools, Snapshots und VMDKs</li>
-                            <li>Benutzerfreundliche Weboberfläche mit Bootstrap 5</li>
-                            <li>Optimierte Erkennung verwaister VMDKs</li>
-                            <li>Verbesserte Darstellung des Logos</li>
+                            <li>Vollständige Umbenennung und Bechtle Branding</li>
+                            <li>Zuverlässige Erkennung von verwaisten VMDK-Dateien</li>
+                            <li>Intelligente Startskripte für Windows und Linux</li>
+                            <li>Optimierte Fehlerbehandlung bei der Datensammlung</li>
                         </ul>
                         <div class="d-flex justify-content-between mt-3">
-                            <a href="v19/fixed/vsphere-reporter-v29.0-web-final-fixed-v19-fixed.zip" class="btn btn-primary">Download (.zip)</a>
-                            <a href="v19/fixed/CHANGELOG-v19-fixed.txt" class="btn btn-outline-secondary">Änderungsprotokoll</a>
+                            <a href="/bechtle-vsphere-reporter-v0.1.zip" class="btn btn-success">Download (.zip)</a>
+                            <a href="#" class="btn btn-outline-secondary">Dokumentation</a>
                         </div>
                     </div>
                 </div>
@@ -121,18 +135,18 @@
                         <span class="badge bg-warning version-badge">Veraltet</span>
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">Version 19.0 (Original)</h5>
-                        <p class="card-text">Ursprüngliche Version mit Bootstrap 5 und überarbeiteter Benutzeroberfläche.</p>
+                        <h5 class="card-title">Version 19.0 (FIXED)</h5>
+                        <p class="card-text">Ältere Version mit korrigierter Datenverarbeitung.</p>
                         <p><strong>Funktionen:</strong></p>
                         <ul>
                             <li>Grundlegende VMware Tools-Statuserkennung</li>
                             <li>Snapshot-Altersberichte</li>
-                            <li>VMDK-Analysefunktionen</li>
-                            <li>Erweiterte Fehlerbehandlung</li>
+                            <li>Eingeschränkte VMDK-Analysefunktionen</li>
+                            <li>Bekannte Probleme bei der Darstellung von VMDKs</li>
                         </ul>
                         <div class="d-flex justify-content-between mt-3">
-                            <a href="v19/vsphere-reporter-v29.0-web-final-fixed-v19.zip" class="btn btn-outline-primary">Download (.zip)</a>
-                            <a href="#" class="btn btn-outline-secondary disabled">Änderungsprotokoll</a>
+                            <a href="v19/fixed/vsphere-reporter-v29.0-web-final-fixed-v19-fixed.zip" class="btn btn-outline-primary">Download (.zip)</a>
+                            <a href="v19/fixed/CHANGELOG-v19-fixed.txt" class="btn btn-outline-secondary">Änderungsprotokoll</a>
                         </div>
                     </div>
                 </div>
@@ -198,7 +212,7 @@
 
     <footer class="footer text-center">
         <div class="container">
-            <p>© 2025 VMware vSphere Reporter | Ein Tool zur Analyse und Überwachung von VMware vSphere-Umgebungen</p>
+            <p>© 2025 Bechtle GmbH | Bechtle vSphere Reporter - Ein Tool zur Analyse und Überwachung von VMware vSphere-Umgebungen</p>
         </div>
     </footer>
 
