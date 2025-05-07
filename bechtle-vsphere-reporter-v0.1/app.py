@@ -268,6 +268,16 @@ def about():
         version=VERSION
     )
 
+@app.route('/downloads')
+def downloads():
+    """Zeigt die Download-Seite an"""
+    return render_template(
+        'downloads.html',
+        connection_info=session.get('connection_info'),
+        demo_mode=session.get('demo_mode', False),
+        version=VERSION
+    )
+
 # API Endpunkte für Datenaktualisierung
 @app.route('/api/collect/vmware-tools', methods=['POST'])
 def collect_vmware_tools_data():
