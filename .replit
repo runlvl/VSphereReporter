@@ -152,10 +152,6 @@ args = "VSphereReporterV22Latest"
 task = "workflow.run"
 args = "BechtleVSphereV01Download"
 
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "BechleVSphereV01"
-
 [[workflows.workflow]]
 name = "VSphereReporter"
 author = "agent"
@@ -484,7 +480,8 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd release/downloads && python -m http.server 5011"
+args = "cd DirectDownload && python -m http.server 5000"
+waitForPort = 5000
 
 [[workflows.workflow]]
 name = "DirectDownload2"
@@ -492,7 +489,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd download && python -m http.server 8080"
+args = "cd DirectDownload && python -m http.server 8080"
 waitForPort = 8080
 
 [[workflows.workflow]]
