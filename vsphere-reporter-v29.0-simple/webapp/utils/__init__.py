@@ -1,3 +1,0 @@
-"""
-VSphere Reporter Utilities Package
-"""

@@ -1,1 +1,0 @@
-"""VSphere Reporter Berichtsgenerator-Modul"""
