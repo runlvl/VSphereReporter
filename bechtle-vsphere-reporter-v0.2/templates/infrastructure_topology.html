@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block title %}VMware vSphere Reporter - Infrastruktur-Topologie{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-diagram-3-fill me-2"></i>Infrastruktur-Topologie
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <p>Die Topologie-Visualisierung bietet einen Überblick über Ihre gesamte vSphere-Infrastruktur, von vCenter bis zu den virtuellen Maschinen.</p>
+                </div>
+                
+                <div class="filter-container bg-light p-3 rounded mb-4">
+                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <span class="fw-bold">Filter: </span>
+                        <button class="btn btn-outline-primary btn-sm filter-button active" data-filter="all">Alle anzeigen</button>
+                        <button class="btn btn-outline-primary btn-sm filter-button" data-filter="vms">Nur VMs</button>
+                        <button class="btn btn-outline-primary btn-sm filter-button" data-filter="datastores">Nur Datastores</button>
+                        <button class="btn btn-outline-primary btn-sm filter-button" data-filter="networks">Nur Netzwerke</button>
+                        <button class="btn btn-outline-primary btn-sm filter-button" data-filter="hosts">Nur Hosts</button>
+                    </div>
+                </div>
+                
+                <div id="topology-chart" style="width: 100%; height: 600px; border: 1px solid #eee; border-radius: 8px;"></div>
+                
+                <div class="mt-3">
+                    <button class="btn btn-sm btn-outline-secondary export-chart" data-type="png">
+                        <i class="bi bi-download me-1"></i>Als PNG exportieren
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary export-chart" data-type="svg">
+                        <i class="bi bi-download me-1"></i>Als SVG exportieren
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-info-circle me-2"></i>Legende und Informationen
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Objekt-Typen</h6>
+                        <ul class="list-group mb-3">
+                            <li class="list-group-item d-flex align-items-center">
+                                <span class="badge bg-primary me-2" style="background-color: #00355e !important;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <strong>vCenter &amp; Datacenter</strong>: Die oberste Ebene der Hierarchie.
+                            </li>
+                            <li class="list-group-item d-flex align-items-center">
+                                <span class="badge me-2" style="background-color: #da6f1e !important;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <strong>Cluster</strong>: Gruppen von Hosts mit gemeinsamen Ressourcen.
+                            </li>
+                            <li class="list-group-item d-flex align-items-center">
+                                <span class="badge me-2" style="background-color: #23a96a !important;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <strong>ESXi-Hosts</strong>: Physische Server, auf denen VMs ausgeführt werden.
+                            </li>
+                            <li class="list-group-item d-flex align-items-center">
+                                <span class="badge bg-secondary me-2">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <strong>VMs</strong>: Virtuelle Maschinen auf den Hosts.
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Funktionen</h6>
+                        <div class="card bg-light mb-3">
+                            <div class="card-body">
+                                <ul>
+                                    <li><strong>Zoomen</strong>: Mausrad oder Pinch-Geste (Touch)</li>
+                                    <li><strong>Verschieben</strong>: Linke Maustaste gedrückt halten und ziehen</li>
+                                    <li><strong>Details anzeigen</strong>: Bewegen Sie den Mauszeiger über ein Element</li>
+                                    <li><strong>Filtern</strong>: Verwenden Sie die Filter oben, um bestimmte Elemente ein- oder auszublenden</li>
+                                    <li><strong>Exportieren</strong>: Speichern Sie die Topologie als Bild für Berichte oder Präsentationen</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialisiere das Topologie-Diagramm
+        const chartContainer = document.getElementById('topology-chart');
+        const chart = echarts.init(chartContainer);
+        
+        // Lade Daten vom Server
+        fetch('/api/topology-data')
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    // Topologie anzeigen
+                    renderTopology(result.data);
+                } else {
+                    // Fehlermeldung anzeigen
+                    chartContainer.innerHTML = `
+                        <div class="alert alert-danger m-3">
+                            <h4 class="alert-heading">Fehler beim Laden der Topologiedaten</h4>
+                            <p>${result.error || 'Unbekannter Fehler'}</p>
+                            <hr>
+                            <p class="mb-0">Bitte versuchen Sie es später erneut oder aktivieren Sie den Demo-Modus.</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                // Fehler abfangen
+                chartContainer.innerHTML = `
+                    <div class="alert alert-danger m-3">
+                        <h4 class="alert-heading">Verbindungsfehler</h4>
+                        <p>${error.message || 'Unbekannter Fehler'}</p>
+                        <hr>
+                        <p class="mb-0">Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.</p>
+                    </div>
+                `;
+            });
+        
+        // Filter-Buttons
+        const filterButtons = document.querySelectorAll('.filter-button');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Entferne aktiven Status von allen Buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Setze aktiven Status für diesen Button
+                this.classList.add('active');
+                
+                // Aktualisiere die Topologie basierend auf dem Filter
+                const filter = this.getAttribute('data-filter');
+                updateTopologyFilter(filter);
+            });
+        });
+        
+        // Export-Buttons
+        const exportButtons = document.querySelectorAll('.export-chart');
+        exportButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const type = this.getAttribute('data-type');
+                exportChart(type);
+            });
+        });
+        
+        // Responsive Chart
+        window.addEventListener('resize', function() {
+            chart.resize();
+        });
+        
+        function renderTopology(topologyData) {
+            // Konfiguration für die Topologie
+            const option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{b}: {c}'
+                },
+                series: [
+                    {
+                        type: 'tree',
+                        data: [topologyData],
+                        top: '10%',
+                        bottom: '10%',
+                        layout: 'orthogonal',
+                        orient: 'vertical',
+                        symbol: 'emptyCircle',
+                        symbolSize: 15,
+                        initialTreeDepth: 3,
+                        animationDurationUpdate: 750,
+                        emphasis: {
+                            focus: 'descendant'
+                        },
+                        label: {
+                            position: 'top',
+                            rotate: 0,
+                            verticalAlign: 'middle',
+                            align: 'right',
+                            fontSize: 12,
+                            distance: 10
+                        },
+                        leaves: {
+                            label: {
+                                position: 'right',
+                                verticalAlign: 'middle',
+                                align: 'left'
+                            }
+                        },
+                        expandAndCollapse: true,
+                        animationDuration: 550,
+                        animationDurationUpdate: 750
+                    }
+                ]
+            };
+            
+            // Topologie anzeigen
+            chart.setOption(option);
+        }
+        
+        function updateTopologyFilter(filter) {
+            // Hier würden wir die Daten je nach Filter aktualisieren
+            // Für diese Demo ändern wir nur den Titel
+            chart.setOption({
+                title: {
+                    text: filter === 'all' ? 'Vollständige Topologie' : 
+                          filter === 'vms' ? 'Nur virtuelle Maschinen' :
+                          filter === 'datastores' ? 'Nur Datastores' :
+                          filter === 'networks' ? 'Nur Netzwerke' : 'Nur ESXi-Hosts',
+                    top: 10,
+                    left: 'center',
+                    textStyle: {
+                        fontSize: 16,
+                        color: '#00355e'
+                    }
+                }
+            });
+        }
+        
+        function exportChart(type) {
+            const url = chart.getDataURL({
+                type: type,
+                pixelRatio: 2,
+                backgroundColor: '#fff'
+            });
+            
+            const link = document.createElement('a');
+            link.download = `vsphere-topology.${type}`;
+            link.href = url;
+            link.click();
+        }
+    });
+</script>
+{% endblock %}

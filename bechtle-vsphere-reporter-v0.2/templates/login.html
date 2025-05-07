@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bechtle vSphere Reporter - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        body {
+            background-color: var(--bechtle-light-gray);
+        }
+        .login-container {
+            max-width: 450px;
+            margin: 7% auto;
+        }
+        .brand-logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .brand-logo img {
+            max-width: 200px;
+        }
+        .login-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        .login-card .card-header {
+            background-color: var(--bechtle-dark-blue);
+            color: white;
+            border-radius: 10px 10px 0 0;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .login-card .card-body {
+            padding: 2rem;
+        }
+        .login-help {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--bechtle-dark-gray);
+        }
+    </style>
+</head>
+<body>
+    <div class="container login-container">
+        <div class="brand-logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Bechtle vSphere Reporter Logo">
+        </div>
+        
+        <div class="card login-card">
+            <div class="card-header">
+                <h4 class="mb-0">Bechtle vSphere Reporter</h4>
+                <span class="badge bg-success">Version 0.1</span>
+            </div>
+            <div class="card-body">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}
+                </div>
+                {% endif %}
+                
+                <form method="post" action="{{ url_for('login') }}">
+                    <div class="mb-3">
+                        <label for="server" class="form-label"><i class="bi bi-server me-1"></i>vCenter Server</label>
+                        <input type="text" class="form-control" id="server" name="server" required placeholder="vcenter.domain.local">
+                    </div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label"><i class="bi bi-person me-1"></i>Benutzername</label>
+                        <input type="text" class="form-control" id="username" name="username" required placeholder="administrator@vsphere.local">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label"><i class="bi bi-key me-1"></i>Passwort</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="ignore_ssl" name="ignore_ssl" checked>
+                        <label class="form-check-label" for="ignore_ssl">SSL-Zertifikatsvalidierung ignorieren</label>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>Anmelden
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="demoModeBtn">
+                            <i class="bi bi-display me-1"></i>Demo-Modus
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="login-help mt-3">
+            <p>
+                <strong>Version 0.1:</strong> Erste Bechtle-Version mit robuster VMDK-Erkennung<br>
+                <small>Mit intelligenten Fallback-Mechanismen für erweiterte Zuverlässigkeit</small>
+            </p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('demoModeBtn').addEventListener('click', function() {
+            window.location.href = "{{ url_for('demo_mode') }}";
+        });
+    </script>
+</body>
+</html>
