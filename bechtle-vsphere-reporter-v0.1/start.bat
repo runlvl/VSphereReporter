@@ -12,14 +12,19 @@ if %ERRORLEVEL% NEQ 0 (
     exit /b 1
 )
 
-REM Starte die Anwendung über Python
-python start.py %*
+REM Direkt mit Python starten ohne den start Befehl
+python app.py
 
 if %ERRORLEVEL% NEQ 0 (
-    echo.
-    echo Es ist ein Fehler beim Starten der Anwendung aufgetreten.
-    echo Bitte überprüfen Sie die Log-Dateien im Ordner 'logs'.
-    pause
+    echo Direkter Start fehlgeschlagen. Versuche intelligenten Start...
+    python start.py
+    
+    if %ERRORLEVEL% NEQ 0 (
+        echo.
+        echo Es ist ein Fehler beim Starten der Anwendung aufgetreten.
+        echo Bitte überprüfen Sie die Log-Dateien im Ordner 'logs'.
+        pause
+    )
 )
 
 exit /b 0
