@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bechtle vSphere Reporter - Bericht erstellen</title>
+    <style>
+        /* Bechtle Farbschema */
+        :root {
+            --primary: #00355e;
+            --secondary: #da6f1e;
+            --success: #23a96a;
+            --light: #f3f3f3;
+            --dark: #5a5a5a;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        
+        nav {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav ul li {
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav ul li a {
+            display: block;
+            padding: 15px 20px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        nav ul li a:hover,
+        nav ul li a.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        .form-container {
+            background-color: white;
+            border-radius: 5px;
+            padding: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .form-section h2 {
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            background-color: var(--light);
+            padding: 15px;
+            border-radius: 5px;
+            min-width: 200px;
+            flex: 1;
+        }
+        
+        .checkbox-option label {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        
+        .checkbox-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #002540;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #c25f13;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .demo-badge {
+            background-color: var(--secondary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .user-menu {
+            position: relative;
+        }
+        
+        .logout-btn {
+            background-color: transparent;
+            color: white;
+            border: 1px solid white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        
+        .logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .checkbox-group {
+                flex-direction: column;
+            }
+            
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .user-menu {
+                margin-top: 15px;
+            }
+            
+            nav ul {
+                flex-direction: column;
+            }
+            
+            .buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bechtle vSphere Reporter v0.1
+        {% if session.demo_mode %}
+            <span class="demo-badge">Demo-Modus</span>
+        {% endif %}
+        </h1>
+        <div class="user-menu">
+            <a href="{{ url_for('logout') }}" class="logout-btn">Abmelden</a>
+        </div>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('report') }}" class="active">Bericht erstellen</a></li>
+            <li><a href="{{ url_for('about') }}">Über</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <h1>Bericht erstellen</h1>
+        
+        <div class="form-container">
+            <form method="post" action="{{ url_for('report') }}">
+                <div class="form-section">
+                    <h2>Berichtsinhalt</h2>
+                    <p>Wählen Sie die Informationen aus, die in Ihrem Bericht enthalten sein sollen:</p>
+                    
+                    <div class="checkbox-group">
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="vmware_tools" name="vmware_tools" {% if options.vmware_tools %}checked{% endif %}>
+                            <label for="vmware_tools">VMware Tools Status</label>
+                        </div>
+                        
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="snapshots" name="snapshots" {% if options.snapshots %}checked{% endif %}>
+                            <label for="snapshots">Snapshots</label>
+                        </div>
+                        
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="orphaned_vmdks" name="orphaned_vmdks" {% if options.orphaned_vmdks %}checked{% endif %}>
+                            <label for="orphaned_vmdks">Verwaiste VMDK-Dateien</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h2>Berichtsformate</h2>
+                    <p>Wählen Sie die Formate, in denen der Bericht erstellt werden soll:</p>
+                    
+                    <div class="checkbox-group">
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="format_html" name="format_html" {% if options.format_html %}checked{% endif %}>
+                            <label for="format_html">HTML</label>
+                        </div>
+                        
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="format_pdf" name="format_pdf" {% if options.format_pdf %}checked{% endif %}>
+                            <label for="format_pdf">PDF</label>
+                        </div>
+                        
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="format_docx" name="format_docx" {% if options.format_docx %}checked{% endif %}>
+                            <label for="format_docx">DOCX (Word)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <a href="{{ url_for('index') }}" class="btn btn-secondary">Zurück</a>
+                    <button type="submit" class="btn">Bericht generieren</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 Bechtle GmbH</p>
+    </footer>
+</body>
+</html>
