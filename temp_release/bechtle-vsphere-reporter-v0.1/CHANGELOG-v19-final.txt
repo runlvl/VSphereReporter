@@ -1,0 +1,47 @@
+CHANGELOG - VMware vSphere Reporter v29.0 (Fixed Version v19.1 Final)
+===================================================================
+
+Diese Version enthält wichtige Verbesserungen und Fehlerbehebungen gegenüber v19.0:
+
+1. BEHOBEN: Fehler 500 bei der Anzeige von verwaisten VMDKs durch korrekte Behandlung der Datenstruktur im Demo-Modus
+2. BEHOBEN: Problem, dass im Echtmodus Demo-Daten angezeigt wurden, durch explizite Deaktivierung des Demo-Modus bei echter Verbindung
+3. BEHOBEN: Fehlende Anzeige von Größe und Änderungsdatum bei verwaisten VMDKs in Echtdaten durch robustere Metadatenextraktion
+4. BEHOBEN: WERKZEUG_SERVER_FD-Fehler beim Starten durch verbesserte Startskripte (run.bat und run.sh)
+5. NEU: Methode `set_demo_mode()` zur besseren Kontrolle des Demo-Modus
+6. VERBESSERT: Optimiertes Setup-Skript (setup.bat) ohne Abfragen, mit automatischem Start der Anwendung
+7. VERBESSERT: "Developer Version"-Meldung entfernt durch umfassende Flask-Unterdrückung
+8. VERBESSERT: Robustere Extraktion von VMDK-Metadaten mit Fallback-Mechanismen für fehlende Größen und Datumsangaben
+9. VERBESSERT: Verbessertes Logging für bessere Diagnose von Problemen bei Metadaten von VMDK-Dateien
+10. VERBESSERT: Konsistente Fehlerbehandlung in allen Modi (Demo und Echtdaten)
+11. VERBESSERT: Detaillierte Debug-Ausgaben für VMDK-Metadaten zur einfacheren Fehlersuche
+12. VERBESSERT: Standardisierte Logging-Konfiguration zur Vermeidung von Startproblemen
+13. NEU: Dedizierte Hilfsmethoden für VMDK-Metadatenextraktion (_get_vmdk_file_size und _get_vmdk_modification_time)
+14. NEU: Mehrere Fallback-Mechanismen für robuste Größen- und Datumswerte (z.B. Schätzung aus Dateinamen)
+15. NEU: Standardwerte garantieren keine NULL-Werte mehr bei VMDK-Metadaten
+16. NEU: Vereinfachte Startskripte run.bat und run.sh, die direkt app.py verwenden
+
+Technische Details:
+------------------
+- Die verwaisten VMDK-Datenstrukturen werden jetzt einheitlich behandelt, sowohl im Demo-Modus als auch bei Echtdaten
+- Felder 'size_kb' und 'modification_time' werden explizit zugewiesen und sind garantiert nie null
+- Verbesserte Fehlerbehandlung durch detailliertere Logging-Informationen
+- Das Demo-Flag wird jetzt korrekt gesetzt/zurückgesetzt bei Wechsel zwischen Demo- und Echtmodus
+- Mehrere Fallback-Mechanismen wurden implementiert:
+  * Primäre Attributextraktion (fileSize, modification)
+  * Sekundäre Attribute (capacity, lastModified, etc.)
+  * Größenschätzung basierend auf Dateinamen-Muster (für -S10G etc.)
+  * Standardwert von 10 MB bei Fehlen jeglicher Informationen
+  * Aktuelles Datum als Fallback für fehlende Zeitstempel
+- Flask-Warnungen werden durch umfassende 8-stufige Unterdrückung zuverlässig verhindert
+- Logging-Konfiguration ist jetzt standardisiert über alle Module hinweg
+- Probleme mit WERKZEUG_SERVER_FD-Umgebungsvariable wurden durch direktes Löschen der Variable behoben
+- Implementierung eines direkteren Startmechanismus für die Flask-Anwendung über subprocess-Aufruf
+
+Installation:
+------------
+1. Entpacken Sie die ZIP-Datei in einen Ordner Ihrer Wahl
+2. Führen Sie setup.bat (Windows) oder setup.sh (Linux) aus, um die Abhängigkeiten zu installieren
+3. Starten Sie die Anwendung mit run.bat (Windows) oder run.sh (Linux)
+4. Öffnen Sie einen Browser und navigieren Sie zu http://localhost:5000
+
+Hinweis: Bei Startproblemen mit run.py kann die Anwendung auch direkt über app.py gestartet werden!
