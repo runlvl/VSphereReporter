@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Downloads - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h4>Download-Bereich</h4>
+                <p>Hier finden Sie alle verfügbaren Versionen des Bechtle vSphere Reporters. Wählen Sie die für Ihre Umgebung passende Version.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 position-relative">
+            <span class="badge bg-bechtle-orange position-absolute top-0 end-0 rotate-15 mt-n2 me-n2 px-3 py-2 shadow-sm">NEU!</span>
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Bechtle vSphere Reporter v0.1</span>
+                    <span class="badge bg-success">Empfohlen</span>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Version 0.1 (Mai 2025)</h5>
+                    <p class="card-text">Neue Version mit Bechtle Branding und verbesserter VMDK-Erkennung.</p>
+                    <p><strong>Neue Funktionen:</strong></p>
+                    <ul>
+                        <li>Vollständige Umbenennung und Bechtle Branding</li>
+                        <li>Zuverlässige Erkennung von verwaisten VMDK-Dateien</li>
+                        <li>Intelligente Startskripte für Windows und Linux</li>
+                        <li>Optimierte Fehlerbehandlung bei der Datensammlung</li>
+                    </ul>
+                    <div class="d-flex justify-content-between mt-3">
+                        <a href="{{ url_for('static', filename='downloads/bechtle-vsphere-reporter-v0.1.zip') }}" class="btn btn-success">Download (.zip)</a>
+                        <a href="{{ url_for('static', filename='downloads/CHANGELOG.md') }}" class="btn btn-outline-secondary">Änderungsprotokoll</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>VMware vSphere Reporter v19.0</span>
+                    <span class="badge bg-warning">Veraltet</span>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Version 19.0 (FIXED)</h5>
+                    <p class="card-text">Ältere Version mit korrigierter Datenverarbeitung.</p>
+                    <p><strong>Funktionen:</strong></p>
+                    <ul>
+                        <li>Grundlegende VMware Tools-Statuserkennung</li>
+                        <li>Snapshot-Altersberichte</li>
+                        <li>Eingeschränkte VMDK-Analysefunktionen</li>
+                        <li>Bekannte Probleme bei der Darstellung von VMDKs</li>
+                    </ul>
+                    <div class="d-flex justify-content-between mt-3">
+                        <a href="{{ url_for('static', filename='downloads/vsphere-reporter-v19-fixed.zip') }}" class="btn btn-outline-primary">Download (.zip)</a>
+                        <a href="{{ url_for('static', filename='downloads/CHANGELOG-v19-fixed.txt') }}" class="btn btn-outline-secondary">Änderungsprotokoll</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">Systemanforderungen</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Mindestanforderungen</h5>
+                            <ul>
+                                <li>Python 3.8 oder höher</li>
+                                <li>2 GB RAM</li>
+                                <li>500 MB freier Festplattenspeicher</li>
+                                <li>Netzwerkverbindung zum vCenter Server</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Unterstützte Betriebssysteme</h5>
+                            <ul>
+                                <li>Windows 10/11</li>
+                                <li>Windows Server 2019/2022</li>
+                                <li>OpenSUSE Tumbleweed</li>
+                                <li>Andere Linux-Distributionen (mit Python 3.8+)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">Installationsanleitung</div>
+                <div class="card-body">
+                    <h5>Windows-Installation</h5>
+                    <ol>
+                        <li>Laden Sie die ZIP-Datei herunter und entpacken Sie sie</li>
+                        <li>Führen Sie <code>start.bat</code> aus, um die Anwendung zu starten</li>
+                        <li>Öffnen Sie in Ihrem Browser: <code>http://localhost:5000</code> oder die in der Konsole angezeigte URL</li>
+                    </ol>
+
+                    <h5>Linux-Installation</h5>
+                    <ol>
+                        <li>Laden Sie die ZIP-Datei herunter und entpacken Sie sie</li>
+                        <li>Führen Sie <code>chmod +x start.sh</code> aus, um das Startskript ausführbar zu machen</li>
+                        <li>Führen Sie <code>./start.sh</code> aus, um die Anwendung zu starten</li>
+                        <li>Öffnen Sie in Ihrem Browser: <code>http://localhost:5000</code> oder die in der Konsole angezeigte URL</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block additional_styles %}
+<style>
+    .rotate-15 {
+        transform: rotate(15deg);
+    }
+</style>
+{% endblock %}
