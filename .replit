@@ -164,6 +164,14 @@ args = "BechtleVSphereV01Server"
 task = "workflow.run"
 args = "BechtleVSphereV02"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "BechtleVSphereV02Download"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "DownloadV02"
+
 [[workflows.workflow]]
 name = "VSphereReporter"
 author = "agent"
@@ -566,6 +574,24 @@ author = "agent"
 task = "shell.exec"
 args = "cd bechtle-vsphere-reporter-v0.2 && VSPHERE_REPORTER_PORT=5006 python app.py"
 waitForPort = 5006
+
+[[workflows.workflow]]
+name = "BechtleVSphereV02Download"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd download && python -m http.server 5600"
+waitForPort = 5600
+
+[[workflows.workflow]]
+name = "DownloadV02"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd download && python -m http.server 5700"
+waitForPort = 5700
 
 [deployment]
 run = ["sh", "-c", "pip install -r requirements.txt || pip install pyVmomi>=7.0.0 PyQt5>=5.15.0 reportlab>=3.6.0 python-docx>=0.8.11 jinja2>=3.0.0 humanize>=3.0.0 && python vsphere_reporter.py"]
