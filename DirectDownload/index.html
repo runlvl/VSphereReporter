@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bechtle vSphere Reporter - Downloads</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bechtle-blue: #00355e;
+            --bechtle-orange: #da6f1e;
+            --bechtle-green: #23a96a;
+            --bechtle-light-gray: #f3f3f3;
+            --bechtle-dark-gray: #5a5a5a;
+        }
+        
+        body {
+            background-color: var(--bechtle-light-gray);
+            color: var(--bechtle-dark-gray);
+        }
+        
+        .navbar {
+            background-color: var(--bechtle-blue) !important;
+        }
+        
+        .bg-primary {
+            background-color: var(--bechtle-blue) !important;
+        }
+        
+        .bg-success {
+            background-color: var(--bechtle-green) !important;
+        }
+        
+        .bg-warning {
+            background-color: var(--bechtle-orange) !important;
+        }
+        
+        .btn-success {
+            background-color: var(--bechtle-green) !important;
+            border-color: var(--bechtle-green) !important;
+        }
+        
+        .btn-primary {
+            background-color: var(--bechtle-blue) !important;
+            border-color: var(--bechtle-blue) !important;
+        }
+        
+        .btn-outline-primary {
+            color: var(--bechtle-blue) !important;
+            border-color: var(--bechtle-blue) !important;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--bechtle-blue) !important;
+            color: white !important;
+        }
+        
+        .btn-outline-secondary {
+            color: var(--bechtle-dark-gray) !important;
+            border-color: var(--bechtle-dark-gray) !important;
+        }
+        
+        .btn-outline-secondary:hover {
+            background-color: var(--bechtle-dark-gray) !important;
+            color: white !important;
+        }
+        
+        .card-header {
+            background-color: var(--bechtle-blue);
+            color: white;
+        }
+        
+        .rotate-15 {
+            transform: rotate(15deg);
+        }
+        
+        .footer {
+            background-color: var(--bechtle-blue);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="logo_white.png" alt="Logo" height="30" class="d-inline-block align-text-top me-2" style="width: auto; height: 30px; object-fit: contain;">
+                Bechtle vSphere Reporter
+                <span class="badge bg-success text-white ms-2">v0.1</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <div class="row mb-4">
+            <div class="col">
+                <h1>Bechtle vSphere Reporter Downloads</h1>
+                <p class="lead">Hier können Sie die neueste Version des Bechtle vSphere Reporter herunterladen.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 mx-auto position-relative">
+                <span class="badge bg-warning position-absolute top-0 end-0 rotate-15 mt-n2 me-n2 px-3 py-2 shadow-sm">NEU!</span>
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Bechtle vSphere Reporter v0.1</span>
+                        <span class="badge bg-success">Empfohlen</span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Version 0.1 (Mai 2025)</h5>
+                        <p class="card-text">Erste Bechtle-Version mit vollständig überarbeiteter VMDK-Erkennung und professionellem Bechtle-Branding.</p>
+                        <p><strong>Neue Funktionen:</strong></p>
+                        <ul>
+                            <li>Vollständige Umbenennung und Bechtle Branding im Corporate Design</li>
+                            <li>Verbesserte und zuverlässige Erkennung von verwaisten VMDK-Dateien</li>
+                            <li>Intelligente Startskripte für Windows und Linux mit automatischer Porterkennung</li>
+                            <li>Optimierte Fehlerbehandlung bei der Datensammlung ohne Abstürze</li>
+                            <li>Konsistente Darstellung der Daten auch bei Verbindungsproblemen</li>
+                        </ul>
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="downloads/bechtle-vsphere-reporter-v0.1.zip" class="btn btn-success">Download (.zip)</a>
+                            <a href="downloads/CHANGELOG.md" class="btn btn-outline-secondary">Änderungsprotokoll</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">Systemanforderungen</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Mindestanforderungen</h5>
+                                <ul>
+                                    <li>Python 3.8 oder höher</li>
+                                    <li>2 GB RAM</li>
+                                    <li>500 MB freier Festplattenspeicher</li>
+                                    <li>Netzwerkverbindung zum vCenter Server</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Unterstützte Betriebssysteme</h5>
+                                <ul>
+                                    <li>Windows 10/11</li>
+                                    <li>Windows Server 2019/2022</li>
+                                    <li>OpenSUSE Tumbleweed</li>
+                                    <li>Andere Linux-Distributionen (mit Python 3.8+)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">Installationsanleitung</div>
+                    <div class="card-body">
+                        <h5>Windows-Installation</h5>
+                        <ol>
+                            <li>Laden Sie die ZIP-Datei herunter und entpacken Sie sie</li>
+                            <li>Führen Sie <code>start.bat</code> aus, um die Anwendung zu starten</li>
+                            <li>Öffnen Sie in Ihrem Browser: <code>http://localhost:5000</code> oder die in der Konsole angezeigte URL</li>
+                        </ol>
+
+                        <h5>Linux-Installation</h5>
+                        <ol>
+                            <li>Laden Sie die ZIP-Datei herunter und entpacken Sie sie</li>
+                            <li>Führen Sie <code>chmod +x start.sh</code> aus, um das Startskript ausführbar zu machen</li>
+                            <li>Führen Sie <code>./start.sh</code> aus, um die Anwendung zu starten</li>
+                            <li>Öffnen Sie in Ihrem Browser: <code>http://localhost:5000</code> oder die in der Konsole angezeigte URL</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-5 py-3">
+        <div class="container text-center">
+            <span>© 2025 Bechtle GmbH</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
