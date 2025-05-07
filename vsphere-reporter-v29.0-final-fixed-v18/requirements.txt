@@ -1,6 +1,0 @@
-flask>=2.0.0
-pyvmomi>=7.0.0
-humanize>=3.0.0
-python-docx>=0.8.11
-reportlab>=3.6.0
-Jinja2>=3.0.0
