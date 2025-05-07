@@ -14,7 +14,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6 position-relative">
+        <div class="col-md-8 mx-auto position-relative">
             <span class="badge bg-bechtle-orange position-absolute top-0 end-0 rotate-15 mt-n2 me-n2 px-3 py-2 shadow-sm">NEU!</span>
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
@@ -23,41 +23,18 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">Version 0.1 (Mai 2025)</h5>
-                    <p class="card-text">Neue Version mit Bechtle Branding und verbesserter VMDK-Erkennung.</p>
+                    <p class="card-text">Erste Bechtle-Version mit vollständig überarbeiteter VMDK-Erkennung und professionellem Bechtle-Branding.</p>
                     <p><strong>Neue Funktionen:</strong></p>
                     <ul>
-                        <li>Vollständige Umbenennung und Bechtle Branding</li>
-                        <li>Zuverlässige Erkennung von verwaisten VMDK-Dateien</li>
-                        <li>Intelligente Startskripte für Windows und Linux</li>
-                        <li>Optimierte Fehlerbehandlung bei der Datensammlung</li>
+                        <li>Vollständige Umbenennung und Bechtle Branding im Corporate Design</li>
+                        <li>Verbesserte und zuverlässige Erkennung von verwaisten VMDK-Dateien</li>
+                        <li>Intelligente Startskripte für Windows und Linux mit automatischer Porterkennung</li>
+                        <li>Optimierte Fehlerbehandlung bei der Datensammlung ohne Abstürze</li>
+                        <li>Konsistente Darstellung der Daten auch bei Verbindungsproblemen</li>
                     </ul>
                     <div class="d-flex justify-content-between mt-3">
                         <a href="{{ url_for('static', filename='downloads/bechtle-vsphere-reporter-v0.1.zip') }}" class="btn btn-success">Download (.zip)</a>
                         <a href="{{ url_for('static', filename='downloads/CHANGELOG.md') }}" class="btn btn-outline-secondary">Änderungsprotokoll</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <span>VMware vSphere Reporter v19.0</span>
-                    <span class="badge bg-warning">Veraltet</span>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Version 19.0 (FIXED)</h5>
-                    <p class="card-text">Ältere Version mit korrigierter Datenverarbeitung.</p>
-                    <p><strong>Funktionen:</strong></p>
-                    <ul>
-                        <li>Grundlegende VMware Tools-Statuserkennung</li>
-                        <li>Snapshot-Altersberichte</li>
-                        <li>Eingeschränkte VMDK-Analysefunktionen</li>
-                        <li>Bekannte Probleme bei der Darstellung von VMDKs</li>
-                    </ul>
-                    <div class="d-flex justify-content-between mt-3">
-                        <a href="{{ url_for('static', filename='downloads/vsphere-reporter-v19-fixed.zip') }}" class="btn btn-outline-primary">Download (.zip)</a>
-                        <a href="{{ url_for('static', filename='downloads/CHANGELOG-v19-fixed.txt') }}" class="btn btn-outline-secondary">Änderungsprotokoll</a>
                     </div>
                 </div>
             </div>
