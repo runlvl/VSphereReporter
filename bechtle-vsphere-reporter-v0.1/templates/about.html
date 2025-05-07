@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bechtle vSphere Reporter - Über</title>
+    <style>
+        /* Bechtle Farbschema */
+        :root {
+            --primary: #00355e;
+            --secondary: #da6f1e;
+            --success: #23a96a;
+            --light: #f3f3f3;
+            --dark: #5a5a5a;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        
+        nav {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav ul li {
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav ul li a {
+            display: block;
+            padding: 15px 20px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        nav ul li a:hover,
+        nav ul li a.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        .about-container {
+            background-color: white;
+            border-radius: 5px;
+            padding: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .about-section {
+            margin-bottom: 40px;
+        }
+        
+        .about-section h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 10px;
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .logo-container img {
+            max-width: 250px;
+            height: auto;
+        }
+        
+        .feature-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+        }
+        
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+        
+        .tech-badge {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .contact-info {
+            background-color: var(--light);
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        
+        .contact-info h3 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+        
+        .demo-badge {
+            background-color: var(--secondary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .user-menu {
+            position: relative;
+        }
+        
+        .logout-btn {
+            background-color: transparent;
+            color: white;
+            border: 1px solid white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        
+        .logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .user-menu {
+                margin-top: 15px;
+            }
+            
+            nav ul {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bechtle vSphere Reporter v0.1
+        {% if session.demo_mode %}
+            <span class="demo-badge">Demo-Modus</span>
+        {% endif %}
+        </h1>
+        <div class="user-menu">
+            {% if session.logged_in %}
+                <a href="{{ url_for('logout') }}" class="logout-btn">Abmelden</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="logout-btn">Anmelden</a>
+            {% endif %}
+        </div>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('report') }}">Bericht erstellen</a></li>
+            <li><a href="{{ url_for('about') }}" class="active">Über</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <h1>Über Bechtle vSphere Reporter</h1>
+        
+        <div class="about-container">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='images/logo_bechtle.svg') }}" alt="Bechtle Logo">
+            </div>
+            
+            <div class="about-section">
+                <h2>Über die Anwendung</h2>
+                <p>
+                    Der Bechtle vSphere Reporter ist ein umfassendes Tool für die Analyse und Überwachung 
+                    von VMware vSphere-Umgebungen. Die Anwendung bietet detaillierte Berichte über 
+                    verschiedene Aspekte Ihrer virtuellen Infrastruktur und hilft Ihnen, potenzielle 
+                    Probleme zu identifizieren und zu beheben.
+                </p>
+                <p>
+                    Version 0.1 wurde entwickelt, um die Berichterstattung zu wichtigen Bereichen 
+                    wie VMware Tools-Status, Snapshot-Management und verwaisten VMDK-Dateien zu optimieren.
+                </p>
+            </div>
+            
+            <div class="about-section">
+                <h2>Hauptfunktionen</h2>
+                <ul class="feature-list">
+                    <li>
+                        <strong>VMware Tools Status:</strong> Überprüfen Sie den Installations- und 
+                        Aktualisierungsstatus von VMware Tools auf allen virtuellen Maschinen.
+                    </li>
+                    <li>
+                        <strong>Snapshot-Analyse:</strong> Identifizieren Sie alte oder potenziell 
+                        problematische Snapshots, die Performance-Probleme verursachen könnten.
+                    </li>
+                    <li>
+                        <strong>Erkennung verwaister VMDK-Dateien:</strong> Lokalisieren Sie verwaiste 
+                        virtuelle Festplatten, die unnötig Speicherplatz belegen.
+                    </li>
+                    <li>
+                        <strong>Mehrere Exportformate:</strong> Erstellen Sie Berichte in HTML-, PDF- 
+                        und DOCX-Format für einfache Weitergabe und Archivierung.
+                    </li>
+                    <li>
+                        <strong>Demo-Modus:</strong> Testen Sie die Funktionalität ohne Verbindung 
+                        zu einem vCenter-Server.
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="about-section">
+                <h2>Technische Details</h2>
+                <p>Bechtle vSphere Reporter wurde mit folgenden Technologien entwickelt:</p>
+                <div>
+                    <span class="tech-badge">Python 3.8+</span>
+                    <span class="tech-badge">Flask</span>
+                    <span class="tech-badge">pyVmomi</span>
+                    <span class="tech-badge">Jinja2</span>
+                    <span class="tech-badge">ReportLab</span>
+                    <span class="tech-badge">python-docx</span>
+                </div>
+                <p>
+                    Die Anwendung ist plattformübergreifend gestaltet und funktioniert auf Windows und 
+                    Linux-Systemen (inklusive spezieller Optimierungen für OpenSUSE Tumbleweed).
+                </p>
+            </div>
+            
+            <div class="about-section">
+                <h2>Kontakt & Support</h2>
+                <p>
+                    Bei Fragen, Feedback oder Unterstützung wenden Sie sich bitte an das 
+                    Bechtle Virtualisierungs-Team.
+                </p>
+                <div class="contact-info">
+                    <h3>Bechtle GmbH</h3>
+                    <p>
+                        E-Mail: vmware-support@bechtle.com<br>
+                        Website: <a href="https://www.bechtle.com" target="_blank">www.bechtle.com</a>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="about-section">
+                <h2>Lizenz</h2>
+                <p>
+                    © 2025 Bechtle GmbH. Alle Rechte vorbehalten. Diese Software ist proprietär 
+                    und darf ohne ausdrückliche Genehmigung nicht verwendet, reproduziert oder 
+                    verteilt werden.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 Bechtle GmbH</p>
+    </footer>
+</body>
+</html>
