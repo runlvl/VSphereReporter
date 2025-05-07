@@ -516,7 +516,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd download && python -m http.server 5500"
+args = "mkdir -p download && cp bechtle-vsphere-reporter-v0.1.zip download/ && cd download && python -m http.server 5500"
 waitForPort = 5500
 
 [deployment]
