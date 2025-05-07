@@ -1,8 +1,0 @@
-VMware vSphere Reporter v18
-Veröffentlicht am 2025-04-14
-
-ÄNDERUNGEN:
-- Vollständige Unterdrückung aller Fehlermeldungen während der Datensammlung verbessert
-- Fehlerbehandlung durch globalen Root-Logger-Filter ergänzt
-- Alle Fehlerausgaben in DEBUG-Level umgewandelt und vollständig unterdrückt
-- Mehrere Schwachstellen in der Fehlerbehandlung behoben
