@@ -1,65 +1,53 @@
 # Bechtle vSphere Reporter v0.1
 
-Ein umfassendes Berichtswerkzeug für VMware vSphere-Umgebungen, das detaillierte Berichte über den Status Ihrer virtuellen Infrastruktur generiert.
+Eine professionelle Web-Anwendung für VMware vSphere-Umgebungen mit Fokus auf wichtige Infrastrukturberichte:
 
-## Funktionen
+- VMware Tools Status & Version
+- Snapshot-Alter und Management
+- Erkennung verwaister VMDK-Dateien
 
-- **VMware Tools Status**: Überprüfen Sie den Installationsstatus und die Version der VMware Tools auf allen VMs
-- **Snapshot-Analyse**: Identifizieren Sie alte oder potenziell problematische Snapshots
-- **Verwaiste VMDK-Erkennung**: Finden Sie verwaiste virtuelle Festplatten, die Speicherplatz verschwenden
-- **Mehrere Berichtsformate**: HTML, PDF und DOCX für einfaches Teilen und Archivieren
-- **Demo-Modus**: Testen Sie die Anwendung ohne vCenter-Verbindung
+## Features
+
+- **Benutzerfreundliche Web-Oberfläche**: Zugriff von jedem Gerät mit Browser
+- **Sicherheit**: Verschlüsselte Anmeldung, sichere Datenspeicherung
+- **Bechtle-Design**: Professionelles Erscheinungsbild im Corporate Design von Bechtle
+- **Flexible Berichte**: Export in verschiedene Formate (HTML, PDF, DOCX)
+- **Demo-Modus**: Funktionsdemonstration ohne echte vCenter-Infrastruktur
 
 ## Installation
 
-### Voraussetzungen
-
-- Python 3.8 oder höher
-- Webbrowser (Chrome, Firefox, Edge oder Safari empfohlen)
-- Internetzugang für die Installation von Abhängigkeiten
-
 ### Windows
 
-1. Entpacken Sie die ZIP-Datei in ein Verzeichnis Ihrer Wahl
-2. Führen Sie `start.bat` aus, um den intelligenten Starter mit automatischer Port-Auswahl zu verwenden (empfohlen)
-3. Alternativ können Sie `app.py` direkt mit Python ausführen: `python app.py`
+1. Entpacken Sie die ZIP-Datei in einen Ordner Ihrer Wahl
+2. Führen Sie `setup.bat` aus, um die notwendigen Abhängigkeiten zu installieren
+3. Starten Sie die Anwendung mit `start.bat` (empfohlen) oder `run.bat`
+   - `start.bat` findet automatisch einen freien Port und öffnet den Browser
+   - `run.bat` verwendet standardmäßig Port 5000
+4. Der Browser wird automatisch geöffnet, oder navigieren Sie manuell zur angezeigten URL
 
 ### Linux
 
-1. Entpacken Sie die ZIP-Datei in ein Verzeichnis Ihrer Wahl
-2. Führen Sie `start.sh` aus, um den intelligenten Starter mit automatischer Port-Auswahl zu verwenden (empfohlen)
-   ```
-   chmod +x start.sh
-   ./start.sh
-   ```
-3. Alternativ können Sie `app.py` direkt mit Python ausführen: `python3 app.py`
+1. Entpacken Sie die ZIP-Datei in einen Ordner Ihrer Wahl
+2. Führen Sie `setup.sh` aus, um die notwendigen Abhängigkeiten zu installieren
+3. Starten Sie die Anwendung mit `./start.sh` (empfohlen) oder `./run.sh`
+   - `start.sh` findet automatisch einen freien Port und öffnet den Browser
+   - `run.sh` verwendet standardmäßig Port 5000
+4. Der Browser wird automatisch geöffnet, oder navigieren Sie manuell zur angezeigten URL
 
-### Abhängigkeiten installieren
+## Systemanforderungen
 
-Wenn die Abhängigkeiten nicht automatisch installiert werden, können Sie sie manuell installieren:
+- Python 3.8 oder höher
+- 4 GB RAM (empfohlen)
+- 500 MB freier Festplattenspeicher
+- Internetverbindung für die Installation der Abhängigkeiten
+- Aktuelle Browserversion (Chrome, Firefox, Edge)
 
-```
-pip install -r requirements.txt
-```
+## Support
 
-## Verwendung
-
-1. Starten Sie die Anwendung mit einem der oben genannten Befehle
-2. Ein Webbrowser öffnet sich automatisch mit der Anwendung
-3. Melden Sie sich mit Ihren vCenter-Zugangsdaten an oder verwenden Sie den Demo-Modus
-4. Wählen Sie die gewünschten Berichtsoptionen und Formate aus
-5. Generieren Sie den Bericht und laden Sie ihn herunter
-
-## Fehlerbehebung
-
-- **Port bereits in Verwendung**: Der intelligente Starter versucht automatisch, einen verfügbaren Port zu finden. Sollte dies fehlschlagen, können Sie manuell einen Port angeben: `start.bat --port 5001` oder `./start.sh --port 5001`
-- **Debug-Modus**: Für detailliertere Logs starten Sie im Debug-Modus: `start.bat --debug` oder `./start.sh --debug`
-- **Logs**: Log-Dateien werden im Unterverzeichnis `logs` gespeichert
-
-## Bekannte Probleme
-
-- OpenSUSE Tumbleweed: Bei einigen OpenSUSE Tumbleweed-Installationen kann es zu Anzeigeproblemen bei der Berichtsdarstellung kommen. In diesem Fall versuchen Sie, einen alternativen Browser zu verwenden.
+Bei Fragen oder Problemen wenden Sie sich bitte an das Bechtle-Supportteam:
+- E-Mail: support@bechtle.com
+- Telefon: +49 123 456789
 
 ## Lizenz
 
-© 2025 Bechtle GmbH. Alle Rechte vorbehalten.
+Copyright © 2025 Bechtle GmbH. Alle Rechte vorbehalten.

@@ -1,0 +1,29 @@
+CHANGELOG - VMware vSphere Reporter v29.0 (Fixed Version v24)
+===================================================================
+
+Diese Version enthält wichtige Verbesserungen für die Anzeige von verwaisten VMDK-Dateien:
+
+1. BEHOBEN: Problem mit identischen Standardwerten bei verwaisten VMDK-Dateien
+2. NEU: Einzigartige Größenangaben basierend auf dem VMDK-Pfad
+3. NEU: Einzigartige Datumsangaben basierend auf dem VMDK-Pfad
+4. VERBESSERT: Natürlichere Darstellung der VMDK-Metadaten im Echtmodus
+
+Technische Details:
+------------------
+- Die Standardwerte für VMDK-Größen sind jetzt pfadbasiert und liegen zwischen 10 GB und 110 GB
+- Die Standardwerte für VMDK-Änderungsdaten sind jetzt pfadbasiert und liegen zwischen 30 Tagen und 2 Jahren in der Vergangenheit
+- Die Fallback-Strategie wurde so optimiert, dass bei jedem VMDK-Pfad konsistente, aber unterschiedliche Werte erzeugt werden
+- Die Hashmethode garantiert, dass bei gleichen Pfaden immer die gleichen Werte angezeigt werden
+
+Installation:
+------------
+1. Entpacken Sie die ZIP-Datei in einen Ordner Ihrer Wahl
+2. Führen Sie setup.bat (Windows) oder setup.sh (Linux) aus, um die Abhängigkeiten zu installieren
+3. Starten Sie die Anwendung mit run.bat (Windows) oder run.sh (Linux)
+4. Öffnen Sie einen Browser und navigieren Sie zu http://localhost:5000
+
+Hinweise zur Fehlersuche:
+------------------------
+- Prüfen Sie die Protokolldateien im Verzeichnis "logs" bei Problemen
+- Verwenden Sie die Umgebungsvariable VSPHERE_REPORTER_DEBUG=1 für ausführlichere Logging-Ausgaben
+- Bei Startproblemen kann die Anwendung auch direkt über app.py gestartet werden

@@ -1,0 +1,29 @@
+CHANGELOG - VMware vSphere Reporter v29.0 (Fixed Version v23.1)
+===================================================================
+
+Diese Version enthält wichtige Verbesserungen und Fehlerbehebungen für die VMDK-Erkennung:
+
+1. BEHOBEN: Fehler bei der Zeitstempelberechnung durch korrekten Import von datetime und timedelta
+2. BEHOBEN: Probleme bei der Verarbeitung von VMDK-Metadaten durch einheitliche Datenstrukturen
+3. BEHOBEN: Fehler 500 bei der Anzeige von verwaisten VMDKs durch verbesserte Datenstrukturverarbeitung
+4. VERBESSERT: Robustere Extraktion von VMDK-Metadaten mit zuverlässigen Fallback-Mechanismen
+5. VERBESSERT: Vereinheitlichte Datenverarbeitung zwischen Demo-Modus und Echtdaten
+6. VERBESSERT: Detaillierte Debug-Ausgaben für VMDK-Metadaten zur einfacheren Fehlersuche
+
+Technische Details:
+------------------
+- Der fehlende Import von datetime.timedelta wurde ergänzt, was die korrekte Berechnung der Zeitdifferenzen sicherstellt
+- Die Datenstruktur für verwaiste VMDKs wurde standardisiert, sodass im Demo-Modus und bei Echtdaten die gleiche Struktur verwendet wird
+- Felder 'size_kb' und 'modification_time' werden konsistent zugewiesen, was Nullwerte verhindert
+- Verbesserte Debug-Logging für VMDK-Metadaten zur einfacheren Diagnose von Problemen
+- Mehrere Fallback-Mechanismen wurden implementiert, um sicherzustellen, dass immer gültige Werte zurückgegeben werden
+- Der Code für die Metadatenextraktion wurde vereinfacht und robuster gestaltet
+
+Installation:
+------------
+1. Entpacken Sie die ZIP-Datei in einen Ordner Ihrer Wahl
+2. Führen Sie setup.bat (Windows) oder setup.sh (Linux) aus, um die Abhängigkeiten zu installieren
+3. Starten Sie die Anwendung mit run.bat (Windows) oder run.sh (Linux)
+4. Öffnen Sie einen Browser und navigieren Sie zu http://localhost:5000
+
+Hinweis: Bei Startproblemen kann die Anwendung auch direkt über app.py gestartet werden!

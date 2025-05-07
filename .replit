@@ -480,7 +480,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd download && python -m http.server 5000"
+args = "cd DirectDownload && python -m http.server 5000"
 waitForPort = 5000
 
 [[workflows.workflow]]
@@ -489,7 +489,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd download && python -m http.server 8080"
+args = "cd DirectDownload && python -m http.server 8080"
 waitForPort = 8080
 
 [[workflows.workflow]]
@@ -516,8 +516,17 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "mkdir -p download && cp bechtle-vsphere-reporter-v0.1.zip download/ && cd download && python -m http.server 5500"
-waitForPort = 5500
+args = "cd download && python -m http.server 8888"
+waitForPort = 8888
+
+[[workflows.workflow]]
+name = "BechleVSphereV01"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd bechtle-vsphere-reporter-v0.1 && VSPHERE_REPORTER_PORT=5012 python app.py"
+waitForPort = 5012
 
 [deployment]
 run = ["sh", "-c", "pip install -r requirements.txt || pip install pyVmomi>=7.0.0 PyQt5>=5.15.0 reportlab>=3.6.0 python-docx>=0.8.11 jinja2>=3.0.0 humanize>=3.0.0 && python vsphere_reporter.py"]

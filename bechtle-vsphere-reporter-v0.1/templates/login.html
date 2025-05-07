@@ -3,235 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bechtle vSphere Reporter - Login</title>
+    <title>VMware vSphere Reporter - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <style>
-        /* Bechtle Farbschema */
-        :root {
-            --primary: #00355e;
-            --secondary: #da6f1e;
-            --success: #23a96a;
-            --light: #f3f3f3;
-            --dark: #5a5a5a;
-        }
-        
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: var(--light);
-            color: #333;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            background-color: var(--bechtle-light-gray);
         }
-        
-        header {
-            background-color: var(--primary);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        header h1 {
-            margin: 0;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            flex: 1;
-        }
-        
         .login-container {
-            max-width: 500px;
-            margin: 40px auto;
-            background-color: white;
-            border-radius: 5px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 450px;
+            margin: 7% auto;
         }
-        
-        .form-group {
-            margin-bottom: 20px;
+        .brand-logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
         }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+        .brand-logo img {
+            max-width: 200px;
         }
-        
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-        
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .checkbox-group label {
-            margin-left: 10px;
-            margin-bottom: 0;
-            font-weight: normal;
-        }
-        
-        button {
-            background-color: var(--primary);
-            color: white;
+        .login-card {
             border: none;
-            padding: 12px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
         }
-        
-        button:hover {
-            background-color: #002540;
-        }
-        
-        .demo-button {
-            background-color: var(--secondary);
-            margin-top: 10px;
-        }
-        
-        .demo-button:hover {
-            background-color: #c25f13;
-        }
-        
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-        }
-        
-        .alert-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: var(--light);
-            color: var(--dark);
-            border-top: 1px solid #ddd;
-        }
-        
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            margin-left: 5px;
-            cursor: help;
-        }
-        
-        .tooltip .icon {
-            background-color: var(--dark);
+        .login-card .card-header {
+            background-color: var(--bechtle-dark-blue);
             color: white;
-            border-radius: 50%;
-            width: 16px;
-            height: 16px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-        }
-        
-        .tooltip .tooltip-text {
-            visibility: hidden;
-            width: 250px;
-            background-color: var(--dark);
-            color: white;
+            border-radius: 10px 10px 0 0;
+            padding: 1.5rem;
             text-align: center;
-            border-radius: 6px;
-            padding: 5px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -125px;
-            opacity: 0;
-            transition: opacity 0.3s;
         }
-        
-        .tooltip:hover .tooltip-text {
-            visibility: visible;
-            opacity: 1;
+        .login-card .card-body {
+            padding: 2rem;
+        }
+        .login-help {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--bechtle-dark-gray);
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Bechtle vSphere Reporter v0.1</h1>
-    </header>
-    
-    <div class="container">
-        <div class="login-container">
-            <h2>Anmeldung am vCenter-Server</h2>
-            
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
+    <div class="container login-container">
+        <div class="brand-logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="VMware vSphere Reporter Logo">
+        </div>
+        
+        <div class="card login-card">
+            <div class="card-header">
+                <h4 class="mb-0">VMware vSphere Reporter</h4>
+                <span class="badge bg-success">Version 19</span>
+            </div>
+            <div class="card-body">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}
+                </div>
                 {% endif %}
-            {% endwith %}
-            
-            <form method="post" action="{{ url_for('login') }}">
-                <div class="form-group">
-                    <label for="server">vCenter-Server</label>
-                    <input type="text" id="server" name="server" placeholder="vcenter.example.com" required>
-                </div>
                 
-                <div class="form-group">
-                    <label for="username">Benutzername</label>
-                    <input type="text" id="username" name="username" placeholder="administrator@vsphere.local" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Passwort</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                
-                <div class="checkbox-group">
-                    <input type="checkbox" id="ignore_ssl" name="ignore_ssl" checked>
-                    <label for="ignore_ssl">SSL-Zertifikatsüberprüfung ignorieren</label>
-                    <div class="tooltip">
-                        <span class="icon">?</span>
-                        <span class="tooltip-text">Aktivieren Sie diese Option, wenn Ihr vCenter-Server ein selbstsigniertes oder ungültiges SSL-Zertifikat verwendet.</span>
+                <form method="post" action="{{ url_for('login') }}">
+                    <div class="mb-3">
+                        <label for="server" class="form-label"><i class="bi bi-server me-1"></i>vCenter Server</label>
+                        <input type="text" class="form-control" id="server" name="server" required placeholder="vcenter.domain.local">
                     </div>
-                </div>
-                
-                <button type="submit">Anmelden</button>
-            </form>
-            
-            <form method="post" action="{{ url_for('login') }}">
-                <input type="hidden" name="demo_mode" value="on">
-                <button type="submit" class="demo-button">Demo-Modus</button>
-            </form>
+                    <div class="mb-3">
+                        <label for="username" class="form-label"><i class="bi bi-person me-1"></i>Benutzername</label>
+                        <input type="text" class="form-control" id="username" name="username" required placeholder="administrator@vsphere.local">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label"><i class="bi bi-key me-1"></i>Passwort</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="ignore_ssl" name="ignore_ssl" checked>
+                        <label class="form-check-label" for="ignore_ssl">SSL-Zertifikatsvalidierung ignorieren</label>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>Anmelden
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="demoModeBtn">
+                            <i class="bi bi-display me-1"></i>Demo-Modus
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="login-help mt-3">
+            <p>
+                <strong>Version 19:</strong> Verbesserte Benutzerschnittstelle mit robuster VMDK-Erkennung<br>
+                <small>Basierend auf dem erfolgreichen Ansatz von Version 18</small>
+            </p>
         </div>
     </div>
-    
-    <footer>
-        <p>&copy; 2025 Bechtle GmbH</p>
-    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('demoModeBtn').addEventListener('click', function() {
+            window.location.href = "{{ url_for('demo_mode') }}";
+        });
+    </script>
 </body>
 </html>

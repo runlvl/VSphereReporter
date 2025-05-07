@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VMware vSphere Reporter - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    {% include 'base.html' %}
+
+    <div class="container-fluid">
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="alert alert-info">
+                    <h4 class="alert-heading">VMDK-Diagnose-Modus</h4>
+                    <p>
+                        Diese Version ist für die Diagnose von Problemen mit der VMDK-Erkennung optimiert. 
+                        Sie zeigt detaillierte Informationen über alle gefundenen VMDKs und führt grundlegende Diagnosen durch.
+                    </p>
+                    <hr>
+                    <p class="mb-0">
+                        Verbunden mit: <strong>{{ connection_info.host }}</strong> als <strong>{{ connection_info.username }}</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">VMDK-Datensammlung</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Klicken Sie auf den Button, um die VMDK-Daten zu sammeln:</p>
+                        
+                        <form action="{{ url_for('collect_vmdk_data') }}" method="post">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-search"></i> VMDK-Daten sammeln
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

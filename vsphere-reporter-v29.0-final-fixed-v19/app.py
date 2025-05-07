@@ -1,11 +1,10 @@
 """
-Bechtle vSphere Reporter v0.1 - Produktionsversion
-Webbasierte Reporting-Lösung für VMware vSphere-Umgebungen mit robuster VMDK-Erkennung
+VMware vSphere Reporter v19.1 - Produktionsversion
+Verbesserte Benutzeroberfläche mit robuster VMDK-Erkennung und optimierter Performance
 
-Eine professionelle Web-Anwendung für VMware vSphere-Umgebungen mit Fokus auf wichtige
-Infrastrukturberichte: VMware Tools Status, Snapshot Management und VMDK-Datei-Analyse.
-Diese Version bietet eine robuste VMDK-Erkennung mit intelligenten Fallback-Mechanismen
-und ist in Bechtle Corporate Design gehalten.
+Diese Version basiert auf dem erfolgreichen Ansatz aus v18, wurde jedoch mit einer
+verbesserten Präsentation, Fehlerbehandlung und optimierter Metadatenextraktion ausgestattet.
+Zusätzlich enthält Version 19.1 erweiterte Metadaten-Fallbacks und unterdrückt Flask-Warnungen.
 
 © 2025 Bechtle GmbH - Alle Rechte vorbehalten
 """
@@ -23,8 +22,8 @@ from vsphere_client import VSphereClient
 # Konfiguration
 DEBUG_MODE = os.environ.get('VSPHERE_REPORTER_DEBUG', 'False').lower() in ['true', '1', 't']
 PORT = int(os.environ.get('VSPHERE_REPORTER_PORT', 5000))
-VERSION = '0.1'
-APP_NAME = 'Bechtle vSphere Reporter'
+VERSION = '19.1'
+APP_NAME = 'VMware vSphere Reporter'
 
 # Logging konfigurieren
 log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logs')
@@ -359,12 +358,12 @@ def get_available_port(start_port=5000, max_attempts=10):
 def main():
     """Haupteinstiegspunkt"""
     try:
-        logger.info(f"Starte {APP_NAME} v{VERSION}...")
+        logger.info(f"Starte {APP_NAME}...")
         port = get_available_port(PORT)
         if port != PORT:
             logger.info(f"Port {PORT} ist belegt, verwende Port {port}")
         
-        logger.info(f"Starte {APP_NAME} v{VERSION} auf Port {port}...")
+        logger.info(f"Starte {APP_NAME} auf Port {port}...")
         app.run(host='0.0.0.0', port=port, debug=DEBUG_MODE)
     except Exception as e:
         logger.error(f"Fehler beim Starten der Anwendung: {str(e)}")
