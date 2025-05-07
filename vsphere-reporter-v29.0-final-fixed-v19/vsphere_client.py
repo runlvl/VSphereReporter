@@ -9,7 +9,7 @@ import time
 import logging
 import socket
 import traceback
-from datetime import datetime
+from datetime import datetime, timedelta
 
 try:
     from pyVim import connect
@@ -671,7 +671,7 @@ class VSphereClient:
                 self.logger.debug(f"Fehler beim Lesen des Datums (Attribut {attr}) für {vmdk_path}: {str(e)}")
         
         # Wenn kein Datum gefunden wurde: Realistische Fallback-Strategie
-        from datetime import datetime
+        from datetime import datetime, timedelta
         
         # Standard-Fallback-Wert: 90 Tage alte VMDK (besser als das aktuelle Datum)
         fallback_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d %H:%M:%S")

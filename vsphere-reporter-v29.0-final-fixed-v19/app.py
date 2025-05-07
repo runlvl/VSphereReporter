@@ -197,45 +197,32 @@ def orphaned_vmdks():
         flash('Bitte loggen Sie sich ein.', 'warning')
         return redirect(url_for('index'))
     
-    # Überprüfen, ob wir im Demo-Modus sind
-    if session.get('demo_mode', False):
-        app.logger.info("Demo-Modus ist aktiv, lade Demo-Daten für verwaiste VMDKs")
-        # Importiere demo_data nur wenn benötigt
-        import demo_data
-        demo_result = demo_data.get_demo_data()
-        
-        # Demo-Daten direkt aus dem Demo-Ergebnis extrahieren
-        orphaned_vmdks = demo_result.get('orphaned_vmdks', [])
-        
-        # Stellen Sie sicher, dass orphaned_vmdks eine Liste ist und die richtigen Schlüssel hat
-        if not isinstance(orphaned_vmdks, list):
-            app.logger.warning(f"Unerwarteter Typ für Demo-VMDK-Daten: {type(orphaned_vmdks)}")
-            orphaned_vmdks = []
-            
-        app.logger.info(f"Demo-Daten geladen: {len(orphaned_vmdks)} verwaiste VMDKs")
-        
-        # Debug-Logging für Demo-Daten
-        for i, vmdk in enumerate(orphaned_vmdks[:2]):
-            app.logger.info(f"Demo VMDK {i+1}: {vmdk.get('path', 'Kein Pfad')} - Größe: {vmdk.get('size_kb', 0)/1024/1024:.2f} GB")
-    else:
-        # Sammle Echtdaten
-        raw_data = vsphere_client.collect_all_vmdk_files()
-        
-        # Verarbeite die Daten
-        if isinstance(raw_data, dict):
-            # Raw_data ist ein Dictionary, wir extrahieren orphaned_vmdks
-            orphaned_vmdks = raw_data.get('orphaned_vmdks', [])
-            app.logger.info(f"Anzahl gefundener verwaister VMDKs: {len(orphaned_vmdks)}")
-            
-            # Debug-Log der ersten VMDK falls vorhanden
-            if orphaned_vmdks and len(orphaned_vmdks) > 0:
-                app.logger.info(f"Beispiel-VMDK: {orphaned_vmdks[0]}")
-        else:
-            # Fallback für unerwartete Datentypen
-            app.logger.warning(f"Unerwarteter Datentyp für VMDK-Daten: {type(raw_data)}")
-            orphaned_vmdks = []
+    # Sammle Daten, unabhängig vom Demo-Modus
+    app.logger.info("Sammle VMDK-Daten...")
+    raw_data = vsphere_client.collect_all_vmdk_files()
     
-    # Zusätzliches Debug-Logging für UI
+    # Einheitliche Verarbeitung für echte und Demo-Daten
+    if isinstance(raw_data, dict):
+        if 'demo' in raw_data:
+            # Wir haben Demo-Daten
+            app.logger.info("Demo-Modus erkannt, verwende Demo-Daten")
+            orphaned_vmdks = raw_data.get('orphaned_vmdks', [])
+        else:
+            # Wir haben Echtdaten
+            orphaned_vmdks = raw_data.get('orphaned_vmdks', [])
+    else:
+        # Fallback, wenn keine validen Daten verfügbar sind
+        app.logger.warning("Keine validen VMDK-Daten verfügbar")
+        orphaned_vmdks = []
+    
+    # Stellen Sie sicher, dass orphaned_vmdks eine Liste ist
+    if not isinstance(orphaned_vmdks, list):
+        app.logger.warning(f"Unerwarteter Typ für VMDK-Daten: {type(orphaned_vmdks)}")
+        orphaned_vmdks = []
+    
+    app.logger.info(f"Anzahl gefundener verwaister VMDKs: {len(orphaned_vmdks)}")
+    
+    # Debug-Logging der ersten VMDKs falls vorhanden
     if orphaned_vmdks:
         app.logger.info(f"Anzeige von {len(orphaned_vmdks)} verwaisten VMDKs")
         for i, vmdk in enumerate(orphaned_vmdks[:2]):  # Zeige nur erste 2 Einträge zur Vermeidung zu großer Logs
