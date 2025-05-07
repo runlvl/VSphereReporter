@@ -126,10 +126,6 @@ args = "DownloadPackage"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "DownloadsV19Direct"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "DownloadsRoot"
 
 [[workflows.workflow.tasks]]
@@ -151,6 +147,10 @@ args = "VSphereReporterV22Latest"
 [[workflows.workflow.tasks]]
 task = "workflow.run"
 args = "BechtleVSphereV01Download"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "DownloadsV19Direct"
 
 [[workflows.workflow]]
 name = "VSphereReporter"
@@ -457,15 +457,6 @@ args = "cd release && mkdir -p downloads-web && cp downloads/vsphere-reporter-v2
 waitForPort = 5030
 
 [[workflows.workflow]]
-name = "DownloadsV19Direct"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd release/downloads && python -m http.server 5000"
-waitForPort = 5000
-
-[[workflows.workflow]]
 name = "DownloadsRoot"
 author = "agent"
 
@@ -527,6 +518,15 @@ author = "agent"
 task = "shell.exec"
 args = "cd download && python -m http.server 5500"
 waitForPort = 5500
+
+[[workflows.workflow]]
+name = "DownloadsV19Direct"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd release/downloads && python -m http.server 5000"
+waitForPort = 5000
 
 [deployment]
 run = ["sh", "-c", "pip install -r requirements.txt || pip install pyVmomi>=7.0.0 PyQt5>=5.15.0 reportlab>=3.6.0 python-docx>=0.8.11 jinja2>=3.0.0 humanize>=3.0.0 && python vsphere_reporter.py"]
