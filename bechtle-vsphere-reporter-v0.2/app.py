@@ -22,6 +22,7 @@ from werkzeug.utils import secure_filename
 
 from vsphere_client import VSphereClient
 from report_generator import ReportGenerator
+import demo_data
 
 # Konfiguration
 DEBUG_MODE = os.environ.get('VSPHERE_REPORTER_DEBUG', 'False').lower() in ['true', '1', 't']
@@ -50,6 +51,12 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_PERMANENT'] = False
+
+# Eigene Jinja-Filter registrieren
+@app.template_filter('basename')
+def basename_filter(path):
+    """Extrahiert den Dateinamen aus einem Pfad"""
+    return os.path.basename(path) if path else ''
 
 # Erstelle vSphere Client
 vsphere_client = VSphereClient()
@@ -482,7 +489,13 @@ def generate_report():
             else:
                 data['vmware_tools'] = vmware_tools_data
         else:
-            data['vmware_tools'] = vsphere_client.data.get('vmware_tools', [])
+            # Bei bereits gesammelten VMware Tools Daten verwenden wir die gleichen
+            # Daten wie bei einer erneuten Sammlung
+            vmware_tools_data = vsphere_client.collect_vmware_tools_status()
+            if isinstance(vmware_tools_data, dict) and 'demo' in vmware_tools_data:
+                data['vmware_tools'] = vmware_tools_data.get('data', [])
+            else:
+                data['vmware_tools'] = vmware_tools_data
     
     if include_sections.get('snapshots', False):
         if not vsphere_client.collection_status['snapshots']:
@@ -492,7 +505,13 @@ def generate_report():
             else:
                 data['snapshots'] = snapshots_data
         else:
-            data['snapshots'] = vsphere_client.data.get('snapshots', [])
+            # Bei bereits gesammelten Snapshot-Daten verwenden wir die gleichen
+            # Daten wie bei einer erneuten Sammlung
+            snapshots_data = vsphere_client.collect_snapshot_info()
+            if isinstance(snapshots_data, dict) and 'demo' in snapshots_data:
+                data['snapshots'] = snapshots_data.get('data', [])
+            else:
+                data['snapshots'] = snapshots_data
     
     if include_sections.get('orphaned_vmdks', False):
         if not vsphere_client.collection_status['orphaned_vmdks']:
@@ -505,7 +524,16 @@ def generate_report():
             else:
                 data['orphaned_vmdks'] = []
         else:
-            data['orphaned_vmdks'] = vsphere_client.data.get('orphaned_vmdks', [])
+            # Bei bereits gesammelten VMDK-Daten verwenden wir die gleichen
+            # Daten wie bei einer erneuten Sammlung
+            raw_data = vsphere_client.collect_all_vmdk_files()
+            if isinstance(raw_data, dict):
+                if 'demo' in raw_data:
+                    data['orphaned_vmdks'] = raw_data.get('orphaned_vmdks', [])
+                else:
+                    data['orphaned_vmdks'] = raw_data.get('orphaned_vmdks', [])
+            else:
+                data['orphaned_vmdks'] = []
     
     # Report-Generator initialisieren
     report_generator = ReportGenerator(
