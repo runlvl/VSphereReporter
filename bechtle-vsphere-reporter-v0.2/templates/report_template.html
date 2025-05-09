@@ -3,283 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
+    <title>{{ report.title }} - Bechtle vSphere Reporter v{{ version }}</title>
     <style>
+        :root {
+            --bechtle-blue: #00355e;
+            --bechtle-orange: #da6f1e;
+            --bechtle-green: #23a96a;
+            --light-gray: #f3f3f3;
+            --dark-gray: #5a5a5a;
+        }
+        
         body {
             font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
+            color: #333;
+            background-color: #fff;
         }
+        
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+        
         .header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 2px solid {{ colors.primary }};
-            padding-bottom: 10px;
+            background-color: var(--bechtle-blue);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
         }
-        .logo {
-            width: 150px;
-            margin-right: 20px;
-        }
-        .title-container {
-            flex-grow: 1;
-        }
-        h1 {
-            color: {{ colors.primary }};
+        
+        .header h1 {
             margin: 0;
             font-size: 24px;
         }
-        h2 {
-            color: {{ colors.primary }};
-            margin-top: 30px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid {{ colors.primary }};
-            padding-bottom: 5px;
+        
+        .metadata {
+            background-color: var(--light-gray);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
         }
-        h3 {
-            color: {{ colors.secondary }};
-            margin-top: 25px;
-            margin-bottom: 10px;
-        }
-        .timestamp {
-            color: #666;
-            font-style: italic;
+        
+        .metadata p {
             margin: 5px 0;
         }
+        
         .demo-badge {
-            background-color: {{ colors.secondary }};
+            background-color: #ff4136;
             color: white;
-            padding: 5px 10px;
+            padding: 8px 12px;
             border-radius: 4px;
+            font-weight: bold;
             display: inline-block;
             margin-top: 10px;
         }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            color: var(--bechtle-blue);
+            font-size: 20px;
+            border-bottom: 2px solid var(--bechtle-orange);
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+        
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin-bottom: 20px;
         }
+        
         th {
-            background-color: {{ colors.primary }};
+            background-color: var(--bechtle-blue);
             color: white;
+            padding: 12px;
             text-align: left;
-            padding: 10px;
         }
+        
         td {
-            padding: 8px 10px;
+            padding: 10px;
             border-bottom: 1px solid #ddd;
         }
+        
         tr:nth-child(even) {
-            background-color: #f2f2f2;
+            background-color: var(--light-gray);
         }
-        .info-box {
-            background-color: #e8f4f8;
-            border-left: 4px solid {{ colors.primary }};
-            padding: 15px;
-            margin: 20px 0;
-        }
-        .warning {
-            background-color: #fff3cd;
-            border-left: 4px solid #ffc107;
-        }
-        .danger {
-            background-color: #f8d7da;
-            border-left: 4px solid #dc3545;
-        }
+        
         .success {
-            background-color: #d4edda;
-            border-left: 4px solid #28a745;
+            color: var(--bechtle-green);
         }
+        
+        .warning {
+            color: var(--bechtle-orange);
+        }
+        
+        .danger {
+            color: #ff4136;
+        }
+        
         .footer {
-            margin-top: 40px;
-            padding-top: 10px;
-            border-top: 1px solid #ddd;
             text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+            color: var(--dark-gray);
             font-size: 12px;
-            color: #666;
+            border-top: 1px solid #ddd;
         }
         
-        /* Spezielle Formatierungen für VMware Tools Status */
-        .status-not-installed, .status-old {
-            background-color: #f8d7da;
-        }
-        .status-new {
-            background-color: #d4edda;
-        }
-        .status-current {
-            background-color: #d4edda;
-        }
-        
-        /* Spezielle Formatierungen für Snapshot Alter */
-        .age-critical {
-            background-color: #f8d7da;
-        }
-        .age-warning {
-            background-color: #fff3cd;
-        }
-        .age-normal {
-            background-color: #d4edda;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .logo {
-                margin-bottom: 10px;
-            }
-            table {
-                font-size: 14px;
-            }
+        .empty-data {
+            padding: 20px;
+            background-color: var(--light-gray);
+            text-align: center;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
+    <div class="header">
+        <h1>{{ report.title }}</h1>
+    </div>
+    
     <div class="container">
-        <div class="header">
-            <img src="data:image/png;base64,{{ logo_base64 }}" alt="Bechtle Logo" class="logo">
-            <div class="title-container">
-                <h1>{{ report.title }}</h1>
-                <p class="timestamp">Erstellt am: {{ report.generated_at }}</p>
-                {% if demo_mode %}
-                <div class="demo-badge">DEMO MODUS - Alle Daten sind Beispieldaten</div>
+        <div class="metadata">
+            <p><strong>Generiert am:</strong> {{ report.generated_at }}</p>
+            <p><strong>vCenter:</strong> {{ report.vcenter }}</p>
+            {% if report.demo_mode %}
+            <div class="demo-badge">DEMO-MODUS - Beispieldaten</div>
+            {% endif %}
+        </div>
+        
+        {% for section in report.sections %}
+        <div class="section">
+            <h2 class="section-title">{{ section.title }}</h2>
+            
+            {% if section.id == 'vmware_tools' %}
+                {% if section.data %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>VM-Name</th>
+                            <th>Tools-Version</th>
+                            <th>Status</th>
+                            <th>Betriebssystem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in section.data %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.tools_version }}</td>
+                            <td>
+                                <span class="{{ item.status_class }}">{{ item.status_text }}</span>
+                                {% if item.running_text %}
+                                 / <span class="{{ item.running_class }}">{{ item.running_text }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ item.os }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-data">Keine VMware Tools Daten verfügbar</div>
                 {% endif %}
-            </div>
+            
+            {% elif section.id == 'snapshots' %}
+                {% if section.data %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>VM-Name</th>
+                            <th>Snapshot-Name</th>
+                            <th>Erstellungsdatum</th>
+                            <th>Alter</th>
+                            <th>Größe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in section.data %}
+                        <tr>
+                            <td>{{ item.vm_name }}</td>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.create_time_str }}</td>
+                            <td class="{{ item.age_class }}">{{ item.age_str }}</td>
+                            <td>{{ item.size_str }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-data">Keine Snapshot-Daten verfügbar</div>
+                {% endif %}
+            
+            {% elif section.id == 'orphaned_vmdks' %}
+                {% if section.data %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pfad</th>
+                            <th>Datastore</th>
+                            <th>Größe</th>
+                            <th>Änderungsdatum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in section.data %}
+                        <tr>
+                            <td>{{ item.path }}</td>
+                            <td>{{ item.datastore }}</td>
+                            <td>{{ (item.size_kb / 1024 / 1024) | round(2) }} GB</td>
+                            <td>{{ item.modification_time }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-data">Keine verwaisten VMDK-Dateien gefunden</div>
+                {% endif %}
+            {% endif %}
         </div>
-        
-        <h2>Verbindungsinformationen</h2>
-        <table>
-            <tr>
-                <th>Server</th>
-                <td>{{ report.connection_info.host|default('Unbekannt') }}</td>
-            </tr>
-            <tr>
-                <th>Benutzer</th>
-                <td>{{ report.connection_info.username|default('Unbekannt') }}</td>
-            </tr>
-            <tr>
-                <th>SSL-Überprüfung</th>
-                <td>{% if report.connection_info.disable_ssl_verification %}Deaktiviert{% else %}Aktiviert{% endif %}</td>
-            </tr>
-        </table>
-        
-        <h2>Zusammenfassung</h2>
-        <table>
-            <tr>
-                <th>Metrik</th>
-                <th>Wert</th>
-            </tr>
-            <tr>
-                <td>Anzahl VMware Tools Einträge</td>
-                <td>{{ report.summary.vm_tools_count }}</td>
-            </tr>
-            <tr>
-                <td>Anzahl Snapshots</td>
-                <td>{{ report.summary.snapshots_count }}</td>
-            </tr>
-            <tr>
-                <td>Anzahl verwaister VMDKs</td>
-                <td>{{ report.summary.orphaned_vmdks_count }}</td>
-            </tr>
-            <tr>
-                <td>Gesamtgröße verwaister VMDKs</td>
-                <td>{{ "%.2f"|format(report.summary.orphaned_vmdks_size_gb) }} GB</td>
-            </tr>
-        </table>
-        
-        {% if report.vmware_tools %}
-        <h2>VMware Tools Status</h2>
-        <div class="info-box">
-            Dieser Bericht zeigt den Status der VMware Tools für alle virtuellen Maschinen. VMware Tools sollten 
-            auf dem neuesten Stand sein, um optimale Leistung und Kompatibilität zu gewährleisten.
-        </div>
-        
-        <table>
-            <tr>
-                <th>VM-Name</th>
-                <th>Tools-Status</th>
-                <th>Version</th>
-                <th>Update-Status</th>
-            </tr>
-            {% for vm in report.vmware_tools %}
-            <tr class="{% if 'not installed' in vm.tools_status|lower %}status-not-installed{% elif 'old' in vm.tools_status|lower %}status-old{% elif 'current' in vm.tools_status|lower %}status-current{% else %}status-new{% endif %}">
-                <td>{{ vm.vm_name }}</td>
-                <td>{{ vm.tools_status }}</td>
-                <td>{{ vm.tools_version }}</td>
-                <td>{{ vm.tools_update_status }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-        {% endif %}
-        
-        {% if report.snapshots %}
-        <h2>Snapshot-Übersicht</h2>
-        <div class="info-box warning">
-            Snapshots sollten als temporäre Sicherungspunkte betrachtet werden. Langfristige Snapshots können 
-            Speicherplatz verschwenden und die Leistung beeinträchtigen. Snapshots, die älter als 7 Tage sind, 
-            sollten überprüft und ggf. gelöscht oder konsolidiert werden.
-        </div>
-        
-        <table>
-            <tr>
-                <th>VM-Name</th>
-                <th>Snapshot-Name</th>
-                <th>Erstellt am</th>
-                <th>Alter (Tage)</th>
-                <th>Größe</th>
-            </tr>
-            {% for snapshot in report.snapshots %}
-            <tr class="{% if snapshot.age_days > 30 %}age-critical{% elif snapshot.age_days > 7 %}age-warning{% else %}age-normal{% endif %}">
-                <td>{{ snapshot.vm_name }}</td>
-                <td>{{ snapshot.name }}</td>
-                <td>{{ snapshot.created_date }}</td>
-                <td>{{ snapshot.age_days }}</td>
-                <td>{{ "%.2f"|format(snapshot.size_gb) }} GB</td>
-            </tr>
-            {% endfor %}
-        </table>
-        {% endif %}
-        
-        {% if report.orphaned_vmdks %}
-        <h2>Verwaiste VMDK-Dateien</h2>
-        <div class="info-box danger">
-            Verwaiste VMDK-Dateien sind virtuelle Festplatten, die keiner virtuellen Maschine mehr zugeordnet sind. 
-            Sie belegen unnötig Speicherplatz und können in der Regel gelöscht werden. Überprüfen Sie jedoch vor dem 
-            Löschen, ob die Dateien noch benötigt werden.
-        </div>
-        
-        <table>
-            <tr>
-                <th>Dateiname</th>
-                <th>Datastore</th>
-                <th>Größe</th>
-                <th>Änderungsdatum</th>
-            </tr>
-            {% for vmdk in report.orphaned_vmdks %}
-            <tr>
-                <td>{{ vmdk.path.split('/')[-1] }}</td>
-                <td>{{ vmdk.datastore }}</td>
-                <td>{{ "%.2f"|format(vmdk.size_kb / 1024 / 1024) }} GB</td>
-                <td>{{ vmdk.modification_time }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-        {% endif %}
+        {% endfor %}
         
         <div class="footer">
-            <p>Bericht erstellt mit dem Bechtle vSphere Reporter v0.2 | © 2025 Bechtle GmbH - Alle Rechte vorbehalten</p>
+            <p>Generiert mit Bechtle vSphere Reporter v{{ version }}</p>
+            <p>© 2025 Bechtle GmbH - Alle Rechte vorbehalten</p>
         </div>
     </div>
 </body>
