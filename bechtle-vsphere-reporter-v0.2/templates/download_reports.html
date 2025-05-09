@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Berichte herunterladen - Bechtle vSphere Reporter{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">Generierte Berichte</h2>
+                </div>
+                <div class="card-body">
+                    {% if demo_mode %}
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle-fill me-2"></i> <strong>Demo-Modus aktiv:</strong> Die Berichte enthalten Beispieldaten.
+                    </div>
+                    {% endif %}
+                    
+                    <p class="lead">Die folgenden Berichte wurden erfolgreich generiert und stehen zum Download bereit:</p>
+                    
+                    <div class="list-group mt-4">
+                        {% if 'html' in reports %}
+                        <a href="{{ url_for('download_report', format='html') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="bi bi-filetype-html me-2 text-primary"></i>
+                                <strong>HTML-Bericht</strong>
+                                <span class="text-muted ms-2">Im Browser anzeigen oder lokal speichern</span>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">
+                                <i class="bi bi-download me-1"></i> Herunterladen
+                            </span>
+                        </a>
+                        {% endif %}
+                        
+                        {% if 'pdf' in reports %}
+                        <a href="{{ url_for('download_report', format='pdf') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="bi bi-filetype-pdf me-2 text-danger"></i>
+                                <strong>PDF-Bericht</strong>
+                                <span class="text-muted ms-2">Plattformunabhängiges Dokumentformat</span>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">
+                                <i class="bi bi-download me-1"></i> Herunterladen
+                            </span>
+                        </a>
+                        {% endif %}
+                        
+                        {% if 'docx' in reports %}
+                        <a href="{{ url_for('download_report', format='docx') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="bi bi-filetype-docx me-2 text-primary"></i>
+                                <strong>Word-Dokument (DOCX)</strong>
+                                <span class="text-muted ms-2">Bearbeitbares Dokumentformat</span>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">
+                                <i class="bi bi-download me-1"></i> Herunterladen
+                            </span>
+                        </a>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="alert alert-warning mt-4">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> <strong>Hinweis:</strong> 
+                        Die Berichtsdateien sind nur temporär verfügbar. Bitte laden Sie die benötigten Berichte jetzt herunter.
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Zurück zum Dashboard
+                    </a>
+                    <a href="{{ url_for('generate_report') }}" class="btn btn-primary float-end">
+                        <i class="bi bi-plus-circle me-1"></i> Neuen Bericht erstellen
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

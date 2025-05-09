@@ -1,454 +1,229 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}VMware vSphere Reporter - Dashboard{% endblock %}
+{% block title %}Dashboard - Bechtle vSphere Reporter v0.2{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0">
-                    <i class="bi bi-info-circle-fill me-2"></i>Übersicht
-                </h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center">
-                            <div class="me-3">
-                                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="64">
-                            </div>
-                            <div>
-                                <h3 class="mb-1">VMware vSphere Reporter</h3>
-                                <p class="text-muted mb-0">Version 0.2 - Erweiterte Visualisierung mit Topologie-Diagrammen</p>
-                            </div>
-                        </div>
-                        <hr>
-                        <p>
-                            Der VMware vSphere Reporter bietet einen umfassenden Überblick über Ihre VMware-Umgebung.
-                            Navigieren Sie zu den einzelnen Berichten über die Menüeinträge oben.
-                        </p>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card bg-light">
-                            <div class="card-body">
-                                <h5 class="card-title">Verbindungsinformationen</h5>
-                                <div class="table-responsive">
-                                    <table class="table table-sm">
-                                        <tbody>
-                                            <tr>
-                                                <td width="40%"><strong>Verbunden mit:</strong></td>
-                                                <td>
-                                                    {% if connection_info %}
-                                                        <span class="text-success">
-                                                            <i class="bi bi-check-circle-fill me-1"></i>{{ connection_info.host }}
-                                                        </span>
-                                                    {% else %}
-                                                        <span class="text-danger">
-                                                            <i class="bi bi-x-circle-fill me-1"></i>Nicht verbunden
-                                                        </span>
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
-                                            {% if connection_info %}
-                                            <tr>
-                                                <td><strong>Benutzer:</strong></td>
-                                                <td>{{ connection_info.username }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>SSL-Prüfung:</strong></td>
-                                                <td>
-                                                    {% if connection_info.disable_ssl_verification %}
-                                                        <span class="text-warning">
-                                                            <i class="bi bi-shield-fill-exclamation me-1"></i>Deaktiviert
-                                                        </span>
-                                                    {% else %}
-                                                        <span class="text-success">
-                                                            <i class="bi bi-shield-fill-check me-1"></i>Aktiviert
-                                                        </span>
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
-                                            {% endif %}
-                                            <tr>
-                                                <td><strong>Demo-Modus:</strong></td>
-                                                <td>
-                                                    {% if demo_mode %}
-                                                        <span class="text-info">
-                                                            <i class="bi bi-display me-1"></i>Aktiv
-                                                        </span>
-                                                    {% else %}
-                                                        <span class="text-secondary">
-                                                            <i class="bi bi-display-fill me-1"></i>Inaktiv
-                                                        </span>
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">Dashboard</h2>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row mb-4">
-    <div class="col-lg-12">
-        <div class="card border-primary mb-3">
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">
-                    <i class="bi bi-diagram-3-fill me-2"></i>Infrastruktur-Topologie
-                </h5>
-                <a href="{{ url_for('infrastructure_topology') }}" class="btn btn-sm btn-light">
-                    <i class="bi bi-arrow-right"></i>
-                </a>
-            </div>
-            <div class="card-body">
-                <div class="row align-items-center">
-                    <div class="col-md-7">
-                        <p>
-                            <strong>NEU in Version 0.2:</strong> Visualisieren Sie Ihre gesamte vSphere-Infrastruktur als interaktives Topologie-Diagramm.
-                            Die Visualisierung zeigt die hierarchische Struktur von vCenter bis zu den virtuellen Maschinen.
-                        </p>
-                        <ul class="mb-3">
-                            <li>Hierarchische Darstellung vom vCenter bis zu den VMs</li>
-                            <li>Interaktive Navigation mit Zoom und Filter-Funktionen</li>
-                            <li>Farbliche Kennzeichnung verschiedener Infrastrukturkomponenten</li>
-                            <li>Export als PNG oder SVG für Dokumentationen und Präsentationen</li>
-                        </ul>
-                        <a href="{{ url_for('infrastructure_topology') }}" class="btn btn-primary">
-                            <i class="bi bi-diagram-3-fill me-2"></i>Zur Topologie-Ansicht
-                        </a>
+                <div class="card-body">
+                    {% if demo_mode %}
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> <strong>Demo-Modus aktiv:</strong> Es werden Beispieldaten verwendet.
                     </div>
-                    <div class="col-md-5">
-                        <div class="border rounded p-2 bg-light">
-                            <div id="mini-topology-preview" style="width: 100%; height: 200px;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">
-                    <i class="bi bi-tools me-2"></i>VMware Tools
-                </h5>
-                <a href="{{ url_for('vmware_tools') }}" class="btn btn-sm btn-primary">
-                    <i class="bi bi-arrow-right"></i>
-                </a>
-            </div>
-            <div class="card-body">
-                <p>Überprüfen Sie den Status der VMware Tools in Ihren virtuellen Maschinen.</p>
-                <div class="mt-3">
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Datensammlung:</span>
-                        {% if vsphere_client.collection_status.vmware_tools %}
-                            <span class="text-success"><i class="bi bi-check-circle-fill"></i> Erfolgreich</span>
-                        {% else %}
-                            <span class="text-secondary"><i class="bi bi-dash-circle-fill"></i> Ausstehend</span>
-                        {% endif %}
-                    </div>
-                    <div class="d-grid">
-                        <a href="{{ url_for('vmware_tools') }}" class="btn btn-outline-primary">VMware Tools anzeigen</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-4">
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">
-                    <i class="bi bi-camera me-2"></i>Snapshots
-                </h5>
-                <a href="{{ url_for('snapshots') }}" class="btn btn-sm btn-primary">
-                    <i class="bi bi-arrow-right"></i>
-                </a>
-            </div>
-            <div class="card-body">
-                <p>Identifizieren Sie alte Snapshots, die bereinigt werden sollten.</p>
-                <div class="mt-3">
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Datensammlung:</span>
-                        {% if vsphere_client.collection_status.snapshots %}
-                            <span class="text-success"><i class="bi bi-check-circle-fill"></i> Erfolgreich</span>
-                        {% else %}
-                            <span class="text-secondary"><i class="bi bi-dash-circle-fill"></i> Ausstehend</span>
-                        {% endif %}
-                    </div>
-                    <div class="d-grid">
-                        <a href="{{ url_for('snapshots') }}" class="btn btn-outline-primary">Snapshots anzeigen</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-4">
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">
-                    <i class="bi bi-hdd me-2"></i>Verwaiste VMDKs
-                </h5>
-                <a href="{{ url_for('orphaned_vmdks') }}" class="btn btn-sm btn-primary">
-                    <i class="bi bi-arrow-right"></i>
-                </a>
-            </div>
-            <div class="card-body">
-                <p>Finden Sie verwaiste VMDK-Dateien, die Speicherplatz verschwenden.</p>
-                <div class="mt-3">
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Datensammlung:</span>
-                        {% if vsphere_client.collection_status.orphaned_vmdks %}
-                            <span class="text-success"><i class="bi bi-check-circle-fill"></i> Erfolgreich</span>
-                        {% else %}
-                            <span class="text-secondary"><i class="bi bi-dash-circle-fill"></i> Ausstehend</span>
-                        {% endif %}
-                    </div>
-                    <div class="d-grid">
-                        <a href="{{ url_for('orphaned_vmdks') }}" class="btn btn-outline-primary">Verwaiste VMDKs anzeigen</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-{% if vsphere_client.error_log and vsphere_client.error_log|length > 0 %}
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card border-danger mb-4">
-            <div class="card-header bg-danger text-white">
-                <h5 class="mb-0"><i class="bi bi-exclamation-triangle-fill me-2"></i>Fehlerprotokoll</h5>
-            </div>
-            <div class="card-body">
-                <div class="alert alert-warning">
-                    <strong>Hinweis:</strong> Es wurden Fehler bei der Datensammlung festgestellt. Dies kann die Vollständigkeit der Berichte beeinträchtigen.
-                </div>
-                <div class="accordion" id="errorLogAccordion">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                Fehlerprotokoll anzeigen ({{ vsphere_client.error_log|length }} Einträge)
-                            </button>
-                        </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#errorLogAccordion">
-                            <div class="accordion-body">
-                                <div style="max-height: 400px; overflow-y: auto;">
-                                    {% for error in vsphere_client.error_log %}
-                                    <div class="border-bottom py-2">
-                                        <pre class="text-danger mb-0">{{ error }}</pre>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
-
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>Berichterstellung</h5>
-            </div>
-            <div class="card-body">
-                <p>Erstellen Sie einen Bericht mit allen oder ausgewählten Abschnitten:</p>
-                
-                <form method="post" action="{{ url_for('generate_report') }}">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card mb-3">
-                                <div class="card-header bg-light">
-                                    <h6 class="mb-0">Berichtsabschnitte</h6>
-                                </div>
+                    {% endif %}
+                    
+                    <h3 class="h5 mb-3">Verfügbare Berichte</h3>
+                    
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="card h-100 border-primary">
                                 <div class="card-body">
-                                    <div class="mb-3">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="include_vmware_tools" name="include_vmware_tools" checked>
-                                            <label class="form-check-label" for="include_vmware_tools">VMware Tools</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="include_snapshots" name="include_snapshots" checked>
-                                            <label class="form-check-label" for="include_snapshots">Snapshots</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="include_orphaned_vmdks" name="include_orphaned_vmdks" checked>
-                                            <label class="form-check-label" for="include_orphaned_vmdks">Verwaiste VMDKs</label>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex gap-2">
-                                        <button type="button" id="selectAllBtn" class="btn btn-sm btn-secondary">Alle auswählen</button>
-                                        <button type="button" id="deselectAllBtn" class="btn btn-sm btn-outline-secondary">Alle abwählen</button>
-                                    </div>
+                                    <h5 class="card-title">
+                                        <i class="bi bi-tools text-primary me-2"></i> VMware Tools Status
+                                    </h5>
+                                    <p class="card-text">Überprüft den Status und die Version der VMware Tools auf allen VMs.</p>
+                                </div>
+                                <div class="card-footer bg-transparent border-top">
+                                    <a href="{{ url_for('vmware_tools') }}" class="btn btn-sm btn-outline-primary">
+                                        Anzeigen <i class="bi bi-arrow-right ms-1"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="col-md-6">
-                            <div class="card mb-3">
-                                <div class="card-header bg-light">
-                                    <h6 class="mb-0">Exportformate</h6>
-                                </div>
+                        <div class="col-md-4">
+                            <div class="card h-100 border-primary">
                                 <div class="card-body">
-                                    <div class="mb-3">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="export_html" name="export_html" checked>
-                                            <label class="form-check-label" for="export_html">HTML</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="export_pdf" name="export_pdf">
-                                            <label class="form-check-label" for="export_pdf">PDF</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="export_docx" name="export_docx">
-                                            <label class="form-check-label" for="export_docx">DOCX</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-text">Wählen Sie mindestens ein Format aus.</div>
+                                    <h5 class="card-title">
+                                        <i class="bi bi-camera text-primary me-2"></i> Snapshots
+                                    </h5>
+                                    <p class="card-text">Zeigt alle vorhandenen Snapshots und deren Alter an.</p>
+                                </div>
+                                <div class="card-footer bg-transparent border-top">
+                                    <a href="{{ url_for('snapshots') }}" class="btn btn-sm btn-outline-primary">
+                                        Anzeigen <i class="bi bi-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="card h-100 border-primary">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="bi bi-hdd text-primary me-2"></i> Verwaiste VMDKs
+                                    </h5>
+                                    <p class="card-text">Identifiziert und listet nicht zugeordnete virtuelle Festplatten auf.</p>
+                                </div>
+                                <div class="card-footer bg-transparent border-top">
+                                    <a href="{{ url_for('orphaned_vmdks') }}" class="btn btn-sm btn-outline-primary">
+                                        Anzeigen <i class="bi bi-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="card h-100 border-success">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="bi bi-diagram-3 text-success me-2"></i> Infrastruktur-Topologie
+                                    </h5>
+                                    <p class="card-text">Visualisiert die vSphere-Infrastruktur in einem interaktiven Diagramm.</p>
+                                </div>
+                                <div class="card-footer bg-transparent border-top">
+                                    <a href="{{ url_for('infrastructure_topology') }}" class="btn btn-sm btn-outline-success">
+                                        Visualisieren <i class="bi bi-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="card h-100 border-secondary">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="bi bi-braces text-secondary me-2"></i> Rohdaten
+                                    </h5>
+                                    <p class="card-text">Zeigt die unverarbeiteten Daten aus der vSphere-Umgebung an.</p>
+                                </div>
+                                <div class="card-footer bg-transparent border-top">
+                                    <a href="{{ url_for('raw_data') }}" class="btn btn-sm btn-outline-secondary">
+                                        Anzeigen <i class="bi bi-arrow-right ms-1"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">Bericht generieren</h2>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Erstellen Sie einen benutzerdefinierten Bericht mit den gewünschten Daten und Exportformaten.</p>
                     
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                    <form action="{{ url_for('generate_report') }}" method="post" class="mt-4">
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h5 class="mb-3">Zu inkludierende Daten</h5>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="include_vmware_tools" name="include_vmware_tools" checked>
+                                    <label class="form-check-label" for="include_vmware_tools">
+                                        VMware Tools Status
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="include_snapshots" name="include_snapshots" checked>
+                                    <label class="form-check-label" for="include_snapshots">
+                                        Snapshots
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="include_orphaned_vmdks" name="include_orphaned_vmdks" checked>
+                                    <label class="form-check-label" for="include_orphaned_vmdks">
+                                        Verwaiste VMDKs
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h5 class="mb-3">Exportformate</h5>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="export_html" name="export_html" checked>
+                                    <label class="form-check-label" for="export_html">
+                                        HTML
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="export_pdf" name="export_pdf">
+                                    <label class="form-check-label" for="export_pdf">
+                                        PDF
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="export_docx" name="export_docx">
+                                    <label class="form-check-label" for="export_docx">
+                                        Word-Dokument (DOCX)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-file-earmark-check me-1"></i>Bericht erstellen
+                            <i class="bi bi-file-earmark-text me-1"></i> Bericht generieren
                         </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">Verbindungsinformationen</h2>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <tr>
+                            <th>Server:</th>
+                            <td>{{ connection_info.host }}</td>
+                        </tr>
+                        <tr>
+                            <th>Benutzer:</th>
+                            <td>{{ connection_info.username }}</td>
+                        </tr>
+                        <tr>
+                            <th>SSL-Überprüfung:</th>
+                            <td>
+                                {% if connection_info.disable_ssl_verification %}
+                                <span class="badge bg-warning">Deaktiviert</span>
+                                {% else %}
+                                <span class="badge bg-success">Aktiviert</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <div class="d-grid mt-3">
+                        <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">
+                            <i class="bi bi-box-arrow-right me-1"></i> Abmelden
+                        </a>
                     </div>
-                </form>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">Über die Anwendung</h2>
+                </div>
+                <div class="card-body">
+                    <p>
+                        <strong>Bechtle vSphere Reporter v0.2</strong> ist eine professionelle Webanwendung für das Monitoring und die Analyse von VMware vSphere-Umgebungen.
+                    </p>
+                    <p>
+                        <strong>Neu in v0.2:</strong>
+                    </p>
+                    <ul>
+                        <li>Interaktive Topologie-Visualisierung</li>
+                        <li>Exportfunktionen für Berichte (HTML, PDF, DOCX)</li>
+                        <li>Verbessertes Dashboard mit Echtzeit-Infrastrukturdaten</li>
+                    </ul>
+                    <div class="d-grid mt-3">
+                        <a href="{{ url_for('about') }}" class="btn btn-outline-primary">
+                            <i class="bi bi-info-circle me-1"></i> Weitere Informationen
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Mini-Topologie-Vorschau initialisieren
-        const miniTopologyPreview = document.getElementById('mini-topology-preview');
-        if (miniTopologyPreview) {
-            const miniChart = echarts.init(miniTopologyPreview);
-            
-            // Vereinfachte Beispieldaten für die Mini-Vorschau
-            const miniData = {
-                name: "vCenter",
-                symbol: "rect",
-                symbolSize: 15,
-                itemStyle: { color: "#00355e" },
-                children: [
-                    {
-                        name: "Datacenter",
-                        symbol: "roundRect",
-                        symbolSize: 12,
-                        itemStyle: { color: "#00355e" },
-                        children: [
-                            {
-                                name: "Cluster",
-                                symbol: "diamond",
-                                symbolSize: 10,
-                                itemStyle: { color: "#da6f1e" },
-                                children: [
-                                    {
-                                        name: "Host",
-                                        symbol: "circle",
-                                        symbolSize: 8,
-                                        itemStyle: { color: "#23a96a" },
-                                        children: [
-                                            {
-                                                name: "VM",
-                                                symbol: "emptyCircle",
-                                                symbolSize: 6,
-                                                itemStyle: { color: "#5a5a5a" }
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            };
-            
-            // Konfiguration für die Mini-Vorschau
-            const option = {
-                series: [
-                    {
-                        type: 'tree',
-                        data: [miniData],
-                        top: '5%',
-                        bottom: '5%',
-                        left: '10%',
-                        right: '10%',
-                        layout: 'orthogonal',
-                        orient: 'vertical',
-                        symbol: 'emptyCircle',
-                        initialTreeDepth: 4,
-                        lineStyle: {
-                            width: 1
-                        },
-                        label: {
-                            show: false
-                        },
-                        leaves: {
-                            label: {
-                                show: false
-                            }
-                        },
-                        emphasis: {
-                            focus: 'descendant'
-                        },
-                        expandAndCollapse: false,
-                        animationDuration: 550,
-                        animationDurationUpdate: 750
-                    }
-                ]
-            };
-            
-            // Vorschau anzeigen
-            miniChart.setOption(option);
-            
-            // Responsive Anpassung
-            window.addEventListener('resize', function() {
-                miniChart.resize();
-            });
-        }
-        
-        // Buttons zur Auswahl/Abwahl aller Optionen
-        const selectAllBtn = document.getElementById('selectAllBtn');
-        const deselectAllBtn = document.getElementById('deselectAllBtn');
-        
-        if (selectAllBtn) {
-            selectAllBtn.addEventListener('click', function() {
-                document.getElementById('include_vmware_tools').checked = true;
-                document.getElementById('include_snapshots').checked = true;
-                document.getElementById('include_orphaned_vmdks').checked = true;
-            });
-        }
-        
-        if (deselectAllBtn) {
-            deselectAllBtn.addEventListener('click', function() {
-                document.getElementById('include_vmware_tools').checked = false;
-                document.getElementById('include_snapshots').checked = false;
-                document.getElementById('include_orphaned_vmdks').checked = false;
-            });
-        }
-    });
-</script>
 {% endblock %}

@@ -14,11 +14,14 @@ import os
 import logging
 import time
 import json
+import base64
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, send_file
 from logging.handlers import RotatingFileHandler
+from werkzeug.utils import secure_filename
 
 from vsphere_client import VSphereClient
+from report_generator import ReportGenerator
 
 # Konfiguration
 DEBUG_MODE = os.environ.get('VSPHERE_REPORTER_DEBUG', 'False').lower() in ['true', '1', 't']
@@ -445,9 +448,184 @@ def generate_report():
         flash('Bitte loggen Sie sich ein.', 'warning')
         return redirect(url_for('index'))
     
-    # In dieser Version ist die Berichterstellung noch nicht implementiert
-    flash('Berichterstellung ist in dieser Version noch nicht implementiert.', 'info')
-    return redirect(url_for('dashboard'))
+    # Berichtsoptionen aus dem Formular lesen
+    include_sections = {
+        'vmware_tools': 'include_vmware_tools' in request.form,
+        'snapshots': 'include_snapshots' in request.form,
+        'orphaned_vmdks': 'include_orphaned_vmdks' in request.form
+    }
+    
+    export_formats = {
+        'html': 'export_html' in request.form,
+        'pdf': 'export_pdf' in request.form,
+        'docx': 'export_docx' in request.form
+    }
+    
+    # Sicherstellen, dass mindestens ein Abschnitt ausgewählt ist
+    if not any(include_sections.values()):
+        flash('Bitte wählen Sie mindestens einen Berichtsabschnitt aus.', 'warning')
+        return redirect(url_for('dashboard'))
+    
+    # Sicherstellen, dass mindestens ein Format ausgewählt ist
+    if not any(export_formats.values()):
+        flash('Bitte wählen Sie mindestens ein Exportformat aus.', 'warning')
+        return redirect(url_for('dashboard'))
+    
+    # Daten sammeln, falls noch nicht erfolgt
+    data = {}
+    
+    if include_sections.get('vmware_tools', False):
+        if not vsphere_client.collection_status['vmware_tools']:
+            vmware_tools_data = vsphere_client.collect_vmware_tools_status()
+            if isinstance(vmware_tools_data, dict) and 'demo' in vmware_tools_data:
+                data['vmware_tools'] = vmware_tools_data.get('data', [])
+            else:
+                data['vmware_tools'] = vmware_tools_data
+        else:
+            data['vmware_tools'] = vsphere_client.data.get('vmware_tools', [])
+    
+    if include_sections.get('snapshots', False):
+        if not vsphere_client.collection_status['snapshots']:
+            snapshots_data = vsphere_client.collect_snapshot_info()
+            if isinstance(snapshots_data, dict) and 'demo' in snapshots_data:
+                data['snapshots'] = snapshots_data.get('data', [])
+            else:
+                data['snapshots'] = snapshots_data
+        else:
+            data['snapshots'] = vsphere_client.data.get('snapshots', [])
+    
+    if include_sections.get('orphaned_vmdks', False):
+        if not vsphere_client.collection_status['orphaned_vmdks']:
+            raw_data = vsphere_client.collect_all_vmdk_files()
+            if isinstance(raw_data, dict):
+                if 'demo' in raw_data:
+                    data['orphaned_vmdks'] = raw_data.get('orphaned_vmdks', [])
+                else:
+                    data['orphaned_vmdks'] = raw_data.get('orphaned_vmdks', [])
+            else:
+                data['orphaned_vmdks'] = []
+        else:
+            data['orphaned_vmdks'] = vsphere_client.data.get('orphaned_vmdks', [])
+    
+    # Report-Generator initialisieren
+    report_generator = ReportGenerator(
+        data=data,
+        client=vsphere_client,
+        demo_mode=session.get('demo_mode', False)
+    )
+    
+    try:
+        # Berichte generieren
+        generated_files = report_generator.generate_report(
+            include_sections=include_sections,
+            export_formats=export_formats
+        )
+        
+        # Bei nur einem Format, diesen direkt zum Download anbieten
+        if len(generated_files) == 1:
+            format_key = list(generated_files.keys())[0]
+            file_path = generated_files[format_key]
+            
+            # Dateinamen für den Download sichern
+            filename = os.path.basename(file_path)
+            
+            # MIME-Typ basierend auf Format
+            mime_types = {
+                'html': 'text/html',
+                'pdf': 'application/pdf',
+                'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            }
+            
+            return send_file(
+                file_path,
+                mimetype=mime_types.get(format_key, 'application/octet-stream'),
+                as_attachment=True,
+                download_name=filename
+            )
+        
+        # Bei mehreren Formaten, zur Download-Übersicht weiterleiten
+        # (In dieser Version noch nicht implementiert, stattdessen alle Formate nacheinander zum Download anbieten)
+        else:
+            # Speichern der generierten Dateien in der Session für den späteren Download
+            session['generated_reports'] = generated_files
+            
+            format_names = {
+                'html': 'HTML',
+                'pdf': 'PDF',
+                'docx': 'Word-Dokument'
+            }
+            
+            success_message = "Bericht erfolgreich in folgenden Formaten generiert: "
+            format_strings = [f"{format_names.get(fmt, fmt)}" for fmt in generated_files.keys()]
+            success_message += ", ".join(format_strings)
+            
+            flash(success_message, 'success')
+            
+            # Weiterleitung zur Anzeige der generierten Berichte
+            return redirect(url_for('download_reports'))
+            
+    except Exception as e:
+        logger.error(f"Fehler bei der Berichterstellung: {str(e)}", exc_info=True)
+        flash(f'Ein Fehler ist bei der Berichterstellung aufgetreten: {str(e)}', 'danger')
+        return redirect(url_for('dashboard'))
+        
+@app.route('/download-reports')
+def download_reports():
+    """Zeigt Links zum Download der generierten Berichte an"""
+    if 'logged_in' not in session:
+        flash('Bitte loggen Sie sich ein.', 'warning')
+        return redirect(url_for('index'))
+    
+    if 'generated_reports' not in session or not session['generated_reports']:
+        flash('Es wurden keine Berichte generiert oder die Session ist abgelaufen.', 'warning')
+        return redirect(url_for('dashboard'))
+    
+    return render_template(
+        'download_reports.html',
+        connection_info=session.get('connection_info'),
+        demo_mode=session.get('demo_mode', False),
+        reports=session['generated_reports']
+    )
+
+@app.route('/download-report/<format>')
+def download_report(format):
+    """Ermöglicht den Download eines generierten Berichts"""
+    if 'logged_in' not in session:
+        flash('Bitte loggen Sie sich ein.', 'warning')
+        return redirect(url_for('index'))
+    
+    if 'generated_reports' not in session or not session['generated_reports']:
+        flash('Es wurden keine Berichte generiert oder die Session ist abgelaufen.', 'warning')
+        return redirect(url_for('dashboard'))
+    
+    reports = session.get('generated_reports', {})
+    
+    if format not in reports:
+        flash(f'Kein Bericht im Format {format} verfügbar.', 'danger')
+        return redirect(url_for('download_reports'))
+    
+    file_path = reports[format]
+    
+    if not os.path.exists(file_path):
+        flash(f'Berichtsdatei konnte nicht gefunden werden.', 'danger')
+        return redirect(url_for('download_reports'))
+    
+    # Dateinamen für den Download sichern
+    filename = os.path.basename(file_path)
+    
+    # MIME-Typ basierend auf Format
+    mime_types = {
+        'html': 'text/html',
+        'pdf': 'application/pdf',
+        'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    }
+    
+    return send_file(
+        file_path,
+        mimetype=mime_types.get(format, 'application/octet-stream'),
+        as_attachment=True,
+        download_name=filename
+    )
 
 # Fehlerbehandlung
 @app.errorhandler(404)
