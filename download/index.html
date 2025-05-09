@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bechtle vSphere Reporter v0.1 - Download</title>
+    <title>Bechtle vSphere Reporter - Download</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,7 +14,7 @@
             background-color: #f5f5f5;
         }
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: white;
             padding: 20px;
@@ -40,6 +40,20 @@
         .download-button:hover {
             background-color: #1c8a55;
         }
+        .secondary-button {
+            display: inline-block;
+            background-color: #5a5a5a;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        .secondary-button:hover {
+            background-color: #444444;
+        }
         .features {
             margin-top: 20px;
             background-color: #f9f9f9;
@@ -57,6 +71,45 @@
         .logo img {
             max-width: 200px;
         }
+        .version-card {
+            margin-top: 30px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+        .version-card h2 {
+            color: #00355e;
+            margin-top: 0;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .version-card h2 .version-tag {
+            font-size: 0.7em;
+            background-color: #da6f1e;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .changelog-link {
+            display: inline-block;
+            margin-left: 10px;
+            color: #00355e;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .changelog-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -64,25 +117,58 @@
         <div class="logo">
             <h2>Bechtle GmbH</h2>
         </div>
-        <h1>Bechtle vSphere Reporter v0.1</h1>
-        <p>Willkommen beim Download des Bechtle vSphere Reporters in der Version 0.1. Diese webbasierte Anwendung ermöglicht umfassende Berichterstellung für VMware vSphere-Umgebungen.</p>
+        <h1>Bechtle vSphere Reporter - Download</h1>
+        <p>Willkommen beim Download des Bechtle vSphere Reporters. Diese webbasierte Anwendung ermöglicht umfassende Berichterstellung und Visualisierung für VMware vSphere-Umgebungen.</p>
         
-        <div class="features">
-            <h3>Hauptmerkmale:</h3>
-            <ul>
-                <li>Vollständige webbasierte Oberfläche für plattformunabhängigen Zugriff</li>
-                <li>Berichterstellung für VMware Tools-Versionen</li>
-                <li>Erkennung und Altersanalyse von Snapshots</li>
-                <li>Zuverlässige Erkennung verwaister VMDK-Dateien</li>
-                <li>Export in HTML-, DOCX- und PDF-Format</li>
-                <li>Einfache Installation durch Smart-Starter-Skripte</li>
-            </ul>
+        <!-- Version 0.2 (Aktuelle Version) -->
+        <div class="version-card">
+            <h2>Version 0.2 <span class="version-tag">NEU</span></h2>
+            <p>Die neueste Version bietet erweiterte Visualisierung und verbesserte Berichterstellung sowie Fehlerbeseitigungen.</p>
+            
+            <div class="features">
+                <h3>Hauptmerkmale:</h3>
+                <ul>
+                    <li><strong>Neu:</strong> Interaktive Infrastruktur-Topologie mit ECharts.js</li>
+                    <li><strong>Neu:</strong> Umfassender Report Generator mit Multiple-Format-Unterstützung</li>
+                    <li><strong>Neu:</strong> Verbesserte Demo-Daten für Tests ohne vCenter-Verbindung</li>
+                    <li><strong>Verbessert:</strong> Optimierte Datenabrufroutinen für zuverlässigere Ergebnisse</li>
+                    <li><strong>Verbessert:</strong> Einheitliches Bechtle-Design für alle Berichte</li>
+                    <li><strong>Behoben:</strong> Probleme bei der Darstellung verwaister VMDK-Dateien</li>
+                </ul>
+            </div>
+            
+            <div class="button-group">
+                <a href="bechtle-vsphere-reporter-v0.2.zip" class="download-button">Version 0.2 herunterladen</a>
+                <a href="CHANGELOG-v0.2.md" class="secondary-button">Vollständiges Changelog</a>
+            </div>
         </div>
         
-        <p>Klicken Sie auf den folgenden Button, um das Tool herunterzuladen:</p>
-        <a href="bechtle-vsphere-reporter-v0.1.zip" class="download-button">Bechtle vSphere Reporter v0.1 herunterladen</a>
+        <!-- Version 0.1 -->
+        <div class="version-card">
+            <h2>Version 0.1</h2>
+            <p>Die Grundversion mit webbasierter Oberfläche und grundlegender Berichterstellung.</p>
+            
+            <div class="features">
+                <h3>Hauptmerkmale:</h3>
+                <ul>
+                    <li>Vollständige webbasierte Oberfläche für plattformunabhängigen Zugriff</li>
+                    <li>Berichterstellung für VMware Tools-Versionen</li>
+                    <li>Erkennung und Altersanalyse von Snapshots</li>
+                    <li>Zuverlässige Erkennung verwaister VMDK-Dateien</li>
+                    <li>Export in HTML-, DOCX- und PDF-Format</li>
+                    <li>Einfache Installation durch Smart-Starter-Skripte</li>
+                </ul>
+            </div>
+            
+            <div class="button-group">
+                <a href="bechtle-vsphere-reporter-v0.1.zip" class="secondary-button">Version 0.1 herunterladen</a>
+                <a href="CHANGELOG-v0.1.md" class="changelog-link">Changelog ansehen</a>
+            </div>
+        </div>
         
         <p style="margin-top: 20px; font-size: 0.9em;">Hinweis: Für Linux wird empfohlen, nach dem Entpacken das Skript start.sh zu verwenden. Windows-Nutzer können die Anwendung bequem mit start.bat starten.</p>
+        
+        <p style="margin-top: 10px; text-align: center; color: #5a5a5a; font-size: 0.8em;">© 2025 Bechtle GmbH - Alle Rechte vorbehalten</p>
     </div>
 </body>
 </html>
